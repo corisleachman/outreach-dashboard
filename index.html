@@ -2017,6 +2017,26 @@ async function loadLinkedIn() {
       rows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
     }
 
+    // Column E (COL.linkedin) stores =HYPERLINK("url","Name") formulas.
+    // The default Sheets API returns the display text, not the URL.
+    // Re-fetch column E with valueRenderOption=FORMULA to get the raw formula,
+    // then parse the real URL out of it.
+    const fRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(SHEET_NAME + '!E:E')}?valueRenderOption=FORMULA`,
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    const fData = fRes.ok ? await fRes.json() : {};
+    const formulaCol = fData.values || []; // index 0 = row 1 (header), index 1 = row 2, etc.
+
+    // Parse the URL from =HYPERLINK("url","text"), or return the value as-is if it's already a URL.
+    function parseLinkedInUrl(raw) {
+      if (!raw) return '';
+      const s = String(raw);
+      const m = s.match(/=HYPERLINK\("([^"]+)"/i);
+      if (m) return m[1];
+      return s.startsWith('http') ? s : '';
+    }
+
     const due = rows.filter(p => {
       const emailSent = !!(p.row[COL.firstEmailDate]);
       const liStatus = (p.row[COL.linkedinReq] || '').toLowerCase();
@@ -2038,7 +2058,9 @@ async function loadLinkedIn() {
       const lastName = row[COL.lastName] || '';
       const agency = row[COL.agencyName] || '';
       const position = row[COL.position] || '';
-      const linkedin = row[COL.linkedin] || '';
+      // Use the formula-parsed URL; p.rowNumber is 1-based sheet row, formulaCol is 0-based (row1=index0)
+      const linkedInFormula = (formulaCol[p.rowNumber - 1] || [])[0] || '';
+      const linkedin = parseLinkedInUrl(linkedInFormula);
       const initials = (firstName[0] || '') + (lastName[0] || '');
       const emailDate = row[COL.firstEmailDate] || '';
 
