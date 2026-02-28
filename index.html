@@ -1182,6 +1182,7 @@
     <button class="filter-btn" onclick="filterCards('nurture', this)">Nurture</button>
     <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+    <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
   </div>
 
   <!-- BOUNCE PANEL -->
@@ -1234,6 +1235,18 @@
       <button class="refresh-btn" onclick="loadLinkedIn()">↻ Refresh</button>
     </div>
     <div id="linkedinContainer"></div>
+  </div>
+
+  <!-- CONVERSATIONS PANEL -->
+  <div id="conversationsPanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">Conversations</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">People you've met or are actively speaking with — generate and send a personalised message.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadConversations()">↻ Refresh</button>
+    </div>
+    <div id="conversationsContainer"></div>
   </div>
 
   <div class="error-banner" id="errorBanner">
@@ -1339,6 +1352,7 @@ const FIXED = {
   sheetId: '1CdB46eJR7lMDdWDp-ha6x75IHdiTAHJTpduq6l_X-bY',
   webhookUrl: 'https://hook.eu1.make.com/102ugxx068bqdafo73kzxbjcpnt4twmw',
   bounceWebhookUrl: 'https://hook.eu1.make.com/bfqqhsifsqqvu51a1cknph8o41phb47k',
+  claudeApiKey: '', // Add your Anthropic API key here to enable AI-generated messages
 };
 
 // ── SETUP ───────────────────────────────────────────────────────
@@ -2149,6 +2163,7 @@ async function showLinkedInTab(btn) {
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'block';
   await loadLinkedIn();
 }
@@ -2395,6 +2410,8 @@ async function showBounceTab(btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'block';
   await loadBounces();
 }
@@ -2402,6 +2419,7 @@ async function showBounceTab(btn) {
 function hideBouncePanel() {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('cardsContainer').style.display = '';
 }
 
@@ -2795,6 +2813,367 @@ async function init() {
 }
 
 init();
+
+// ── CONVERSATIONS TAB ────────────────────────────────────────────
+
+async function showConversationsTab(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'block';
+  await loadConversations();
+}
+
+async function loadConversations() {
+  const container = document.getElementById('conversationsContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading conversations...</div></div>`;
+
+  try {
+    let rows;
+    if (allPeopleRows && allPeopleRows.length) {
+      rows = allPeopleRows;
+    } else {
+      const range = `${SHEET_NAME}!A:W`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+      if (!res.ok) throw new Error('Failed to load sheet');
+      const data = await res.json();
+      rows = (data.values || []).slice(1); // skip header row
+    }
+
+    const conversations = rows
+      .map((row, i) => ({ row, rowNumber: i + 2 }))
+      .filter(({ row }) => {
+        const status = (row[COL.status] || '').trim();
+        return status === 'Closed \u2013 meeting booked' || status === 'Conversation ongoing';
+      });
+
+    // Update count badge
+    const badge = document.getElementById('conversationsCount');
+    if (conversations.length > 0) {
+      badge.textContent = conversations.length;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    renderConversations(conversations);
+  } catch (err) {
+    container.innerHTML = `<div class="empty-state"><p style="color:var(--red);">Error: ${err.message}</p></div>`;
+  }
+}
+
+function renderConversations(contacts) {
+  const container = document.getElementById('conversationsContainer');
+  if (!contacts.length) {
+    container.innerHTML = `<div class="empty-state"><h3>No active conversations</h3><p>Contacts with "Closed \u2013 meeting booked" or "Conversation ongoing" status will appear here.</p></div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+  contacts.forEach(({ row, rowNumber }, idx) => {
+    const firstName  = row[COL.firstName]  || '';
+    const lastName   = row[COL.lastName]   || '';
+    const agency     = row[COL.agencyName] || '';
+    const email      = row[COL.cleanEmail] || row[COL.email] || '';
+    const status     = (row[COL.status]    || '').trim();
+    const notes      = row[COL.notes]      || '';
+    const position   = row[COL.position]   || '';
+    const initials   = (firstName[0] || '') + (lastName[0] || '');
+
+    const isMeeting  = status === 'Closed \u2013 meeting booked';
+    const statusColor = isMeeting ? 'var(--accent)' : 'var(--blue)';
+    const statusLabel = isMeeting ? 'MEETING BOOKED' : 'ONGOING';
+
+    const card = document.createElement('div');
+    card.className = 'prospect-card';
+    card.style.animationDelay = `${idx * 60}ms`;
+    card.dataset.rowNumber  = rowNumber;
+    card.dataset.email      = email;
+    card.dataset.firstName  = firstName;
+    card.dataset.lastName   = lastName;
+    card.dataset.agency     = agency;
+    card.dataset.status     = status;
+    card.dataset.notes      = notes;
+    card.dataset.position   = position;
+    card.dataset.selectedType = 'value-drop';
+
+    card.innerHTML = `
+      <div class="card-header" style="padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="toggleConvCard(${rowNumber})">
+        <div style="width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text-muted);flex-shrink:0;">${initials || '?'}</div>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:500;font-size:14px;">${firstName} ${lastName}</div>
+          <div style="font-size:12px;color:var(--text-muted);">${agency}${position ? ' · ' + position : ''} &nbsp;·&nbsp; <span style="color:var(--text-dim);">${email}</span></div>
+        </div>
+        <div style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:${statusColor};border:1px solid ${statusColor};padding:3px 8px;border-radius:4px;letter-spacing:0.06em;flex-shrink:0;">${statusLabel}</div>
+        <div style="color:var(--text-dim);font-size:14px;transition:transform 0.2s;" id="conv-chevron-${rowNumber}">▾</div>
+      </div>
+
+      <div id="conv-body-${rowNumber}" style="display:none;padding:0 20px 20px;border-top:1px solid var(--border);">
+
+        <!-- Message type selector -->
+        <div style="margin:16px 0 12px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:8px;">MESSAGE TYPE</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="conv-types-${rowNumber}">
+            <button class="conv-type-btn active-type" data-type="value-drop" onclick="selectConvType(${rowNumber}, 'value-drop', this)">✦ Value drop</button>
+            <button class="conv-type-btn" data-type="chase" onclick="selectConvType(${rowNumber}, 'chase', this)">↻ Regular chase</button>
+            <button class="conv-type-btn" data-type="checkin" onclick="selectConvType(${rowNumber}, 'checkin', this)">◎ Check-in</button>
+            <button class="conv-type-btn" data-type="post-meeting" onclick="selectConvType(${rowNumber}, 'post-meeting', this)">✓ Post-meeting</button>
+          </div>
+        </div>
+
+        <!-- Subject -->
+        <div style="margin-bottom:12px;">
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:6px;">SUBJECT</div>
+          <input id="conv-subject-${rowNumber}" type="text" placeholder="Subject line…"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:9px 12px;border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;"
+            onfocus="this.style.borderColor='var(--border-light)'" onblur="this.style.borderColor='var(--border)'" />
+        </div>
+
+        <!-- Message body -->
+        <div style="margin-bottom:16px;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;">MESSAGE</div>
+            <button id="conv-gen-btn-${rowNumber}" onclick="generateConvMessage(${rowNumber})"
+              style="background:transparent;border:1px solid var(--border-light);color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.15s;"
+              onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+              onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
+              ✦ Generate
+            </button>
+          </div>
+          <textarea id="conv-message-${rowNumber}" rows="7" placeholder="Your message will appear here after clicking Generate…"
+            style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;line-height:1.65;resize:vertical;outline:none;transition:border-color 0.15s;"
+            onfocus="this.style.borderColor='var(--border-light)'" onblur="this.style.borderColor='var(--border)'"></textarea>
+        </div>
+
+        <!-- Actions -->
+        <div style="display:flex;gap:10px;justify-content:flex-end;align-items:center;">
+          <div id="conv-status-${rowNumber}" style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;"></div>
+          <button onclick="sendConversationEmail(${rowNumber})" class="send-btn" id="conv-send-${rowNumber}">
+            Send email
+          </button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+
+  // Inject shared button styles once
+  if (!document.getElementById('conv-styles')) {
+    const style = document.createElement('style');
+    style.id = 'conv-styles';
+    style.textContent = `
+      .conv-type-btn {
+        background: transparent;
+        border: 1px solid var(--border);
+        color: var(--text-muted);
+        padding: 5px 13px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-family: 'DM Mono', monospace;
+        cursor: pointer;
+        letter-spacing: 0.03em;
+        transition: all 0.15s;
+      }
+      .conv-type-btn:hover { border-color: var(--border-light); color: var(--text); }
+      .conv-type-btn.active-type { background: rgba(200,240,96,0.08); border-color: var(--accent); color: var(--accent); }
+    `;
+    document.head.appendChild(style);
+  }
+}
+
+function toggleConvCard(rowNumber) {
+  const body    = document.getElementById(`conv-body-${rowNumber}`);
+  const chevron = document.getElementById(`conv-chevron-${rowNumber}`);
+  const open    = body.style.display === 'none';
+  body.style.display    = open ? 'block' : 'none';
+  chevron.style.transform = open ? 'rotate(180deg)' : '';
+}
+
+function selectConvType(rowNumber, type, btn) {
+  const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  card.dataset.selectedType = type;
+  document.querySelectorAll(`#conv-types-${rowNumber} .conv-type-btn`).forEach(b => b.classList.remove('active-type'));
+  btn.classList.add('active-type');
+}
+
+async function generateConvMessage(rowNumber) {
+  const card      = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const firstName = card.dataset.firstName;
+  const agency    = card.dataset.agency;
+  const notes     = card.dataset.notes;
+  const type      = card.dataset.selectedType || 'value-drop';
+  const genBtn    = document.getElementById(`conv-gen-btn-${rowNumber}`);
+  const subjectEl = document.getElementById(`conv-subject-${rowNumber}`);
+  const msgEl     = document.getElementById(`conv-message-${rowNumber}`);
+
+  genBtn.textContent = '⟳ Generating…';
+  genBtn.disabled = true;
+
+  // Try Claude API if key is configured
+  if (FIXED.claudeApiKey) {
+    try {
+      const typeLabels = {
+        'value-drop':   'value drop (sharing something genuinely useful — an insight, article, or idea relevant to their work)',
+        'chase':        'regular chase (a brief, warm follow-up to keep momentum — no pressure, just staying visible)',
+        'checkin':      'check-in (a light touch to reconnect and see how things are going)',
+        'post-meeting': 'post-meeting follow-up (following up after we spoke — confirming next steps and keeping the relationship warm)'
+      };
+      const context = notes ? `Context/notes: ${notes}` : '';
+      const prompt = `You are writing on behalf of Coris Leachman. Draft a short, professional email to ${firstName} at ${agency}. The email type is: ${typeLabels[type]}. ${context}
+
+Rules:
+- Keep it to 3–4 short paragraphs maximum
+- Warm, natural tone — not salesy or stiff
+- Leave a clear placeholder like [insert X] only where personalisation is genuinely needed
+- Sign off as "Coris"
+- Return ONLY a JSON object with exactly two fields: "subject" and "body". No other text.`;
+
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {
+          'x-api-key': FIXED.claudeApiKey,
+          'anthropic-version': '2023-06-01',
+          'anthropic-dangerous-direct-browser-access': 'true',
+          'content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: 'claude-haiku-4-5-20251001',
+          max_tokens: 600,
+          messages: [{ role: 'user', content: prompt }]
+        })
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        const raw  = data.content[0].text.trim();
+        const json = JSON.parse(raw.replace(/^```json\s*/,'').replace(/```$/,'').trim());
+        subjectEl.value = json.subject;
+        msgEl.value     = json.body;
+        flashBorder(msgEl);
+        genBtn.textContent = '✦ Generate';
+        genBtn.disabled = false;
+        return;
+      }
+    } catch (e) {
+      // fall through to templates
+    }
+  }
+
+  // Smart templates fallback (or when no API key set)
+  const templates = {
+    'value-drop': {
+      subject: `Something I thought you'd find useful`,
+      body: `Hi ${firstName},\n\nHope you're well. I came across something that made me think of you and the work you're doing at ${agency} — wanted to pass it along.\n\n[Insert the insight, article, or idea here — make it specific to their world.]\n\nNo agenda, just thought it was worth sharing.\n\nBest,\nCoris`
+    },
+    'chase': {
+      subject: `Following up`,
+      body: `Hi ${firstName},\n\nJust circling back — I don't want to be a pest, but I do think there's something worth exploring here.\n\nIs there a good moment for a quick call this week or next? Even 20 minutes would be great.\n\nBest,\nCoris`
+    },
+    'checkin': {
+      subject: `Checking in`,
+      body: `Hi ${firstName},\n\nHope things are going well at ${agency}. I've been thinking about our last conversation and wanted to check in — no rush or pressure, just staying in touch.\n\nWould love to hear how things are going whenever you have a moment.\n\nBest,\nCoris`
+    },
+    'post-meeting': {
+      subject: `Great speaking with you`,
+      body: `Hi ${firstName},\n\nReally enjoyed our conversation — thanks so much for your time.\n\nAs we discussed, I'll [next step]. In the meantime, feel free to reach out if anything comes up on your end.\n\nLooking forward to staying in touch.\n\nBest,\nCoris`
+    }
+  };
+
+  const t = templates[type] || templates['chase'];
+  subjectEl.value = t.subject;
+  msgEl.value     = t.body;
+  flashBorder(msgEl);
+  genBtn.textContent = '✦ Generate';
+  genBtn.disabled = false;
+}
+
+function flashBorder(el) {
+  el.style.borderColor = 'var(--accent)';
+  setTimeout(() => { el.style.borderColor = 'var(--border)'; }, 1200);
+}
+
+async function sendConversationEmail(rowNumber) {
+  const card      = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const toEmail   = card.dataset.email;
+  const subject   = document.getElementById(`conv-subject-${rowNumber}`).value.trim();
+  const body      = document.getElementById(`conv-message-${rowNumber}`).value.trim();
+  const btn       = document.getElementById(`conv-send-${rowNumber}`);
+  const statusEl  = document.getElementById(`conv-status-${rowNumber}`);
+
+  if (!toEmail)  { statusEl.textContent = 'No email address found.'; statusEl.style.color = 'var(--red)'; return; }
+  if (!subject)  { statusEl.textContent = 'Please add a subject line.'; statusEl.style.color = 'var(--amber)'; return; }
+  if (!body)     { statusEl.textContent = 'Message is empty.'; statusEl.style.color = 'var(--amber)'; return; }
+
+  btn.textContent = 'Sending…';
+  btn.disabled = true;
+  statusEl.textContent = '';
+
+  try {
+    // Build RFC 2822 raw email and base64url-encode it
+    const mime = [
+      `To: ${toEmail}`,
+      `Subject: =?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`,
+      `MIME-Version: 1.0`,
+      `Content-Type: text/plain; charset=UTF-8`,
+      `Content-Transfer-Encoding: quoted-printable`,
+      '',
+      body
+    ].join('\r\n');
+
+    const raw = btoa(unescape(encodeURIComponent(mime)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    // Create Gmail draft
+    const draftRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/drafts', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: { raw } })
+    });
+    if (!draftRes.ok) {
+      const err = await draftRes.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Draft failed (${draftRes.status})`);
+    }
+    const draft = await draftRes.json();
+
+    // Send the draft
+    const sendRes = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/drafts/send', {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: draft.id })
+    });
+    if (!sendRes.ok) {
+      const err = await sendRes.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Send failed (${sendRes.status})`);
+    }
+
+    // Update "Last contacted" column (T) in the sheet
+    const today = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
+    await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        valueInputOption: 'USER_ENTERED',
+        data: [{ range: `${SHEET_NAME}!T${rowNumber}`, values: [[today]] }]
+      })
+    });
+
+    btn.textContent = '✓ Sent';
+    btn.style.background = 'transparent';
+    btn.style.color = 'var(--accent)';
+    btn.style.border = '1px solid var(--accent)';
+    statusEl.textContent = `Sent to ${toEmail}`;
+    statusEl.style.color = 'var(--text-muted)';
+
+  } catch (err) {
+    btn.textContent = 'Send email';
+    btn.disabled = false;
+    statusEl.textContent = `Error: ${err.message}`;
+    statusEl.style.color = 'var(--red)';
+  }
+}
 </script>
 </body>
 </html>
