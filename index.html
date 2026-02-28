@@ -2831,24 +2831,27 @@ async function loadConversations() {
   container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading conversations...</div></div>`;
 
   try {
-    let rows;
+    let conversations;
     if (allPeopleRows && allPeopleRows.length) {
-      rows = allPeopleRows;
+      // allPeopleRows is already an array of { row, rowNumber } objects — filter directly
+      conversations = allPeopleRows.filter(({ row }) => {
+        const status = (row[COL.status] || '').trim();
+        return status === 'Closed \u2013 meeting booked' || status === 'Conversation ongoing';
+      });
     } else {
       const range = `${SHEET_NAME}!A:W`;
       const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
       const res = await fetch(url, { headers: { Authorization: `Bearer ${CONFIG.token}` } });
       if (!res.ok) throw new Error('Failed to load sheet');
       const data = await res.json();
-      rows = (data.values || []).slice(1); // skip header row
+      const rawRows = (data.values || []).slice(1);
+      conversations = rawRows
+        .map((row, i) => ({ row, rowNumber: i + 2 }))
+        .filter(({ row }) => {
+          const status = (row[COL.status] || '').trim();
+          return status === 'Closed \u2013 meeting booked' || status === 'Conversation ongoing';
+        });
     }
-
-    const conversations = rows
-      .map((row, i) => ({ row, rowNumber: i + 2 }))
-      .filter(({ row }) => {
-        const status = (row[COL.status] || '').trim();
-        return status === 'Closed \u2013 meeting booked' || status === 'Conversation ongoing';
-      });
 
     // Update count badge
     const badge = document.getElementById('conversationsCount');
