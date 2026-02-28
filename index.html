@@ -1338,6 +1338,12 @@ async function loadDrafts() {
     </div>`;
 
   try {
+    // Validate token first
+    if (!CONFIG.token) {
+      showError('No access token — please sign in again.');
+      return;
+    }
+
     const range = `${SHEET_NAME}!A:W`;
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
     const res = await fetch(url, {
