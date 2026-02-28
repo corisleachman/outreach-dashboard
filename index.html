@@ -1014,6 +1014,19 @@
     margin-bottom: -8px !important;
     transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.3s ease 0.15s, padding 0.3s ease 0.15s, margin 0.3s ease 0.15s;
   }
+  .drag-handle {
+    cursor: grab;
+    color: var(--text-dim);
+    font-size: 15px;
+    padding-right: 8px;
+    user-select: none;
+    opacity: 0.35;
+    transition: opacity 0.15s;
+    flex-shrink: 0;
+  }
+  .roadmap-item.backlog:hover .drag-handle { opacity: 0.75; }
+  .roadmap-item.dragging { opacity: 0.35; background: var(--surface2); }
+  .roadmap-item.drag-over { border-top: 2px solid var(--accent); }
   .roadmap-add-row { display: flex; gap: 8px; margin-top: 12px; }
   .roadmap-add-input {
     flex: 1;
@@ -2496,6 +2509,8 @@ function showRoadmap() {
 }
 function hideRoadmap() { document.getElementById('roadmapModal').style.display = 'none'; }
 
+let _rmDragIdx = null;
+
 function _rmInit() {
   _rmRenderBacklog(_rmBacklog());
   _rmRenderShipped(_rmShipped());
@@ -2511,7 +2526,41 @@ function _rmRenderBacklog(items) {
   items.forEach((text, i) => {
     const item = document.createElement('div');
     item.className = 'roadmap-item backlog';
-    item.innerHTML = `<span style="flex:1">${text}</span><button class="roadmap-check-btn" onclick="shipBacklogItem(${i})" title="Mark as shipped">✓</button>`;
+    item.draggable = true;
+    item.innerHTML = `<span class="drag-handle" title="Drag to reorder">⠿</span><span style="flex:1">${text}</span><button class="roadmap-check-btn" onclick="shipBacklogItem(${i})" title="Mark as shipped">✓</button>`;
+
+    item.addEventListener('dragstart', e => {
+      _rmDragIdx = i;
+      item.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    item.addEventListener('dragend', () => {
+      _rmDragIdx = null;
+      item.classList.remove('dragging');
+      list.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+    });
+    item.addEventListener('dragover', e => {
+      e.preventDefault();
+      e.dataTransfer.dropEffect = 'move';
+      list.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
+      item.classList.add('drag-over');
+    });
+    item.addEventListener('dragleave', () => {
+      item.classList.remove('drag-over');
+    });
+    item.addEventListener('drop', e => {
+      e.preventDefault();
+      item.classList.remove('drag-over');
+      const toIdx = i;
+      if (_rmDragIdx === null || _rmDragIdx === toIdx) return;
+      const backlog = _rmBacklog();
+      const [moved] = backlog.splice(_rmDragIdx, 1);
+      backlog.splice(toIdx, 0, moved);
+      localStorage.setItem('roadmap_backlog', JSON.stringify(backlog));
+      _rmDragIdx = null;
+      _rmRenderBacklog(backlog);
+    });
+
     list.appendChild(item);
   });
 }
