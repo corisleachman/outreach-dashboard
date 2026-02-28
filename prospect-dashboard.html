@@ -1,0 +1,2376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outreach Dashboard — Coris Leachman</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0d0f;
+    --surface: #15151a;
+    --surface2: #1c1c23;
+    --border: #2a2a35;
+    --border-light: #333340;
+    --text: #e8e8f0;
+    --text-muted: #7a7a90;
+    --text-dim: #4a4a60;
+    --accent: #c8f060;
+    --accent-dark: #a0c040;
+    --red: #ff5c5c;
+    --amber: #ffb340;
+    --blue: #5c9fff;
+    --purple: #a78bfa;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HEADER */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 0 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    position: sticky;
+    top: 0;
+    background: rgba(13,13,15,0.92);
+    backdrop-filter: blur(12px);
+    z-index: 100;
+  }
+
+  .logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    color: var(--text);
+  }
+
+  .logo span {
+    color: var(--accent);
+  }
+
+  .header-meta {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .status-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .status-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--text-dim);
+  }
+
+  .status-dot.live { background: var(--accent); box-shadow: 0 0 8px var(--accent); animation: pulse 2s infinite; }
+  .status-dot.error { background: var(--red); }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  .refresh-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .refresh-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+
+  /* SETUP PANEL */
+  .setup-panel {
+    max-width: 680px;
+    margin: 60px auto;
+    padding: 0 24px;
+  }
+
+  .setup-panel h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .setup-panel p {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .config-form {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 32px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .form-group label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .form-group input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    color: var(--text);
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+  }
+
+  .form-group input:focus {
+    border-color: var(--accent);
+  }
+
+  .form-group input::placeholder {
+    color: var(--text-dim);
+  }
+
+  .form-hint {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .form-hint a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .connect-btn {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 14px 24px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-top: 4px;
+  }
+
+  .connect-btn:hover {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  .connect-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  /* MAIN DASHBOARD */
+  .dashboard { display: none; }
+
+  .dash-header {
+    padding: 40px 48px 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .dash-header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: -0.03em;
+  }
+
+  .dash-header h1 em {
+    font-style: italic;
+    color: var(--text-muted);
+  }
+
+  .summary-stats {
+    display: flex;
+    gap: 32px;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  /* FILTERS */
+  .filters {
+    padding: 20px 48px;
+    display: flex;
+    gap: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover, .filter-btn.active {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(200, 240, 96, 0.06);
+  }
+
+  /* PROSPECT CARDS */
+  .cards-container {
+    padding: 32px 48px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .prospect-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .prospect-card:hover {
+    border-color: var(--border-light);
+  }
+
+  .prospect-card.sent {
+    opacity: 0.35;
+    pointer-events: none;
+  }
+
+  .card-header {
+    padding: 20px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .card-header:hover { background: rgba(255,255,255,0.02); }
+
+  .card-identity {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 16px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .card-name {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 3px;
+  }
+
+  .card-agency {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .card-email-address {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .card-right {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .type-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 4px 10px;
+    border-radius: 4px;
+    border: 1px solid;
+  }
+
+  .type-badge.email1 { color: var(--blue); border-color: rgba(92,159,255,0.3); background: rgba(92,159,255,0.08); }
+  .type-badge.followup { color: var(--amber); border-color: rgba(255,179,64,0.3); background: rgba(255,179,64,0.08); }
+  .type-badge.nurture { color: var(--purple); border-color: rgba(167,139,250,0.3); background: rgba(167,139,250,0.08); }
+
+  .chevron {
+    color: var(--text-dim);
+    transition: transform 0.2s;
+    font-size: 12px;
+  }
+
+  .prospect-card.expanded .chevron { transform: rotate(180deg); }
+
+  /* CARD BODY */
+  .card-body {
+    display: none;
+    border-top: 1px solid var(--border);
+  }
+
+  .prospect-card.expanded .card-body { display: block; }
+
+  .email-preview {
+    padding: 24px;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .email-preview-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+  }
+
+  .email-subject {
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+    color: var(--text-muted);
+  }
+
+  .email-subject span { color: var(--text); }
+
+  .email-body {
+    font-size: 13px;
+    line-height: 1.7;
+    color: var(--text-muted);
+    white-space: pre-wrap;
+    max-height: 220px;
+    overflow-y: auto;
+    padding-right: 8px;
+  }
+
+  .email-body::-webkit-scrollbar { width: 4px; }
+  .email-body::-webkit-scrollbar-track { background: transparent; }
+  .email-body::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .email-body-edit {
+    display: none;
+    width: 100%;
+    min-height: 180px;
+    background: var(--bg);
+    border: 1px solid var(--accent);
+    border-radius: 8px;
+    padding: 14px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    line-height: 1.7;
+    resize: vertical;
+    outline: none;
+  }
+
+  .edit-controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  .edit-toggle-btn {
+    background: transparent;
+    border: 1px solid var(--border-light);
+    color: var(--text-muted);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .edit-toggle-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .save-draft-btn {
+    display: none;
+    background: rgba(200,240,96,0.1);
+    border: 1px solid rgba(200,240,96,0.35);
+    color: var(--accent);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .save-draft-btn:hover { background: rgba(200,240,96,0.18); }
+  .save-draft-btn.saving { opacity: 0.5; pointer-events: none; }
+
+  .cancel-edit-btn {
+    display: none;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .cancel-edit-btn:hover { border-color: var(--red); color: var(--red); }
+
+  .linkedin-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    background: rgba(92,159,255,0.1);
+    border: 1px solid rgba(92,159,255,0.2);
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+
+  .linkedin-icon:hover { background: rgba(92,159,255,0.22); border-color: var(--blue); }
+  .linkedin-icon svg { width: 11px; height: 11px; fill: var(--blue); }
+
+  .card-email-address {
+    cursor: pointer;
+    transition: color 0.15s;
+  }
+
+  .card-email-address:hover { color: var(--accent) !important; }
+
+  .card-actions {
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .action-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .send-btn {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .send-btn:hover:not(:disabled) {
+    background: var(--accent-dark);
+    transform: translateY(-1px);
+  }
+
+  .send-btn:disabled {
+    background: var(--surface2);
+    color: var(--text-dim);
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  .send-btn.sending {
+    background: var(--border);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+
+  .send-btn.success {
+    background: rgba(200,240,96,0.15);
+    color: var(--accent);
+    border: 1px solid rgba(200,240,96,0.3);
+    pointer-events: none;
+  }
+
+  /* LOADING */
+  .loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px 48px;
+    gap: 16px;
+    color: var(--text-muted);
+  }
+
+  .loader {
+    width: 32px;
+    height: 32px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .loading-text {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.05em;
+  }
+
+  /* EMPTY STATE */
+  .empty-state {
+    text-align: center;
+    padding: 80px 48px;
+    color: var(--text-dim);
+  }
+
+  .empty-state h3 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px;
+    font-weight: 400;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .empty-state p {
+    font-size: 13px;
+  }
+
+  /* ERROR BANNER */
+  .error-banner {
+    background: rgba(255,92,92,0.1);
+    border: 1px solid rgba(255,92,92,0.3);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 0 48px 0;
+    font-size: 13px;
+    color: var(--red);
+    display: none;
+    align-items: center;
+    gap: 10px;
+  }
+
+  /* WEBHOOK CONFIG NOTE */
+  .webhook-note {
+    background: rgba(200,240,96,0.06);
+    border: 1px solid rgba(200,240,96,0.2);
+    border-radius: 8px;
+    padding: 14px 20px;
+    margin: 0 48px;
+    font-size: 12px;
+    color: var(--accent);
+    font-family: 'DM Mono', monospace;
+    display: none;
+  }
+
+  /* TOAST */
+  .toast {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    border-radius: 10px;
+    padding: 14px 20px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transform: translateY(80px);
+    opacity: 0;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 1000;
+    max-width: 320px;
+  }
+
+  .toast.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  .toast.success { border-color: rgba(200,240,96,0.4); }
+  .toast.error { border-color: rgba(255,92,92,0.4); }
+  .toast-icon { font-size: 16px; }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    header { padding: 0 20px; }
+    .dash-header { padding: 24px 20px 16px; flex-direction: column; align-items: flex-start; gap: 16px; }
+    .filters { padding: 16px 20px; }
+    .cards-container { padding: 20px; }
+    .card-actions { flex-direction: column; gap: 12px; align-items: stretch; }
+    .send-btn { justify-content: center; }
+  }
+
+  /* BOUNCE CARDS */
+  .bounce-card {
+    background: var(--surface);
+    border: 1px solid rgba(255,92,92,0.25);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .bounce-card.undeliverable {
+    border-color: var(--border);
+    opacity: 0.5;
+  }
+
+  .bounce-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .bounce-identity {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .bounce-name {
+    font-size: 15px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
+  .bounce-agency {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  .bounce-attempts {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+
+  .bounce-attempt {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    padding: 8px 12px;
+    border-radius: 6px;
+    background: var(--surface2);
+  }
+
+  .bounce-attempt.failed {
+    color: var(--red);
+    background: rgba(255,92,92,0.06);
+    text-decoration: line-through;
+    opacity: 0.7;
+  }
+
+  .bounce-attempt.next {
+    color: var(--accent);
+    background: rgba(200,240,96,0.06);
+    border: 1px solid rgba(200,240,96,0.2);
+  }
+
+  .attempt-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-dim);
+    width: 52px;
+    flex-shrink: 0;
+  }
+
+  .bounce-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .draft-next-btn {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .draft-next-btn:hover { background: var(--accent-dark); transform: translateY(-1px); }
+  .draft-next-btn:disabled { background: var(--surface2); color: var(--text-dim); cursor: not-allowed; transform: none; }
+
+  .skip-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .skip-btn:hover { border-color: var(--red); color: var(--red); }
+
+
+  /* STATS BAR */
+  .stats-bar {
+    padding: 16px 48px;
+    display: flex;
+    align-items: center;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-wrap: wrap;
+  }
+
+  .stat-pill {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 4px 28px;
+    gap: 3px;
+    cursor: default;
+  }
+
+  .stat-pill-number {
+    font-family: 'DM Serif Display', serif;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--text);
+  }
+
+  .stat-pill-number.stat-pill-alert { color: var(--amber); }
+
+  .stat-pill-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-dim);
+  }
+
+  .stat-pill-divider {
+    width: 1px;
+    height: 32px;
+    background: var(--border);
+  }
+
+  /* RESPONDED BUTTON */
+  .responded-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 6px 14px;
+    border-radius: 6px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .responded-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .responded-btn.marked { background: rgba(200,240,96,0.1); border-color: rgba(200,240,96,0.4); color: var(--accent); pointer-events: none; }
+
+  /* LINKEDIN CARDS */
+  .linkedin-card {
+    background: var(--surface);
+    border: 1px solid rgba(92,159,255,0.2);
+    border-radius: 12px;
+    padding: 18px 24px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    animation: slideIn 0.3s ease forwards;
+    opacity: 0;
+    transform: translateY(8px);
+  }
+
+  .linkedin-card-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .linkedin-card-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+
+  .linkedin-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .open-linkedin-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(92,159,255,0.1);
+    border: 1px solid rgba(92,159,255,0.3);
+    color: var(--blue);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .open-linkedin-btn:hover { background: rgba(92,159,255,0.2); }
+
+  .mark-sent-btn {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .mark-sent-btn:hover { background: var(--accent-dark); }
+  .mark-sent-btn.done { background: rgba(200,240,96,0.1); color: var(--accent); border: 1px solid rgba(200,240,96,0.3); pointer-events: none; }
+
+
+  /* ROADMAP MODAL */
+  .roadmap-list { display: flex; flex-direction: column; gap: 8px; }
+  .roadmap-item {
+    font-size: 13px;
+    padding: 10px 14px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    line-height: 1.4;
+  }
+  .roadmap-item::before { flex-shrink: 0; font-size: 11px; }
+  .roadmap-item.done { background: rgba(200,240,96,0.05); color: var(--text-muted); }
+  .roadmap-item.done::before { content: '✓'; color: var(--accent); }
+  .roadmap-item.backlog { background: var(--surface2); color: var(--text); }
+  .roadmap-item.backlog::before { content: '○'; color: var(--amber); }
+
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="logo">Outreach<span>.</span></div>
+  <div class="header-meta">
+    <div class="status-pill" id="connectionStatus">
+      <div class="status-dot" id="statusDot"></div>
+      <span id="statusText">Not connected</span>
+    </div>
+    <button class="refresh-btn" onclick="loadDrafts()" id="refreshBtn" style="display:none">↻ Refresh</button>
+    <span onclick="showRoadmap()" style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);cursor:pointer;letter-spacing:0.06em;opacity:0.4;transition:opacity 0.2s;" onmouseover="this.style.opacity='1'" onmouseout="this.style.opacity='0.4'" title="Features & roadmap">v0.1</span>
+  </div>
+</header>
+
+<!-- ROADMAP MODAL -->
+<div id="roadmapModal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:1000;backdrop-filter:blur(4px);" onclick="if(event.target===this)hideRoadmap()">
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:680px;max-height:80vh;overflow-y:auto;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 40px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:28px;">
+      <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">Features & roadmap</div>
+      <button onclick="hideRoadmap()" style="background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px 8px;">✕</button>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:14px;">✓ Shipped</div>
+      <div class="roadmap-list">
+        <div class="roadmap-item done">Gmail OAuth connection with access token</div>
+        <div class="roadmap-item done">Google Sheets integration — reads People tab for draft-ready prospects</div>
+        <div class="roadmap-item done">Draft cards — expand to preview email body</div>
+        <div class="roadmap-item done">Send & update sheet — fires Make webhook, updates status in one click</div>
+        <div class="roadmap-item done">Filter tabs — All, First email, Follow-ups, Nurture</div>
+        <div class="roadmap-item done">Edit email body in-place with save back to Gmail draft</div>
+        <div class="roadmap-item done">Attachment preservation — edits keep PDF attachment intact</div>
+        <div class="roadmap-item done">LinkedIn icon on cards — opens profile in one click</div>
+        <div class="roadmap-item done">Click-to-copy email address on cards</div>
+        <div class="roadmap-item done">Stats bar — Drafts ready, Responded, Meetings set, LinkedIn sent, LinkedIn due</div>
+        <div class="roadmap-item done">Responded button — marks column O in sheet directly from card</div>
+        <div class="roadmap-item done">LinkedIn tab — surfaces prospects due a connection request, mark sent in one click</div>
+        <div class="roadmap-item done">Bounced tab — detects hard bounces from Gmail, shows next email permutation to try</div>
+        <div class="roadmap-item done">Bounce retry — triggers Make scenario to create new draft with PDF attachment</div>
+        <div class="roadmap-item done">Bounce retry — updates Lix column E and People column G with new address</div>
+        <div class="roadmap-item done">Mark undeliverable — writes status to sheet, removes from active list</div>
+      </div>
+    </div>
+
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog</div>
+      <div class="roadmap-list">
+        <div class="roadmap-item backlog">Persistent Gmail auth — refresh token so token never needs manual pasting again</div>
+        <div class="roadmap-item backlog">Accurate draft count — pull live count from Gmail API directly, not sheet status</div>
+        <div class="roadmap-item backlog">Clickable draft count — click the stat to see all current Gmail drafts listed by type</div>
+        <div class="roadmap-item backlog">Send from dashboard — send drafts directly via Gmail API without leaving the dashboard</div>
+        <div class="roadmap-item backlog">Make Scenario 2 date gate — follow-ups only fire after 5 days</div>
+        <div class="roadmap-item backlog">Nurture scenario date gate — nurture emails only fire after 14 days</div>
+      </div>
+    </div>
+
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-dim);text-align:right;margin-top:8px;">outreach dashboard · built with Claude</div>
+  </div>
+</div>
+
+<!-- SETUP PANEL -->
+<div class="setup-panel" id="setupPanel">
+  <h2>Connect your accounts</h2>
+  <p>Sign in with Google to connect your Gmail and Sheets — no tokens to copy, no expiry. Your credentials stay in your browser only.</p>
+  <div class="config-form">
+    <button class="connect-btn" onclick="startOAuth()" id="connectBtn" style="display:flex;align-items:center;justify-content:center;gap:12px;">
+      <svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+      Sign in with Google
+    </button>
+    <div id="authStatus" style="font-family:'DM Mono',monospace;font-size:11px;color:var(--text-dim);text-align:center;margin-top:12px;display:none;"></div>
+  </div>
+</div>
+
+<!-- MAIN DASHBOARD -->
+<div class="dashboard" id="dashboard">
+
+  <div class="dash-header">
+    <h1>Drafts <em>ready to send</em></h1>
+    <div class="summary-stats">
+      <div class="stat">
+        <div class="stat-number" id="statTotal">—</div>
+        <div class="stat-label">Drafts ready</div>
+      </div>
+      <div class="stat">
+        <div class="stat-number" id="statSent" style="color:var(--accent)">0</div>
+        <div class="stat-label">Sent this session</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filters">
+    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
+    <button class="filter-btn" onclick="filterCards('email1', this)">First email</button>
+    <button class="filter-btn" onclick="filterCards('followup', this)">Follow-ups</button>
+    <button class="filter-btn" onclick="filterCards('nurture', this)">Nurture</button>
+    <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+    <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+  </div>
+
+  <!-- BOUNCE PANEL -->
+  <div id="bouncePanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">Bounced emails</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Mailer-daemon failures from the last 24 hours — draft with the next address in one click.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadBounces()">↻ Refresh</button>
+    </div>
+    <div id="bounceContainer"></div>
+  </div>
+
+  <!-- STATS BAR -->
+  <div class="stats-bar" id="statsBar" style="display:none;">
+    <div class="stat-pill" title="Total prospects with drafts ready">
+      <span class="stat-pill-number" id="statDraftsReady">—</span>
+      <span class="stat-pill-label">Drafts ready</span>
+    </div>
+    <div class="stat-pill-divider"></div>
+    <div class="stat-pill" title="Prospects who have replied">
+      <span class="stat-pill-number" id="statResponded">—</span>
+      <span class="stat-pill-label">Responded</span>
+    </div>
+    <div class="stat-pill-divider"></div>
+    <div class="stat-pill" title="Meetings booked">
+      <span class="stat-pill-number" id="statMeetings">—</span>
+      <span class="stat-pill-label">Meetings set</span>
+    </div>
+    <div class="stat-pill-divider"></div>
+    <div class="stat-pill" title="LinkedIn connections sent">
+      <span class="stat-pill-number" id="statLinkedIn">—</span>
+      <span class="stat-pill-label">LinkedIn sent</span>
+    </div>
+    <div class="stat-pill-divider"></div>
+    <div class="stat-pill" title="Awaiting LinkedIn connection request">
+      <span class="stat-pill-number stat-pill-alert" id="statLinkedInDue">—</span>
+      <span class="stat-pill-label">LinkedIn due</span>
+    </div>
+  </div>
+
+  <!-- LINKEDIN PANEL -->
+  <div id="linkedinPanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">LinkedIn requests due</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Prospects who've received the first email but haven't had a connection request yet.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadLinkedIn()">↻ Refresh</button>
+    </div>
+    <div id="linkedinContainer"></div>
+  </div>
+
+  <div class="error-banner" id="errorBanner">
+    <span>⚠</span>
+    <span id="errorMessage">Something went wrong.</span>
+  </div>
+
+  <div class="webhook-note" id="webhookNote"></div>
+
+  <div class="cards-container" id="cardsContainer">
+    <div class="loading-state">
+      <div class="loader"></div>
+      <div class="loading-text">Loading drafts...</div>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon"></span>
+  <span id="toastMessage"></span>
+</div>
+
+<script>
+// ── CONFIG ──────────────────────────────────────────────────────
+let CONFIG = {
+  token: '',
+  sheetId: '',
+  webhookUrl: '',
+  bounceWebhookUrl: 'https://hook.eu1.make.com/bfqqhsifsqqvu51a1cknph8o41phb47k',
+};
+
+const SHEET_NAME = 'People';
+// Column indices (0-based from sheet data)
+const COL = {
+  agencyName: 0,   // A
+  website: 1,       // B
+  firstName: 2,     // C
+  lastName: 3,      // D
+  linkedin: 4,      // E
+  position: 5,      // F
+  email: 6,         // G
+  firstEmailDate: 7,// H
+  linkedinReq: 8,   // I
+  followUpDate: 9,  // J
+  status: 10,       // K
+  draftType: 11,    // L
+  followUpSent: 12, // M
+  nextAction: 13,   // N
+  responded: 14,    // O
+  meetingSet: 15,   // P
+  notes: 16,        // Q
+  threadId: 17,     // R
+  cleanEmail: 18,   // S
+  lastContacted: 19,// T  (new)
+  nurtureStage: 20, // U  (new)
+  nurtureDraftReady: 21, // V  (new)
+};
+
+// Statuses that mean a draft is ready to send
+const DRAFT_READY_STATUSES = [
+  'First email drafted',
+  'Draft Email 1 created',
+  'Follow-up drafted',
+  'Nurture draft ready',
+];
+
+// Map status → type badge
+function getDraftType(status, draftType) {
+  const s = (status || '').toLowerCase();
+  const d = (draftType || '').toLowerCase();
+  if (s.includes('first email') || d.includes('email 1') || d.includes('draft email')) return 'email1';
+  if (s.includes('follow-up') || d.includes('follow-up')) return 'followup';
+  if (s.includes('nurture')) return 'nurture';
+  return 'email1';
+}
+
+// New status after sending
+function getNewStatus(currentStatus) {
+  const s = (currentStatus || '').toLowerCase();
+  if (s.includes('first email')) return 'First email sent';
+  if (s.includes('follow-up')) return 'Follow-up sent';
+  if (s.includes('nurture')) return 'Nurture sent';
+  return 'Email sent';
+}
+
+// ── STATE ───────────────────────────────────────────────────────
+let prospects = [];
+let sentCount = 0;
+let currentFilter = 'all';
+
+// ── OAUTH CONFIG ────────────────────────────────────────────────
+const OAUTH = {
+  clientId: '594843403645-7v1pnpgi4juth6ca0l5nb9vqj57v0p9h.apps.googleusercontent.com',
+  clientSecret: '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',
+  redirectUri: 'https://corisleachman.github.io/outreach-dashboard',
+  scopes: 'https://www.googleapis.com/auth/gmail.modify https://www.googleapis.com/auth/spreadsheets',
+};
+
+const FIXED = {
+  sheetId: '1CdB46eJR7lMDdWDp-ha6x75IHdiTAHJTpduq6l_X-bY',
+  webhookUrl: 'https://hook.eu1.make.com/102ugxx068bqdafo73kzxbjcpnt4twmw',
+  bounceWebhookUrl: 'https://hook.eu1.make.com/bfqqhsifsqqvu51a1cknph8o41phb47k',
+};
+
+// ── SETUP ───────────────────────────────────────────────────────
+function startOAuth() {
+  const btn = document.getElementById('connectBtn');
+  btn.textContent = 'Redirecting to Google...';
+  btn.disabled = true;
+
+  // Save state so we know where we were after redirect
+  sessionStorage.setItem('oauthPending', '1');
+
+  const params = new URLSearchParams({
+    client_id: OAUTH.clientId,
+    redirect_uri: OAUTH.redirectUri,
+    response_type: 'code',
+    scope: OAUTH.scopes,
+    access_type: 'offline',
+    prompt: 'consent',
+  });
+
+  window.location.href = 'https://accounts.google.com/o/oauth2/v2/auth?' + params.toString();
+}
+
+async function exchangeCodeForTokens(code) {
+  const status = document.getElementById('authStatus');
+  status.style.display = 'block';
+  status.textContent = 'Connecting to Google...';
+
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      code,
+      client_id: OAUTH.clientId,
+      client_secret: OAUTH.clientSecret,
+      redirect_uri: OAUTH.redirectUri,
+      grant_type: 'authorization_code',
+    }),
+  });
+
+  if (!res.ok) {
+    const err = await res.json();
+    throw new Error(err.error_description || 'Token exchange failed');
+  }
+
+  const data = await res.json();
+  // Store refresh token persistently
+  localStorage.setItem('gRefreshToken', data.refresh_token);
+  return data.access_token;
+}
+
+async function refreshAccessToken() {
+  const refreshToken = localStorage.getItem('gRefreshToken');
+  if (!refreshToken) return null;
+
+  const res = await fetch('https://oauth2.googleapis.com/token', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      refresh_token: refreshToken,
+      client_id: OAUTH.clientId,
+      client_secret: OAUTH.clientSecret,
+      grant_type: 'refresh_token',
+    }),
+  });
+
+  if (!res.ok) {
+    localStorage.removeItem('gRefreshToken');
+    return null;
+  }
+
+  const data = await res.json();
+  return data.access_token;
+}
+
+function launchDashboard(token) {
+  CONFIG = {
+    token,
+    sheetId: FIXED.sheetId,
+    webhookUrl: FIXED.webhookUrl,
+    bounceWebhookUrl: FIXED.bounceWebhookUrl,
+  };
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('dashboard').style.display = 'block';
+  document.getElementById('refreshBtn').style.display = 'block';
+  loadDrafts();
+}
+
+// ── LOAD SHEET DATA ─────────────────────────────────────────────
+async function loadDrafts() {
+  setStatus('loading');
+  document.getElementById('cardsContainer').innerHTML = `
+    <div class="loading-state">
+      <div class="loader"></div>
+      <div class="loading-text">Fetching sheet data...</div>
+    </div>`;
+
+  try {
+    const range = `${SHEET_NAME}!A:W`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error?.message || 'Failed to read sheet');
+    }
+
+    const data = await res.json();
+    const rows = (data.values || []).slice(1); // skip header
+
+    // Filter to only draft-ready rows
+    prospects = rows
+      .map((row, i) => ({ row, rowNumber: i + 2 })) // +2 for header + 1-indexed
+      .filter(({ row }) => {
+        const status = row[COL.status] || '';
+        return DRAFT_READY_STATUSES.some(s => status.toLowerCase().includes(s.toLowerCase()));
+      });
+
+    document.getElementById('statTotal').textContent = prospects.length;
+    setStatus('connected');
+    await renderCards();
+    await computeStats();
+
+  } catch(e) {
+    setStatus('error');
+    showError('Could not load sheet: ' + e.message);
+    document.getElementById('cardsContainer').innerHTML = `
+      <div class="empty-state">
+        <h3>Couldn't load your sheet</h3>
+        <p>${e.message}</p>
+      </div>`;
+  }
+}
+
+// ── FETCH DRAFT FROM GMAIL ──────────────────────────────────────
+async function fetchDraftContent(emailAddress, draftType) {
+  // Search Gmail drafts for one matching this recipient
+  try {
+    const query = encodeURIComponent(`to:${emailAddress}`);
+    const res = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts?q=${query}&maxResults=5`, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+    if (!res.ok) throw new Error('Gmail API error');
+    const data = await res.json();
+    const drafts = data.drafts || [];
+    if (!drafts.length) return null;
+
+    // Get the first draft's full content
+    const draftId = drafts[0].id;
+    const res2 = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}?format=full`, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+    if (!res2.ok) throw new Error('Could not fetch draft');
+    const draft = await res2.json();
+
+    const msg = draft.message;
+    const headers = msg.payload?.headers || [];
+    const subject = headers.find(h => h.name === 'Subject')?.value || '(no subject)';
+
+    // Recursively extract plain text from any Gmail message structure
+    function decodeBase64(data) {
+      try {
+        return decodeURIComponent(escape(atob(data.replace(/-/g, '+').replace(/_/g, '/'))));
+      } catch(e) {
+        return atob(data.replace(/-/g, '+').replace(/_/g, '/'));
+      }
+    }
+
+    function htmlToPlain(html) {
+      return html
+        .replace(/<br\s*\/?>/gi, '\n')
+        .replace(/<\/p>/gi, '\n\n')
+        .replace(/<\/div>/gi, '\n')
+        .replace(/<[^>]+>/g, '')
+        .replace(/&nbsp;/g, ' ')
+        .replace(/&amp;/g, '&')
+        .replace(/&lt;/g, '<')
+        .replace(/&gt;/g, '>')
+        .replace(/&quot;/g, '"')
+        .replace(/&#39;/g, "'")
+        .replace(/\n{3,}/g, '\n\n')
+        .trim();
+    }
+
+    function extractText(payload) {
+      if (!payload) return '';
+      // Prefer plain text
+      if (payload.mimeType === 'text/plain' && payload.body?.data) {
+        return decodeBase64(payload.body.data);
+      }
+      // HTML — convert to plain
+      if (payload.mimeType === 'text/html' && payload.body?.data) {
+        return htmlToPlain(decodeBase64(payload.body.data));
+      }
+      // Multipart — recurse, preferring text/plain
+      if (payload.parts && payload.parts.length) {
+        const plainPart = payload.parts.find(p => p.mimeType === 'text/plain');
+        if (plainPart) return extractText(plainPart);
+        const htmlPart = payload.parts.find(p => p.mimeType === 'text/html');
+        if (htmlPart) return extractText(htmlPart);
+        for (const part of payload.parts) {
+          const result = extractText(part);
+          if (result) return result;
+        }
+      }
+      // Fallback: raw body data
+      if (payload.body?.data) {
+        const raw = decodeBase64(payload.body.data);
+        return raw.includes('<') ? htmlToPlain(raw) : raw;
+      }
+      return '';
+    }
+
+    const body = extractText(msg.payload);
+    return { draftId, subject, body: body.trim() };
+  } catch(e) {
+    return null;
+  }
+}
+
+// ── RENDER CARDS ────────────────────────────────────────────────
+async function renderCards() {
+  const container = document.getElementById('cardsContainer');
+
+  if (!prospects.length) {
+    container.innerHTML = `
+      <div class="empty-state">
+        <h3>No drafts ready</h3>
+        <p>Run your Make scenarios to generate email drafts, then refresh.</p>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = '';
+
+  for (let i = 0; i < prospects.length; i++) {
+    const { row, rowNumber } = prospects[i];
+    const firstName = row[COL.firstName] || '';
+    const lastName = row[COL.lastName] || '';
+    const agency = row[COL.agencyName] || '';
+    const email = row[COL.cleanEmail] || row[COL.email] || '';
+    const status = row[COL.status] || '';
+    const draftTypeRaw = row[COL.draftType] || '';
+    const type = getDraftType(status, draftTypeRaw);
+
+    const card = document.createElement('div');
+    card.className = 'prospect-card';
+    card.dataset.type = type;
+    card.dataset.rowNumber = rowNumber;
+    card.dataset.email = email;
+    card.dataset.status = status;
+    card.style.animationDelay = `${i * 60}ms`;
+
+    const typeBadgeLabel = type === 'email1' ? 'First email' : type === 'followup' ? 'Follow-up' : 'Nurture';
+    const initials = (firstName[0] || '') + (lastName[0] || '');
+    const canSend = !!CONFIG.webhookUrl;
+    const linkedin = row[COL.linkedin] || '';
+
+    card.innerHTML = `
+      <div class="card-header" onclick="toggleCard(this.parentElement)">
+        <div class="card-identity">
+          <div class="avatar">${initials}</div>
+          <div>
+            <div class="card-name">${firstName} ${lastName}</div>
+            <div class="card-meta">
+              <span class="card-agency">${agency}</span>
+              <span class="card-email-address" title="Click to copy" onclick="copyEmail(event, '${email}')">${email}</span>
+              ${linkedin ? `<a class="linkedin-icon" href="${linkedin}" target="_blank" title="Open LinkedIn profile" onclick="event.stopPropagation()"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>` : ''}
+            </div>
+          </div>
+        </div>
+        <div class="card-right">
+          <div class="type-badge ${type}">${typeBadgeLabel}</div>
+          <div class="chevron">▾</div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="email-preview">
+          <div class="email-preview-label">Email preview</div>
+          <div class="email-subject">Subject: <span id="subject-${rowNumber}">Loading...</span></div>
+          <div class="email-body" id="body-${rowNumber}">Fetching from Gmail...</div>
+          <textarea class="email-body-edit" id="edit-${rowNumber}" placeholder="Edit email body..."></textarea>
+          <div class="edit-controls">
+            <button class="edit-toggle-btn" id="editBtn-${rowNumber}" onclick="toggleEdit(${rowNumber})">✎ Edit</button>
+            <button class="save-draft-btn" id="saveBtn-${rowNumber}" onclick="saveDraft(${rowNumber})">✓ Save to draft</button>
+            <button class="cancel-edit-btn" id="cancelBtn-${rowNumber}" onclick="cancelEdit(${rowNumber})">✕ Cancel</button>
+          </div>
+        </div>
+        <div class="card-actions">
+          <div class="action-left">
+            Row ${rowNumber} · ${status}
+          </div>
+          <button class="send-btn" id="sendBtn-${rowNumber}" ${!canSend ? 'disabled title="Add webhook URL in setup to enable sending"' : ''}
+            onclick="sendEmail(${rowNumber}, '${email}', '${status}')">
+            ${canSend ? '↑ Send & update sheet' : 'Webhook not configured'}
+          </button>
+        </div>
+      </div>`;
+
+    container.appendChild(card);
+
+    // Lazy-load draft content when card is expanded
+    card.querySelector('.card-header').addEventListener('click', async () => {
+      const bodyEl = document.getElementById(`body-${rowNumber}`);
+      const subjectEl = document.getElementById(`subject-${rowNumber}`);
+      if (bodyEl.textContent === 'Fetching from Gmail...') {
+        const content = await fetchDraftContent(email, type);
+        if (content) {
+          subjectEl.textContent = content.subject;
+          bodyEl.textContent = content.body;
+          document.getElementById(`edit-${rowNumber}`).value = content.body;
+          card.dataset.draftId = content.draftId;
+        } else {
+          subjectEl.textContent = '(could not load)';
+          bodyEl.textContent = 'Draft not found in Gmail. It may have been sent already or the email address may not match.';
+        }
+      }
+    });
+  }
+
+  filterCards(currentFilter);
+}
+
+function toggleCard(card) {
+  card.classList.toggle('expanded');
+}
+
+// ── FILTER ──────────────────────────────────────────────────────
+function filterCards(type, btn) {
+  hideBouncePanel();
+  currentFilter = type;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+
+  document.querySelectorAll('.prospect-card').forEach(card => {
+    if (type === 'all' || card.dataset.type === type) {
+      card.style.display = '';
+    } else {
+      card.style.display = 'none';
+    }
+  });
+}
+
+// ── SEND EMAIL ──────────────────────────────────────────────────
+async function sendEmail(rowNumber, email, status) {
+  const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const btn = document.getElementById(`sendBtn-${rowNumber}`);
+  const draftId = card.dataset.draftId;
+
+  if (!draftId) {
+    showToast('error', '⚠', 'Please expand the card first to load the draft');
+    return;
+  }
+
+  const newStatus = getNewStatus(status);
+
+  // Optimistic UI
+  btn.className = 'send-btn sending';
+  btn.textContent = 'Sending...';
+
+  try {
+    const payload = {
+      draftId,
+      rowNumber,
+      email,
+      newStatus,
+      timestamp: new Date().toISOString(),
+    };
+
+    const res = await fetch(CONFIG.webhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`Webhook returned ${res.status}`);
+
+    // Success
+    btn.className = 'send-btn success';
+    btn.textContent = '✓ Sent';
+    card.classList.add('sent');
+    sentCount++;
+    document.getElementById('statSent').textContent = sentCount;
+    showToast('success', '✓', `Email to ${email} sent and sheet updated`);
+
+  } catch(e) {
+    btn.className = 'send-btn';
+    btn.textContent = '↑ Send & update sheet';
+    showToast('error', '⚠', 'Failed to send: ' + e.message);
+  }
+}
+
+// ── COPY EMAIL ──────────────────────────────────────────────────
+function copyEmail(event, email) {
+  event.stopPropagation();
+  navigator.clipboard.writeText(email).then(() => {
+    showToast('success', '⎘', `${email} copied to clipboard`);
+  });
+}
+
+// ── EDIT DRAFT ──────────────────────────────────────────────────
+function toggleEdit(rowNumber) {
+  const bodyEl = document.getElementById(`body-${rowNumber}`);
+  const editEl = document.getElementById(`edit-${rowNumber}`);
+  const editBtn = document.getElementById(`editBtn-${rowNumber}`);
+  const saveBtn = document.getElementById(`saveBtn-${rowNumber}`);
+  const cancelBtn = document.getElementById(`cancelBtn-${rowNumber}`);
+
+  // Enter edit mode
+  editEl.value = bodyEl.textContent;
+  bodyEl.style.display = 'none';
+  editEl.style.display = 'block';
+  editBtn.style.display = 'none';
+  saveBtn.style.display = 'inline-block';
+  cancelBtn.style.display = 'inline-block';
+  editEl.focus();
+}
+
+function cancelEdit(rowNumber) {
+  const bodyEl = document.getElementById(`body-${rowNumber}`);
+  const editEl = document.getElementById(`edit-${rowNumber}`);
+  const editBtn = document.getElementById(`editBtn-${rowNumber}`);
+  const saveBtn = document.getElementById(`saveBtn-${rowNumber}`);
+  const cancelBtn = document.getElementById(`cancelBtn-${rowNumber}`);
+
+  bodyEl.style.display = 'block';
+  editEl.style.display = 'none';
+  editBtn.style.display = 'inline-block';
+  saveBtn.style.display = 'none';
+  cancelBtn.style.display = 'none';
+}
+
+async function saveDraft(rowNumber) {
+  const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const draftId = card.dataset.draftId;
+  const editEl = document.getElementById(`edit-${rowNumber}`);
+  const bodyEl = document.getElementById(`body-${rowNumber}`);
+  const saveBtn = document.getElementById(`saveBtn-${rowNumber}`);
+  const newBody = editEl.value;
+
+  if (!draftId) {
+    showToast('error', '⚠', 'Draft not loaded yet — expand the card first');
+    return;
+  }
+
+  saveBtn.classList.add('saving');
+  saveBtn.textContent = 'Saving...';
+
+  try {
+    // Fetch the existing draft to preserve all parts (including attachments)
+    const draftRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}?format=raw`, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+    if (!draftRes.ok) throw new Error('Could not fetch draft');
+    const draftData = await draftRes.json();
+    const msg = draftData.message;
+    const threadId = msg.threadId || '';
+
+    // Decode raw RFC 2822 message
+    const rawOriginal = atob(msg.raw.replace(/-/g, '+').replace(/_/g, '/'));
+
+    // Find the boundary and text body section to replace
+    // Strategy: replace only the text/plain body part, leave everything else intact
+    let updatedRaw;
+
+    // Check if multipart (has attachment)
+    const boundaryMatch = rawOriginal.match(/boundary="?([^"\r\n;]+)"?/i);
+    if (boundaryMatch) {
+      const boundary = boundaryMatch[1];
+      const parts = rawOriginal.split('--' + boundary);
+
+      const newParts = parts.map(part => {
+        // Find the text/plain part and replace its body
+        if (part.match(/Content-Type:\s*text\/plain/i)) {
+          const headerBodySplit = part.indexOf('\r\n\r\n');
+          if (headerBodySplit !== -1) {
+            const partHeaders = part.substring(0, headerBodySplit);
+            return partHeaders + '\r\n\r\n' + newBody + '\r\n';
+          }
+        }
+        return part;
+      });
+
+      updatedRaw = newParts.join('--' + boundary);
+    } else {
+      // No attachment — simple header+body replacement
+      const headerBodySplit = rawOriginal.indexOf('\r\n\r\n');
+      if (headerBodySplit !== -1) {
+        updatedRaw = rawOriginal.substring(0, headerBodySplit) + '\r\n\r\n' + newBody;
+      } else {
+        updatedRaw = rawOriginal;
+      }
+    }
+
+    // Re-encode and update
+    const encoded = btoa(unescape(encodeURIComponent(updatedRaw)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    const updateRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}`, {
+      method: 'PUT',
+      headers: {
+        Authorization: `Bearer ${CONFIG.token}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        id: draftId,
+        message: { threadId, raw: encoded }
+      })
+    });
+
+    if (!updateRes.ok) throw new Error('Failed to update draft');
+
+    // Update the visible body and exit edit mode
+    bodyEl.textContent = newBody;
+    cancelEdit(rowNumber);
+    showToast('success', '✓', 'Draft updated — attachment preserved');
+
+  } catch(e) {
+    showToast('error', '⚠', 'Could not save: ' + e.message);
+  } finally {
+    saveBtn.classList.remove('saving');
+    saveBtn.textContent = '✓ Save to draft';
+  }
+}
+
+// ── UI HELPERS ──────────────────────────────────────────────────
+function setStatus(state) {
+  const dot = document.getElementById('statusDot');
+  const text = document.getElementById('statusText');
+  dot.className = 'status-dot';
+  if (state === 'connected') { dot.classList.add('live'); text.textContent = 'Connected'; }
+  else if (state === 'loading') { text.textContent = 'Loading...'; }
+  else if (state === 'error') { dot.classList.add('error'); text.textContent = 'Error'; }
+  else { text.textContent = 'Not connected'; }
+}
+
+function showError(msg) {
+  const banner = document.getElementById('errorBanner');
+  document.getElementById('errorMessage').textContent = msg;
+  banner.style.display = 'flex';
+  setTimeout(() => banner.style.display = 'none', 6000);
+}
+
+let toastTimer;
+function showToast(type, icon, message) {
+  const toast = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMessage').textContent = message;
+  toast.className = `toast ${type} show`;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => toast.className = `toast ${type}`, 3500);
+}
+
+
+
+// ── STATS ────────────────────────────────────────────────────────
+let allPeopleRows = [];
+
+async function computeStats() {
+  try {
+    const range = `${SHEET_NAME}!A:P`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+    if (!res.ok) return;
+    const data = await res.json();
+    allPeopleRows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
+
+    const responded = allPeopleRows.filter(p => (p.row[COL.responded] || '').toLowerCase() === 'yes').length;
+    const meetings = allPeopleRows.filter(p => {
+      const s = (p.row[COL.status] || '').toLowerCase();
+      return s.includes('meeting') || s.includes('closed');
+    }).length;
+    const linkedinSent = allPeopleRows.filter(p => {
+      const li = (p.row[COL.linkedinReq] || '').toLowerCase();
+      return li.includes('connection sent') || li.includes('connection acce');
+    }).length;
+
+    // LinkedIn due: first email sent, connection NOT yet sent, not responded, not closed
+    const linkedinDue = allPeopleRows.filter(p => {
+      const emailSent = !!(p.row[COL.firstEmailDate]);
+      const liStatus = (p.row[COL.linkedinReq] || '').toLowerCase();
+      const notSent = !liStatus.includes('connection sent') && !liStatus.includes('connection acce') && !liStatus.includes('unable');
+      const notClosed = !(p.row[COL.status] || '').toLowerCase().includes('closed');
+      const notResponded = (p.row[COL.responded] || '').toLowerCase() !== 'yes';
+      return emailSent && notSent && notClosed && notResponded;
+    }).length;
+
+    document.getElementById('statDraftsReady').textContent = prospects.length;
+    document.getElementById('statResponded').textContent = responded;
+    document.getElementById('statMeetings').textContent = meetings;
+    document.getElementById('statLinkedIn').textContent = linkedinSent;
+    document.getElementById('statLinkedInDue').textContent = linkedinDue;
+    document.getElementById('statsBar').style.display = 'flex';
+
+    // Update LinkedIn badge
+    if (linkedinDue > 0) {
+      const badge = document.getElementById('linkedinCount');
+      badge.textContent = linkedinDue;
+      badge.style.display = 'inline';
+    }
+
+  } catch(e) { /* stats are non-critical, fail silently */ }
+}
+
+// ── RESPONDED ────────────────────────────────────────────────────
+async function markResponded(rowNumber, btn) {
+  btn.textContent = 'Saving...';
+  btn.classList.add('marked');
+  try {
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('People!O' + rowNumber)}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [['Yes']] })
+      }
+    );
+    if (!res.ok) throw new Error('Sheet update failed');
+    btn.textContent = '✓ Responded';
+    showToast('success', '✓', 'Marked as responded in sheet');
+    await computeStats();
+  } catch(e) {
+    btn.classList.remove('marked');
+    btn.textContent = '✓ Responded';
+    showToast('error', '⚠', 'Could not update sheet');
+  }
+}
+
+// ── LINKEDIN TAB ─────────────────────────────────────────────────
+async function showLinkedInTab(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'block';
+  await loadLinkedIn();
+}
+
+function hideLinkedInPanel() {
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('cardsContainer').style.display = '';
+}
+
+async function loadLinkedIn() {
+  const container = document.getElementById('linkedinContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading...</div></div>`;
+
+  try {
+    // Use allPeopleRows if available, otherwise fetch
+    let rows = allPeopleRows;
+    if (!rows.length) {
+      const range = `${SHEET_NAME}!A:P`;
+      const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
+      const res = await fetch(url, { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+      if (!res.ok) throw new Error('Could not load sheet');
+      const data = await res.json();
+      rows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
+    }
+
+    const due = rows.filter(p => {
+      const emailSent = !!(p.row[COL.firstEmailDate]);
+      const liStatus = (p.row[COL.linkedinReq] || '').toLowerCase();
+      const notSent = !liStatus.includes('connection sent') && !liStatus.includes('connection acce') && !liStatus.includes('unable');
+      const notClosed = !(p.row[COL.status] || '').toLowerCase().includes('closed');
+      const notResponded = (p.row[COL.responded] || '').toLowerCase() !== 'yes';
+      return emailSent && notSent && notClosed && notResponded;
+    });
+
+    if (!due.length) {
+      container.innerHTML = `<div class="empty-state"><h3>All caught up</h3><p>No LinkedIn requests due right now.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    due.forEach((p, idx) => {
+      const row = p.row;
+      const firstName = row[COL.firstName] || '';
+      const lastName = row[COL.lastName] || '';
+      const agency = row[COL.agencyName] || '';
+      const position = row[COL.position] || '';
+      const linkedin = row[COL.linkedin] || '';
+      const initials = (firstName[0] || '') + (lastName[0] || '');
+      const emailDate = row[COL.firstEmailDate] || '';
+
+      const card = document.createElement('div');
+      card.className = 'linkedin-card';
+      card.style.animationDelay = `${idx * 40}ms`;
+      card.innerHTML = `
+        <div class="linkedin-card-left">
+          <div class="avatar">${initials}</div>
+          <div>
+            <div class="card-name">${firstName} ${lastName}</div>
+            <div class="linkedin-card-meta">${agency}${position ? ' · ' + position : ''}${emailDate ? ' · emailed ' + emailDate : ''}</div>
+          </div>
+        </div>
+        <div class="linkedin-card-actions">
+          ${linkedin
+            ? `<a class="open-linkedin-btn" href="${linkedin}" target="_blank">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                Open profile
+              </a>`
+            : `<span style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">No LinkedIn URL</span>`
+          }
+          <button class="mark-sent-btn" id="liBtn-${p.rowNumber}" onclick="markLinkedInSent(${p.rowNumber}, this)">✓ Mark sent</button>
+        </div>`;
+      container.appendChild(card);
+    });
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><h3>Couldn't load</h3><p>${e.message}</p></div>`;
+  }
+}
+
+async function markLinkedInSent(rowNumber, btn) {
+  btn.textContent = 'Saving...';
+  btn.disabled = true;
+  try {
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('People!I' + rowNumber)}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [['Connection Sent']] })
+      }
+    );
+    if (!res.ok) throw new Error('Sheet update failed');
+    btn.textContent = '✓ Sent';
+    btn.classList.add('done');
+    btn.closest('.linkedin-card').style.opacity = '0.4';
+    showToast('success', '✓', 'LinkedIn request marked as sent');
+    await computeStats();
+  } catch(e) {
+    btn.textContent = '✓ Mark sent';
+    btn.disabled = false;
+    showToast('error', '⚠', 'Could not update sheet');
+  }
+}
+
+// ── BOUNCE DETECTION ────────────────────────────────────────────
+
+const EMAIL_TEMPLATE = (firstName) => `Hi ${firstName}, hope you don't mind the direct note.
+
+I'm reaching out to introduce myself. I work with independent agencies to bring structure and momentum to new business and growth, particularly where things have started to feel messy, reactive, or overly dependent on a couple of people. I come in and get the foundations sorted so new business becomes smoother and more repeatable.
+
+In practice, that usually means setting the strategy, joining up sales, marketing and delivery, putting some shape around pipeline and partnerships, and turning that familiar "we should be doing better" feeling into something practical and repeatable.
+
+For context, I've spent the last 15+ years leading agency growth, including 12 years at creative agency, Impero, (helping grow from 3 to 55+ people), and most recently 3 years as Head of New Business at a digital experience agency, Great State, setting up the new business machine and bringing new IP to market to break into a new sector.
+
+No hard sell here, but if this is the kind of thing you ever need additional support with in the future, it'd be good to have a conversation and see if I could be useful. I've attached a short PDF with a bit more context.
+
+Kind regards,
+Coris`;
+
+const LIX_SHEET = 'Lix';
+
+function generatePermutations(firstName, lastName, domain) {
+  const f = (firstName || '').toLowerCase().replace(/[^a-z]/g, '');
+  const l = (lastName || '').toLowerCase().replace(/[^a-z]/g, '');
+  const d = (domain || '').toLowerCase().replace(/^www\./, '');
+  return [
+    `${f}@${d}`,
+    `${f}.${l}@${d}`,
+    `${f[0]}${l}@${d}`
+  ];
+}
+
+function extractDomain(email) {
+  if (!email) return '';
+  const parts = email.split('@');
+  return parts.length > 1 ? parts[1].trim() : '';
+}
+
+async function extractBouncedEmail(msgId) {
+  try {
+    const res = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msgId}?format=full`, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+
+    // Check snippet for soft bounce indicators — ignore these
+    const snippet = (data.snippet || '').toLowerCase();
+    if (snippet.includes('will retry') || snippet.includes('temporary problem') || snippet.includes('delivery incomplete')) {
+      return null; // soft bounce, skip
+    }
+
+    // Only process hard bounces: "address not found" or "delivery failed"
+    const isHardBounce = snippet.includes('address not found') || snippet.includes("wasn't delivered") || snippet.includes('delivery failed') || snippet.includes('no such user');
+    if (!isHardBounce) return null;
+
+    // Extract email from HTML body — it appears in bold (<b> or <strong>)
+    function decodeB64(str) {
+      try { return decodeURIComponent(escape(atob(str.replace(/-/g, '+').replace(/_/g, '/')))); }
+      catch(e) { return atob(str.replace(/-/g, '+').replace(/_/g, '/')); }
+    }
+
+    function getBodyHtml(payload) {
+      if (!payload) return '';
+      if (payload.mimeType === 'text/html' && payload.body?.data) return decodeB64(payload.body.data);
+      if (payload.parts) {
+        for (const part of payload.parts) {
+          const result = getBodyHtml(part);
+          if (result) return result;
+        }
+      }
+      if (payload.body?.data) return decodeB64(payload.body.data);
+      return '';
+    }
+
+    const html = getBodyHtml(data.payload);
+
+    // Extract email from bold tags (Google formats the address in <b>...</b>)
+    const boldMatch = html.match(/<b>([a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,})<\/b>/);
+    if (boldMatch) return boldMatch[1];
+
+    // Fallback: extract any email address from the HTML
+    const emailMatch = html.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+    if (emailMatch) return emailMatch[0];
+
+    // Last resort: check snippet
+    const snippetMatch = snippet.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+    return snippetMatch ? snippetMatch[0] : null;
+
+  } catch(e) {
+    return null;
+  }
+}
+
+function findProspectByEmail(email) {
+  if (!email) return null;
+  const normalised = email.toLowerCase().trim();
+  // Search allPeopleRows first (full sheet), fall back to draft-ready prospects only
+  const pool = allPeopleRows.length ? allPeopleRows : prospects;
+  return pool.find(p => {
+    const pEmail = (p.row[COL.cleanEmail] || p.row[COL.email] || '').toLowerCase().trim();
+    return pEmail === normalised;
+  });
+}
+
+async function findLixRowByEmail(email) {
+  try {
+    const range = `${LIX_SHEET}!A:E`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`;
+    const res = await fetch(url, { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+    if (!res.ok) return null;
+    const data = await res.json();
+    const rows = data.values || [];
+    const normalised = email.toLowerCase().trim();
+    for (let i = 1; i < rows.length; i++) {
+      const rowEmail = (rows[i][4] || '').toLowerCase().trim(); // column E = index 4
+      if (rowEmail === normalised) return i + 1; // 1-indexed row number
+    }
+    return null;
+  } catch(e) { return null; }
+}
+
+async function showBounceTab(btn) {
+  // Switch UI to bounce panel
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'block';
+  await loadBounces();
+}
+
+function hideBouncePanel() {
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('cardsContainer').style.display = '';
+}
+
+async function loadBounces() {
+  const container = document.getElementById('bounceContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Scanning Gmail for bounces...</div></div>`;
+
+  try {
+    // Search for hard bounce mailer-daemon messages in last 7 days
+    const query = encodeURIComponent('from:mailer-daemon@googlemail.com newer_than:7d');
+    const res = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages?q=${query}&maxResults=30`, {
+      headers: { Authorization: `Bearer ${CONFIG.token}` }
+    });
+    if (!res.ok) throw new Error('Gmail search failed');
+    const data = await res.json();
+    const messages = data.messages || [];
+
+    if (!messages.length) {
+      container.innerHTML = `<div class="empty-state"><h3>No bounces</h3><p>No mailer-daemon messages in the last 7 days.</p></div>`;
+      return;
+    }
+
+    // Fetch snippet for each message to filter hard vs soft and extract email
+    const bounces = [];
+    const seen = new Set();
+
+    for (const msg of messages) {
+      const r = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/messages/${msg.id}?format=metadata&metadataHeaders=Subject`, {
+        headers: { Authorization: `Bearer ${CONFIG.token}` }
+      });
+      if (!r.ok) continue;
+      const d = await r.json();
+      const snippet = (d.snippet || '').toLowerCase();
+
+      // Skip soft bounces
+      if (snippet.includes('will retry') || snippet.includes('temporary problem') || snippet.includes('delivery incomplete')) continue;
+
+      // Extract email from snippet — it's always mentioned there
+      const emailMatch = d.snippet.match(/[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}/);
+      const bouncedEmail = emailMatch ? emailMatch[0] : null;
+
+      if (!bouncedEmail || seen.has(bouncedEmail.toLowerCase())) continue;
+      seen.add(bouncedEmail.toLowerCase());
+
+      // Try to match to a prospect in the sheet
+      const pool = allPeopleRows.length ? allPeopleRows : prospects;
+      const prospect = pool.find(p => {
+        const pEmail = (p.row[COL.cleanEmail] || p.row[COL.email] || '').toLowerCase().trim();
+        return pEmail === bouncedEmail.toLowerCase().trim();
+      });
+
+      const firstName = prospect ? (prospect.row[COL.firstName] || '') : '';
+      const lastName = prospect ? (prospect.row[COL.lastName] || '') : '';
+      const agency = prospect ? (prospect.row[COL.agencyName] || '') : '';
+      const domain = extractDomain(bouncedEmail);
+      const perms = firstName ? generatePermutations(firstName, lastName, domain) : [];
+      const nextEmail = perms.find(p => p.toLowerCase() !== bouncedEmail.toLowerCase()) || null;
+
+      bounces.push({ msgId: msg.id, bouncedEmail, snippet: d.snippet, prospect, firstName, lastName, agency, domain, perms, nextEmail, rowNumber: prospect?.rowNumber || null });
+    }
+
+    // Update badge
+    const badge = document.getElementById('bounceCount');
+    if (bounces.length > 0) { badge.textContent = bounces.length; badge.style.display = 'inline'; }
+    else { badge.style.display = 'none'; }
+
+    if (!bounces.length) {
+      container.innerHTML = `<div class="empty-state"><h3>No hard bounces</h3><p>Any temporary delivery failures are excluded — only permanent failures appear here.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    window._bounceData = {};
+    bounces.forEach((b, idx) => {
+      window._bounceData[idx] = b;
+      renderBounceCard(b, idx, container);
+    });
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><h3>Couldn't load bounces</h3><p>${e.message}</p></div>`;
+  }
+}
+
+function renderBounceCard(b, idx, container) {
+  const card = document.createElement('div');
+  card.className = 'bounce-card';
+  card.style.animationDelay = `${idx * 60}ms`;
+
+  const initials = b.firstName && b.lastName ? (b.firstName[0] + b.lastName[0]) : '?';
+  const displayName = b.firstName ? `${b.firstName} ${b.lastName}` : 'Unknown prospect';
+  const allAttempts = [b.bouncedEmail, ...b.perms];
+  const triedSet = new Set([b.bouncedEmail.toLowerCase()]);
+
+  const attemptsHtml = allAttempts.map(email => {
+    const isFailed = triedSet.has(email.toLowerCase());
+    const isNext = b.nextEmail && email.toLowerCase() === b.nextEmail.toLowerCase();
+    const cls = isFailed ? 'failed' : isNext ? 'next' : '';
+    const label = isFailed ? 'Failed' : isNext ? 'Next' : 'Queued';
+    return `<div class="bounce-attempt ${cls}">
+      <span class="attempt-label">${label}</span>
+      <span>${email}</span>
+    </div>`;
+  }).join('');
+
+  card.innerHTML = `
+    <div class="bounce-header">
+      <div class="bounce-identity">
+        <div class="avatar">${initials}</div>
+        <div>
+          <div class="bounce-name">${displayName}</div>
+          <div class="bounce-agency">${b.agency || b.bouncedEmail}</div>
+        </div>
+      </div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--red);text-transform:uppercase;letter-spacing:0.08em;">Hard bounce</div>
+    </div>
+    <div class="bounce-attempts">${attemptsHtml}</div>
+    <div class="bounce-actions">
+      ${b.rowNumber ? `<button class="skip-btn" onclick="markUndeliverable(${b.rowNumber}, this)">Mark undeliverable</button>` : ''}
+      ${b.nextEmail
+        ? `<button class="draft-next-btn" id="draftBtn-${idx}" onclick="draftWithNextEmail(${idx})">↑ Draft with next address</button>`
+        : b.prospect
+          ? `<button class="skip-btn" onclick="markUndeliverable(${b.rowNumber}, this)">All addresses exhausted</button>`
+          : `<span style="font-size:12px;color:var(--text-dim);font-family:'DM Mono',monospace;">Not found in sheet</span>`
+      }
+    </div>`;
+
+  container.appendChild(card);
+}
+
+async function draftWithNextEmail(idx) {
+  const b = window._bounceData[idx];
+  const btn = document.getElementById(`draftBtn-${idx}`);
+  btn.textContent = 'Working...';
+  btn.disabled = true;
+
+  try {
+    const newEmail = b.nextEmail;
+
+    if (!CONFIG.bounceWebhookUrl) throw new Error('Bounce webhook URL not configured');
+
+    // 1. Fire Make webhook — it creates the draft with the PDF attachment
+    const makeRes = await fetch(CONFIG.bounceWebhookUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ firstName: b.firstName, email: newEmail })
+    });
+    if (!makeRes.ok) throw new Error('Make webhook failed');
+
+    // 2. Update Lix column E with new email
+    const lixRow = await findLixRowByEmail(b.bouncedEmail);
+    if (lixRow) {
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_SHEET + '!E' + lixRow)}?valueInputOption=USER_ENTERED`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values: [[newEmail]] })
+        }
+      );
+    }
+
+    // 3. Update People column G (email) with new address
+    if (b.rowNumber) {
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('People!G' + b.rowNumber)}?valueInputOption=USER_ENTERED`,
+        {
+          method: 'PUT',
+          headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ values: [[newEmail]] })
+        }
+      );
+    }
+
+    // Mark card as done
+    btn.textContent = '✓ Draft created';
+    btn.style.background = 'rgba(200,240,96,0.15)';
+    btn.style.color = 'var(--accent)';
+    btn.style.border = '1px solid rgba(200,240,96,0.3)';
+    showToast('success', '✓', `Draft created for ${newEmail} with attachment — sheet updated`);
+
+  } catch(e) {
+    btn.textContent = '↑ Draft with next address';
+    btn.disabled = false;
+    showToast('error', '⚠', 'Failed: ' + e.message);
+  }
+}
+
+async function markUndeliverable(rowNumber, btn) {
+  btn.textContent = 'Marking...';
+  btn.disabled = true;
+  try {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('People!K' + rowNumber)}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [['Undeliverable']] })
+      }
+    );
+    btn.closest('.bounce-card').style.opacity = '0.35';
+    btn.closest('.bounce-card').style.pointerEvents = 'none';
+    showToast('success', '✓', 'Marked as undeliverable');
+  } catch(e) {
+    btn.textContent = 'Mark undeliverable';
+    btn.disabled = false;
+    showToast('error', '⚠', 'Could not update sheet');
+  }
+}
+
+
+// ── ROADMAP ───────────────────────────────────────────────────────
+function showRoadmap() { document.getElementById('roadmapModal').style.display = 'block'; }
+function hideRoadmap() { document.getElementById('roadmapModal').style.display = 'none'; }
+
+// ── INIT ────────────────────────────────────────────────────────
+async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const code = params.get('code');
+
+  // Case 1: Returning from Google OAuth with auth code
+  if (code) {
+    // Clean URL so refreshing doesn't re-use the code
+    window.history.replaceState({}, document.title, window.location.pathname);
+    try {
+      const token = await exchangeCodeForTokens(code);
+      launchDashboard(token);
+    } catch(e) {
+      document.getElementById('authStatus').style.display = 'block';
+      document.getElementById('authStatus').textContent = 'Authentication failed: ' + e.message;
+    }
+    return;
+  }
+
+  // Case 2: Refresh token already stored — silently get a new access token
+  const refreshToken = localStorage.getItem('gRefreshToken');
+  if (refreshToken) {
+    const status = document.getElementById('authStatus');
+    const btn = document.getElementById('connectBtn');
+    btn.innerHTML = '<span style="opacity:0.6;font-size:13px;">Reconnecting...</span>';
+    btn.disabled = true;
+    status.style.display = 'block';
+    status.textContent = 'Signing you in automatically...';
+
+    const token = await refreshAccessToken();
+    if (token) {
+      launchDashboard(token);
+      return;
+    } else {
+      // Refresh token invalid — show sign in again
+      btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg> Sign in with Google`;
+      btn.disabled = false;
+      btn.onclick = startOAuth;
+      status.textContent = 'Session expired — please sign in again.';
+    }
+    return;
+  }
+
+  // Case 3: First time — show sign in button normally
+}
+
+init();
+</script>
+</body>
+</html>
