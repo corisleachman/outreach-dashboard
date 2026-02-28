@@ -605,6 +605,24 @@
     pointer-events: none;
   }
 
+  .dnc-btn, .remove-btn {
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text-dim);
+    font-family: 'DM Sans', sans-serif;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .dnc-btn:hover:not(:disabled) { border-color: #f59e0b; color: #f59e0b; background: rgba(245,158,11,0.08); }
+  .remove-btn:hover:not(:disabled) { border-color: #ef4444; color: #ef4444; background: rgba(239,68,68,0.08); }
+  .dnc-btn:disabled, .remove-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .card-right-actions { display: flex; gap: 8px; align-items: center; }
+
   /* LOADING */
   .loading-state {
     display: flex;
@@ -1658,10 +1676,14 @@ async function renderCards() {
           <div class="action-left">
             Row ${rowNumber} · ${status}
           </div>
-          <button class="send-btn" id="sendBtn-${rowNumber}"
-            onclick="sendEmail(${rowNumber}, '${email}', '${status}')">
-            ↑ Send & update sheet
-          </button>
+          <div class="card-right-actions">
+            <button class="dnc-btn" onclick="markDNC(${rowNumber}, '${email}', event)">⊘ DNC</button>
+            <button class="remove-btn" onclick="removePerson(${rowNumber}, '${firstName} ${lastName}', event)">✕ Remove</button>
+            <button class="send-btn" id="sendBtn-${rowNumber}"
+              onclick="sendEmail(${rowNumber}, '${email}', '${status}')">
+              ↑ Send & update sheet
+            </button>
+          </div>
         </div>
       </div>`;
 
@@ -1778,6 +1800,109 @@ async function sendEmail(rowNumber, email, status) {
     btn.className = 'send-btn';
     btn.textContent = '↑ Send & update sheet';
     showToast('error', '⚠', 'Failed to send: ' + e.message);
+  }
+}
+
+// ── DNC / REMOVE ────────────────────────────────────────────────
+// Helper: get numeric sheetId for the People tab (cached)
+let _peopleSheetNumId = null;
+async function _getPeopleSheetId() {
+  if (_peopleSheetNumId !== null) return _peopleSheetNumId;
+  const res = await fetch(
+    `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}?fields=sheets.properties`,
+    { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+  );
+  const data = await res.json();
+  const sheet = (data.sheets || []).find(s => s.properties.title === SHEET_NAME);
+  _peopleSheetNumId = sheet ? sheet.properties.sheetId : 0;
+  return _peopleSheetNumId;
+}
+
+// Helper: animate a card out then call callback
+function _collapseCard(card, then) {
+  card.style.overflow = 'hidden';
+  const h = card.offsetHeight;
+  card.style.maxHeight = h + 'px';
+  requestAnimationFrame(() => {
+    card.style.transition = 'opacity 0.25s, transform 0.25s, max-height 0.35s 0.15s, margin-bottom 0.35s 0.15s';
+    card.style.opacity = '0';
+    card.style.transform = 'translateX(16px)';
+    card.style.maxHeight = '0';
+    card.style.marginBottom = '0';
+  });
+  setTimeout(then, 520);
+}
+
+async function markDNC(rowNumber, email, e) {
+  e.stopPropagation();
+  const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const btn = card.querySelector('.dnc-btn');
+  btn.disabled = true;
+  btn.textContent = 'Marking…';
+  try {
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          valueInputOption: 'USER_ENTERED',
+          data: [{ range: `${SHEET_NAME}!K${rowNumber}`, values: [['Do Not Contact']] }],
+        }),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || res.status);
+    }
+    showToast('success', '⊘', `${email} marked as Do Not Contact`);
+    _collapseCard(card, () => {
+      card.remove();
+      prospects = prospects.filter(p => p.rowNumber !== rowNumber);
+    });
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = '⊘ DNC';
+    showToast('error', '⚠', 'Failed: ' + err.message);
+  }
+}
+
+async function removePerson(rowNumber, name, e) {
+  e.stopPropagation();
+  if (!confirm(`Permanently remove ${name} from the sheet?\n\nThis cannot be undone.`)) return;
+  const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const btn = card.querySelector('.remove-btn');
+  btn.disabled = true;
+  btn.textContent = 'Removing…';
+  try {
+    const numId = await _getPeopleSheetId();
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          requests: [{
+            deleteDimension: {
+              range: { sheetId: numId, dimension: 'ROWS', startIndex: rowNumber - 1, endIndex: rowNumber },
+            },
+          }],
+        }),
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.error?.message || res.status);
+    }
+    showToast('success', '✓', `${name} removed from sheet`);
+    _collapseCard(card, () => {
+      card.remove();
+      prospects = prospects.filter(p => p.rowNumber !== rowNumber);
+    });
+  } catch(err) {
+    btn.disabled = false;
+    btn.textContent = '✕ Remove';
+    showToast('error', '⚠', 'Failed: ' + err.message);
   }
 }
 
