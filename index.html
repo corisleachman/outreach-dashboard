@@ -1294,6 +1294,7 @@ function getNewStatus(currentStatus) {
 let prospects = [];
 let sentCount = 0;
 let currentFilter = 'all';
+let linkedInByEmail = {}; // populated in loadDrafts() from Lix Cleaned sheet
 
 // ── OAUTH CONFIG ────────────────────────────────────────────────
 const OAUTH = {
@@ -1441,6 +1442,24 @@ async function loadDrafts() {
 
     const data = await res.json();
     const rows = (data.values || []).slice(1); // skip header
+
+    // Build LinkedIn URL map from Lix Cleaned sheet (email → LinkedIn URL)
+    try {
+      const lixRes = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!E:AA')}`,
+        { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+      );
+      if (lixRes.ok) {
+        const lixData = await lixRes.json();
+        const lixRows = (lixData.values || []).slice(1);
+        linkedInByEmail = {};
+        lixRows.forEach(r => {
+          const em = (r[0] || '').toLowerCase().trim();
+          const url = (r[22] || '').trim();
+          if (em && url) linkedInByEmail[em] = url;
+        });
+      }
+    } catch(lixErr) { /* non-fatal — cards just won't show LinkedIn icon */ }
 
     // Filter to only draft-ready rows
     prospects = rows
@@ -1590,7 +1609,7 @@ async function renderCards() {
 
     const typeBadgeLabel = type === 'email1' ? 'First email' : type === 'followup' ? 'Follow-up' : 'Nurture';
     const initials = (firstName[0] || '') + (lastName[0] || '');
-    const linkedin = row[COL.linkedin] || '';
+    const linkedin = linkedInByEmail[(row[COL.email] || '').toLowerCase().trim()] || '';
 
     card.innerHTML = `
       <div class="card-header" onclick="toggleCard(this.parentElement)">
