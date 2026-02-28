@@ -1015,7 +1015,7 @@
         <div class="roadmap-item done">Gmail OAuth connection with access token</div>
         <div class="roadmap-item done">Google Sheets integration — reads People tab for draft-ready prospects</div>
         <div class="roadmap-item done">Draft cards — expand to preview email body</div>
-        <div class="roadmap-item done">Send & update sheet — fires Make webhook, updates status in one click</div>
+        <div class="roadmap-item done">Send & update sheet — direct Gmail API send, updates status in one click</div>
         <div class="roadmap-item done">Filter tabs — All, First email, Follow-ups, Nurture</div>
         <div class="roadmap-item done">Edit email body in-place with save back to Gmail draft</div>
         <div class="roadmap-item done">Attachment preservation — edits keep PDF attachment intact</div>
@@ -1035,9 +1035,9 @@
       <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog</div>
       <div class="roadmap-list">
         <div class="roadmap-item backlog">Persistent Gmail auth — refresh token so token never needs manual pasting again</div>
-        <div class="roadmap-item backlog">Accurate draft count — pull live count from Gmail API directly, not sheet status</div>
-        <div class="roadmap-item backlog">Clickable draft count — click the stat to see all current Gmail drafts listed by type</div>
-        <div class="roadmap-item backlog">Send from dashboard — send drafts directly via Gmail API without leaving the dashboard</div>
+        <div class="roadmap-item done">Accurate draft count — pull live count from Gmail API directly, not sheet status</div>
+        <div class="roadmap-item done">Clickable draft count — click the stat to show all current Gmail drafts listed by type</div>
+        <div class="roadmap-item done">Send from dashboard — send drafts directly via Gmail API without leaving the dashboard</div>
         <div class="roadmap-item backlog">Make Scenario 2 date gate — follow-ups only fire after 5 days</div>
         <div class="roadmap-item backlog">Nurture scenario date gate — nurture emails only fire after 14 days</div>
       </div>
@@ -1067,7 +1067,7 @@
     <h1>Drafts <em>ready to send</em></h1>
     <div class="summary-stats">
       <div class="stat">
-        <div class="stat-number" id="statTotal">—</div>
+        <div class="stat-number" id="statTotal" style="cursor:pointer" title="Click to show all drafts" onclick="filterCards('all', document.querySelector('.filter-btn'))">—</div>
         <div class="stat-label">Drafts ready</div>
       </div>
       <div class="stat">
@@ -1101,7 +1101,7 @@
   <!-- STATS BAR -->
   <div class="stats-bar" id="statsBar" style="display:none;">
     <div class="stat-pill" title="Total prospects with drafts ready">
-      <span class="stat-pill-number" id="statDraftsReady">—</span>
+      <span class="stat-pill-number" id="statDraftsReady" style="cursor:pointer" title="Click to show all drafts" onclick="filterCards('all', document.querySelector('.filter-btn'))">—</span>
       <span class="stat-pill-label">Drafts ready</span>
     </div>
     <div class="stat-pill-divider"></div>
@@ -1328,6 +1328,23 @@ function launchDashboard(token) {
   loadDrafts();
 }
 
+// ── GMAIL DRAFT COUNT ────────────────────────────────────────────
+async function fetchGmailDraftCount() {
+  try {
+    const res = await fetch(
+      'https://gmail.googleapis.com/gmail/v1/users/me/drafts?maxResults=500',
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    const drafts = data.drafts || [];
+    // If there's a next page, we have 500+ drafts — show "500+"
+    return data.nextPageToken ? '500+' : drafts.length;
+  } catch(e) {
+    return null;
+  }
+}
+
 // ── LOAD SHEET DATA ─────────────────────────────────────────────
 async function loadDrafts() {
   setStatus('loading');
@@ -1366,10 +1383,13 @@ async function loadDrafts() {
         return DRAFT_READY_STATUSES.some(s => status.toLowerCase().includes(s.toLowerCase()));
       });
 
-    document.getElementById('statTotal').textContent = prospects.length;
     setStatus('connected');
     await renderCards();
     await computeStats();
+    // Update "Drafts ready" header stat from Gmail API (true draft count)
+    fetchGmailDraftCount().then(count => {
+      if (count !== null) document.getElementById('statTotal').textContent = count;
+    });
 
   } catch(e) {
     setStatus('error');
@@ -1503,7 +1523,6 @@ async function renderCards() {
 
     const typeBadgeLabel = type === 'email1' ? 'First email' : type === 'followup' ? 'Follow-up' : 'Nurture';
     const initials = (firstName[0] || '') + (lastName[0] || '');
-    const canSend = !!CONFIG.webhookUrl;
     const linkedin = row[COL.linkedin] || '';
 
     card.innerHTML = `
@@ -1540,9 +1559,9 @@ async function renderCards() {
           <div class="action-left">
             Row ${rowNumber} · ${status}
           </div>
-          <button class="send-btn" id="sendBtn-${rowNumber}" ${!canSend ? 'disabled title="Add webhook URL in setup to enable sending"' : ''}
+          <button class="send-btn" id="sendBtn-${rowNumber}"
             onclick="sendEmail(${rowNumber}, '${email}', '${status}')">
-            ${canSend ? '↑ Send & update sheet' : 'Webhook not configured'}
+            ↑ Send & update sheet
           </button>
         </div>
       </div>`;
@@ -1596,6 +1615,7 @@ async function sendEmail(rowNumber, email, status) {
   const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
   const btn = document.getElementById(`sendBtn-${rowNumber}`);
   const draftId = card.dataset.draftId;
+  const type = card.dataset.type; // 'email1', 'followup', 'nurture'
 
   if (!draftId) {
     showToast('error', '⚠', 'Please expand the card first to load the draft');
@@ -1603,27 +1623,49 @@ async function sendEmail(rowNumber, email, status) {
   }
 
   const newStatus = getNewStatus(status);
+  const today = new Date().toLocaleDateString('en-US', { month: 'numeric', day: 'numeric', year: 'numeric' });
 
   // Optimistic UI
   btn.className = 'send-btn sending';
   btn.textContent = 'Sending...';
 
   try {
-    const payload = {
-      draftId,
-      rowNumber,
-      email,
-      newStatus,
-      timestamp: new Date().toISOString(),
-    };
+    // 1. Send the draft via Gmail API
+    const sendRes = await fetch(
+      `https://gmail.googleapis.com/gmail/v1/users/me/drafts/send`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: draftId }),
+      }
+    );
+    if (!sendRes.ok) {
+      const err = await sendRes.json().catch(() => ({}));
+      throw new Error(err.error?.message || `Gmail API returned ${sendRes.status}`);
+    }
 
-    const res = await fetch(CONFIG.webhookUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    });
+    // 2. Update People sheet via Sheets API batchUpdate
+    //    K = status, H = first email sent date (email1 only), T = last contacted
+    const updateRanges = [
+      { range: `${SHEET_NAME}!K${rowNumber}`, values: [[newStatus]] },
+      { range: `${SHEET_NAME}!T${rowNumber}`, values: [[today]] },
+    ];
+    if (type === 'email1') {
+      updateRanges.push({ range: `${SHEET_NAME}!H${rowNumber}`, values: [[today]] });
+    }
 
-    if (!res.ok) throw new Error(`Webhook returned ${res.status}`);
+    const sheetRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
+      {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: updateRanges }),
+      }
+    );
+    if (!sheetRes.ok) {
+      const err = await sheetRes.json().catch(() => ({}));
+      throw new Error('Sheet update failed: ' + (err.error?.message || sheetRes.status));
+    }
 
     // Success
     btn.className = 'send-btn success';
@@ -1835,7 +1877,8 @@ async function computeStats() {
       return emailSent && notSent && notClosed && notResponded;
     }).length;
 
-    document.getElementById('statDraftsReady').textContent = prospects.length;
+    const gmailDraftCount = await fetchGmailDraftCount();
+    document.getElementById('statDraftsReady').textContent = gmailDraftCount !== null ? gmailDraftCount : prospects.length;
     document.getElementById('statResponded').textContent = responded;
     document.getElementById('statMeetings').textContent = meetings;
     document.getElementById('statLinkedIn').textContent = linkedinSent;
