@@ -2017,25 +2017,21 @@ async function loadLinkedIn() {
       rows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
     }
 
-    // Column E (COL.linkedin) stores =HYPERLINK("url","Name") formulas.
-    // The default Sheets API returns the display text, not the URL.
-    // Re-fetch column E with valueRenderOption=FORMULA to get the raw formula,
-    // then parse the real URL out of it.
-    const fRes = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(SHEET_NAME + '!E:E')}?valueRenderOption=FORMULA`,
+    // Build an email → LinkedIn URL lookup from Lix Cleaned.
+    // Lix Cleaned column E (index 0 in E:AA range) = email
+    // Lix Cleaned column AA (index 22 in E:AA range) = LinkedIn profile URL
+    const lixRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!E:AA')}`,
       { headers: { Authorization: `Bearer ${CONFIG.token}` } }
     );
-    const fData = fRes.ok ? await fRes.json() : {};
-    const formulaCol = fData.values || []; // index 0 = row 1 (header), index 1 = row 2, etc.
-
-    // Parse the URL from =HYPERLINK("url","text"), or return the value as-is if it's already a URL.
-    function parseLinkedInUrl(raw) {
-      if (!raw) return '';
-      const s = String(raw);
-      const m = s.match(/=HYPERLINK\("([^"]+)"/i);
-      if (m) return m[1];
-      return s.startsWith('http') ? s : '';
-    }
+    const lixData = lixRes.ok ? await lixRes.json() : {};
+    const lixRows = (lixData.values || []).slice(1); // skip header row
+    const linkedInByEmail = {};
+    lixRows.forEach(r => {
+      const email = (r[0] || '').toLowerCase().trim();   // column E = index 0 in this range
+      const url   = (r[22] || '').trim();                // column AA = index 22 in this range
+      if (email && url) linkedInByEmail[email] = url;
+    });
 
     const due = rows.filter(p => {
       const emailSent = !!(p.row[COL.firstEmailDate]);
@@ -2058,9 +2054,9 @@ async function loadLinkedIn() {
       const lastName = row[COL.lastName] || '';
       const agency = row[COL.agencyName] || '';
       const position = row[COL.position] || '';
-      // Use the formula-parsed URL; p.rowNumber is 1-based sheet row, formulaCol is 0-based (row1=index0)
-      const linkedInFormula = (formulaCol[p.rowNumber - 1] || [])[0] || '';
-      const linkedin = parseLinkedInUrl(linkedInFormula);
+      // Look up LinkedIn URL from Lix Cleaned using the prospect's email (People col G)
+      const email = (row[COL.email] || '').toLowerCase().trim();
+      const linkedin = linkedInByEmail[email] || '';
       const initials = (firstName[0] || '') + (lastName[0] || '');
       const emailDate = row[COL.firstEmailDate] || '';
 
@@ -2134,6 +2130,7 @@ Kind regards,
 Coris`;
 
 const LIX_SHEET = 'Lix';
+const LIX_CLEANED_SHEET = 'Lix Cleaned';
 
 function generatePermutations(firstName, lastName, domain) {
   const f = (firstName || '').toLowerCase().replace(/[^a-z]/g, '');
