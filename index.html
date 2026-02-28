@@ -984,6 +984,68 @@
   .roadmap-item.backlog { background: var(--surface2); color: var(--text); }
   .roadmap-item.backlog::before { content: '○'; color: var(--amber); }
 
+  /* ROADMAP — check button, collapse animation, add-item row */
+  .roadmap-check-btn {
+    margin-left: auto;
+    flex-shrink: 0;
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    padding: 0;
+    line-height: 1;
+  }
+  .roadmap-check-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,96,0.1); }
+  .roadmap-item.removing {
+    overflow: hidden;
+    opacity: 0;
+    transform: translateX(16px);
+    max-height: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    margin-bottom: -8px !important;
+    transition: opacity 0.2s ease, transform 0.2s ease, max-height 0.3s ease 0.15s, padding 0.3s ease 0.15s, margin 0.3s ease 0.15s;
+  }
+  .roadmap-add-row { display: flex; gap: 8px; margin-top: 12px; }
+  .roadmap-add-input {
+    flex: 1;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .roadmap-add-input:focus { border-color: var(--accent); }
+  .roadmap-add-input::placeholder { color: var(--text-dim); }
+  .roadmap-add-btn {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+    flex-shrink: 0;
+  }
+  .roadmap-add-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(200,240,96,0.08); }
+
 </style>
 </head>
 <body>
@@ -1009,9 +1071,26 @@
       <button onclick="hideRoadmap()" style="background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px 8px;">✕</button>
     </div>
 
+    <!-- BACKLOG — shown first; items rendered dynamically from localStorage -->
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog</div>
+      <div class="roadmap-list" id="backlogList"></div>
+      <div class="roadmap-add-row">
+        <input type="text" id="backlogInput" class="roadmap-add-input" placeholder="Add to backlog…" onkeydown="if(event.key==='Enter')addBacklogItem()">
+        <button class="roadmap-add-btn" onclick="addBacklogItem()" title="Add item">+</button>
+      </div>
+    </div>
+
+    <!-- SHIPPED — custom items (moved from backlog) injected above hardcoded list -->
     <div style="margin-bottom:28px;">
       <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--accent);margin-bottom:14px;">✓ Shipped</div>
       <div class="roadmap-list">
+        <!-- Dynamic: items shipped via checkmark appear here, newest first -->
+        <div id="customShippedList"></div>
+        <!-- Static shipped items — remain in place -->
+        <div class="roadmap-item done">Accurate draft count — pull live count from Gmail API directly, not sheet status</div>
+        <div class="roadmap-item done">Clickable draft count — click the stat to show all current Gmail drafts listed by type</div>
+        <div class="roadmap-item done">Send from dashboard — send drafts directly via Gmail API without leaving the dashboard</div>
         <div class="roadmap-item done">Gmail OAuth connection with access token</div>
         <div class="roadmap-item done">Google Sheets integration — reads People tab for draft-ready prospects</div>
         <div class="roadmap-item done">Draft cards — expand to preview email body</div>
@@ -1028,18 +1107,6 @@
         <div class="roadmap-item done">Bounce retry — triggers Make scenario to create new draft with PDF attachment</div>
         <div class="roadmap-item done">Bounce retry — updates Lix column E and People column G with new address</div>
         <div class="roadmap-item done">Mark undeliverable — writes status to sheet, removes from active list</div>
-      </div>
-    </div>
-
-    <div style="margin-bottom:28px;">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog</div>
-      <div class="roadmap-list">
-        <div class="roadmap-item backlog">Persistent Gmail auth — refresh token so token never needs manual pasting again</div>
-        <div class="roadmap-item done">Accurate draft count — pull live count from Gmail API directly, not sheet status</div>
-        <div class="roadmap-item done">Clickable draft count — click the stat to show all current Gmail drafts listed by type</div>
-        <div class="roadmap-item done">Send from dashboard — send drafts directly via Gmail API without leaving the dashboard</div>
-        <div class="roadmap-item backlog">Make Scenario 2 date gate — follow-ups only fire after 5 days</div>
-        <div class="roadmap-item backlog">Nurture scenario date gate — nurture emails only fire after 14 days</div>
       </div>
     </div>
 
@@ -2370,8 +2437,104 @@ async function markUndeliverable(rowNumber, btn) {
 
 
 // ── ROADMAP ───────────────────────────────────────────────────────
-function showRoadmap() { document.getElementById('roadmapModal').style.display = 'block'; }
+const DEFAULT_BACKLOG = [
+  'Persistent Gmail auth — refresh token so token never needs manual pasting again',
+  'Make Scenario 2 date gate — follow-ups only fire after 5 days',
+  'Nurture scenario date gate — nurture emails only fire after 14 days',
+];
+
+function _rmBacklog() {
+  const s = localStorage.getItem('roadmap_backlog');
+  return s ? JSON.parse(s) : [...DEFAULT_BACKLOG];
+}
+function _rmShipped() {
+  const s = localStorage.getItem('roadmap_shipped_custom');
+  return s ? JSON.parse(s) : [];
+}
+
+function showRoadmap() {
+  document.getElementById('roadmapModal').style.display = 'block';
+  _rmInit();
+}
 function hideRoadmap() { document.getElementById('roadmapModal').style.display = 'none'; }
+
+function _rmInit() {
+  _rmRenderBacklog(_rmBacklog());
+  _rmRenderShipped(_rmShipped());
+}
+
+function _rmRenderBacklog(items) {
+  const list = document.getElementById('backlogList');
+  list.innerHTML = '';
+  if (!items.length) {
+    list.innerHTML = '<div style="font-size:12px;color:var(--text-dim);padding:8px 14px;">Nothing in the backlog — add something below.</div>';
+    return;
+  }
+  items.forEach((text, i) => {
+    const item = document.createElement('div');
+    item.className = 'roadmap-item backlog';
+    item.innerHTML = `<span style="flex:1">${text}</span><button class="roadmap-check-btn" onclick="shipBacklogItem(${i})" title="Mark as shipped">✓</button>`;
+    list.appendChild(item);
+  });
+}
+
+function _rmRenderShipped(items) {
+  const list = document.getElementById('customShippedList');
+  list.innerHTML = '';
+  items.forEach(text => {
+    const item = document.createElement('div');
+    item.className = 'roadmap-item done';
+    item.textContent = text;
+    list.appendChild(item);
+  });
+}
+
+function shipBacklogItem(index) {
+  const backlog = _rmBacklog();
+  const shipped = _rmShipped();
+  const text = backlog[index];
+  if (!text) return;
+
+  // Animate the item out before removing it
+  const listEl = document.getElementById('backlogList');
+  const itemEl = listEl.children[index];
+  if (!itemEl) return;
+
+  itemEl.style.maxHeight = itemEl.offsetHeight + 'px';
+  itemEl.style.overflow = 'hidden';
+
+  requestAnimationFrame(() => {
+    itemEl.classList.add('removing');
+  });
+
+  setTimeout(() => {
+    backlog.splice(index, 1);
+    shipped.unshift(text);
+    localStorage.setItem('roadmap_backlog', JSON.stringify(backlog));
+    localStorage.setItem('roadmap_shipped_custom', JSON.stringify(shipped));
+    _rmRenderBacklog(backlog);
+    _rmRenderShipped(shipped);
+  }, 450);
+}
+
+function addBacklogItem() {
+  const input = document.getElementById('backlogInput');
+  const text = (input.value || '').trim();
+  if (!text) return;
+  const backlog = _rmBacklog();
+  backlog.push(text);
+  localStorage.setItem('roadmap_backlog', JSON.stringify(backlog));
+  input.value = '';
+  _rmRenderBacklog(backlog);
+  // Brief highlight on the new item
+  const listEl = document.getElementById('backlogList');
+  const newItem = listEl.lastElementChild;
+  if (newItem && newItem.classList.contains('backlog')) {
+    newItem.style.transition = 'background 0.5s';
+    newItem.style.background = 'rgba(200,240,96,0.14)';
+    setTimeout(() => { newItem.style.background = ''; }, 700);
+  }
+}
 
 // ── INIT ────────────────────────────────────────────────────────
 async function init() {
