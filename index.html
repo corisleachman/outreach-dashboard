@@ -2670,7 +2670,7 @@ function _rmRenderBacklog(items) {
     const item = document.createElement('div');
     item.className = 'roadmap-item backlog';
     item.draggable = true;
-    item.innerHTML = `<span class="drag-handle" title="Drag to reorder">⠿</span><span style="flex:1">${text}</span><button class="roadmap-check-btn" onclick="shipBacklogItem(${i})" title="Mark as shipped">✓</button>`;
+    item.innerHTML = `<span class="drag-handle" title="Drag to reorder">⠿</span><span style="flex:1;cursor:text;" title="Click to edit" onclick="_rmEditItem(this,${i})">${text}</span><button class="roadmap-check-btn" onclick="shipBacklogItem(${i})" title="Mark as shipped">✓</button>`;
 
     item.addEventListener('dragstart', e => {
       _rmDragIdx = i;
@@ -2708,7 +2708,26 @@ function _rmRenderBacklog(items) {
   });
 }
 
-function _rmRenderShipped(items) {
+function _rmEditItem(spanEl, idx) {
+  const backlog = _rmBacklog();
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.value = backlog[idx];
+  input.style.cssText = 'flex:1;background:transparent;border:none;outline:none;color:var(--text);font-family:inherit;font-size:13px;padding:0;width:100%;';
+  spanEl.replaceWith(input);
+  input.focus();
+  input.select();
+  function commit() {
+    const val = input.value.trim();
+    if (val) { backlog[idx] = val; localStorage.setItem('roadmap_backlog', JSON.stringify(backlog)); }
+    _rmRenderBacklog(_rmBacklog());
+  }
+  input.onblur = commit;
+  input.onkeydown = e => {
+    if (e.key === 'Enter') { e.preventDefault(); commit(); }
+    if (e.key === 'Escape') { _rmRenderBacklog(_rmBacklog()); }
+  };
+}
   const list = document.getElementById('customShippedList');
   list.innerHTML = '';
   items.forEach(text => {
