@@ -2627,29 +2627,51 @@ async function saveGdDraft(uid) {
   const card = document.querySelector(`[data-uid="${uid}"]`);
   const draftId = card.dataset.draftId;
   const newBody = document.getElementById(`edit-${uid}`).value;
+  const bodyEl = document.getElementById(`body-${uid}`);
   const saveBtn = document.getElementById(`saveBtn-${uid}`);
   saveBtn.textContent = 'Saving...';
   saveBtn.disabled = true;
   try {
-    // Fetch raw draft to preserve headers/attachments
+    // Fetch raw draft to preserve MIME structure and attachments
     const rawRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}?format=raw`,
       { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+    if (!rawRes.ok) throw new Error('Could not fetch draft');
     const rawData = await rawRes.json();
-    const rawMsg = atob(rawData.message.raw.replace(/-/g,'+').replace(/_/g,'/'));
+    const msg = rawData.message;
+    const threadId = msg.threadId || '';
+    const rawOriginal = atob(msg.raw.replace(/-/g, '+').replace(/_/g, '/'));
 
-    // Split headers from body
-    const headerBodySplit = rawMsg.indexOf('\r\n\r\n');
-    const headers = rawMsg.substring(0, headerBodySplit);
-    const newRaw = headers + '\r\n\r\n' + newBody;
-    const encoded = btoa(unescape(encodeURIComponent(newRaw))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    let updatedRaw;
+    const boundaryMatch = rawOriginal.match(/boundary="?([^"\r\n;]+)"?/i);
+    if (boundaryMatch) {
+      // Multipart — only replace the text/plain part, leave attachments intact
+      const boundary = boundaryMatch[1];
+      const parts = rawOriginal.split('--' + boundary);
+      const newParts = parts.map(part => {
+        if (part.match(/Content-Type:\s*text\/plain/i)) {
+          const split = part.indexOf('\r\n\r\n');
+          if (split !== -1) return part.substring(0, split) + '\r\n\r\n' + newBody + '\r\n';
+        }
+        return part;
+      });
+      updatedRaw = newParts.join('--' + boundary);
+    } else {
+      // Simple message — replace body only
+      const split = rawOriginal.indexOf('\r\n\r\n');
+      updatedRaw = split !== -1 ? rawOriginal.substring(0, split) + '\r\n\r\n' + newBody : rawOriginal;
+    }
 
-    await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}`,
+    const encoded = btoa(unescape(encodeURIComponent(updatedRaw)))
+      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+    const updateRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}`,
       { method: 'PUT', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({ id: draftId, message: { raw: encoded } }) });
+        body: JSON.stringify({ id: draftId, message: { threadId, raw: encoded } }) });
+    if (!updateRes.ok) throw new Error('Failed to update draft');
 
-    document.getElementById(`body-${uid}`).textContent = newBody;
+    bodyEl.textContent = newBody;
     cancelEditGd(uid);
-    showToast('success', '✓', 'Draft saved');
+    showToast('success', '✓', 'Draft updated — attachment preserved');
   } catch(e) {
     showToast('error', '⚠', 'Could not save draft: ' + e.message);
   } finally {
