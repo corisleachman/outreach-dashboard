@@ -2728,6 +2728,8 @@ function _rmEditItem(spanEl, idx) {
     if (e.key === 'Escape') { _rmRenderBacklog(_rmBacklog()); }
   };
 }
+
+function _rmRenderShipped(items) {
   const list = document.getElementById('customShippedList');
   list.innerHTML = '';
   items.forEach(text => {
