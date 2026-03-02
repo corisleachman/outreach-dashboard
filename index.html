@@ -2464,58 +2464,218 @@ async function loadDraftsPanel() {
       return;
     }
 
-    // Fetch subject+snippet for each draft in parallel (up to 50)
+    // Fetch metadata for each draft in parallel
     const details = await Promise.all(
-      drafts.slice(0, 50).map(d =>
+      drafts.slice(0, 100).map(d =>
         fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${d.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=To`,
           { headers: { Authorization: `Bearer ${CONFIG.token}` } }
         ).then(r => r.json()).catch(() => null)
       )
     );
 
-    // Group by type based on subject keywords
-    const groups = { 'First email': [], 'Follow-up': [], 'Nurture': [], 'Other': [] };
-    details.forEach(d => {
+    container.innerHTML = '';
+
+    details.forEach((d, idx) => {
       if (!d) return;
       const msg = d.message || {};
       const headers = msg.payload?.headers || [];
-      const subject = (headers.find(h => h.name === 'Subject')?.value || '(no subject)');
-      const to = (headers.find(h => h.name === 'To')?.value || '');
-      const snippet = msg.snippet || '';
-      const item = { id: d.id, subject, to, snippet };
+      const subject = headers.find(h => h.name === 'Subject')?.value || '(no subject)';
+      const to = headers.find(h => h.name === 'To')?.value || '';
+      const draftId = d.id;
+      const uid = `gd-${idx}`;
+
+      // Guess type from subject
       const sl = subject.toLowerCase();
-      if (sl.includes('follow') || sl.includes('fw:') || sl.includes('re:')) groups['Follow-up'].push(item);
-      else if (sl.includes('nurture') || sl.includes('check in') || sl.includes('checking in')) groups['Nurture'].push(item);
-      else if (to || subject) groups['First email'].push(item);
-      else groups['Other'].push(item);
-    });
+      let type = 'email1';
+      if (sl.includes('follow') || sl.includes('re:')) type = 'followup';
+      else if (sl.includes('nurture') || sl.includes('check')) type = 'nurture';
+      const typeBadgeLabel = type === 'email1' ? 'First email' : type === 'followup' ? 'Follow-up' : 'Nurture';
 
-    container.innerHTML = '';
-    Object.entries(groups).forEach(([label, items]) => {
-      if (!items.length) return;
-      const section = document.createElement('div');
-      section.style.cssText = 'margin-bottom:28px;';
-      section.innerHTML = `<div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin-bottom:12px;">${label} · ${items.length}</div>`;
-      items.forEach(item => {
-        const row = document.createElement('div');
-        row.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;';
-        row.innerHTML = `
-          <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;">${item.subject}</div>
-          <div style="font-size:11px;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:4px;">${item.to}</div>
-          <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.snippet}</div>`;
-        section.appendChild(row);
+      const card = document.createElement('div');
+      card.className = 'prospect-card';
+      card.dataset.type = type;
+      card.dataset.draftId = draftId;
+      card.dataset.email = to;
+      card.dataset.uid = uid;
+
+      card.innerHTML = `
+        <div class="card-header" onclick="toggleCard(this.parentElement)">
+          <div class="card-identity">
+            <div class="avatar" style="font-size:11px;letter-spacing:0;">✉</div>
+            <div>
+              <div class="card-name">${to || '(no recipient)'}</div>
+              <div class="card-meta">
+                <span class="card-agency">${subject}</span>
+              </div>
+            </div>
+          </div>
+          <div class="card-right">
+            <div class="type-badge ${type}">${typeBadgeLabel}</div>
+            <div class="chevron">▾</div>
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="email-preview">
+            <div class="email-preview-label">Email preview</div>
+            <div class="email-subject">Subject: <span id="subject-${uid}">Loading...</span></div>
+            <div class="email-body" id="body-${uid}">Click to expand and load body...</div>
+            <textarea class="email-body-edit" id="edit-${uid}" placeholder="Edit email body..."></textarea>
+            <div class="edit-controls">
+              <button class="edit-toggle-btn" id="editBtn-${uid}" onclick="toggleEditGd('${uid}')">✎ Edit</button>
+              <button class="save-draft-btn" id="saveBtn-${uid}" onclick="saveGdDraft('${uid}')">✓ Save to draft</button>
+              <button class="cancel-edit-btn" id="cancelBtn-${uid}" onclick="cancelEditGd('${uid}')">✕ Cancel</button>
+            </div>
+          </div>
+          <div class="card-actions">
+            <div class="action-left">${to}</div>
+            <div class="card-right-actions">
+              <button class="send-btn" id="sendBtn-${uid}" onclick="sendGdDraft('${uid}')">↑ Send</button>
+            </div>
+          </div>
+        </div>`;
+
+      // Lazy-load full body on expand
+      card.querySelector('.card-header').addEventListener('click', async () => {
+        const bodyEl = document.getElementById(`body-${uid}`);
+        if (bodyEl.textContent === 'Click to expand and load body...') {
+          bodyEl.textContent = 'Fetching from Gmail...';
+          try {
+            const r = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}?format=full`,
+              { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+            const dd = await r.json();
+            const body = extractTextFromPayload(dd.message?.payload);
+            const subj = (dd.message?.payload?.headers || []).find(h => h.name === 'Subject')?.value || subject;
+            document.getElementById(`subject-${uid}`).textContent = subj;
+            bodyEl.textContent = body;
+            document.getElementById(`edit-${uid}`).value = body;
+          } catch(e) {
+            bodyEl.textContent = 'Could not load draft body.';
+          }
+        }
       });
-      container.appendChild(section);
+
+      container.appendChild(card);
     });
 
-    if (drafts.length > 50) {
+    if (drafts.length > 100) {
       const note = document.createElement('div');
-      note.style.cssText = 'font-size:12px;color:var(--text-dim);text-align:center;margin-top:8px;';
-      note.textContent = `Showing 50 of ${drafts.length} drafts.`;
+      note.style.cssText = 'font-size:12px;color:var(--text-dim);text-align:center;margin-top:16px;';
+      note.textContent = `Showing 100 of ${drafts.length} drafts.`;
       container.appendChild(note);
     }
   } catch(e) {
     container.innerHTML = `<div class="empty-state"><h3>Couldn't load drafts</h3><p>${e.message}</p></div>`;
+  }
+}
+
+// Shared body extractor (reusable from drafts panel)
+function extractTextFromPayload(payload) {
+  function decodeB64(data) {
+    try { return decodeURIComponent(escape(atob(data.replace(/-/g,'+').replace(/_/g,'/')))); }
+    catch(e) { return atob(data.replace(/-/g,'+').replace(/_/g,'/')); }
+  }
+  function htmlToPlain(html) {
+    return html.replace(/<br\s*\/?>/gi,'\n').replace(/<\/p>/gi,'\n\n').replace(/<\/div>/gi,'\n')
+      .replace(/<[^>]+>/g,'').replace(/&nbsp;/g,' ').replace(/&amp;/g,'&')
+      .replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+      .replace(/\n{3,}/g,'\n\n').trim();
+  }
+  function extract(p) {
+    if (!p) return '';
+    if (p.mimeType === 'text/plain' && p.body?.data) return decodeB64(p.body.data);
+    if (p.mimeType === 'text/html' && p.body?.data) return htmlToPlain(decodeB64(p.body.data));
+    if (p.parts?.length) {
+      const plain = p.parts.find(x => x.mimeType === 'text/plain');
+      if (plain) return extract(plain);
+      const html = p.parts.find(x => x.mimeType === 'text/html');
+      if (html) return extract(html);
+      for (const part of p.parts) { const r = extract(part); if (r) return r; }
+    }
+    if (p.body?.data) { const raw = decodeB64(p.body.data); return raw.includes('<') ? htmlToPlain(raw) : raw; }
+    return '';
+  }
+  return extract(payload).trim();
+}
+
+function toggleEditGd(uid) {
+  const bodyEl = document.getElementById(`body-${uid}`);
+  const editEl = document.getElementById(`edit-${uid}`);
+  const editBtn = document.getElementById(`editBtn-${uid}`);
+  const saveBtn = document.getElementById(`saveBtn-${uid}`);
+  const cancelBtn = document.getElementById(`cancelBtn-${uid}`);
+  const isEditing = editEl.style.display === 'block';
+  if (!isEditing) {
+    editEl.value = bodyEl.textContent;
+    bodyEl.style.display = 'none';
+    editEl.style.display = 'block';
+    editBtn.style.display = 'none';
+    saveBtn.style.display = 'inline-flex';
+    cancelBtn.style.display = 'inline-flex';
+    editEl.focus();
+  }
+}
+
+function cancelEditGd(uid) {
+  document.getElementById(`edit-${uid}`).style.display = 'none';
+  document.getElementById(`body-${uid}`).style.display = 'block';
+  document.getElementById(`editBtn-${uid}`).style.display = 'inline-flex';
+  document.getElementById(`saveBtn-${uid}`).style.display = 'none';
+  document.getElementById(`cancelBtn-${uid}`).style.display = 'none';
+}
+
+async function saveGdDraft(uid) {
+  const card = document.querySelector(`[data-uid="${uid}"]`);
+  const draftId = card.dataset.draftId;
+  const newBody = document.getElementById(`edit-${uid}`).value;
+  const saveBtn = document.getElementById(`saveBtn-${uid}`);
+  saveBtn.textContent = 'Saving...';
+  saveBtn.disabled = true;
+  try {
+    // Fetch raw draft to preserve headers/attachments
+    const rawRes = await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}?format=raw`,
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } });
+    const rawData = await rawRes.json();
+    const rawMsg = atob(rawData.message.raw.replace(/-/g,'+').replace(/_/g,'/'));
+
+    // Split headers from body
+    const headerBodySplit = rawMsg.indexOf('\r\n\r\n');
+    const headers = rawMsg.substring(0, headerBodySplit);
+    const newRaw = headers + '\r\n\r\n' + newBody;
+    const encoded = btoa(unescape(encodeURIComponent(newRaw))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+
+    await fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${draftId}`,
+      { method: 'PUT', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: draftId, message: { raw: encoded } }) });
+
+    document.getElementById(`body-${uid}`).textContent = newBody;
+    cancelEditGd(uid);
+    showToast('success', '✓', 'Draft saved');
+  } catch(e) {
+    showToast('error', '⚠', 'Could not save draft: ' + e.message);
+  } finally {
+    saveBtn.textContent = '✓ Save to draft';
+    saveBtn.disabled = false;
+  }
+}
+
+async function sendGdDraft(uid) {
+  const card = document.querySelector(`[data-uid="${uid}"]`);
+  const draftId = card.dataset.draftId;
+  const btn = document.getElementById(`sendBtn-${uid}`);
+  btn.textContent = 'Sending...';
+  btn.disabled = true;
+  try {
+    const res = await fetch('https://gmail.googleapis.com/gmail/v1/users/me/drafts/send',
+      { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: draftId }) });
+    if (!res.ok) { const e = await res.json().catch(()=>({})); throw new Error(e.error?.message || 'Send failed'); }
+    showToast('success', '✓', 'Email sent');
+    card.classList.add('sent');
+    btn.textContent = '✓ Sent';
+  } catch(e) {
+    showToast('error', '⚠', 'Could not send: ' + e.message);
+    btn.textContent = '↑ Send';
+    btn.disabled = false;
   }
 }
 
