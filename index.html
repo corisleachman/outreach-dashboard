@@ -1165,7 +1165,7 @@
     <h1>Drafts <em>ready to send</em></h1>
     <div class="summary-stats">
       <div class="stat">
-        <div class="stat-number" id="statTotal" style="cursor:pointer" title="Click to show all drafts" onclick="filterCards('all', document.querySelector('.filter-btn'))">—</div>
+        <div class="stat-number" id="statTotal" style="cursor:pointer" title="Click to show all drafts" onclick="showDraftsPanel()">—</div>
         <div class="stat-label">Drafts ready</div>
       </div>
       <div class="stat">
@@ -1185,6 +1185,18 @@
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
   </div>
 
+  <!-- DRAFTS PANEL -->
+  <div id="draftsPanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">All Gmail drafts</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Every draft currently sitting in your Gmail — grouped by type.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadDraftsPanel()">↻ Refresh</button>
+    </div>
+    <div id="draftsPanelContainer"></div>
+  </div>
+
   <!-- BOUNCE PANEL -->
   <div id="bouncePanel" style="display:none; padding:32px 48px;">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
@@ -1200,7 +1212,7 @@
   <!-- STATS BAR -->
   <div class="stats-bar" id="statsBar" style="display:none;">
     <div class="stat-pill" title="Total prospects with drafts ready">
-      <span class="stat-pill-number" id="statDraftsReady" style="cursor:pointer" title="Click to show all drafts" onclick="filterCards('all', document.querySelector('.filter-btn'))">—</span>
+      <span class="stat-pill-number" id="statDraftsReady" style="cursor:pointer" title="Click to show all drafts" onclick="showDraftsPanel()">—</span>
       <span class="stat-pill-label">Drafts ready</span>
     </div>
     <div class="stat-pill-divider"></div>
@@ -2164,6 +2176,7 @@ async function showLinkedInTab(btn) {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'block';
   await loadLinkedIn();
 }
@@ -2412,6 +2425,7 @@ async function showBounceTab(btn) {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'block';
   await loadBounces();
 }
@@ -2420,7 +2434,89 @@ function hideBouncePanel() {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('cardsContainer').style.display = '';
+}
+
+function showDraftsPanel() {
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'block';
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  loadDraftsPanel();
+}
+
+async function loadDraftsPanel() {
+  const container = document.getElementById('draftsPanelContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Fetching all drafts from Gmail...</div></div>`;
+  try {
+    const res = await fetch(
+      'https://gmail.googleapis.com/gmail/v1/users/me/drafts?maxResults=500',
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    if (!res.ok) throw new Error('Gmail API error');
+    const data = await res.json();
+    const drafts = data.drafts || [];
+    if (!drafts.length) {
+      container.innerHTML = '<div class="empty-state"><h3>No drafts found</h3><p>Your Gmail drafts folder is empty.</p></div>';
+      return;
+    }
+
+    // Fetch subject+snippet for each draft in parallel (up to 50)
+    const details = await Promise.all(
+      drafts.slice(0, 50).map(d =>
+        fetch(`https://gmail.googleapis.com/gmail/v1/users/me/drafts/${d.id}?format=metadata&metadataHeaders=Subject&metadataHeaders=To`,
+          { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+        ).then(r => r.json()).catch(() => null)
+      )
+    );
+
+    // Group by type based on subject keywords
+    const groups = { 'First email': [], 'Follow-up': [], 'Nurture': [], 'Other': [] };
+    details.forEach(d => {
+      if (!d) return;
+      const msg = d.message || {};
+      const headers = msg.payload?.headers || [];
+      const subject = (headers.find(h => h.name === 'Subject')?.value || '(no subject)');
+      const to = (headers.find(h => h.name === 'To')?.value || '');
+      const snippet = msg.snippet || '';
+      const item = { id: d.id, subject, to, snippet };
+      const sl = subject.toLowerCase();
+      if (sl.includes('follow') || sl.includes('fw:') || sl.includes('re:')) groups['Follow-up'].push(item);
+      else if (sl.includes('nurture') || sl.includes('check in') || sl.includes('checking in')) groups['Nurture'].push(item);
+      else if (to || subject) groups['First email'].push(item);
+      else groups['Other'].push(item);
+    });
+
+    container.innerHTML = '';
+    Object.entries(groups).forEach(([label, items]) => {
+      if (!items.length) return;
+      const section = document.createElement('div');
+      section.style.cssText = 'margin-bottom:28px;';
+      section.innerHTML = `<div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--text-dim);margin-bottom:12px;">${label} · ${items.length}</div>`;
+      items.forEach(item => {
+        const row = document.createElement('div');
+        row.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:8px;';
+        row.innerHTML = `
+          <div style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:2px;">${item.subject}</div>
+          <div style="font-size:11px;color:var(--text-dim);font-family:'DM Mono',monospace;margin-bottom:4px;">${item.to}</div>
+          <div style="font-size:12px;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${item.snippet}</div>`;
+        section.appendChild(row);
+      });
+      container.appendChild(section);
+    });
+
+    if (drafts.length > 50) {
+      const note = document.createElement('div');
+      note.style.cssText = 'font-size:12px;color:var(--text-dim);text-align:center;margin-top:8px;';
+      note.textContent = `Showing 50 of ${drafts.length} drafts.`;
+      container.appendChild(note);
+    }
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><h3>Couldn't load drafts</h3><p>${e.message}</p></div>`;
+  }
 }
 
 async function loadBounces() {
@@ -2843,6 +2939,7 @@ async function showConversationsTab(btn) {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'block';
   await loadConversations();
 }
