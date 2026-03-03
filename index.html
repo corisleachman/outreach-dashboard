@@ -3312,15 +3312,22 @@ function renderReviewCard(row, rowNumber, container) {
   const card = document.createElement('div');
   card.className = 'review-card';
   card.dataset.rowNumber = rowNumber;
+  card.dataset.firstName = firstName;
+  card.dataset.lastName  = lastName;
+  card.dataset.org       = org;
+  card.dataset.email     = email;
 
   card.innerHTML = `
     <div class="review-card-header" onclick="this.closest('.review-card').classList.toggle('expanded');this.querySelector('.review-chevron').style.transform=this.closest('.review-card').classList.contains('expanded')?'rotate(180deg)':''">
       <div class="review-avatar">${initials || '?'}</div>
       <div style="flex:1;min-width:0;">
-        <div class="review-name">${firstName} ${lastName}${profileLink ? ` <a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" style="color:var(--blue);font-size:11px;text-decoration:none;margin-left:6px;" title="LinkedIn profile">↗</a>` : ''}</div>
+        <div class="review-name">${firstName} ${lastName}</div>
         <div class="review-meta">${role || '—'}${org ? ' · ' + org : ''}${location ? ' · ' + location : ''}</div>
       </div>
       <span class="review-email-pill ${quality}">${qualityLabel}</span>
+      ${profileLink ? `<a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" class="review-skip-btn" style="padding:6px 10px;font-size:12px;text-decoration:none;flex-shrink:0;" title="Open LinkedIn profile">↗ LinkedIn</a>` : ''}
+      <button class="review-skip-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();skipReviewCard(${rowNumber})">✕</button>
+      <button class="review-approve-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();approveReviewCard(${rowNumber})">✓</button>
       <div class="review-chevron">▾</div>
     </div>
 
@@ -3378,21 +3385,28 @@ function renderReviewCard(row, rowNumber, container) {
 }
 
 async function approveReviewCard(rowNumber) {
-  const approveBtn = document.getElementById(`rv-approve-${rowNumber}`);
-  const skipBtn    = document.getElementById(`rv-skip-${rowNumber}`);
   const statusEl   = document.getElementById(`rv-status-${rowNumber}`);
-  const card       = approveBtn.closest('.review-card');
+  // Find the card — works whether called from header or body button
+  const anyBtn     = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const card       = anyBtn;
+  const approveBtns = card.querySelectorAll('.review-approve-btn');
+  const skipBtns    = card.querySelectorAll('.review-skip-btn');
 
-  const firstName = document.getElementById(`rv-fname-${rowNumber}`).value.trim();
-  const lastName  = document.getElementById(`rv-lname-${rowNumber}`).value.trim();
-  const org       = document.getElementById(`rv-org-${rowNumber}`).value.trim();
-  const email     = document.getElementById(`rv-email-${rowNumber}`).value.trim();
+  // Read editable fields (may not be expanded yet — fall back to dataset)
+  const fnameEl = document.getElementById(`rv-fname-${rowNumber}`);
+  const lnameEl = document.getElementById(`rv-lname-${rowNumber}`);
+  const orgEl   = document.getElementById(`rv-org-${rowNumber}`);
+  const emailEl = document.getElementById(`rv-email-${rowNumber}`);
 
-  if (!email) { statusEl.textContent = 'Email is required.'; statusEl.style.color = 'var(--amber)'; return; }
+  const firstName = fnameEl ? fnameEl.value.trim() : (card.dataset.firstName || '');
+  const lastName  = lnameEl ? lnameEl.value.trim() : (card.dataset.lastName  || '');
+  const org       = orgEl   ? orgEl.value.trim()   : (card.dataset.org       || '');
+  const email     = emailEl ? emailEl.value.trim() : (card.dataset.email     || '');
 
-  approveBtn.textContent = 'Approving…';
-  approveBtn.disabled = true;
-  skipBtn.disabled = true;
+  if (!email) { statusEl.textContent = 'Expand card to verify email first.'; statusEl.style.color = 'var(--amber)'; return; }
+
+  approveBtns.forEach(b => { b.textContent = '✓'; b.disabled = true; });
+  skipBtns.forEach(b => b.disabled = true);
   statusEl.textContent = '';
 
   try {
@@ -3450,7 +3464,7 @@ async function approveReviewCard(rowNumber) {
     }
 
     card.classList.add('approved');
-    approveBtn.textContent = '✓ Approved';
+    approveBtns.forEach(b => b.textContent = '✓');
     showToast('success', '✓', `${firstName} ${lastName} approved`);
 
     // Refresh badge count
@@ -3462,19 +3476,17 @@ async function approveReviewCard(rowNumber) {
   } catch(e) {
     statusEl.textContent = e.message;
     statusEl.style.color = 'var(--red)';
-    approveBtn.textContent = '✓ Approve';
-    approveBtn.disabled = false;
-    skipBtn.disabled = false;
+    approveBtns.forEach(b => { b.textContent = '✓ Approve'; b.disabled = false; });
+    skipBtns.forEach(b => b.disabled = false);
   }
 }
 
 async function skipReviewCard(rowNumber) {
-  const skipBtn  = document.getElementById(`rv-skip-${rowNumber}`);
-  const approveBtn = document.getElementById(`rv-approve-${rowNumber}`);
-  const card     = skipBtn.closest('.review-card');
-  skipBtn.textContent = 'Skipping…';
-  skipBtn.disabled = true;
-  approveBtn.disabled = true;
+  const card       = document.querySelector(`[data-row-number="${rowNumber}"]`);
+  const skipBtns   = card.querySelectorAll('.review-skip-btn');
+  const approveBtns = card.querySelectorAll('.review-approve-btn');
+  skipBtns.forEach(b => { b.textContent = '…'; b.disabled = true; });
+  approveBtns.forEach(b => b.disabled = true);
   try {
     await fetch(
       `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
@@ -3484,15 +3496,14 @@ async function skipReviewCard(rowNumber) {
         ]}) }
     );
     card.classList.add('skipped');
-    skipBtn.textContent = '✕ Skipped';
+    skipBtns.forEach(b => b.textContent = '✕');
     const badge = document.getElementById('reviewCount');
     const current = parseInt(badge.textContent || '0', 10);
     if (current > 1) { badge.textContent = current - 1; }
     else { badge.style.display = 'none'; }
   } catch(e) {
-    skipBtn.textContent = '✕ Skip';
-    skipBtn.disabled = false;
-    approveBtn.disabled = false;
+    skipBtns.forEach(b => { b.textContent = '✕'; b.disabled = false; });
+    approveBtns.forEach(b => b.disabled = false);
     showToast('error', '⚠', 'Could not skip: ' + e.message);
   }
 }
