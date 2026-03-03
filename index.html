@@ -1418,6 +1418,11 @@
         <button class="refresh-btn" onclick="loadReview()">↻ Refresh</button>
       </div>
     </div>
+    <div style="margin-bottom:16px;">
+      <input id="reviewSearch" type="text" placeholder="Search name, role, or agency…" oninput="filterReviewCards(this.value)"
+        style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;"
+        onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'" />
+    </div>
     <div id="reviewContainer"></div>
   </div>
 
@@ -3469,6 +3474,7 @@ async function showReviewTab(btn) {
 
 async function loadReview() {
   const container = document.getElementById('reviewContainer');
+  const searchEl = document.getElementById('reviewSearch'); if (searchEl) searchEl.value = '';
   container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading Lix prospects...</div></div>`;
   try {
     const range = `${LIX_SHEET}!A:AE`;
@@ -3558,7 +3564,7 @@ function renderReviewCard(row, rowNumber, container) {
         <div class="review-meta">${role || '—'}${org ? ' · ' + org : ''}${location ? ' · ' + location : ''}</div>
       </div>
       <span class="review-email-pill ${quality}">${qualityLabel}</span>
-      ${profileLink ? `<a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" class="review-skip-btn" style="padding:6px 10px;font-size:12px;text-decoration:none;flex-shrink:0;" title="Open LinkedIn profile">↗ LinkedIn</a>` : ''}
+      ${profileLink ? `<a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" class="li-profile-icon" style="flex-shrink:0;" title="Open LinkedIn profile"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>` : ''}
       <button class="review-skip-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();skipReviewCard(${rowNumber})">✕</button>
       <button class="review-approve-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();approveReviewCard(${rowNumber})">✓</button>
       <div class="review-chevron">▾</div>
@@ -3615,6 +3621,21 @@ function renderReviewCard(row, rowNumber, container) {
     </div>`;
 
   container.appendChild(card);
+}
+
+function filterReviewCards(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('.review-card').forEach(card => {
+    if (!q) { card.style.display = ''; return; }
+    const text = [
+      card.dataset.firstName || '',
+      card.dataset.lastName  || '',
+      card.dataset.org       || '',
+      card.querySelector('.review-name')  ? card.querySelector('.review-name').textContent  : '',
+      card.querySelector('.review-meta')  ? card.querySelector('.review-meta').textContent  : '',
+    ].join(' ').toLowerCase();
+    card.style.display = text.includes(q) ? '' : 'none';
+  });
 }
 
 async function approveReviewCard(rowNumber) {
@@ -3696,9 +3717,11 @@ async function approveReviewCard(rowNumber) {
       statusEl.style.color = 'var(--amber)';
     }
 
-    card.classList.add('approved');
     approveBtns.forEach(b => b.textContent = '✓');
     showToast('success', '✓', `${firstName} ${lastName} approved`);
+    card.style.transition = 'opacity 0.4s';
+    card.style.opacity = '0';
+    setTimeout(() => { card.style.transition = 'max-height 0.3s, margin 0.3s, padding 0.3s, opacity 0s'; card.style.maxHeight = '0'; card.style.overflow = 'hidden'; card.style.marginBottom = '0'; card.style.paddingTop = '0'; card.style.paddingBottom = '0'; setTimeout(() => card.remove(), 320); }, 420);
 
     // Refresh badge count
     const badge = document.getElementById('reviewCount');
@@ -3728,8 +3751,10 @@ async function skipReviewCard(rowNumber) {
           { range: `${LIX_SHEET}!F${rowNumber}`, values: [['skip']] }
         ]}) }
     );
-    card.classList.add('skipped');
     skipBtns.forEach(b => b.textContent = '✕');
+    card.style.transition = 'opacity 0.4s';
+    card.style.opacity = '0';
+    setTimeout(() => { card.style.transition = 'max-height 0.3s, margin 0.3s, padding 0.3s, opacity 0s'; card.style.maxHeight = '0'; card.style.overflow = 'hidden'; card.style.marginBottom = '0'; card.style.paddingTop = '0'; card.style.paddingBottom = '0'; setTimeout(() => card.remove(), 320); }, 420);
     const badge = document.getElementById('reviewCount');
     const current = parseInt(badge.textContent || '0', 10);
     if (current > 1) { badge.textContent = current - 1; }
