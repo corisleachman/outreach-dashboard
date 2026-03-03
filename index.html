@@ -2436,6 +2436,8 @@ async function loadLinkedIn() {
       const card = document.createElement('div');
       card.className = 'linkedin-card';
       card.style.animationDelay = `${idx * 40}ms`;
+      card.dataset.liUrl  = linkedin  || '';
+      card.dataset.liName = firstName || '';
       card.innerHTML = `
         <div class="linkedin-card-left">
           <div class="avatar">${initials}</div>
@@ -2445,12 +2447,7 @@ async function loadLinkedIn() {
           </div>
         </div>
         <div class="li-card-actions">
-          ${linkedin
-            ? `<a class="li-profile-icon" href="${linkedin}" target="_blank" title="Open LinkedIn profile" onclick="event.stopPropagation()">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-              </a>`
-            : ''
-          }
+          ${linkedin ? `<button class="li-profile-icon" onclick="liOpen(this,'connect')" title="Open profile &amp; copy message" style="cursor:pointer;border:none;flex-shrink:0;"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></button>` : ''}
           <div class="li-status-pills" id="liPills-${p.rowNumber}">
             ${['No','Connection Sent','Connection Accepted','No - Unable to','Chose not to'].map(opt => {
               const cur = (row[COL.linkedinReq] || '').trim();
@@ -2569,6 +2566,9 @@ async function loadFollowup() {
       const card = document.createElement('div');
       card.className = 'followup-card';
       card.style.animationDelay = `${idx * 40}ms`;
+      const fuLiUrl = linkedInByEmail ? (linkedInByEmail[(row[COL.email] || '').toLowerCase().trim()] || '') : '';
+      card.dataset.liUrl  = fuLiUrl;
+      card.dataset.liName = firstName || '';
       card.innerHTML = `
         <div class="followup-card-top">
           <div class="followup-card-left">
@@ -2579,6 +2579,7 @@ async function loadFollowup() {
             </div>
           </div>
           <div class="followup-card-actions">
+            ${fuLiUrl ? `<button class="li-profile-icon" onclick="liOpen(this,'followup')" title="Open profile &amp; copy message" style="cursor:pointer;border:none;flex-shrink:0;"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></button>` : ''}
             <button class="copy-msg-btn" onclick="copyFollowupMsg(this, \`${msg.replace(/`/g,'\\`')}\`)">Copy message</button>
             <button class="mark-messaged-btn" onclick="markMessaged(${p.rowNumber}, this)">✓ Message sent</button>
           </div>
@@ -2590,6 +2591,20 @@ async function loadFollowup() {
   } catch(e) {
     container.innerHTML = `<div class="empty-state"><h3>Couldn’t load</h3><p>${e.message}</p></div>`;
   }
+}
+
+function liOpen(btn, type) {
+  const card = btn.closest('[data-li-url]') || btn.closest('[data-li-name]');
+  const url  = card ? (card.dataset.liUrl  || '') : '';
+  const name = card ? (card.dataset.liName || '') : '';
+  const connectMsg  = 'Hi ' + name + ',\n\nI wanted to connect to intro myself, and the fractional new business support I help agencies with.\n\nCheers,\nCoris';
+  const followupMsg = 'Hi ' + name + ',\n\nThanks for connecting. If what I sent over is of interest at all, I’d love to have a quick conversation — happy to work around your schedule.\n\nKind regards,\nCoris';
+  const msg = type === 'followup' ? followupMsg : connectMsg;
+  navigator.clipboard.writeText(msg).catch(() => {});
+  if (url) window.open(url, '_blank');
+  const orig = btn.title;
+  btn.title = '✓ Copied!';
+  setTimeout(() => btn.title = orig, 2000);
 }
 
 function copyFollowupMsg(btn, msg) {
@@ -3555,6 +3570,8 @@ function renderReviewCard(row, rowNumber, container) {
   card.dataset.lastName  = lastName;
   card.dataset.org       = org;
   card.dataset.email     = email;
+  card.dataset.liUrl      = profileLink || '';
+  card.dataset.liName     = firstName  || '';
 
   card.innerHTML = `
     <div class="review-card-header" onclick="this.closest('.review-card').classList.toggle('expanded');this.querySelector('.review-chevron').style.transform=this.closest('.review-card').classList.contains('expanded')?'rotate(180deg)':''">
@@ -3564,7 +3581,7 @@ function renderReviewCard(row, rowNumber, container) {
         <div class="review-meta">${role || '—'}${org ? ' · ' + org : ''}${location ? ' · ' + location : ''}</div>
       </div>
       <span class="review-email-pill ${quality}">${qualityLabel}</span>
-      ${profileLink ? `<a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" class="li-profile-icon" style="flex-shrink:0;" title="Open LinkedIn profile"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>` : ''}
+      ${profileLink ? `<button class="li-profile-icon" onclick="liOpen(this,'connect')" title="Open profile &amp; copy message" style="cursor:pointer;border:none;flex-shrink:0;"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></button>` : ''}
       <button class="review-skip-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();skipReviewCard(${rowNumber})">✕</button>
       <button class="review-approve-btn" style="padding:6px 12px;font-size:12px;flex-shrink:0;" onclick="event.stopPropagation();approveReviewCard(${rowNumber})">✓</button>
       <div class="review-chevron">▾</div>
