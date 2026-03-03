@@ -1346,7 +1346,10 @@
         <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">Prospect review</div>
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Lix imports awaiting vetting — approve to add to People and trigger first email draft, or skip to dismiss.</div>
       </div>
-      <button class="refresh-btn" onclick="loadReview()">↻ Refresh</button>
+      <div style="display:flex;gap:10px;">
+        <button class="refresh-btn" id="reviewGenDraftsBtn" onclick="triggerDraftGeneration()" title="Run the Make scenario that generates first email drafts for all approved prospects">✦ Generate drafts</button>
+        <button class="refresh-btn" onclick="loadReview()">↻ Refresh</button>
+      </div>
     </div>
     <div id="reviewContainer"></div>
   </div>
@@ -1454,6 +1457,7 @@ const FIXED = {
   sheetId: '1CdB46eJR7lMDdWDp-ha6x75IHdiTAHJTpduq6l_X-bY',
   webhookUrl: 'https://hook.eu1.make.com/102ugxx068bqdafo73kzxbjcpnt4twmw',
   bounceWebhookUrl: 'https://hook.eu1.make.com/bfqqhsifsqqvu51a1cknph8o41phb47k',
+  draftGenWebhookUrl: '', // Make webhook URL for "generate first email drafts" scenario
   claudeApiKey: '', // Add your Anthropic API key here to enable AI-generated messages
 };
 
@@ -1536,6 +1540,7 @@ function launchDashboard(token) {
     sheetId: FIXED.sheetId,
     webhookUrl: FIXED.webhookUrl,
     bounceWebhookUrl: FIXED.bounceWebhookUrl,
+    draftGenWebhookUrl: FIXED.draftGenWebhookUrl,
   };
   document.getElementById('setupPanel').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
@@ -3505,6 +3510,30 @@ async function skipReviewCard(rowNumber) {
     skipBtns.forEach(b => { b.textContent = '✕'; b.disabled = false; });
     approveBtns.forEach(b => b.disabled = false);
     showToast('error', '⚠', 'Could not skip: ' + e.message);
+  }
+}
+
+async function triggerDraftGeneration() {
+  const btn = document.getElementById('reviewGenDraftsBtn');
+  if (!CONFIG.draftGenWebhookUrl) {
+    showToast('error', '⚠', 'Draft generation webhook URL not configured in FIXED config');
+    return;
+  }
+  btn.textContent = '⟳ Running…';
+  btn.disabled = true;
+  try {
+    const res = await fetch(CONFIG.draftGenWebhookUrl, { method: 'POST' });
+    if (!res.ok) throw new Error(`Make returned ${res.status}`);
+    showToast('success', '✓', 'Draft generation scenario triggered');
+    btn.textContent = '✓ Triggered';
+    setTimeout(() => {
+      btn.textContent = '✦ Generate drafts';
+      btn.disabled = false;
+    }, 3000);
+  } catch(e) {
+    showToast('error', '⚠', 'Could not trigger scenario: ' + e.message);
+    btn.textContent = '✦ Generate drafts';
+    btn.disabled = false;
   }
 }
 
