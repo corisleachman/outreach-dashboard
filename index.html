@@ -985,6 +985,83 @@
   .mark-sent-btn.done { background: rgba(200,240,96,0.1); color: var(--accent); border: 1px solid rgba(200,240,96,0.3); pointer-events: none; }
 
 
+  /* REVIEW CARDS */
+  .review-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .review-card:hover { border-color: var(--border-light); }
+  .review-card.approved { opacity: 0.45; border-color: var(--accent); }
+  .review-card.skipped { opacity: 0.3; }
+  .review-card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    cursor: pointer;
+  }
+  .review-avatar {
+    width: 38px; height: 38px; border-radius: 50%;
+    background: var(--surface2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 600; color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .review-name { font-weight: 500; font-size: 14px; }
+  .review-meta { font-size: 12px; color: var(--text-muted); margin-top: 2px; }
+  .review-email-pill {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    padding: 2px 8px; border-radius: 4px; border: 1px solid var(--border);
+    color: var(--text-dim);
+  }
+  .review-email-pill.good { border-color: rgba(200,240,96,0.3); color: var(--accent); }
+  .review-email-pill.catchall { border-color: rgba(245,158,11,0.3); color: var(--amber); }
+  .review-email-pill.bad { border-color: rgba(239,68,68,0.3); color: var(--red); }
+  .review-body { display: none; padding: 0 18px 18px; border-top: 1px solid var(--border); }
+  .review-card.expanded .review-body { display: block; }
+  .review-card.expanded .review-chevron { transform: rotate(180deg); }
+  .review-chevron { color: var(--text-dim); font-size: 13px; transition: transform 0.2s; margin-left: auto; flex-shrink: 0; }
+  .review-field { margin-top: 14px; }
+  .review-field-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; margin-bottom: 5px; }
+  .review-field-value { font-size: 13px; color: var(--text); line-height: 1.5; }
+  .review-field-input {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    color: var(--text); padding: 8px 10px; border-radius: 6px;
+    font-size: 13px; font-family: 'DM Sans', sans-serif; outline: none;
+    transition: border-color 0.15s;
+  }
+  .review-field-input:focus { border-color: var(--border-light); }
+  .review-alts { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 4px; }
+  .review-alt-btn {
+    font-family: 'DM Mono', monospace; font-size: 11px;
+    padding: 3px 9px; border-radius: 4px; border: 1px solid var(--border);
+    background: transparent; color: var(--text-dim); cursor: pointer;
+    transition: all 0.15s;
+  }
+  .review-alt-btn:hover { border-color: var(--accent); color: var(--accent); }
+  .review-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--border); }
+  .review-approve-btn {
+    background: var(--accent); color: #0d0d0f;
+    border: none; border-radius: 8px; padding: 9px 20px;
+    font-size: 13px; font-weight: 600; cursor: pointer;
+    font-family: 'DM Sans', sans-serif; transition: opacity 0.15s;
+  }
+  .review-approve-btn:hover { opacity: 0.85; }
+  .review-approve-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .review-skip-btn {
+    background: transparent; color: var(--text-dim);
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 20px;
+    font-size: 13px; cursor: pointer; font-family: 'DM Sans', sans-serif;
+    transition: all 0.15s;
+  }
+  .review-skip-btn:hover { border-color: var(--red); color: var(--red); }
+  .review-skip-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
   /* ROADMAP MODAL */
   .roadmap-list { display: flex; flex-direction: column; gap: 8px; }
   .roadmap-item {
@@ -1183,6 +1260,7 @@
     <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
+    <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
   </div>
 
   <!-- DRAFTS PANEL -->
@@ -1259,6 +1337,18 @@
       <button class="refresh-btn" onclick="loadConversations()">↻ Refresh</button>
     </div>
     <div id="conversationsContainer"></div>
+  </div>
+
+  <!-- REVIEW PANEL -->
+  <div id="reviewPanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">Prospect review</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Lix imports awaiting vetting — approve to add to People and trigger first email draft, or skip to dismiss.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadReview()">↻ Refresh</button>
+    </div>
+    <div id="reviewContainer"></div>
   </div>
 
   <div class="error-banner" id="errorBanner">
@@ -2177,6 +2267,7 @@ async function showLinkedInTab(btn) {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'block';
   await loadLinkedIn();
 }
@@ -2426,6 +2517,7 @@ async function showBounceTab(btn) {
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'block';
   await loadBounces();
 }
@@ -2435,6 +2527,7 @@ function hideBouncePanel() {
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('cardsContainer').style.display = '';
 }
 
@@ -2443,6 +2536,7 @@ function showDraftsPanel() {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'block';
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   loadDraftsPanel();
@@ -3115,6 +3209,294 @@ init();
 
 // ── CONVERSATIONS TAB ────────────────────────────────────────────
 
+// ── REVIEW TAB ──────────────────────────────────────────────────
+const LIX_COLS = {
+  id: 0, linkedinName: 1, firstName: 2, lastName: 3,
+  email: 4, go: 5, deliverability: 6, emailType: 7,
+  catchallScore: 8, alternatives: 9, description: 10,
+  orgId: 11, organisation: 12, orgSalesNav: 13, website: 14,
+  orgSize: 15, location: 16, industry: 17, currentRoles: 18,
+  seniority: 19, jobFunction: 20, pastRoles: 21, education: 22,
+  tenureCompany: 23, tenureRole: 24, nameResolved: 25,
+  profileLink: 26, salesNavProfile: 27, about: 28,
+  sharedConnections: 29, sharedConnectionNames: 30
+};
+
+async function showReviewTab(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'block';
+  await loadReview();
+}
+
+async function loadReview() {
+  const container = document.getElementById('reviewContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading Lix prospects...</div></div>`;
+  try {
+    const range = `${LIX_SHEET}!A:AE`;
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`,
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    if (!res.ok) throw new Error('Could not read Lix sheet');
+    const data = await res.json();
+    const rows = (data.values || []).slice(1); // skip header
+
+    const pending = rows
+      .map((row, i) => ({ row, rowNumber: i + 2 }))
+      .filter(({ row }) => {
+        const go = (row[LIX_COLS.go] || '').toLowerCase().trim();
+        return go !== 'yes' && go !== 'skip' && go !== 'no';
+      });
+
+    // Update badge
+    const badge = document.getElementById('reviewCount');
+    if (pending.length > 0) {
+      badge.textContent = pending.length;
+      badge.style.display = 'inline';
+    } else {
+      badge.style.display = 'none';
+    }
+
+    if (!pending.length) {
+      container.innerHTML = `<div class="empty-state"><h3>Queue is clear</h3><p>No Lix prospects awaiting review.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    pending.forEach(({ row, rowNumber }) => renderReviewCard(row, rowNumber, container));
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><h3>Couldn't load Lix sheet</h3><p>${e.message}</p></div>`;
+  }
+}
+
+function emailQuality(row) {
+  const deliv = (row[LIX_COLS.deliverability] || '').toLowerCase();
+  const score = parseFloat(row[LIX_COLS.catchallScore] || '1');
+  if (deliv.includes('valid') && score < 0.3) return 'good';
+  if (deliv.includes('catch') || score >= 0.3) return 'catchall';
+  if (deliv.includes('invalid') || deliv.includes('risky')) return 'bad';
+  return 'good';
+}
+
+function emailQualityLabel(row) {
+  const q = emailQuality(row);
+  if (q === 'good') return '● Verified';
+  if (q === 'catchall') return '◐ Catch-all';
+  return '○ Risky';
+}
+
+function renderReviewCard(row, rowNumber, container) {
+  const firstName    = row[LIX_COLS.firstName]    || '';
+  const lastName     = row[LIX_COLS.lastName]     || '';
+  const org          = row[LIX_COLS.organisation] || '';
+  const email        = row[LIX_COLS.email]        || '';
+  const role         = row[LIX_COLS.currentRoles] || '';
+  const location     = row[LIX_COLS.location]     || '';
+  const about        = row[LIX_COLS.about]        || '';
+  const profileLink  = row[LIX_COLS.profileLink]  || '';
+  const altsRaw      = row[LIX_COLS.alternatives] || '';
+  const orgSize      = row[LIX_COLS.orgSize]      || '';
+  const industry     = row[LIX_COLS.industry]     || '';
+  const quality      = emailQuality(row);
+  const qualityLabel = emailQualityLabel(row);
+  const initials     = (firstName[0] || '') + (lastName[0] || '');
+  const alts         = altsRaw ? altsRaw.split(/[,;|\n]/).map(s => s.trim()).filter(Boolean) : [];
+
+  const card = document.createElement('div');
+  card.className = 'review-card';
+  card.dataset.rowNumber = rowNumber;
+
+  card.innerHTML = `
+    <div class="review-card-header" onclick="this.closest('.review-card').classList.toggle('expanded');this.querySelector('.review-chevron').style.transform=this.closest('.review-card').classList.contains('expanded')?'rotate(180deg)':''">
+      <div class="review-avatar">${initials || '?'}</div>
+      <div style="flex:1;min-width:0;">
+        <div class="review-name">${firstName} ${lastName}${profileLink ? ` <a href="${profileLink}" target="_blank" onclick="event.stopPropagation()" style="color:var(--blue);font-size:11px;text-decoration:none;margin-left:6px;" title="LinkedIn profile">↗</a>` : ''}</div>
+        <div class="review-meta">${role || '—'}${org ? ' · ' + org : ''}${location ? ' · ' + location : ''}</div>
+      </div>
+      <span class="review-email-pill ${quality}">${qualityLabel}</span>
+      <div class="review-chevron">▾</div>
+    </div>
+
+    <div class="review-body">
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:4px;">
+        <div class="review-field">
+          <div class="review-field-label">FIRST NAME</div>
+          <input class="review-field-input" id="rv-fname-${rowNumber}" value="${firstName}" />
+        </div>
+        <div class="review-field">
+          <div class="review-field-label">LAST NAME</div>
+          <input class="review-field-input" id="rv-lname-${rowNumber}" value="${lastName}" />
+        </div>
+      </div>
+
+      <div class="review-field">
+        <div class="review-field-label">ORGANISATION</div>
+        <input class="review-field-input" id="rv-org-${rowNumber}" value="${org}" />
+      </div>
+
+      <div class="review-field">
+        <div class="review-field-label">EMAIL <span class="review-email-pill ${quality}" style="margin-left:6px;">${qualityLabel}</span></div>
+        <input class="review-field-input" id="rv-email-${rowNumber}" value="${email}" style="font-family:'DM Mono',monospace;font-size:12px;" />
+        ${alts.length ? `<div class="review-alts" style="margin-top:6px;">
+          <span style="font-size:11px;color:var(--text-dim);align-self:center;">Alternatives:</span>
+          ${alts.map(a => `<button class="review-alt-btn" onclick="document.getElementById('rv-email-${rowNumber}').value='${a}'">${a}</button>`).join('')}
+        </div>` : ''}
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="review-field">
+          <div class="review-field-label">INDUSTRY</div>
+          <div class="review-field-value">${industry || '—'}</div>
+        </div>
+        <div class="review-field">
+          <div class="review-field-label">ORG SIZE</div>
+          <div class="review-field-value">${orgSize || '—'}</div>
+        </div>
+      </div>
+
+      ${about ? `<div class="review-field">
+        <div class="review-field-label">ABOUT</div>
+        <div class="review-field-value" style="font-size:12px;color:var(--text-muted);max-height:80px;overflow:hidden;position:relative;" id="rv-about-${rowNumber}">${about}<span style="position:absolute;bottom:0;right:0;background:linear-gradient(to right,transparent,var(--surface));padding-left:20px;cursor:pointer;color:var(--text-dim);" onclick="document.getElementById('rv-about-${rowNumber}').style.maxHeight='none';this.remove()"> …more</span></div>
+      </div>` : ''}
+
+      <div class="review-actions">
+        <div id="rv-status-${rowNumber}" style="font-size:12px;color:var(--text-muted);font-family:'DM Mono',monospace;margin-right:auto;align-self:center;"></div>
+        <button class="review-skip-btn" id="rv-skip-${rowNumber}" onclick="skipReviewCard(${rowNumber})">✕ Skip</button>
+        <button class="review-approve-btn" id="rv-approve-${rowNumber}" onclick="approveReviewCard(${rowNumber})">✓ Approve</button>
+      </div>
+    </div>`;
+
+  container.appendChild(card);
+}
+
+async function approveReviewCard(rowNumber) {
+  const approveBtn = document.getElementById(`rv-approve-${rowNumber}`);
+  const skipBtn    = document.getElementById(`rv-skip-${rowNumber}`);
+  const statusEl   = document.getElementById(`rv-status-${rowNumber}`);
+  const card       = approveBtn.closest('.review-card');
+
+  const firstName = document.getElementById(`rv-fname-${rowNumber}`).value.trim();
+  const lastName  = document.getElementById(`rv-lname-${rowNumber}`).value.trim();
+  const org       = document.getElementById(`rv-org-${rowNumber}`).value.trim();
+  const email     = document.getElementById(`rv-email-${rowNumber}`).value.trim();
+
+  if (!email) { statusEl.textContent = 'Email is required.'; statusEl.style.color = 'var(--amber)'; return; }
+
+  approveBtn.textContent = 'Approving…';
+  approveBtn.disabled = true;
+  skipBtn.disabled = true;
+  statusEl.textContent = '';
+
+  try {
+    // 1. Write any edits back to Lix row + set Go? = yes
+    const lixUpdates = [
+      { range: `${LIX_SHEET}!C${rowNumber}`, values: [[firstName]] },
+      { range: `${LIX_SHEET}!D${rowNumber}`, values: [[lastName]] },
+      { range: `${LIX_SHEET}!E${rowNumber}`, values: [[email]] },
+      { range: `${LIX_SHEET}!M${rowNumber}`, values: [[org]] },
+      { range: `${LIX_SHEET}!F${rowNumber}`, values: [['yes']] },
+    ];
+    const lixRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
+      { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: lixUpdates }) }
+    );
+    if (!lixRes.ok) throw new Error('Failed to update Lix sheet');
+
+    // 2. Find this person in People sheet by email and set status = Prospect added
+    statusEl.textContent = 'Finding in People sheet…';
+    await new Promise(r => setTimeout(r, 1500)); // brief wait for sheet formula to propagate
+
+    const peopleRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(SHEET_NAME + '!A:S')}`,
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    if (!peopleRes.ok) throw new Error('Could not read People sheet');
+    const peopleData = await peopleRes.json();
+    const peopleRows = (peopleData.values || []).slice(1);
+    const emailLower = email.toLowerCase().trim();
+
+    // Match on email col G (index 6) or clean email col S (index 18)
+    let peopleRowNum = null;
+    for (let i = 0; i < peopleRows.length; i++) {
+      const g = (peopleRows[i][6]  || '').toLowerCase().trim();
+      const s = (peopleRows[i][18] || '').toLowerCase().trim();
+      if (g === emailLower || s === emailLower) { peopleRowNum = i + 2; break; }
+    }
+
+    if (peopleRowNum) {
+      // Person already in People sheet — just set status
+      await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
+        { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: [
+            { range: `${SHEET_NAME}!K${peopleRowNum}`, values: [['Prospect added']] }
+          ]}) }
+      );
+      statusEl.textContent = `✓ Added to People row ${peopleRowNum}`;
+    } else {
+      // Not in People yet — the Lix→People formula may need a moment, or they need adding manually
+      // We still approved in Lix; let the user know
+      statusEl.textContent = '✓ Approved in Lix — add "Prospect added" to People manually if not auto-populated';
+      statusEl.style.color = 'var(--amber)';
+    }
+
+    card.classList.add('approved');
+    approveBtn.textContent = '✓ Approved';
+    showToast('success', '✓', `${firstName} ${lastName} approved`);
+
+    // Refresh badge count
+    const badge = document.getElementById('reviewCount');
+    const current = parseInt(badge.textContent || '0', 10);
+    if (current > 1) { badge.textContent = current - 1; }
+    else { badge.style.display = 'none'; }
+
+  } catch(e) {
+    statusEl.textContent = e.message;
+    statusEl.style.color = 'var(--red)';
+    approveBtn.textContent = '✓ Approve';
+    approveBtn.disabled = false;
+    skipBtn.disabled = false;
+  }
+}
+
+async function skipReviewCard(rowNumber) {
+  const skipBtn  = document.getElementById(`rv-skip-${rowNumber}`);
+  const approveBtn = document.getElementById(`rv-approve-${rowNumber}`);
+  const card     = skipBtn.closest('.review-card');
+  skipBtn.textContent = 'Skipping…';
+  skipBtn.disabled = true;
+  approveBtn.disabled = true;
+  try {
+    await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values:batchUpdate`,
+      { method: 'POST', headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ valueInputOption: 'USER_ENTERED', data: [
+          { range: `${LIX_SHEET}!F${rowNumber}`, values: [['skip']] }
+        ]}) }
+    );
+    card.classList.add('skipped');
+    skipBtn.textContent = '✕ Skipped';
+    const badge = document.getElementById('reviewCount');
+    const current = parseInt(badge.textContent || '0', 10);
+    if (current > 1) { badge.textContent = current - 1; }
+    else { badge.style.display = 'none'; }
+  } catch(e) {
+    skipBtn.textContent = '✕ Skip';
+    skipBtn.disabled = false;
+    approveBtn.disabled = false;
+    showToast('error', '⚠', 'Could not skip: ' + e.message);
+  }
+}
+
 async function showConversationsTab(btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -3122,6 +3504,7 @@ async function showConversationsTab(btn) {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'block';
   await loadConversations();
 }
