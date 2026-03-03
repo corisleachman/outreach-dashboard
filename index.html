@@ -3202,6 +3202,7 @@ function renderConversations(contacts) {
     card.dataset.notes      = notes;
     card.dataset.position   = position;
     card.dataset.selectedType = 'value-drop';
+    card.dataset.toneIndex = '0';
 
     card.innerHTML = `
       <div class="card-header" style="padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="toggleConvCard(${rowNumber})">
@@ -3243,7 +3244,7 @@ function renderConversations(contacts) {
               style="background:transparent;border:1px solid var(--border-light);color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.15s;"
               onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
               onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
-              ✦ Generate
+              ✦ Generate <span style="font-size:9px;opacity:0.6;margin-left:4px;">Calm &amp; Commercial</span>
             </button>
           </div>
           <textarea id="conv-message-${rowNumber}" rows="7" placeholder="Your message will appear here after clicking Generate…"
@@ -3298,8 +3299,22 @@ function toggleConvCard(rowNumber) {
 function selectConvType(rowNumber, type, btn) {
   const card = document.querySelector(`[data-row-number="${rowNumber}"]`);
   card.dataset.selectedType = type;
+  card.dataset.toneIndex = '0'; // reset tone cycle on type change
   document.querySelectorAll(`#conv-types-${rowNumber} .conv-type-btn`).forEach(b => b.classList.remove('active-type'));
   btn.classList.add('active-type');
+  // Reset button label
+  const genBtn = document.getElementById(`conv-gen-btn-${rowNumber}`);
+  if (genBtn) updateGenBtnLabel(genBtn, 0);
+}
+
+const TONES = [
+  { label: 'Calm & Commercial',       desc: 'calm, confident and commercial — safe and solid, warm but professional, no fluff' },
+  { label: 'Direct & Confident',      desc: 'slightly more direct and confident — clear about what you want, respectful but assured' },
+  { label: 'Light Touch, Relational', desc: 'light touch and relationship-led — conversational, human, low-pressure, feels like a message from someone they already know' }
+];
+
+function updateGenBtnLabel(btn, toneIndex) {
+  btn.innerHTML = `✦ Generate <span style="font-size:9px;opacity:0.6;margin-left:4px;">${TONES[toneIndex].label}</span>`;
 }
 
 async function generateConvMessage(rowNumber) {
@@ -3312,7 +3327,12 @@ async function generateConvMessage(rowNumber) {
   const subjectEl = document.getElementById(`conv-subject-${rowNumber}`);
   const msgEl     = document.getElementById(`conv-message-${rowNumber}`);
 
-  genBtn.textContent = '⟳ Generating…';
+  // Get current tone and advance index for next click
+  const toneIndex = parseInt(card.dataset.toneIndex || '0', 10);
+  const tone = TONES[toneIndex];
+  const nextToneIndex = (toneIndex + 1) % TONES.length;
+
+  genBtn.innerHTML = '⟳ Generating…';
   genBtn.disabled = true;
 
   // Try Claude API if key is configured
@@ -3327,9 +3347,10 @@ async function generateConvMessage(rowNumber) {
       const context = notes ? `Context/notes: ${notes}` : '';
       const prompt = `You are writing on behalf of Coris Leachman. Draft a short, professional email to ${firstName} at ${agency}. The email type is: ${typeLabels[type]}. ${context}
 
+Tone: ${tone.desc}
+
 Rules:
 - Keep it to 3–4 short paragraphs maximum
-- Warm, natural tone — not salesy or stiff
 - Leave a clear placeholder like [insert X] only where personalisation is genuinely needed
 - Sign off as "Coris"
 - Return ONLY a JSON object with exactly two fields: "subject" and "body". No other text.`;
@@ -3356,7 +3377,8 @@ Rules:
         subjectEl.value = json.subject;
         msgEl.value     = json.body;
         flashBorder(msgEl);
-        genBtn.textContent = '✦ Generate';
+        card.dataset.toneIndex = String(nextToneIndex);
+        updateGenBtnLabel(genBtn, nextToneIndex);
         genBtn.disabled = false;
         return;
       }
@@ -3389,7 +3411,8 @@ Rules:
   subjectEl.value = t.subject;
   msgEl.value     = t.body;
   flashBorder(msgEl);
-  genBtn.textContent = '✦ Generate';
+  card.dataset.toneIndex = String(nextToneIndex);
+  updateGenBtnLabel(genBtn, nextToneIndex);
   genBtn.disabled = false;
 }
 
