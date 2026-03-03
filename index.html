@@ -2208,11 +2208,11 @@ async function computeStats() {
     // LinkedIn due: first email sent, connection NOT yet sent, not responded, not closed
     const linkedinDue = allPeopleRows.filter(p => {
       const emailSent = !!(p.row[COL.firstEmailDate]);
-      const liStatus = (p.row[COL.linkedinReq] || '').toLowerCase();
-      const notSent = !liStatus.includes('connection sent') && !liStatus.includes('connection acce') && !liStatus.includes('unable');
+      const liStatus = (p.row[COL.linkedinReq] || '').trim().toLowerCase();
+      const liDone = ['connection sent','connection accepted','no - unable to','chose not to','no'].includes(liStatus);
       const notClosed = !(p.row[COL.status] || '').toLowerCase().includes('closed');
       const notResponded = (p.row[COL.responded] || '').toLowerCase() !== 'yes';
-      return emailSent && notSent && notClosed && notResponded;
+      return emailSent && !liDone && notClosed && notResponded;
     }).length;
 
     const gmailDraftCount = await fetchGmailDraftCount();
@@ -2309,11 +2309,11 @@ async function loadLinkedIn() {
 
     const due = rows.filter(p => {
       const emailSent = !!(p.row[COL.firstEmailDate]);
-      const liStatus = (p.row[COL.linkedinReq] || '').toLowerCase();
-      const notSent = !liStatus.includes('connection sent') && !liStatus.includes('connection acce') && !liStatus.includes('unable');
+      const liStatus = (p.row[COL.linkedinReq] || '').trim().toLowerCase();
+      const liDone = ['connection sent','connection accepted','no - unable to','chose not to','no'].includes(liStatus);
       const notClosed = !(p.row[COL.status] || '').toLowerCase().includes('closed');
       const notResponded = (p.row[COL.responded] || '').toLowerCase() !== 'yes';
-      return emailSent && notSent && notClosed && notResponded;
+      return emailSent && !liDone && notClosed && notResponded;
     });
 
     if (!due.length) {
@@ -2396,6 +2396,11 @@ async function setLinkedInStatus(rowNumber, value, btn) {
     });
     btn.textContent = orig;
     showToast('success', '✓', `LinkedIn: ${value}`);
+    const doneStatuses = ['connection sent','connection accepted','no - unable to','chose not to','no'];
+    if (doneStatuses.includes(value.toLowerCase())) {
+      const card = btn.closest('.linkedin-card');
+      if (card) { card.style.transition = 'opacity 0.5s'; card.style.opacity = '0'; setTimeout(() => card.remove(), 520); }
+    }
     await computeStats();
   } catch(e) {
     btn.textContent = orig;
