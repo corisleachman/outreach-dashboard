@@ -978,6 +978,79 @@
   .li-pill.active-no       { background: rgba(100,100,100,0.12); border-color: rgba(150,150,150,0.3); color: var(--text-muted); }
 
 
+  /* FOLLOW-UP CARDS */
+  .followup-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin-bottom: 12px;
+    animation: fadeIn 0.25s ease both;
+  }
+  .followup-card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .followup-card-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-width: 0;
+  }
+  .followup-meta {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 3px;
+  }
+  .followup-msg-box {
+    margin-top: 16px;
+    background: rgba(92,159,255,0.06);
+    border: 1px solid rgba(92,159,255,0.18);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.6;
+    white-space: pre-wrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .followup-card-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .copy-msg-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--text-dim);
+    padding: 7px 14px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-msg-btn:hover { border-color: var(--blue); color: var(--blue); }
+  .copy-msg-btn.copied { border-color: var(--accent); color: var(--accent); }
+  .mark-messaged-btn {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .mark-messaged-btn:hover { opacity: 0.85; }
+  .mark-messaged-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
   /* REVIEW CARDS */
   .review-card {
     background: var(--surface);
@@ -1254,6 +1327,7 @@
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
     <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
+    <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
   </div>
 
   <!-- DRAFTS PANEL -->
@@ -1345,6 +1419,17 @@
       </div>
     </div>
     <div id="reviewContainer"></div>
+  </div>
+
+  <div id="followupPanel" style="display:none; padding:32px 48px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <div>
+        <div style="font-family:'DM Serif Display',serif;font-size:22px;letter-spacing:-0.02em;">LinkedIn follow-up</div>
+        <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Connection accepted — send a follow-up message to keep the momentum going.</div>
+      </div>
+      <button class="refresh-btn" onclick="loadFollowup()">↻ Refresh</button>
+    </div>
+    <div id="followupContainer"></div>
   </div>
 
   <div class="error-banner" id="errorBanner">
@@ -2221,6 +2306,14 @@ async function computeStats() {
     document.getElementById('statMeetings').textContent = meetings;
     document.getElementById('statLinkedIn').textContent = linkedinSent;
     document.getElementById('statLinkedInDue').textContent = linkedinDue;
+
+    // Follow-up badge: accepted connections not yet messaged
+    const followupDue = allPeopleRows.filter(p => (p.row[COL.linkedinReq] || '').trim().toLowerCase() === 'connection accepted').length;
+    const followupBadge = document.getElementById('followupCount');
+    if (followupBadge) {
+      if (followupDue) { followupBadge.textContent = followupDue; followupBadge.style.display = 'inline'; }
+      else followupBadge.style.display = 'none';
+    }
     document.getElementById('statsBar').style.display = 'flex';
 
     // Update LinkedIn badge
@@ -2272,6 +2365,7 @@ async function showLinkedInTab(btn) {
 
 function hideLinkedInPanel() {
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('cardsContainer').style.display = '';
 }
 
@@ -2409,6 +2503,122 @@ async function setLinkedInStatus(rowNumber, value, btn) {
   }
 }
 
+// ── FOLLOW-UP TAB ─────────────────────────────────────────
+
+async function showFollowupTab(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('cardsContainer').style.display = 'none';
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
+  document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'block';
+  await loadFollowup();
+}
+
+async function loadFollowup() {
+  const container = document.getElementById('followupContainer');
+  container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading...</div></div>`;
+  try {
+    let rows = allPeopleRows;
+    if (!rows || !rows.length) {
+      const range = `${SHEET_NAME}!A:W`;
+      const res = await fetch(
+        `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(range)}`,
+        { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+      );
+      if (!res.ok) throw new Error('Could not read People sheet');
+      const data = await res.json();
+      rows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
+    }
+
+    const due = rows.filter(p => {
+      const liStatus = (p.row[COL.linkedinReq] || '').trim().toLowerCase();
+      return liStatus === 'connection accepted';
+    });
+
+    // Update badge
+    const badge = document.getElementById('followupCount');
+    if (due.length) { badge.textContent = due.length; badge.style.display = 'inline'; }
+    else badge.style.display = 'none';
+
+    if (!due.length) {
+      container.innerHTML = `<div class="empty-state"><h3>All caught up</h3><p>No accepted connections waiting for a follow-up message.</p></div>`;
+      return;
+    }
+
+    container.innerHTML = '';
+    due.forEach((p, idx) => {
+      const row = p.row;
+      const firstName = row[COL.firstName] || '';
+      const lastName  = row[COL.lastName]  || '';
+      const agency    = row[COL.agencyName] || '';
+      const position  = row[COL.position]  || '';
+      const emailDate = row[COL.firstEmailDate] || '';
+      const initials  = (firstName[0] || '') + (lastName[0] || '');
+
+      const msg = `Hi ${firstName},\n\nThanks for connecting. If what I sent over is of interest at all, I’d love to have a quick conversation — happy to work around your schedule.\n\nKind regards,\nCoris`;
+
+      const card = document.createElement('div');
+      card.className = 'followup-card';
+      card.style.animationDelay = `${idx * 40}ms`;
+      card.innerHTML = `
+        <div class="followup-card-top">
+          <div class="followup-card-left">
+            <div class="avatar">${initials}</div>
+            <div>
+              <div class="card-name">${firstName} ${lastName}</div>
+              <div class="followup-meta">${agency}${position ? ' · ' + position : ''}${emailDate ? ' · emailed ' + emailDate : ''}</div>
+            </div>
+          </div>
+          <div class="followup-card-actions">
+            <button class="copy-msg-btn" onclick="copyFollowupMsg(this, \`${msg.replace(/`/g,'\\`')}\`)">Copy message</button>
+            <button class="mark-messaged-btn" onclick="markMessaged(${p.rowNumber}, this)">✓ Message sent</button>
+          </div>
+        </div>
+        <div class="followup-msg-box">${msg}</div>`;
+      container.appendChild(card);
+    });
+
+  } catch(e) {
+    container.innerHTML = `<div class="empty-state"><h3>Couldn’t load</h3><p>${e.message}</p></div>`;
+  }
+}
+
+function copyFollowupMsg(btn, msg) {
+  navigator.clipboard.writeText(msg).then(() => {
+    btn.textContent = '✓ Copied';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'Copy message'; btn.classList.remove('copied'); }, 2000);
+  });
+}
+
+async function markMessaged(rowNumber, btn) {
+  btn.textContent = 'Saving…';
+  btn.disabled = true;
+  try {
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('People!I' + rowNumber)}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [['LinkedIn messaged']] })
+      }
+    );
+    if (!res.ok) throw new Error('Sheet update failed');
+    showToast('success', '✓', 'Marked as messaged');
+    const card = btn.closest('.followup-card');
+    if (card) { card.style.transition = 'opacity 0.5s'; card.style.opacity = '0'; setTimeout(() => card.remove(), 520); }
+    await computeStats();
+  } catch(e) {
+    btn.textContent = '✓ Message sent';
+    btn.disabled = false;
+    showToast('error', '⚠', 'Could not update sheet');
+  }
+}
+
 // ── BOUNCE DETECTION ────────────────────────────────────────────
 
 const EMAIL_TEMPLATE = (firstName) => `Hi ${firstName}, hope you don't mind the direct note.
@@ -2534,6 +2744,7 @@ async function showBounceTab(btn) {
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'none';
@@ -2544,6 +2755,7 @@ async function showBounceTab(btn) {
 function hideBouncePanel() {
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'none';
@@ -2554,6 +2766,7 @@ function showDraftsPanel() {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'block';
@@ -3247,6 +3460,7 @@ async function showReviewTab(btn) {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'block';
@@ -3557,6 +3771,7 @@ async function showConversationsTab(btn) {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'block';
