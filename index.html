@@ -3387,27 +3387,68 @@ Rules:
     }
   }
 
-  // Smart templates fallback (or when no API key set)
+  // Tone-aware templates — three variants per message type, indexed by toneIndex
   const templates = {
-    'value-drop': {
-      subject: `Something I thought you'd find useful`,
-      body: `Hi ${firstName},\n\nHope you're well. I came across something that made me think of you and the work you're doing at ${agency} — wanted to pass it along.\n\n[Insert the insight, article, or idea here — make it specific to their world.]\n\nNo agenda, just thought it was worth sharing.\n\nBest,\nCoris`
-    },
-    'chase': {
-      subject: `Following up`,
-      body: `Hi ${firstName},\n\nJust circling back — I don't want to be a pest, but I do think there's something worth exploring here.\n\nIs there a good moment for a quick call this week or next? Even 20 minutes would be great.\n\nBest,\nCoris`
-    },
-    'checkin': {
-      subject: `Checking in`,
-      body: `Hi ${firstName},\n\nHope things are going well at ${agency}. I've been thinking about our last conversation and wanted to check in — no rush or pressure, just staying in touch.\n\nWould love to hear how things are going whenever you have a moment.\n\nBest,\nCoris`
-    },
-    'post-meeting': {
-      subject: `Great speaking with you`,
-      body: `Hi ${firstName},\n\nReally enjoyed our conversation — thanks so much for your time.\n\nAs we discussed, I'll [next step]. In the meantime, feel free to reach out if anything comes up on your end.\n\nLooking forward to staying in touch.\n\nBest,\nCoris`
-    }
+    'value-drop': [
+      { // Calm & Commercial
+        subject: `Something I thought you'd find useful`,
+        body: `Hi ${firstName},\n\nHope you're well. I came across something that made me think of you and the work you're doing at ${agency} — wanted to pass it along.\n\n[Insert the insight, article, or idea here — make it specific to their world.]\n\nNo agenda, just thought it was worth sharing.\n\nBest,\nCoris`
+      },
+      { // Direct & Confident
+        subject: `Worth five minutes of your time`,
+        body: `Hi ${firstName},\n\nI'll keep this short — I came across something that's directly relevant to what you're building at ${agency} and wanted to make sure it landed in front of you.\n\n[Insert the insight, article, or idea here.]\n\nHappy to talk through why I think it's relevant if useful.\n\nBest,\nCoris`
+      },
+      { // Light Touch, Relational
+        subject: `Made me think of you`,
+        body: `Hi ${firstName},\n\nSaw this and immediately thought of you — no particular agenda, just one of those things that felt worth sending on.\n\n[Insert the insight, article, or idea here.]\n\nHope things are good at ${agency}.\n\nCoris`
+      }
+    ],
+    'chase': [
+      { // Calm & Commercial
+        subject: `Following up`,
+        body: `Hi ${firstName},\n\nJust circling back on my previous note — I appreciate you're busy, and I don't want to be a pest, but I do think there's something worth exploring here.\n\nIs there a good moment for a quick call this week or next? Even 20 minutes would be great.\n\nBest,\nCoris`
+      },
+      { // Direct & Confident
+        subject: `Still think this is worth a conversation`,
+        body: `Hi ${firstName},\n\nI've reached out a couple of times and I know your inbox is busy — but I wouldn't keep trying if I didn't genuinely think this was relevant for ${agency}.\n\nCan we find 20 minutes? I'll keep it tight and make it worth your while.\n\nBest,\nCoris`
+      },
+      { // Light Touch, Relational
+        subject: `Just checking in`,
+        body: `Hi ${firstName},\n\nNo pressure at all — just wanted to pop back into your inbox in case my last message got buried.\n\nWould love to find a moment to connect whenever the timing works for you.\n\nCoris`
+      }
+    ],
+    'checkin': [
+      { // Calm & Commercial
+        subject: `Checking in`,
+        body: `Hi ${firstName},\n\nHope things are going well at ${agency}. I've been thinking about our last conversation and wanted to check in — no rush or pressure, just staying in touch.\n\nWould love to hear how things are going whenever you have a moment.\n\nBest,\nCoris`
+      },
+      { // Direct & Confident
+        subject: `How are things going at ${agency}?`,
+        body: `Hi ${firstName},\n\nIt's been a little while — I wanted to check in and see how things are shaping up at ${agency}.\n\nI've been keeping an eye on what you're doing and there are a couple of things I think could be genuinely useful to you right now. Worth a quick call?\n\nBest,\nCoris`
+      },
+      { // Light Touch, Relational
+        subject: `Hope you're well`,
+        body: `Hi ${firstName},\n\nJust thinking about you — hope things are going well.\n\nNo particular ask, just wanted to stay in touch and see how life at ${agency} is treating you.\n\nCoris`
+      }
+    ],
+    'post-meeting': [
+      { // Calm & Commercial
+        subject: `Great speaking with you`,
+        body: `Hi ${firstName},\n\nReally enjoyed our conversation — thanks so much for your time.\n\nAs we discussed, I'll [next step]. In the meantime, feel free to reach out if anything comes up on your end.\n\nLooking forward to staying in touch.\n\nBest,\nCoris`
+      },
+      { // Direct & Confident
+        subject: `Following up from our conversation`,
+        body: `Hi ${firstName},\n\nGreat to speak with you. I wanted to follow up while it's fresh.\n\nNext step on my end is [next step] — I'll have that with you by [date]. On your side, we said [their action if any].\n\nLet's keep the momentum going.\n\nBest,\nCoris`
+      },
+      { // Light Touch, Relational
+        subject: `Lovely to catch up`,
+        body: `Hi ${firstName},\n\nReally good to speak — always enjoy our conversations.\n\nI'll get [next step] sorted and send it over. No rush on your end, but shout if anything comes to mind in the meantime.\n\nSpeak soon,\nCoris`
+      }
+    ]
   };
 
-  const t = templates[type] || templates['chase'];
+  const typeTemplates = templates[type] || templates['chase'];
+  const t = typeTemplates[toneIndex] || typeTemplates[0];
   subjectEl.value = t.subject;
   msgEl.value     = t.body;
   flashBorder(msgEl);
