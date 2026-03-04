@@ -1327,6 +1327,7 @@
 
   <div class="filters">
     <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
+    <button class="filter-btn" id="draftsTabBtn" onclick="showDraftsTab(this)">Drafts <span id="draftsTabCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" onclick="filterCards('email1', this)">First email</button>
@@ -2348,7 +2349,14 @@ async function computeStats() {
     }).length;
 
     const gmailDraftCount = await fetchGmailDraftCount();
-    document.getElementById('statDraftsReady').textContent = gmailDraftCount !== null ? gmailDraftCount : prospects.length;
+    const draftDisplayCount = gmailDraftCount !== null ? gmailDraftCount : prospects.length;
+    document.getElementById('statDraftsReady').textContent = draftDisplayCount;
+    document.getElementById('statTotal').textContent = draftDisplayCount;
+    const draftsTabBadge = document.getElementById('draftsTabCount');
+    if (draftsTabBadge) {
+      draftsTabBadge.textContent = draftDisplayCount;
+      draftsTabBadge.style.display = draftDisplayCount > 0 ? 'inline' : 'none';
+    }
     document.getElementById('statResponded').textContent = responded;
     document.getElementById('statMeetings').textContent = meetings;
     document.getElementById('statLinkedIn').textContent = linkedinSent;
@@ -2865,18 +2873,22 @@ function hideBouncePanel() {
   document.getElementById('cardsContainer').style.display = '';
 }
 
+function showDraftsTab(btn) {
+  setPageTitle('Drafts', 'ready to send');
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  showDraftsPanel();
+}
+
 function showDraftsPanel() {
   document.getElementById('cardsContainer').style.display = 'none';
   document.getElementById('bouncePanel').style.display = 'none';
-  document.getElementById('linkedinPanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
-  document.getElementById('followupPanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
+  document.getElementById('linkedinPanel').style.display = 'none';
+  document.getElementById('nurturePanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
   document.getElementById('conversationsPanel').style.display = 'none';
-  document.getElementById('reviewPanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
+  document.getElementById('reviewPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'block';
-  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   loadDraftsPanel();
 }
 
