@@ -2556,7 +2556,7 @@ async function loadFollowup() {
     if (!linkedInByEmail || !Object.keys(linkedInByEmail).length) {
       try {
         const lixRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('Lix Cleaned!A:W')}`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('Lix Cleaned!A:AA')}`,
           { headers: { Authorization: `Bearer ${CONFIG.token}` } }
         );
         if (lixRes.ok) {
@@ -2565,7 +2565,7 @@ async function loadFollowup() {
           linkedInByEmail = {};
           lixRows.forEach(r => {
             const em = (r[0] || '').toLowerCase().trim();
-            const url = (r[22] || '').trim();
+            const url = (r[26] || '').trim(); // col AA = index 26
             if (em && url) linkedInByEmail[em] = url;
           });
         }
@@ -2644,9 +2644,14 @@ function liOpen(btn, type) {
   const card = btn.closest('[data-li-url]') || btn.closest('[data-li-name]');
   const url  = card ? (card.dataset.liUrl  || '') : '';
   const name = card ? (card.dataset.liName || '') : '';
-  const connectMsg  = 'Hi ' + name + ',\n\nI wanted to connect to intro myself, and the fractional new business support I help agencies with.\n\nCheers,\nCoris';
-  const followupMsg = 'Hi ' + name + ',\n\nThanks for connecting. If what I sent over is of interest at all, I’d love to have a quick conversation — happy to work around your schedule.\n\nKind regards,\nCoris';
-  const msg = type === 'followup' ? followupMsg : connectMsg;
+  let msg;
+  if (type === 'followup') {
+    // Copy whatever is in the visible message box
+    const msgBox = card ? card.querySelector('.followup-msg-box') : null;
+    msg = msgBox ? msgBox.innerText : ('Hi ' + name + ',\n\nThanks for connecting. If what I sent over is of interest at all, I’d love to have a quick conversation — happy to work around your schedule.\n\nKind regards,\nCoris');
+  } else {
+    msg = 'Hi ' + name + ',\n\nI wanted to connect to intro myself, and the fractional new business support I help agencies with.\n\nCheers,\nCoris';
+  }
   navigator.clipboard.writeText(msg).catch(() => {});
   if (url) window.open(url, '_blank');
   const orig = btn.title;
