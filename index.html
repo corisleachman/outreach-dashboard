@@ -3811,9 +3811,8 @@ async function approveReviewCard(rowNumber) {
       <span style="font-size:12px;color:var(--amber);font-family:'DM Mono',monospace;">⚠ Email missing — expand card to add or generate one</span>
       ${guessEmail ? `<button onclick="generateEmailForCard(${rowNumber},'${guessEmail}',this)" style="background:var(--amber);color:#0d0d0f;border:none;padding:4px 12px;border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;cursor:pointer;white-space:nowrap;">Generate email</button>` : ''}
     `;
-    // Insert after the card header
-    const header = card.querySelector('[style*="cursor:pointer"]') || card.firstElementChild;
-    if (header && header.nextSibling) card.insertBefore(alertDiv, header.nextSibling);
+    // Insert at top of card (before first child)
+    if (card.firstChild) card.insertBefore(alertDiv, card.firstChild);
     else card.appendChild(alertDiv);
     // Auto-remove after 8s
     setTimeout(() => alertDiv.remove(), 8000);
