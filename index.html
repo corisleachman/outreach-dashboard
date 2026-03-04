@@ -3949,23 +3949,21 @@ async function loadNurture() {
           </div>
         </div>
         <div id="nurture-expand-${rowNumber}" style="display:none;padding:20px 24px;border-top:1px solid var(--border);">
-          <div id="nurture-types-${rowNumber}" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
-            <label style="font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;align-self:center;margin-right:4px;">MESSAGE TYPE</label>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:8px;">MESSAGE TYPE</div>
+          <div id="nurture-types-${rowNumber}" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;align-items:center;">
             <button class="conv-type-btn active-type" data-type="value-drop" onclick="selectNurtureType(${rowNumber}, 'value-drop', this)">✦ Value drop</button>
             <button class="conv-type-btn" data-type="chase" onclick="selectNurtureType(${rowNumber}, 'chase', this)">↻ Regular chase</button>
             <button class="conv-type-btn" data-type="checkin" onclick="selectNurtureType(${rowNumber}, 'checkin', this)">◎ Check-in</button>
+            <button id="nurture-gen-btn-${rowNumber}" onclick="generateNurtureMsg(${rowNumber}, '${firstName}', '${agency}')"
+              style="background:var(--accent);border:1px solid var(--accent);color:#0a0a0a;padding:5px 14px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;font-weight:600;transition:opacity 0.15s;margin-left:4px;"
+              onmouseover="this.style.opacity='0.85'"
+              onmouseout="this.style.opacity='1'">
+              ✦ Generate <span style="font-size:9px;opacity:0.7;margin-left:4px;" id="nurture-tone-label-${rowNumber}">Calm &amp; Commercial</span>
+            </button>
           </div>
           <div style="margin-bottom:8px;font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">SUBJECT</div>
           <input id="nurture-subject-${rowNumber}" type="text" placeholder="Subject line…" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px;" />
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-            <div style="font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">MESSAGE</div>
-            <button id="nurture-gen-btn-${rowNumber}" onclick="generateNurtureMsg(${rowNumber}, '${firstName}', '${agency}')"
-              style="background:transparent;border:1px solid var(--border-light);color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.15s;"
-              onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-              onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
-              ✦ Generate <span style="font-size:9px;opacity:0.6;margin-left:4px;" id="nurture-tone-label-${rowNumber}">Calm &amp; Commercial</span>
-            </button>
-          </div>
+          <div style="margin-bottom:8px;font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">MESSAGE</div>
           <textarea id="nurture-msg-${rowNumber}" placeholder="Your message will appear here after clicking Generate…" style="width:100%;box-sizing:border-box;min-height:160px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6;"></textarea>
           <div style="display:flex;justify-content:flex-end;margin-top:12px;">
             <button class="send-btn" onclick="sendNurtureEmail(${rowNumber}, this)">↑ Send email</button>
@@ -4215,14 +4213,20 @@ function renderConversations(contacts) {
 
       <div id="conv-body-${rowNumber}" style="display:none;padding:0 20px 20px;border-top:1px solid var(--border);">
 
-        <!-- Message type selector -->
+        <!-- Message type selector + Generate -->
         <div style="margin:16px 0 12px;">
           <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:8px;">MESSAGE TYPE</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;" id="conv-types-${rowNumber}">
+          <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;" id="conv-types-${rowNumber}">
             <button class="conv-type-btn active-type" data-type="value-drop" onclick="selectConvType(${rowNumber}, 'value-drop', this)">✦ Value drop</button>
             <button class="conv-type-btn" data-type="chase" onclick="selectConvType(${rowNumber}, 'chase', this)">↻ Regular chase</button>
             <button class="conv-type-btn" data-type="checkin" onclick="selectConvType(${rowNumber}, 'checkin', this)">◎ Check-in</button>
             <button class="conv-type-btn" data-type="post-meeting" onclick="selectConvType(${rowNumber}, 'post-meeting', this)">✓ Post-meeting</button>
+            <button id="conv-gen-btn-${rowNumber}" onclick="generateConvMessage(${rowNumber})"
+              style="background:var(--accent);border:1px solid var(--accent);color:#0a0a0a;padding:5px 14px;border-radius:20px;font-size:11px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;font-weight:600;transition:opacity 0.15s;margin-left:4px;"
+              onmouseover="this.style.opacity='0.85'"
+              onmouseout="this.style.opacity='1'">
+              ✦ Generate <span style="font-size:9px;opacity:0.7;margin-left:4px;" id="conv-tone-label-${rowNumber}">Calm &amp; Commercial</span>
+            </button>
           </div>
         </div>
 
@@ -4236,15 +4240,7 @@ function renderConversations(contacts) {
 
         <!-- Message body -->
         <div style="margin-bottom:16px;">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-            <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;">MESSAGE</div>
-            <button id="conv-gen-btn-${rowNumber}" onclick="generateConvMessage(${rowNumber})"
-              style="background:transparent;border:1px solid var(--border-light);color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.15s;"
-              onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
-              onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
-              ✦ Generate <span style="font-size:9px;opacity:0.6;margin-left:4px;">Calm &amp; Commercial</span>
-            </button>
-          </div>
+          <div style="font-family:'DM Mono',monospace;font-size:10px;color:var(--text-muted);letter-spacing:0.08em;margin-bottom:6px;">MESSAGE</div>
           <textarea id="conv-message-${rowNumber}" rows="7" placeholder="Your message will appear here after clicking Generate…"
             style="width:100%;background:var(--surface2);border:1px solid var(--border);color:var(--text);padding:10px 12px;border-radius:6px;font-size:13px;font-family:'DM Sans',sans-serif;line-height:1.65;resize:vertical;outline:none;transition:border-color 0.15s;"
             onfocus="this.style.borderColor='var(--border-light)'" onblur="this.style.borderColor='var(--border)'"></textarea>
