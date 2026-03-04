@@ -1247,7 +1247,7 @@
 
     <!-- BACKLOG — shown first; items rendered dynamically from localStorage -->
     <div style="margin-bottom:28px;">
-      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog</div>
+      <div style="font-family:'DM Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--amber);margin-bottom:14px;">⬡ Backlog — Phase 1 → 2 → 3</div>
       <div class="roadmap-list" id="backlogList"></div>
       <div class="roadmap-add-row">
         <input type="text" id="backlogInput" class="roadmap-add-input" placeholder="Add to backlog…" onkeydown="if(event.key==='Enter')addBacklogItem()">
@@ -1281,6 +1281,13 @@
         <div class="roadmap-item done">Bounce retry — triggers Make scenario to create new draft with PDF attachment</div>
         <div class="roadmap-item done">Bounce retry — updates Lix column E and People column G with new address</div>
         <div class="roadmap-item done">Mark undeliverable — writes status to sheet, removes from active list</div>
+        <div class="roadmap-item done">Persistent Gmail auth — OAuth refresh token, no manual token pasting</div>
+        <div class="roadmap-item done">Review tab — vet Lix imports, approve/skip, auto-populate People sheet</div>
+        <div class="roadmap-item done">Conversations tab — active pipeline view with editable status dropdown</div>
+        <div class="roadmap-item done">Nurture tab — multi-sequence follow-up with tone cycling and reply threading</div>
+        <div class="roadmap-item done">Follow-up tab — LinkedIn follow-up with message copy and profile open</div>
+        <div class="roadmap-item done">Search on Review, LinkedIn, and Nurture tabs</div>
+        <div class="roadmap-item done">Email missing alert with auto-generate from domain on approve</div>
       </div>
     </div>
 
@@ -3335,13 +3342,21 @@ async function markUndeliverable(rowNumber, btn) {
 
 // ── ROADMAP ───────────────────────────────────────────────────────
 const DEFAULT_BACKLOG = [
-  'Persistent Gmail auth — refresh token so token never needs manual pasting again',
+  // Phase 1 — v1 close-out
   'Make Scenario 2 date gate — follow-ups only fire after 5 days',
   'Nurture scenario date gate — nurture emails only fire after 14 days',
-  'Database migration — move off Google Sheets to a proper backend (single source of truth, no dual-sheet reconciliation)',
-  'Status as structured enum with timestamps — replace string-matching (e.g. 2nd follow-up sent) with a proper stage field',
-  'Prospect identity via ID field — stop using email as primary key across sheets',
-  'App name + brand identity — give the product its own name, visual language, and sense of identity',
+  'Code review — audit for fragility and clean up anything brittle',
+  'Reorder tabs to mirror funnel (contacts → MQL → SQL → active → done)',
+  // Phase 2 — re-architect for multi-tenant
+  'Database migration — move off Google Sheets to a proper backend',
+  'Authentication — each user has their own account and data',
+  'Status as structured enum with timestamps — replace fragile string-matching',
+  'Prospect identity via ID field — stop using email as primary key',
+  'Onboarding flow — provisions Make, Gmail, and Claude automatically',
+  'CSV import — the only manual step in setup',
+  // Phase 3 — product / SaaS
+  'URL onboarding — someone visits a URL, enters details, gets a fully working CRM',
+  'App name + brand identity — own name, visual language, sense of identity',
   'Mobile-responsive layout',
 ];
 
