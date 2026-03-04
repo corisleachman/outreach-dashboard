@@ -1639,8 +1639,13 @@ function launchDashboard(token) {
   document.getElementById('setupPanel').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   document.getElementById('refreshBtn').style.display = 'block';
-  setPageTitle('First email', 'drafts ready');
-  loadDrafts();
+  setPageTitle('Prospect', 'review');
+  // Default to Review tab
+  const reviewBtn = document.querySelector('.filter-btn');
+  if (reviewBtn) reviewBtn.classList.add('active');
+  document.getElementById('draftsPanel').style.display = 'none';
+  document.getElementById('reviewPanel').style.display = 'block';
+  loadReview();
 }
 
 // ── GMAIL DRAFT COUNT ────────────────────────────────────────────
@@ -3741,11 +3746,15 @@ async function approveReviewCard(rowNumber) {
   const org       = orgEl   ? orgEl.value.trim()   : (card.dataset.org       || '');
   const email     = emailEl ? emailEl.value.trim() : (card.dataset.email     || '');
 
-  if (!email) { statusEl.textContent = 'Expand card to verify email first.'; statusEl.style.color = 'var(--amber)'; return; }
+  if (!email) {
+    if (statusEl) { statusEl.textContent = 'Expand card to verify email first.'; statusEl.style.color = 'var(--amber)'; }
+    else showToast('error', '⚠', 'Expand card to verify email first');
+    return;
+  }
 
   approveBtns.forEach(b => { b.textContent = '✓'; b.disabled = true; });
   skipBtns.forEach(b => b.disabled = true);
-  statusEl.textContent = '';
+  if (statusEl) statusEl.textContent = '';
 
   try {
     // 1. Write any edits back to Lix row + set Go? = yes
@@ -3764,7 +3773,7 @@ async function approveReviewCard(rowNumber) {
     if (!lixRes.ok) throw new Error('Failed to update Lix sheet');
 
     // 2. Find this person in People sheet by email and set status = Prospect added
-    statusEl.textContent = 'Finding in People sheet…';
+    if (statusEl) statusEl.textContent = 'Finding in People sheet…';
     await new Promise(r => setTimeout(r, 1500)); // brief wait for sheet formula to propagate
 
     const peopleRes = await fetch(
@@ -3793,12 +3802,11 @@ async function approveReviewCard(rowNumber) {
             { range: `${SHEET_NAME}!K${peopleRowNum}`, values: [['Prospect added']] }
           ]}) }
       );
-      statusEl.textContent = `✓ Added to People row ${peopleRowNum}`;
+      if (statusEl) statusEl.textContent = `✓ Added to People row ${peopleRowNum}`;
     } else {
       // Not in People yet — the Lix→People formula may need a moment, or they need adding manually
       // We still approved in Lix; let the user know
-      statusEl.textContent = '✓ Approved in Lix — add "Prospect added" to People manually if not auto-populated';
-      statusEl.style.color = 'var(--amber)';
+      if (statusEl) { statusEl.textContent = '✓ Approved in Lix — add "Prospect added" to People manually if not auto-populated'; statusEl.style.color = 'var(--amber)'; }
     }
 
     approveBtns.forEach(b => b.textContent = '✓');
@@ -3815,8 +3823,8 @@ async function approveReviewCard(rowNumber) {
     else { badge.style.display = 'none'; }
 
   } catch(e) {
-    statusEl.textContent = e.message;
-    statusEl.style.color = 'var(--red)';
+    if (statusEl) { statusEl.textContent = e.message; statusEl.style.color = 'var(--red)'; }
+    else showToast('error', '⚠', e.message);
     approveBtns.forEach(b => { b.textContent = '✓ Approve'; b.disabled = false; });
     skipBtns.forEach(b => b.disabled = false);
   }
