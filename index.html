@@ -3902,6 +3902,19 @@ async function loadNurture() {
       rows = (data.values || []).slice(1).map((row, i) => ({ row, rowNumber: i + 2 }));
     }
 
+    // Build LinkedIn URL lookup from Lix Cleaned col A (email) + col AA (LinkedIn URL)
+    const lixRes = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!A:AA')}`,
+      { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+    );
+    const lixData = lixRes.ok ? await lixRes.json() : {};
+    const nurtureLinkedIn = {};
+    (lixData.values || []).slice(1).forEach(r => {
+      const em = (r[0] || '').toLowerCase().trim();
+      const url = (r[26] || '').trim(); // col AA = index 26
+      if (em && url) nurtureLinkedIn[em] = url;
+    });
+
     const nurture = rows.filter(({ row }) => {
       const status = (row[COL.status] || '').trim().toLowerCase();
       // Match any follow-up email in sequence: 2nd, 3rd, 4th, 5th... follow-up sent
@@ -3930,7 +3943,7 @@ async function loadNurture() {
       const position  = row[COL.position]  || '';
       const email     = (row[COL.email] || '').toLowerCase().trim();
       const initials  = (firstName[0] || '') + (lastName[0] || '');
-      const liUrl     = linkedInByEmail[email] || row[COL.linkedin] || '';
+      const liUrl     = nurtureLinkedIn[email] || '';
 
       const card = document.createElement('div');
       card.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;';
