@@ -1323,7 +1323,7 @@
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn active" onclick="filterCards('email1', this)">First email</button>
-    <button class="filter-btn" onclick="filterCards('followup', this)">Follow-ups</button>
+    <button class="filter-btn" onclick="filterCards('followup', this)">Sent</button>
     <button class="filter-btn" onclick="filterCards('nurture', this)">Nurture</button>
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
     <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
@@ -2535,6 +2535,25 @@ async function loadFollowup() {
   const container = document.getElementById('followupContainer');
   container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading...</div></div>`;
   try {
+    // Ensure LinkedIn URL map is populated
+    if (!linkedInByEmail || !Object.keys(linkedInByEmail).length) {
+      try {
+        const lixRes = await fetch(
+          `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('Lix Cleaned!A:W')}`,
+          { headers: { Authorization: `Bearer ${CONFIG.token}` } }
+        );
+        if (lixRes.ok) {
+          const lixData = await lixRes.json();
+          const lixRows = (lixData.values || []).slice(1);
+          linkedInByEmail = {};
+          lixRows.forEach(r => {
+            const em = (r[0] || '').toLowerCase().trim();
+            const url = (r[22] || '').trim();
+            if (em && url) linkedInByEmail[em] = url;
+          });
+        }
+      } catch(e) { /* non-fatal */ }
+    }
     let rows = allPeopleRows;
     if (!rows || !rows.length) {
       const range = `${SHEET_NAME}!A:W`;
