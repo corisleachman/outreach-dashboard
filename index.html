@@ -1346,7 +1346,7 @@
       </div>
       <button class="refresh-btn" onclick="loadDraftsPanel()">↻ Refresh</button>
     </div>
-    <div id="draftsPanelContainer"></div>
+    <div id="draftsPanelContainer" style="display:flex;flex-direction:column;gap:12px;"></div>
   </div>
 
   <!-- BOUNCE PANEL -->
@@ -1426,7 +1426,7 @@
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Lix imports awaiting vetting — approve to add to People and trigger first email draft, or skip to dismiss.</div>
       </div>
       <div style="display:flex;gap:10px;">
-        <button class="refresh-btn" id="reviewGenDraftsBtn" onclick="triggerDraftGeneration()" title="Run the Make scenario that generates first email drafts for all approved prospects">✦ Generate drafts</button>
+
         <button class="refresh-btn" onclick="loadReview()">↻ Refresh</button>
       </div>
     </div>
@@ -3909,8 +3909,22 @@ async function approveReviewCard(rowNumber) {
     }
 
     approveBtns.forEach(b => b.textContent = '✓');
-    showToast('success', '✓', `${firstName} ${lastName} approved`);
+    showToast('success', '✓', `${firstName} ${lastName} approved — generating draft…`);
     allPeopleRows = []; // invalidate cache so next tab fetches fresh data
+
+    // 3. Trigger Make to generate the first email draft for this prospect
+    if (CONFIG.draftGenWebhookUrl) {
+      try {
+        await fetch(CONFIG.draftGenWebhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, firstName, lastName, org, peopleRow: peopleRowNum })
+        });
+        showToast('success', '✦', `Draft generation triggered for ${firstName}`);
+      } catch(webhookErr) {
+        showToast('error', '⚠', 'Approved, but draft webhook failed: ' + webhookErr.message);
+      }
+    }
     card.style.transition = 'opacity 0.4s';
     card.style.opacity = '0';
     setTimeout(() => { card.style.transition = 'max-height 0.3s, margin 0.3s, padding 0.3s, opacity 0s'; card.style.maxHeight = '0'; card.style.overflow = 'hidden'; card.style.marginBottom = '0'; card.style.paddingTop = '0'; card.style.paddingBottom = '0'; setTimeout(() => card.remove(), 320); }, 420);
