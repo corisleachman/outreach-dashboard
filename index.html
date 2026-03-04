@@ -1305,7 +1305,7 @@
 <div class="dashboard" id="dashboard">
 
   <div class="dash-header">
-    <h1>Drafts <em>ready to send</em></h1>
+    <h1 id="pageTitle">Drafts <em>ready to send</em></h1>
     <div class="summary-stats">
       <div class="stat">
         <div class="stat-number" id="statTotal" style="cursor:pointer" title="Click to show all drafts" onclick="showDraftsPanel()">—</div>
@@ -1319,15 +1319,14 @@
   </div>
 
   <div class="filters">
-    <button class="filter-btn active" onclick="filterCards('all', this)">All</button>
-    <button class="filter-btn" onclick="filterCards('email1', this)">First email</button>
+    <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
+    <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+    <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+    <button class="filter-btn active" onclick="filterCards('email1', this)">First email</button>
     <button class="filter-btn" onclick="filterCards('followup', this)">Follow-ups</button>
     <button class="filter-btn" onclick="filterCards('nurture', this)">Nurture</button>
-    <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
-    <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
-    <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
-    <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
+    <button class="filter-btn" id="bounceTabBtn" onclick="showBounceTab(this)">Bounced <span id="bounceCount" style="display:none;background:var(--red);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
   </div>
 
   <!-- DRAFTS PANEL -->
@@ -1508,7 +1507,7 @@ function getDraftType(status, draftType) {
   const s = (status || '').toLowerCase();
   const d = (draftType || '').toLowerCase();
   if (s.includes('first email') || d.includes('email 1') || d.includes('draft email')) return 'email1';
-  if (s.includes('follow-up') || d.includes('follow-up')) return 'followup';
+  if (s.includes('2nd follow-up') || d.includes('follow-up')) return 'followup';
   if (s.includes('nurture')) return 'nurture';
   return 'email1';
 }
@@ -1517,7 +1516,7 @@ function getDraftType(status, draftType) {
 function getNewStatus(currentStatus) {
   const s = (currentStatus || '').toLowerCase();
   if (s.includes('first email')) return 'First email sent';
-  if (s.includes('follow-up')) return 'Follow-up sent';
+  if (s.includes('2nd follow-up')) return '2nd follow-up sent';
   if (s.includes('nurture')) return 'Nurture sent';
   return 'Email sent';
 }
@@ -1628,6 +1627,7 @@ function launchDashboard(token) {
   document.getElementById('setupPanel').style.display = 'none';
   document.getElementById('dashboard').style.display = 'block';
   document.getElementById('refreshBtn').style.display = 'block';
+  setPageTitle('First email', 'drafts ready');
   loadDrafts();
 }
 
@@ -1920,9 +1920,17 @@ function toggleCard(card) {
 }
 
 // ── FILTER ──────────────────────────────────────────────────────
+
+function setPageTitle(main, sub) {
+  const el = document.getElementById('pageTitle');
+  if (el) el.innerHTML = main + (sub ? ' <em>' + sub + '</em>' : '');
+}
 function filterCards(type, btn) {
   hideBouncePanel();
   currentFilter = type;
+  const titleMap = { email1: ['First email', 'drafts ready'], followup: ['Follow-ups', 'ready to send'], nurture: ['Nurture', 'follow-ups'], all: ['Drafts', 'ready to send'] };
+  const t = titleMap[type] || titleMap['all'];
+  setPageTitle(t[0], t[1]);
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   if (btn) btn.classList.add('active');
 
@@ -2357,6 +2365,7 @@ async function markResponded(rowNumber, btn) {
 
 // ── LINKEDIN TAB ─────────────────────────────────────────────────
 async function showLinkedInTab(btn) {
+  setPageTitle('LinkedIn', 'connections');
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
@@ -2508,6 +2517,7 @@ async function setLinkedInStatus(rowNumber, value, btn) {
 // ── FOLLOW-UP TAB ─────────────────────────────────────────
 
 async function showFollowupTab(btn) {
+  setPageTitle('LinkedIn', 'follow-up');
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
@@ -2759,6 +2769,7 @@ async function findLixRowByEmail(email) {
 }
 
 async function showBounceTab(btn) {
+  setPageTitle('Bounced', 'emails');
   // Switch UI to bounce panel
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
@@ -3475,6 +3486,7 @@ const LIX_COLS = {
 };
 
 async function showReviewTab(btn) {
+  setPageTitle('Prospect', 'review');
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
@@ -3808,6 +3820,7 @@ async function triggerDraftGeneration() {
 }
 
 async function showConversationsTab(btn) {
+  setPageTitle('Conversations', 'in progress');
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
