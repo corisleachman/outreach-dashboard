@@ -1322,7 +1322,7 @@
     <button class="filter-btn" id="reviewTabBtn" onclick="showReviewTab(this)">Review <span id="reviewCount" style="display:none;background:var(--amber);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
     <button class="filter-btn" id="linkedinTabBtn" onclick="showLinkedInTab(this)">LinkedIn <span id="linkedinCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="followupTabBtn" onclick="showFollowupTab(this)">Follow-up <span id="followupCount" style="display:none;background:var(--blue);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
-    <button class="filter-btn active" onclick="filterCards('email1', this)">First email</button>
+    <button class="filter-btn" onclick="filterCards('email1', this)">First email</button>
     <button class="filter-btn" onclick="filterCards('followup', this)">Sent</button>
     <button class="filter-btn" id="nurtureTabBtn" onclick="showNurtureTab(this)">Nurture <span id="nurtureCount" style="display:none;background:var(--purple);color:#fff;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;"></span></button>
     <button class="filter-btn" id="conversationsTabBtn" onclick="showConversationsTab(this)">Conversations <span id="conversationsCount" style="display:none;background:var(--accent);color:#0d0d0f;border-radius:10px;padding:1px 6px;font-size:10px;margin-left:2px;font-weight:600;"></span></button>
@@ -1390,6 +1390,11 @@
       </div>
       <button class="refresh-btn" onclick="allPeopleRows=[];loadLinkedIn()">↻ Refresh</button>
     </div>
+    <div style="margin-bottom:16px;">
+      <input id="linkedinSearch" type="text" placeholder="Search name, role, or agency…" oninput="filterLinkedInCards(this.value)"
+        style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;"
+        onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'" />
+    </div>
     <div id="linkedinContainer"></div>
   </div>
 
@@ -1443,6 +1448,11 @@
         <div style="font-size:12px;color:var(--text-muted);margin-top:4px;">Received 2 emails, no response yet — send a value drop, chase, or check-in.</div>
       </div>
       <button class="refresh-btn" onclick="allPeopleRows=[];loadNurture()">↻ Refresh</button>
+    </div>
+    <div style="margin-bottom:16px;">
+      <input id="nurtureSearch" type="text" placeholder="Search name, role, or agency…" oninput="filterNurtureCards(this.value)"
+        style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s;"
+        onfocus="this.style.borderColor='var(--blue)'" onblur="this.style.borderColor='var(--border)'" />
     </div>
     <div id="nurtureContainer"></div>
   </div>
@@ -1641,10 +1651,10 @@ function launchDashboard(token) {
   document.getElementById('refreshBtn').style.display = 'block';
   setPageTitle('Prospect', 'review');
   // Default to Review tab
-  const reviewBtn = document.querySelector('.filter-btn');
-  if (reviewBtn) reviewBtn.classList.add('active');
   document.getElementById('draftsPanel').style.display = 'none';
   document.getElementById('reviewPanel').style.display = 'block';
+  const reviewBtn = document.getElementById('reviewTabBtn');
+  if (reviewBtn) reviewBtn.classList.add('active');
   loadReview();
 }
 
@@ -2407,6 +2417,7 @@ function hideLinkedInPanel() {
 async function loadLinkedIn() {
   const container = document.getElementById('linkedinContainer');
   container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading...</div></div>`;
+  const liSearch = document.getElementById('linkedinSearch'); if (liSearch) liSearch.value = '';
 
   try {
     // Always fetch fresh data for accuracy
@@ -3642,6 +3653,7 @@ function renderReviewCard(row, rowNumber, container) {
   card.dataset.lastName  = lastName;
   card.dataset.org       = org;
   card.dataset.email     = email;
+  card.dataset.website   = (row[LIX_COLS.website] || '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0].trim();
   card.dataset.liUrl      = profileLink || '';
   card.dataset.liName     = firstName  || '';
 
@@ -3712,6 +3724,22 @@ function renderReviewCard(row, rowNumber, container) {
   container.appendChild(card);
 }
 
+function filterLinkedInCards(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#linkedinContainer .linkedin-card').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+
+function filterNurtureCards(query) {
+  const q = query.toLowerCase();
+  document.querySelectorAll('#nurtureContainer > div').forEach(card => {
+    const text = card.textContent.toLowerCase();
+    card.style.display = (!q || text.includes(q)) ? '' : 'none';
+  });
+}
+
 function filterReviewCards(query) {
   const q = query.toLowerCase().trim();
   document.querySelectorAll('.review-card').forEach(card => {
@@ -3725,6 +3753,27 @@ function filterReviewCards(query) {
     ].join(' ').toLowerCase();
     card.style.display = text.includes(q) ? '' : 'none';
   });
+}
+
+function generateEmailForCard(rowNumber, guessEmail, btn) {
+  // Populate the email field in the expanded card, then re-trigger approve
+  const emailEl = document.getElementById(`rv-email-${rowNumber}`);
+  if (emailEl) {
+    emailEl.value = guessEmail;
+    emailEl.style.borderColor = 'var(--amber)';
+    setTimeout(() => emailEl.style.borderColor = '', 2000);
+  }
+  // Remove the alert
+  const alert = btn.closest('.email-missing-alert');
+  if (alert) alert.remove();
+  // If card isn't expanded, expand it so user can see the populated field
+  const body = document.getElementById(`rv-body-${rowNumber}`);
+  if (body && body.style.display === 'none') {
+    body.style.display = 'block';
+    const chevron = document.getElementById(`rv-chevron-${rowNumber}`);
+    if (chevron) chevron.style.transform = 'rotate(180deg)';
+  }
+  showToast('success', '✓', `Generated: ${guessEmail} — review then approve`);
 }
 
 async function approveReviewCard(rowNumber) {
@@ -3747,8 +3796,27 @@ async function approveReviewCard(rowNumber) {
   const email     = emailEl ? emailEl.value.trim() : (card.dataset.email     || '');
 
   if (!email) {
-    if (statusEl) { statusEl.textContent = 'Expand card to verify email first.'; statusEl.style.color = 'var(--amber)'; }
-    else showToast('error', '⚠', 'Expand card to verify email first');
+    // Show inline alert with Generate email option
+    const existingAlert = card.querySelector('.email-missing-alert');
+    if (existingAlert) return; // already shown
+    // Try to guess email from firstName + agency website
+    const guessFirst = (card.dataset.firstName || '').toLowerCase().replace(/[^a-z]/g,'');
+    const guessWebsite = (card.dataset.website || card.dataset.org || '').toLowerCase()
+      .replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0].trim();
+    const guessEmail = guessFirst && guessWebsite ? `${guessFirst}@${guessWebsite}` : '';
+    const alertDiv = document.createElement('div');
+    alertDiv.className = 'email-missing-alert';
+    alertDiv.style.cssText = 'margin:8px 16px 0;padding:10px 14px;background:rgba(251,191,36,0.08);border:1px solid rgba(251,191,36,0.3);border-radius:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;';
+    alertDiv.innerHTML = `
+      <span style="font-size:12px;color:var(--amber);font-family:'DM Mono',monospace;">⚠ Email missing — expand card to add or generate one</span>
+      ${guessEmail ? `<button onclick="generateEmailForCard(${rowNumber},'${guessEmail}',this)" style="background:var(--amber);color:#0d0d0f;border:none;padding:4px 12px;border-radius:6px;font-size:11px;font-family:'DM Mono',monospace;font-weight:600;cursor:pointer;white-space:nowrap;">Generate email</button>` : ''}
+    `;
+    // Insert after the card header
+    const header = card.querySelector('[style*="cursor:pointer"]') || card.firstElementChild;
+    if (header && header.nextSibling) card.insertBefore(alertDiv, header.nextSibling);
+    else card.appendChild(alertDiv);
+    // Auto-remove after 8s
+    setTimeout(() => alertDiv.remove(), 8000);
     return;
   }
 
@@ -3902,6 +3970,7 @@ async function showNurtureTab(btn) {
 async function loadNurture() {
   const container = document.getElementById('nurtureContainer');
   container.innerHTML = `<div class="loading-state"><div class="loader"></div><div class="loading-text">Loading nurture contacts...</div></div>`;
+  const nuSearch = document.getElementById('nurtureSearch'); if (nuSearch) nuSearch.value = '';
   try {
     let rows = allPeopleRows;
     if (!rows || !rows.length) {
