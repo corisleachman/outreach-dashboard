@@ -4122,6 +4122,37 @@ async function sendNurtureEmail(rowNumber, btn) {
   }
 }
 
+async function updateConvStatus(rowNumber, select) {
+  const newStatus = select.value;
+  const opt = [
+    { value: 'Conversation ongoing',         color: 'var(--blue)' },
+    { value: 'Closed – meeting booked', color: 'var(--accent)' },
+    { value: 'Closed – not interested', color: 'var(--text-muted)' },
+    { value: 'Closed – won',            color: 'var(--green)' },
+  ].find(o => o.value === newStatus) || { color: 'var(--text-muted)' };
+
+  select.style.color = opt.color;
+  select.style.borderColor = opt.color;
+
+  try {
+    const res = await fetch(
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(SHEET_NAME + '!K' + rowNumber)}?valueInputOption=USER_ENTERED`,
+      {
+        method: 'PUT',
+        headers: { Authorization: `Bearer ${CONFIG.token}`, 'Content-Type': 'application/json' },
+        body: JSON.stringify({ values: [[newStatus]] })
+      }
+    );
+    if (!res.ok) throw new Error('Sheet update failed');
+    showToast('success', '✓', 'Status updated');
+    // Update allPeopleRows cache so other tabs reflect change immediately
+    const cached = allPeopleRows.find(p => p.rowNumber === rowNumber);
+    if (cached) cached.row[COL.status] = newStatus;
+  } catch(e) {
+    showToast('error', '⚠', 'Could not update status: ' + e.message);
+  }
+}
+
 async function showConversationsTab(btn) {
   setPageTitle('Conversations', 'in progress');
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -4199,9 +4230,13 @@ function renderConversations(contacts) {
     const position   = row[COL.position]   || '';
     const initials   = (firstName[0] || '') + (lastName[0] || '');
 
-    const isMeeting  = status === 'Closed \u2013 meeting booked';
-    const statusColor = isMeeting ? 'var(--accent)' : 'var(--blue)';
-    const statusLabel = isMeeting ? 'MEETING BOOKED' : 'ONGOING';
+    const STATUS_OPTIONS = [
+      { value: 'Conversation ongoing',         label: 'ONGOING',        color: 'var(--blue)' },
+      { value: 'Closed \u2013 meeting booked', label: 'MEETING BOOKED', color: 'var(--accent)' },
+      { value: 'Closed \u2013 not interested', label: 'NOT INTERESTED', color: 'var(--text-muted)' },
+      { value: 'Closed \u2013 won',            label: 'WON',            color: 'var(--green)' },
+    ];
+    const currentOpt = STATUS_OPTIONS.find(o => o.value === status) || STATUS_OPTIONS[0];
 
     const card = document.createElement('div');
     card.className = 'prospect-card';
@@ -4225,7 +4260,12 @@ function renderConversations(contacts) {
           <div style="font-weight:500;font-size:14px;">${firstName} ${lastName}</div>
           <div style="font-size:12px;color:var(--text-muted);">${agency}${position ? ' · ' + position : ''} &nbsp;·&nbsp; <span style="color:var(--text-dim);">${email}</span></div>
         </div>
-        <div style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:${statusColor};border:1px solid ${statusColor};padding:3px 8px;border-radius:4px;letter-spacing:0.06em;flex-shrink:0;">${statusLabel}</div>
+        <select id="conv-status-pill-${rowNumber}"
+          onchange="updateConvStatus(${rowNumber}, this)"
+          onclick="event.stopPropagation()"
+          style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:${currentOpt.color};border:1px solid ${currentOpt.color};padding:3px 8px;border-radius:4px;letter-spacing:0.06em;flex-shrink:0;background:transparent;cursor:pointer;appearance:none;-webkit-appearance:none;outline:none;">
+          ${STATUS_OPTIONS.map(o => `<option value="${o.value}" ${o.value === status ? 'selected' : ''} style="background:var(--surface2);color:var(--text);">${o.label}</option>`).join('')}
+        </select>
         <div style="color:var(--text-dim);font-size:14px;transition:transform 0.2s;" id="conv-chevron-${rowNumber}">▾</div>
       </div>
 
