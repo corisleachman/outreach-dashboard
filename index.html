@@ -2381,13 +2381,12 @@ async function showLinkedInTab(btn) {
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   document.getElementById('cardsContainer').style.display = 'none';
-  document.getElementById('bouncePanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
-  document.getElementById('conversationsPanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
+  document.getElementById('bouncePanel').style.display = 'none';
+  document.getElementById('conversationsPanel').style.display = 'none';
   document.getElementById('draftsPanel').style.display = 'none';
-  document.getElementById('reviewPanel').style.display = 'none';  document.getElementById('nurturePanel').style.display = 'none';
-
+  document.getElementById('reviewPanel').style.display = 'none';
+  document.getElementById('followupPanel').style.display = 'none';
+  document.getElementById('nurturePanel').style.display = 'none';
   document.getElementById('linkedinPanel').style.display = 'block';
   await loadLinkedIn();
 }
@@ -2433,12 +2432,11 @@ async function loadLinkedIn() {
     });
 
     const due = rows.filter(p => {
-      const emailSent = !!(p.row[COL.firstEmailDate]);
       const liStatus = (p.row[COL.linkedinReq] || '').trim().toLowerCase();
-      const liDone = ['connection sent','connection accepted','no - unable to','chose not to','no'].includes(liStatus);
+      const liDone = ['connection sent','connection accepted','no - unable to','chose not to'].includes(liStatus);
+      const hasProfile = !!(p.row[COL.linkedin] || '').trim();
       const notClosed = !(p.row[COL.status] || '').toLowerCase().includes('closed');
-      const notResponded = (p.row[COL.responded] || '').toLowerCase() !== 'yes';
-      return emailSent && !liDone && notClosed && notResponded;
+      return hasProfile && !liDone && notClosed;
     });
 
     if (!due.length) {
@@ -3934,21 +3932,19 @@ async function loadNurture() {
       const liUrl     = linkedInByEmail[email] || row[COL.linkedin] || '';
 
       const card = document.createElement('div');
-      card.className = 'conv-card';
+      card.style.cssText = 'background:var(--surface);border:1px solid var(--border);border-radius:10px;margin-bottom:8px;overflow:hidden;';
       card.style.animationDelay = `${idx * 40}ms`;
       card.innerHTML = `
-        <div class="conv-card-top" onclick="toggleNurtureExpand(${rowNumber}, this)">
-          <div class="conv-card-left">
-            <div class="avatar">${initials}</div>
-            <div>
-              <div class="card-name">${firstName} ${lastName}</div>
-              <div class="conv-meta">${agency}${position ? ' · ' + position : ''}${email ? ' · ' + email : ''}</div>
-            </div>
+        <div style="padding:16px 20px;display:flex;align-items:center;gap:12px;cursor:pointer;" onclick="toggleNurtureExpand(${rowNumber}, this)">
+          <div style="width:36px;height:36px;border-radius:50%;background:var(--surface2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text-muted);flex-shrink:0;">${initials}</div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:500;font-size:14px;">${firstName} ${lastName}</div>
+            <div style="font-size:12px;color:var(--text-muted);">${agency}${position ? ' · ' + position : ''} &nbsp;·&nbsp; <span style="color:var(--text-dim);">${email}</span></div>
           </div>
           <div style="display:flex;align-items:center;gap:8px;">
             ${liUrl ? `<button class="li-profile-icon" onclick="event.stopPropagation();liOpenNurture('${liUrl}','${firstName}')" title="Open LinkedIn profile &amp; copy message"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></button>` : ''}
-            <div class="conv-status-pill ongoing">ONGOING</div>
-            <span style="color:var(--text-dim);font-size:18px;">›</span>
+            <div style="font-family:'DM Mono',monospace;font-size:10px;font-weight:600;color:var(--text-muted);border:1px solid var(--border);padding:3px 8px;border-radius:4px;letter-spacing:0.06em;">NURTURE</div>
+            <div style="color:var(--text-dim);font-size:14px;transition:transform 0.2s;" id="nurture-chevron-${rowNumber}">▾</div>
           </div>
         </div>
         <div id="nurture-expand-${rowNumber}" style="display:none;padding:20px 24px;border-top:1px solid var(--border);">
@@ -3962,7 +3958,12 @@ async function loadNurture() {
           <input id="nurture-subject-${rowNumber}" type="text" placeholder="Subject line…" style="width:100%;box-sizing:border-box;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:12px;" />
           <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
             <div style="font-size:10px;font-weight:600;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;">MESSAGE</div>
-            <button class="generate-btn" onclick="generateNurtureMsg(${rowNumber}, '${firstName}', '${agency}')">✦ Generate <span style="color:var(--text-dim);font-size:10px;margin-left:4px;" id="nurture-tone-label-${rowNumber}">Calm &amp; Commercial</span></button>
+            <button id="nurture-gen-btn-${rowNumber}" onclick="generateNurtureMsg(${rowNumber}, '${firstName}', '${agency}')"
+              style="background:transparent;border:1px solid var(--border-light);color:var(--text-muted);padding:4px 10px;border-radius:5px;font-size:10px;font-family:'DM Mono',monospace;cursor:pointer;letter-spacing:0.03em;transition:all 0.15s;"
+              onmouseover="this.style.borderColor='var(--accent)';this.style.color='var(--accent)'"
+              onmouseout="this.style.borderColor='var(--border-light)';this.style.color='var(--text-muted)'">
+              ✦ Generate <span style="font-size:9px;opacity:0.6;margin-left:4px;" id="nurture-tone-label-${rowNumber}">Calm &amp; Commercial</span>
+            </button>
           </div>
           <textarea id="nurture-msg-${rowNumber}" placeholder="Your message will appear here after clicking Generate…" style="width:100%;box-sizing:border-box;min-height:160px;background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;resize:vertical;line-height:1.6;"></textarea>
           <div style="display:flex;justify-content:flex-end;margin-top:12px;">
@@ -3979,9 +3980,11 @@ async function loadNurture() {
 
 function toggleNurtureExpand(rowNumber, topEl) {
   const expand = document.getElementById('nurture-expand-' + rowNumber);
+  const chevron = document.getElementById('nurture-chevron-' + rowNumber);
   if (!expand) return;
   const isOpen = expand.style.display !== 'none';
   expand.style.display = isOpen ? 'none' : 'block';
+  if (chevron) chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
 }
 
 function selectNurtureType(rowNumber, type, btn) {
