@@ -3724,9 +3724,9 @@ function filterReviewCards(query) {
 
 async function approveReviewCard(rowNumber) {
   const statusEl   = document.getElementById(`rv-status-${rowNumber}`);
-  // Find the card — works whether called from header or body button
-  const anyBtn     = document.querySelector(`[data-row-number="${rowNumber}"]`);
-  const card       = anyBtn;
+  // Scope to reviewPanel to avoid matching same rowNumber in other tabs
+  const reviewPanel = document.getElementById('reviewPanel');
+  const card        = reviewPanel ? reviewPanel.querySelector(`[data-row-number="${rowNumber}"]`) : document.querySelector(`[data-row-number="${rowNumber}"]`);
   const approveBtns = card.querySelectorAll('.review-approve-btn');
   const skipBtns    = card.querySelectorAll('.review-skip-btn');
 
