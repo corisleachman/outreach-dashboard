@@ -2556,7 +2556,7 @@ async function loadFollowup() {
     if (!linkedInByEmail || !Object.keys(linkedInByEmail).length) {
       try {
         const lixRes = await fetch(
-          `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent('Lix Cleaned!A:AA')}`,
+          `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!E:AA')}`,
           { headers: { Authorization: `Bearer ${CONFIG.token}` } }
         );
         if (lixRes.ok) {
@@ -2564,8 +2564,8 @@ async function loadFollowup() {
           const lixRows = (lixData.values || []).slice(1);
           linkedInByEmail = {};
           lixRows.forEach(r => {
-            const em = (r[0] || '').toLowerCase().trim();
-            const url = (r[26] || '').trim(); // col AA = index 26
+            const em = (r[0] || '').toLowerCase().trim(); // col E = index 0
+            const url = (r[22] || '').trim();             // col AA = index 22
             if (em && url) linkedInByEmail[em] = url;
           });
         }
@@ -3909,14 +3909,14 @@ async function loadNurture() {
 
     // Build LinkedIn URL lookup from Lix Cleaned col A (email) + col AA (LinkedIn URL)
     const lixRes = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!A:AA')}`,
+      `https://sheets.googleapis.com/v4/spreadsheets/${CONFIG.sheetId}/values/${encodeURIComponent(LIX_CLEANED_SHEET + '!E:AA')}`,
       { headers: { Authorization: `Bearer ${CONFIG.token}` } }
     );
     const lixData = lixRes.ok ? await lixRes.json() : {};
     const nurtureLinkedIn = {};
     (lixData.values || []).slice(1).forEach(r => {
-      const em = (r[0] || '').toLowerCase().trim();
-      const url = (r[26] || '').trim(); // col AA = index 26
+      const em = (r[0] || '').toLowerCase().trim(); // col E = index 0
+      const url = (r[22] || '').trim();             // col AA = index 22
       if (em && url) nurtureLinkedIn[em] = url;
     });
 
