@@ -1507,7 +1507,8 @@ function getDraftType(status, draftType) {
   const s = (status || '').toLowerCase();
   const d = (draftType || '').toLowerCase();
   if (s.includes('first email') || d.includes('email 1') || d.includes('draft email')) return 'email1';
-  if (s.includes('2nd follow-up') || d.includes('follow-up')) return 'followup';
+  if (s.includes('2nd follow-up')) return 'nurture';
+  if (d.includes('follow-up') || s.includes('follow-up sent')) return 'followup';
   if (s.includes('nurture')) return 'nurture';
   return 'email1';
 }
