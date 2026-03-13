@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiet Luxury Palette Exploration</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: #f8f5ff;
+  color: #1a1a1a;
+  padding: 40px;
+}
+
+.container { max-width: 1400px; margin: 0 auto; }
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.palette-info {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 12px;
+  margin-top: 40px;
+}
+
+.mode-desc {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.comparison-item h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.comparison-item .desc {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.celebration {
+  border-radius: 16px;
+  padding: 36px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.celebration-emoji {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration-text {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.celebration-subtext {
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.celebration-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.metric-card {
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-secondary {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* QUIET LUXURY DARK */
+.quiet-luxury-dark {
+  background: linear-gradient(135deg, #1a1526 0%, #2d2340 50%, #1f1930 100%);
+  border: 2px solid #9b8fa3;
+}
+
+.quiet-luxury-dark .celebration-text {
+  color: #e8dfe8;
+}
+
+.quiet-luxury-dark .celebration-subtext {
+  color: #b8a8c8;
+}
+
+.quiet-luxury-dark .celebration-badge {
+  background: linear-gradient(135deg, #7a6b8f 0%, #9b8fa3 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(123, 107, 143, 0.3);
+}
+
+.quiet-luxury-dark .metric-card {
+  background: rgba(155, 143, 163, 0.1);
+  border: 1.5px solid rgba(155, 143, 163, 0.3);
+  color: #e8dfe8;
+}
+
+.quiet-luxury-dark .metric-card::before {
+  background: linear-gradient(90deg, #9b8fa3 0%, #b8a8c8 100%);
+}
+
+.quiet-luxury-dark .metric-label {
+  color: #b8a8c8;
+}
+
+.quiet-luxury-dark .metric-value {
+  color: #e8dfe8;
+}
+
+.quiet-luxury-dark .metric-secondary {
+  color: #9b8fa3;
+}
+
+/* QUIET LUXURY LIGHT */
+.quiet-luxury-light {
+  background: linear-gradient(135deg, #f9f7fa 0%, #f5f2f8 50%, #faf8fb 100%);
+  border: 2px solid #d4cad6;
+}
+
+.quiet-luxury-light .celebration-text {
+  color: #4a3f55;
+}
+
+.quiet-luxury-light .celebration-subtext {
+  color: #7a6b8f;
+}
+
+.quiet-luxury-light .celebration-badge {
+  background: linear-gradient(135deg, #9b8fa3 0%, #b8a8c8 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(123, 107, 143, 0.2);
+}
+
+.quiet-luxury-light .metric-card {
+  background: rgba(155, 143, 163, 0.06);
+  border: 1.5px solid rgba(155, 143, 163, 0.25);
+  color: #4a3f55;
+}
+
+.quiet-luxury-light .metric-card::before {
+  background: linear-gradient(90deg, #9b8fa3 0%, #b8a8c8 100%);
+}
+
+.quiet-luxury-light .metric-label {
+  color: #7a6b8f;
+}
+
+.quiet-luxury-light .metric-value {
+  color: #4a3f55;
+}
+
+.quiet-luxury-light .metric-secondary {
+  color: #9b8fa3;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Quiet Luxury</h1>
+<div class="palette-info">
+  <strong>Foundation:</strong> Future Dusk, deep moody blue-purple (#1a1526)<br>
+  <strong>Supporting:</strong> Transcendent pink (barely-there elevated neutral #e8dfe8), Ray flower (radiant yellow removed for subtlety)<br>
+  <strong>Feel:</strong> Sophisticated, mysterious, earned confidence, premium
+</div>
+
+<div class="mode-label">Comparison: Dark vs Light</div>
+
+<div class="comparison-grid">
+  <div class="comparison-item">
+    <h3>Dark Mode</h3>
+    <div class="desc">Deep moody purples with subtle mauve and lavender. Understated, sophisticated, minimal but premium.</div>
+    <div class="celebration quiet-luxury-dark">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-item">
+    <h3>Light Mode</h3>
+    <div class="desc">Soft, creamy backgrounds with delicate mauve accents. Calm, refined, whisper-quiet confidence.</div>
+    <div class="celebration quiet-luxury-light">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

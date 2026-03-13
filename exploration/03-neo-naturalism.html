@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Neo-Naturalism Palette Exploration</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: #f8f5ff;
+  color: #1a1a1a;
+  padding: 40px;
+}
+
+.container { max-width: 1400px; margin: 0 auto; }
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.palette-info {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 12px;
+  margin-top: 40px;
+}
+
+.mode-desc {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.comparison-item h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.comparison-item .desc {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.celebration {
+  border-radius: 16px;
+  padding: 36px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.celebration-emoji {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration-text {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.celebration-subtext {
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.celebration-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.metric-card {
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-secondary {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* NEO-NATURALISM DARK */
+.neo-naturalism-dark {
+  background: linear-gradient(135deg, #2a1f15 0%, #3d2d1f 50%, #332614 100%);
+  border: 2px solid #8b6f47;
+}
+
+.neo-naturalism-dark .celebration-text {
+  color: #d4af8f;
+}
+
+.neo-naturalism-dark .celebration-subtext {
+  color: #b89968;
+}
+
+.neo-naturalism-dark .celebration-badge {
+  background: linear-gradient(135deg, #8b6f47 0%, #a0714d 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(139, 111, 71, 0.3);
+}
+
+.neo-naturalism-dark .metric-card {
+  background: rgba(160, 113, 77, 0.12);
+  border: 1.5px solid rgba(160, 113, 77, 0.3);
+  color: #d4af8f;
+}
+
+.neo-naturalism-dark .metric-card::before {
+  background: linear-gradient(90deg, #a0714d 0%, #b89968 100%);
+}
+
+.neo-naturalism-dark .metric-label {
+  color: #b89968;
+}
+
+.neo-naturalism-dark .metric-value {
+  color: #d4af8f;
+}
+
+.neo-naturalism-dark .metric-secondary {
+  color: #8b6f47;
+}
+
+/* NEO-NATURALISM LIGHT */
+.neo-naturalism-light {
+  background: linear-gradient(135deg, #faf7f3 0%, #f5f0e8 50%, #f9f5f1 100%);
+  border: 2px solid #d4b896;
+}
+
+.neo-naturalism-light .celebration-text {
+  color: #5c4820;
+}
+
+.neo-naturalism-light .celebration-subtext {
+  color: #8b6f47;
+}
+
+.neo-naturalism-light .celebration-badge {
+  background: linear-gradient(135deg, #a0714d 0%, #c99968 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(160, 113, 77, 0.25);
+}
+
+.neo-naturalism-light .metric-card {
+  background: linear-gradient(135deg, rgba(160, 113, 77, 0.06) 0%, rgba(185, 153, 104, 0.06) 100%);
+  border: 1.5px solid rgba(160, 113, 77, 0.2);
+  color: #5c4820;
+}
+
+.neo-naturalism-light .metric-card::before {
+  background: linear-gradient(90deg, #a0714d 0%, #c99968 100%);
+}
+
+.neo-naturalism-light .metric-label {
+  color: #8b6f47;
+}
+
+.neo-naturalism-light .metric-value {
+  color: #5c4820;
+}
+
+.neo-naturalism-light .metric-secondary {
+  color: #a0714d;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Neo-Naturalism</h1>
+<div class="palette-info">
+  <strong>Foundation:</strong> Muted terracotta/burnt orange (#3d2d1f)<br>
+  <strong>Supporting:</strong> Cyber lavender or digital mint — using warm stone + cyber lavender here<br>
+  <strong>Feel:</strong> Warm, grounded, organic + subtle futurism
+</div>
+
+<div class="mode-label">Comparison: Dark vs Light</div>
+
+<div class="comparison-grid">
+  <div class="comparison-item">
+    <h3>Dark Mode</h3>
+    <div class="desc">Deep warm terracottas and earthy browns. Organic, grounded, approachable warmth with subtle modernity.</div>
+    <div class="celebration neo-naturalism-dark">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-item">
+    <h3>Light Mode</h3>
+    <div class="desc">Warm cream and ivory backgrounds with terracotta accents. Natural, inviting, feels like home office.</div>
+    <div class="celebration neo-naturalism-light">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>
