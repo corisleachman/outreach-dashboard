@@ -63,45 +63,50 @@ h1 {
 /* NAVIGATION */
 nav {
   position: sticky;
-  top: 20px;
-  background: rgba(26, 15, 46, 0.95);
+  top: 0;
+  background: rgba(26, 15, 46, 0.98);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 12px;
-  padding: 20px;
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 16px 40px;
   margin-bottom: 60px;
   z-index: 100;
 }
 
 nav h3 {
   font-family: 'Space Grotesk', sans-serif;
-  font-size: 12px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   color: #00d4ff;
-  margin-bottom: 12px;
+  margin-bottom: 0;
+  display: inline-block;
+  margin-right: 32px;
 }
 
 nav ul {
   list-style: none;
+  display: inline-flex;
+  gap: 32px;
+  flex-wrap: wrap;
 }
 
 nav li {
-  margin-bottom: 8px;
+  margin-bottom: 0;
 }
 
 nav a {
-  font-size: 14px;
+  font-size: 13px;
   color: #b0b0d0;
   text-decoration: none;
   transition: all 0.2s ease;
-  display: block;
-  padding: 6px 0;
+  display: inline;
+  padding: 0;
+  white-space: nowrap;
 }
 
 nav a:hover {
   color: #ff1493;
-  padding-left: 8px;
+  padding-left: 0;
 }
 
 /* SECTIONS */
