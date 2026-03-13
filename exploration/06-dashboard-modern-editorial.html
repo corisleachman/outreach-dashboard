@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Dashboard - Modern Editorial Typography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
+  color: #fff;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.page-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #00d4ff;
+  margin-bottom: 40px;
+}
+
+/* DASHBOARD LAYOUT */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+/* STATE: MORNING (CALM) */
+.state-card {
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.08) 0%, rgba(0, 212, 255, 0.08) 100%);
+  border: 1px solid rgba(255, 20, 147, 0.2);
+  border-radius: 16px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.state-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #00d4ff;
+  margin-bottom: 20px;
+}
+
+.state-greeting {
+  font-family: 'Outfit', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.state-subtext {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #a0a0b0;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.cta-button {
+  font-family: 'Outfit', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: linear-gradient(135deg, #ff1493 0%, #ffa500 100%);
+  color: white;
+}
+
+.cta-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(255, 20, 147, 0.3);
+}
+
+/* STATE: ACTIVE (MOMENTUM) */
+.state-active {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(0, 212, 255, 0.04) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+.state-active .state-greeting {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.metric-mini {
+  background: rgba(255, 20, 147, 0.1);
+  border: 1px solid rgba(255, 20, 147, 0.2);
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-mini-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00d4ff;
+}
+
+.metric-mini-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff1493;
+}
+
+/* STATE: CELEBRATION */
+.celebration-state {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 50%, #1f1435 100%);
+  border: 2px solid #ff1493;
+  border-radius: 16px;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+}
+
+.celebration-emoji {
+  font-size: 64px;
+  margin-bottom: 24px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration-headline {
+  font-family: 'Outfit', sans-serif;
+  font-size: 96px;
+  font-weight: 800;
+  line-height: 1;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 12px;
+  letter-spacing: -0.02em;
+}
+
+.celebration-statement {
+  font-family: 'Outfit', sans-serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #00d4ff;
+  margin-bottom: 24px;
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+}
+
+.celebration-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #b0b0d0;
+  margin-bottom: 32px;
+  line-height: 1.7;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.badge {
+  font-family: 'Outfit', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: 24px;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 100%);
+  color: white;
+  margin-bottom: 40px;
+  box-shadow: 0 12px 32px rgba(0, 212, 255, 0.4);
+}
+
+.celebration-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.celebration-metric {
+  background: rgba(255, 20, 147, 0.15);
+  border: 1.5px solid #ff1493;
+  border-radius: 12px;
+  padding: 28px;
+  position: relative;
+}
+
+.celebration-metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #ff1493 0%, #00d4ff 100%);
+  border-radius: 12px 12px 0 0;
+}
+
+.celebration-metric-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #00d4ff;
+  margin-bottom: 12px;
+}
+
+.celebration-metric-value {
+  font-family: 'Outfit', sans-serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: #ff1493;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.02em;
+}
+
+.celebration-metric-secondary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #a0a0ff;
+}
+
+/* CAMPAIGNS SECTION */
+.campaigns-section {
+  margin-top: 60px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+.section-header .see-all {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #00d4ff;
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+.section-header .see-all:hover {
+  color: #ff1493;
+}
+
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.campaign-card {
+  background: rgba(255, 20, 147, 0.05);
+  border: 1px solid rgba(255, 20, 147, 0.15);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.campaign-card:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: rgba(0, 212, 255, 0.05);
+}
+
+.campaign-name {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.campaign-meta {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #a0a0b0;
+  margin-bottom: 16px;
+}
+
+.campaign-progress {
+  background: rgba(0, 212, 255, 0.1);
+  height: 4px;
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.campaign-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff1493 0%, #00d4ff 100%);
+  width: 65%;
+}
+
+.campaign-stat {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #00d4ff;
+}
+
+/* COMPARISON NOTE */
+.comparison-note {
+  margin-top: 60px;
+  padding: 24px;
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #a0a0b0;
+  line-height: 1.6;
+}
+
+.comparison-note strong {
+  color: #00d4ff;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-title">Dashboard — Modern Editorial (Outfit + DM Sans)</div>
+
+<!-- STATE CARDS -->
+<div class="dashboard-grid">
+  
+  <!-- MORNING STATE -->
+  <div class="state-card">
+    <div class="state-label">Morning State</div>
+    <div class="state-greeting">Good morning, Coris</div>
+    <div class="state-subtext">You have 3 follow-ups due today and 2 new conversations waiting. Ready to keep the momentum going?</div>
+    <button class="cta-button">See today's plan</button>
+  </div>
+
+  <!-- ACTIVE STATE -->
+  <div class="state-card state-active">
+    <div class="state-label">Active State</div>
+    <div class="state-greeting">Momentum building</div>
+    <div class="state-subtext">You've sent 8 emails so far today. Your sequences are converting well. Keep this pace up.</div>
+    
+    <div class="metric-grid">
+      <div class="metric-mini">
+        <div class="metric-mini-label">Sent today</div>
+        <div class="metric-mini-value">8</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Expected replies</div>
+        <div class="metric-mini-value">~2-3</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Current streak</div>
+        <div class="metric-mini-value">5 days</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CELEBRATION STATE -->
+<div class="celebration-state">
+  <span class="celebration-emoji">🎉</span>
+  <div class="celebration-headline">50 sent</div>
+  <div class="celebration-statement">Highest day yet</div>
+  <div class="celebration-body">
+    You've just crushed your personal record. Your outreach rhythm is accelerating. Keep this momentum — consistency wins the game.
+  </div>
+  <div class="badge">Personal Record</div>
+  
+  <div class="celebration-metrics">
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Sequences</div>
+      <div class="celebration-metric-value">14</div>
+      <div class="celebration-metric-secondary">active campaigns</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Expected Replies</div>
+      <div class="celebration-metric-value">~8-10</div>
+      <div class="celebration-metric-secondary">coming in</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Your Streak</div>
+      <div class="celebration-metric-value">7 days</div>
+      <div class="celebration-metric-secondary">unbroken</div>
+    </div>
+  </div>
+</div>
+
+<!-- CAMPAIGNS SECTION -->
+<div class="campaigns-section">
+  <div class="section-header">
+    <h2>Active campaigns</h2>
+    <a href="#" class="see-all">See all →</a>
+  </div>
+
+  <div class="campaigns-grid">
+    <div class="campaign-card">
+      <div class="campaign-name">Q1 Outreach</div>
+      <div class="campaign-meta">12 sequences • 142 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar"></div>
+      </div>
+      <div class="campaign-stat">65% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">Agency founders</div>
+      <div class="campaign-meta">8 sequences • 87 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 42%;"></div>
+      </div>
+      <div class="campaign-stat">42% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">BD Directors</div>
+      <div class="campaign-meta">6 sequences • 54 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 88%;"></div>
+      </div>
+      <div class="campaign-stat">88% complete</div>
+    </div>
+  </div>
+</div>
+
+<!-- COMPARISON NOTE -->
+<div class="comparison-note">
+  <strong>What changed:</strong> Space Grotesk → Outfit. <strong>Why:</strong> Outfit is contemporary, clean, geometric, and bold without feeling retro or 70s-pastiche. Same editorial weight and confidence, but future-facing rather than vintage-forward. Both are on Google Fonts and open-source.
+</div>
+
+</div>
+
+</body>
+</html>
