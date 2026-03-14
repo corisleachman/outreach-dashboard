@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Dashboard - Neo-Naturalism Refined</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Lora:wght@600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg, #faf8f5 0%, #f5f0ea 50%, #f9f5f0 100%);
+  color: #2a2420;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.page-title {
+  font-family: 'Lora', serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #7a5d43;
+  margin-bottom: 40px;
+  text-align: center;
+}
+
+/* DASHBOARD LAYOUT */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  margin-bottom: 60px;
+}
+
+/* STATE CARDS */
+.state-card {
+  background: linear-gradient(135deg, rgba(160, 113, 77, 0.06) 0%, rgba(185, 153, 104, 0.05) 100%);
+  border: 1px solid rgba(160, 113, 77, 0.2);
+  border-radius: 12px;
+  padding: 40px;
+  position: relative;
+}
+
+.state-card.active {
+  background: linear-gradient(135deg, rgba(185, 153, 104, 0.08) 0%, rgba(160, 113, 77, 0.05) 100%);
+  border-color: rgba(160, 113, 77, 0.3);
+}
+
+.state-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999;
+  margin-bottom: 20px;
+}
+
+.state-greeting {
+  font-family: 'Lora', serif;
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  color: #2a2420;
+  letter-spacing: -0.01em;
+}
+
+.state-greeting.gradient {
+  color: #7a5d43;
+}
+
+.state-subtext {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b5a4f;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.cta-button {
+  font-family: 'Lora', serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 10px 20px;
+  border: 2px solid #a0714d;
+  background: transparent;
+  color: #a0714d;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-button:hover {
+  background: #a0714d;
+  color: white;
+}
+
+/* METRIC MINI */
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.metric-mini {
+  background: transparent;
+  border-bottom: 1px solid rgba(160, 113, 77, 0.15);
+  border-radius: 0;
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-mini-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #999;
+  font-weight: 600;
+}
+
+.metric-mini-value {
+  font-family: 'Lora', serif;
+  font-size: 26px;
+  font-weight: 700;
+  color: #a0714d;
+}
+
+/* CELEBRATION STATE */
+.celebration-state {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(160, 113, 77, 0.08) 0%, rgba(185, 153, 104, 0.08) 100%);
+  border: 1px solid rgba(160, 113, 77, 0.25);
+  border-radius: 12px;
+  padding: 60px 40px;
+  text-align: center;
+  position: relative;
+}
+
+.celebration-emoji {
+  font-size: 64px;
+  margin-bottom: 24px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration-headline {
+  font-family: 'Lora', serif;
+  font-size: 96px;
+  font-weight: 700;
+  line-height: 0.9;
+  color: #2a2420;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.celebration-statement {
+  font-family: 'Lora', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #7a5d43;
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.celebration-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #6b5a4f;
+  margin-bottom: 32px;
+  line-height: 1.8;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.badge {
+  font-family: 'Lora', serif;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  display: inline-block;
+  padding: 8px 20px;
+  border: 1px solid #a0714d;
+  background: transparent;
+  color: #a0714d;
+  margin-bottom: 40px;
+}
+
+.celebration-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.celebration-metric {
+  background: rgba(160, 113, 77, 0.06);
+  border: 1px solid rgba(160, 113, 77, 0.2);
+  border-radius: 8px;
+  padding: 28px;
+  position: relative;
+}
+
+.celebration-metric::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, #a0714d 0%, #c99968 100%);
+  border-radius: 8px 8px 0 0;
+}
+
+.celebration-metric-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #999;
+  margin-bottom: 12px;
+}
+
+.celebration-metric-value {
+  font-family: 'Lora', serif;
+  font-size: 48px;
+  font-weight: 700;
+  color: #2a2420;
+  line-height: 1;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.celebration-metric-secondary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #7a5d43;
+}
+
+/* CAMPAIGNS SECTION */
+.campaigns-section {
+  margin-top: 60px;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 24px;
+}
+
+.section-header h2 {
+  font-family: 'Lora', serif;
+  font-size: 42px;
+  font-weight: 700;
+  color: #2a2420;
+  letter-spacing: -0.01em;
+}
+
+.section-header .see-all {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #a0714d;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+
+.section-header .see-all:hover {
+  color: #7a5d43;
+}
+
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.campaign-card {
+  background: linear-gradient(135deg, rgba(160, 113, 77, 0.04) 0%, rgba(185, 153, 104, 0.04) 100%);
+  border: 1px solid rgba(160, 113, 77, 0.15);
+  border-radius: 8px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.campaign-card:hover {
+  border-color: rgba(160, 113, 77, 0.3);
+  background: rgba(160, 113, 77, 0.08);
+}
+
+.campaign-name {
+  font-family: 'Lora', serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: #2a2420;
+  margin-bottom: 8px;
+  letter-spacing: -0.01em;
+}
+
+.campaign-meta {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #999;
+  margin-bottom: 16px;
+}
+
+.campaign-progress {
+  background: rgba(160, 113, 77, 0.1);
+  height: 3px;
+  border-radius: 1.5px;
+  overflow: hidden;
+  margin-bottom: 12px;
+}
+
+.campaign-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #a0714d 0%, #c99968 100%);
+  width: 65%;
+}
+
+.campaign-stat {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #a0714d;
+  font-weight: 600;
+}
+
+.note {
+  margin-top: 60px;
+  padding: 20px;
+  background: rgba(160, 113, 77, 0.05);
+  border: 1px solid rgba(160, 113, 77, 0.15);
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #6b5a4f;
+  line-height: 1.6;
+}
+
+.note strong {
+  color: #2a2420;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-title">NEO-NATURALISM REFINED: Saol Text + Maax (Paid Fonts)</div>
+
+<div class="dashboard-grid">
+  <div class="state-card">
+    <div class="state-label">Morning</div>
+    <div class="state-greeting">Good morning</div>
+    <div class="state-subtext">You have 3 follow-ups due. Your rhythm is steady and grounded.</div>
+    <button class="cta-button">See plan</button>
+  </div>
+
+  <div class="state-card active">
+    <div class="state-label">Active</div>
+    <div class="state-greeting gradient">Momentum</div>
+    <div class="state-subtext">8 emails sent. Your sequences are converting well. Keep this pace.</div>
+    
+    <div class="metric-grid">
+      <div class="metric-mini">
+        <div class="metric-mini-label">Sent today</div>
+        <div class="metric-mini-value">8</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Expected replies</div>
+        <div class="metric-mini-value">~2-3</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Current streak</div>
+        <div class="metric-mini-value">5 days</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="celebration-state">
+  <span class="celebration-emoji">🎉</span>
+  <div class="celebration-headline">50 sent</div>
+  <div class="celebration-statement">Highest day yet</div>
+  <div class="celebration-body">You've crushed your personal record. Your outreach rhythm is accelerating. Keep this momentum — consistency wins the game.</div>
+  <div class="badge">Personal Record</div>
+  
+  <div class="celebration-metrics">
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Sequences</div>
+      <div class="celebration-metric-value">14</div>
+      <div class="celebration-metric-secondary">active campaigns</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Expected Replies</div>
+      <div class="celebration-metric-value">~8-10</div>
+      <div class="celebration-metric-secondary">coming in</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Your Streak</div>
+      <div class="celebration-metric-value">7 days</div>
+      <div class="celebration-metric-secondary">unbroken</div>
+    </div>
+  </div>
+</div>
+
+<div class="campaigns-section">
+  <div class="section-header">
+    <h2>Active campaigns</h2>
+    <a href="#" class="see-all">See all →</a>
+  </div>
+
+  <div class="campaigns-grid">
+    <div class="campaign-card">
+      <div class="campaign-name">Q1 Outreach</div>
+      <div class="campaign-meta">12 sequences • 142 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar"></div>
+      </div>
+      <div class="campaign-stat">65% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">Agency founders</div>
+      <div class="campaign-meta">8 sequences • 87 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 42%;"></div>
+      </div>
+      <div class="campaign-stat">42% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">BD Directors</div>
+      <div class="campaign-meta">6 sequences • 54 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 88%;"></div>
+      </div>
+      <div class="campaign-stat">88% complete</div>
+    </div>
+  </div>
+</div>
+
+<div class="note">
+  <strong>Font Note:</strong> This mockup uses Lora + DM Sans (Google Fonts proxies). When implementing, replace with <strong>Saol Text</strong> (display) + <strong>Maax</strong> (supporting). These paid fonts will give the refined, grounded aesthetic shown here with much stronger character and sophistication.
+</div>
+
+</div>
+
+</body>
+</html>
