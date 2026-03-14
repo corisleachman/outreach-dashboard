@@ -505,20 +505,45 @@ footer {
 <!-- SECTION 4: MICRO-INTERACTIONS -->
 <section class="section" id="micro-interactions">
   <h2>Micro-Interactions</h2>
-  <span class="status-exploring">IN DEVELOPMENT</span>
-  <p class="section-intro">Motion carries emotional weight. Every interaction is intentional, not decorative. Currently in research phase.</p>
-  
-  <div class="content-block">
-    <h3>Planned Micro-Interactions</h3>
-    <p><strong>Metric Card Pulse:</strong> Celebration badge pulses in rhythm with a heartbeat metaphor. Glow extends slightly on pulse.</p>
-    <p><strong>Scanning Line Effect (Reference):</strong> WebGPU scanning effect with depth maps. Sweeping line across metric card outlines, revealing neon glow as it passes. <a href="https://tympanus.net/codrops/2025/03/31/webgpu-scanning-effect-with-depth-maps/" style="color: #ff1493; text-decoration: none;">See reference →</a></p>
-    <p><strong>Gradient Text Animation:</strong> Hero headline with animated gradient. Neon colors shift subtly, creating a sense of movement and energy.</p>
-    <p><strong>Campaign Card Hover:</strong> Border shifts from hot pink to cyan on hover. Background subtly brightens.</p>
+  <span class="status-locked" style="background:rgba(0,255,128,0.1);color:#00e080;border-color:rgba(0,255,128,0.3);">SYSTEM DEFINED</span>
+  <p class="section-intro">Motion carries emotional weight. Every interaction is intentional, not decorative. The micro-interaction system — covering motion tokens, interaction patterns, dashboard states, microcopy, and the momentum engine — is now fully defined and design-direction agnostic. Colour tokens will update when the final direction is locked.</p>
+
+  <div class="link-box">
+    <strong>Full Micro-Interaction System →</strong>
+    <a href="01-micro-interaction-system.html">View detailed spec ↗</a>
   </div>
 
   <div class="content-block">
-    <h3>Animation Philosophy</h3>
-    <p>All motion should feel <strong>intentional and rewarding</strong>. No arbitrary animations. If it moves, it should communicate something or celebrate a moment.</p>
+    <h3>Motion token summary</h3>
+    <p><strong>instant (0ms)</strong> — State flags, boolean toggles.</p>
+    <p><strong>quick (120ms)</strong> — Hover bg, border colour changes, pill state shifts.</p>
+    <p><strong>standard (200ms)</strong> — Default for most UI transitions. Drawers, dropdowns.</p>
+    <p><strong>deliberate (350ms)</strong> — Progress indicators, step advancement, confirmation banners.</p>
+    <p><strong>exit / collapse (400–500ms)</strong> — Row fade-and-collapse after send. Gives user time to register completion.</p>
+    <p style="margin-top:8px">Enter easing: <code style="color:#ffa500;font-size:12px">cubic-bezier(0.22, 0.68, 0, 1.2)</code> (spring) · Exit: <code style="color:#ffa500;font-size:12px">ease-in</code></p>
+  </div>
+
+  <div class="content-block">
+    <h3>Seven named interaction patterns (all defined)</h3>
+    <p><strong>1. Send row — fade and collapse</strong> Row transitions through "sending" state (40% opacity, +5px X) then collapses out. Toast fires in parallel.</p>
+    <p><strong>2. Toast confirmation</strong> Spring-eased entrance. Shows recipient email address, not generic success copy. Auto-dismisses after 4s.</p>
+    <p><strong>3. Button states</strong> Hover: 120ms bg. Active: scale(0.97). Locked: 35% opacity.</p>
+    <p><strong>4. Progress step advancement</strong> Line fills over 500ms, dot transitions stagger 100ms offset.</p>
+    <p><strong>5. Momentum prompt reveal</strong> Slides up 6px, fades in over 300ms. Left-border accent. Auto-expires 10s.</p>
+    <p><strong>6. Milestone reveal</strong> scale(0.96→1) + opacity, 400ms. Stagger 300ms per card. No confetti.</p>
+    <p><strong>7. Inline field error</strong> Error border + message beneath field. Never a toast. No system codes.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Celebration moments — what to avoid</h3>
+    <p>The product celebrates real work, not engagement. The following are explicitly out of scope and will not be added in any future direction:</p>
+    <p style="margin-top:8px;color:#888;">Confetti animations · Streak pressure · Gamification points · Leaderboards · Forced engagement loops · Blocking overlay celebrations · Sound effects</p>
+  </div>
+
+  <div class="content-block">
+    <h3>References (marketing / brand moments only)</h3>
+    <p><strong>Scanning Line Effect:</strong> WebGPU scanning effect — candidate for metric card hover on marketing pages only, not dashboard. <a href="https://tympanus.net/codrops/2025/03/31/webgpu-scanning-effect-with-depth-maps/" style="color: #ff1493; text-decoration: none;">See reference →</a></p>
+    <p><strong>Gradient Text Animation:</strong> Hero headline animation candidate for landing page. Not for dashboard UI.</p>
   </div>
 </section>
 
@@ -526,19 +551,41 @@ footer {
 <section class="section" id="voice-tone">
   <h2>Voice & Tone</h2>
   <span class="status-exploring">DEVELOPING</span>
-  <p class="section-intro">Opinionated, playful, character-driven. Not false-American SaaS. Inspired by Oatly, Monzo, Mailchimp, Innocent.</p>
-  
+  <p class="section-intro">Opinionated, playful, character-driven. Not false-American SaaS. Inspired by Oatly, Monzo, Mailchimp, Innocent. The UX Microcopy System (Phase 2.12) is locked — the full copy library and storage structure are defined. Brand voice and personality pack variations are still being developed.</p>
+
   <div class="content-block">
-    <h3>Personality Packs (Future)</h3>
-    <p>Default pack: Friendly. Future packs will include Direct, Dry, Playful. When personality packs are developed, design aesthetic may shift per pack (typography, color emphasis, micro-interactions).</p>
-    <p><strong>Note:</strong> Currently locked on one default aesthetic. Personality pack visual variations are a future exploration.</p>
+    <h3>Core voice qualities</h3>
+    <p>The product voice should feel: <strong>helpful · calm · confident · conversational</strong></p>
+    <p>It should not feel: robotic · overly casual · corporate · technical</p>
+    <p style="margin-top:8px;font-style:italic;color:#888;">"We've prepared a message to get you started." — not "Template successfully generated."</p>
   </div>
 
   <div class="content-block">
-    <h3>Microcopy Examples (Placeholder)</h3>
-    <p>"Nice. Your contacts are ready" — Confirmation, clean, affirming.</p>
-    <p>"5 follow-ups due today" — Practical, matter-of-fact, motivating.</p>
-    <p>"You've crushed your personal record" — Celebratory, affirming, not patronizing.</p>
+    <h3>Language rules (locked)</h3>
+    <p style="margin-bottom:8px">Avoid system language: <span style="color:#ff6060;">configure · execute · initiate · parameter · Error 400</span></p>
+    <p>Prefer plain language: <span style="color:#00e080;">write · send · add · follow up · here's what happened</span></p>
+    <p style="margin-top:10px;color:#888">Errors must explain the issue and offer a fix. Never blame the user. Never show raw codes.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Microcopy system (Phase 2.12 — locked)</h3>
+    <p>All UI copy lives in <code style="color:#ffa500;font-size:12px">src/config/microcopy/</code> as version-controlled JSON files. Categories: guidance, reassurance, empty states, success messages, error messages. Updated via Git PR, not database. Error frequency tracked via analytics.</p>
+    <p style="margin-top:8px">See the <a href="01-micro-interaction-system.html#microcopy" style="color:#ff1493;text-decoration:none">Micro-Interaction System →</a> for the full copy library, voice rules, and file structure.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Personality Packs (Phase 2.11 — defined, deferred)</h3>
+    <p>Default personality: <strong>Calm & Commercial</strong>. Additional packs: <strong>Direct & Confident</strong>, <strong>Light Touch Relational</strong>. A fourth pack is planned. Global default set in user preferences, with per-message override available.</p>
+    <p><strong>Note:</strong> Personality pack visual variations (typography emphasis, colour shifts) are a future exploration. Currently locked on one default aesthetic.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Confirmed microcopy examples</h3>
+    <p>"Shorter messages often get more replies." — Guidance, message editor</p>
+    <p>"Nothing will be sent until you press Send." — Reassurance, pre-send</p>
+    <p>"Your campaign is live. Your first messages are on their way." — Confirmation</p>
+    <p>"Add a subject line before sending." — Inline error</p>
+    <p>"You're building momentum." — Milestone, 10 replies</p>
   </div>
 </section>
 
@@ -622,8 +669,18 @@ footer {
       </tr>
       <tr>
         <td><strong>Micro-Interactions</strong></td>
-        <td><span class="decision-pending">IN DEVELOPMENT</span></td>
-        <td>Scanning line effect, pulse animations, gradient text movement. Reference collected, implementation TBD.</td>
+        <td><span class="decision-locked">DEFINED</span></td>
+        <td>7 patterns, motion tokens, all states, microcopy, momentum engine — all locked. Colour tokens pending direction lock. <a href="01-micro-interaction-system.html" style="color:#ff1493;text-decoration:none;">Full spec ↗</a></td>
+      </tr>
+      <tr>
+        <td><strong>Microcopy System</strong></td>
+        <td><span class="decision-locked">LOCKED</span></td>
+        <td>Phase 2.12. JSON config files, voice rules, 5 copy categories, error analytics. Git-based updates.</td>
+      </tr>
+      <tr>
+        <td><strong>Momentum Engine</strong></td>
+        <td><span class="decision-locked">LOCKED</span></td>
+        <td>Phase 2.13. Post-action next-step prompts, activation loop integration, milestone recognition.</td>
       </tr>
       <tr>
         <td><strong>Voice & Tone</strong></td>
@@ -638,8 +695,9 @@ footer {
 
 <footer>
   <p>Pulse Brand Guidelines — Living Document</p>
-  <p>Last updated: March 13, 2026</p>
+  <p>Last updated: March 14, 2026</p>
 </footer>
 
 </body>
 </html>
+
