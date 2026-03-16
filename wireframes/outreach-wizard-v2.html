@@ -1189,7 +1189,7 @@ Coris</textarea>
 ════════════════════════════════════════ -->
 <div id="s4" class="screen">
   <div class="wizard-outer">
-    <div class="wizard-inner">
+    <div class="wizard-inner" style="max-width:600px;">
       <div class="progress-bar-wrap">
         <div class="progress-segment done"></div>
         <div class="progress-segment done"></div>
@@ -1199,9 +1199,10 @@ Coris</textarea>
 
       <div class="step-eyebrow">Step 4 of 4</div>
       <h1 class="step-title">Ready to send</h1>
-      <p class="step-sub">Review your campaign. Once sent, outreach starts immediately and follow-ups run automatically.</p>
+      <p class="step-sub">Check your sequence below. Click any step to preview or edit before sending.</p>
 
-      <div class="summary-grid">
+      <!-- STATS -->
+      <div class="summary-grid" style="margin-bottom:24px;">
         <div class="summary-cell">
           <div class="summary-cell-val">8</div>
           <div class="summary-cell-label">Prospects</div>
@@ -1216,26 +1217,63 @@ Coris</textarea>
         </div>
       </div>
 
-      <div class="card" style="margin-bottom:16px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
-          <div class="card-title" style="margin:0;">Campaign</div>
-          <button class="btn btn-ghost btn-sm" onclick="goStep(1)" style="font-size:11px;">Edit</button>
-        </div>
-        <div style="font-family:var(--outfit);font-size:18px;font-weight:700;color:var(--text);margin-bottom:4px;">My First Campaign</div>
-        <div style="font-size:12px;color:var(--text-dim);">Sending from: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d7b4b8a5bea497b2afb6baa7bbb2f9b4b8ba">[email&#160;protected]</a> via Gmail</div>
+      <!-- SEQUENCE REVIEW -->
+      <div class="card" style="margin-bottom:16px; padding:0; overflow:hidden;">
 
-        <div class="divider"></div>
+        <!-- TAB ROW -->
+        <div id="rv-tab-row" style="display:flex;gap:0;border-bottom:1px solid rgba(255,255,255,0.08);overflow-x:auto;"></div>
 
-        <div style="display:flex;justify-content:space-between;align-items:center;">
+        <!-- PANEL HEADER -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:rgba(255,255,255,0.03);border-bottom:1px solid rgba(255,255,255,0.06);">
           <div>
-            <div class="toggle-label">Sequence</div>
-            <div class="toggle-sub" id="sequence-summary">Step 1: Value drop · Step 2: Follow-up after 3 days</div>
+            <div id="rv-step-label" style="font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;font-family:var(--outfit);font-weight:600;margin-bottom:2px;"></div>
+            <div id="rv-delay-label" style="font-size:12px;color:var(--text-mid);"></div>
           </div>
-          <button class="btn btn-ghost btn-sm" onclick="goStep('3a')" style="font-size:11px;">Edit</button>
+          <button class="btn btn-secondary btn-sm" id="rv-edit-btn" onclick="rvEnterEdit()" style="font-size:11px;">Edit this step</button>
         </div>
+
+        <!-- PREVIEW MODE -->
+        <div id="rv-preview" style="padding:18px;">
+          <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:5px;">Subject</div>
+          <div id="rv-preview-subject" style="font-size:13px;font-weight:500;color:var(--text);margin-bottom:14px;"></div>
+          <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:5px;">Message</div>
+          <div id="rv-preview-body" style="font-size:12px;color:var(--text-mid);line-height:1.7;white-space:pre-wrap;margin-bottom:14px;"></div>
+          <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:5px;">Attachment</div>
+          <div id="rv-preview-attach"></div>
+        </div>
+
+        <!-- EDIT MODE -->
+        <div id="rv-edit" style="padding:18px;display:none;">
+          <div style="margin-bottom:14px;">
+            <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:6px;">Subject</div>
+            <input class="input" id="rv-edit-subject" type="text">
+          </div>
+          <div style="margin-bottom:14px;">
+            <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:6px;">Message</div>
+            <textarea class="input" id="rv-edit-body" rows="7"></textarea>
+          </div>
+          <div style="margin-bottom:16px;">
+            <div style="font-size:10px;font-family:var(--outfit);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim);margin-bottom:6px;">Attachment</div>
+            <div id="rv-edit-attach-current"></div>
+            <button class="attachment-zone" id="rv-add-attach-btn" onclick="rvSimulateAttach()" type="button" style="margin-top:0;">
+              <span class="attachment-icon">📎</span>
+              <div class="attachment-label"><strong>Add an attachment</strong><span>PDF, Word, or image — optional</span></div>
+            </button>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center;">
+            <button class="btn btn-primary btn-sm" onclick="rvSaveEdit()">Save changes</button>
+            <button class="btn btn-secondary btn-sm" onclick="rvCancelEdit()">Cancel</button>
+          </div>
+        </div>
+
       </div>
 
-      <div class="dev-guard">🔧 Dev mode active — no real emails will be sent. This simulates the send flow.</div>
+      <!-- SAVED CONFIRMATION -->
+      <div id="rv-saved-toast" style="display:none;align-items:center;gap:8px;padding:10px 14px;background:rgba(200,240,96,0.08);border:1px solid rgba(200,240,96,0.2);border-radius:8px;font-size:12px;color:var(--accent);margin-bottom:16px;">
+        ✓ <span id="rv-saved-text">Changes saved</span>
+      </div>
+
+      <div class="dev-guard">🔧 Dev mode active — no real emails will be sent.</div>
 
       <button class="btn btn-primary btn-lg" style="width:100%;font-size:16px;padding:18px;" onclick="triggerSend()">
         Send to 8 prospects →
@@ -1297,15 +1335,200 @@ function goStep(id) {
 }
 
 function updateSummary() {
-  const stepsEl = document.getElementById('steps-count');
-  stepsEl.textContent = 1 + followUpCount;
-  const seqEl = document.getElementById('sequence-summary');
-  const parts = ['Step 1: Value drop'];
-  if (followUpCount >= 1) parts.push('Follow-up #1 after 3 days');
-  if (followUpCount >= 2) parts.push('Follow-up #2 after 5 days');
-  if (followUpCount >= 3) parts.push('Follow-up #3 after 7 days');
-  seqEl.textContent = parts.join(' · ');
+  // Update step count stat
+  document.getElementById('steps-count').textContent = 1 + followUpCount;
+
+  // Pull live values from the wizard inputs into the review data store
+  const s2Subject = document.getElementById('s2-subject');
+  const s2Body    = document.getElementById('s2-body');
+  const s3aBody   = document.getElementById('s3a-body');
+  const s3bBody   = document.getElementById('s3b-body');
+  const s3cBody   = document.getElementById('s3c-body');
+
+  rvSteps = [
+    {
+      label: 'Step 1',
+      stepDesc: 'Initial email',
+      delay: 'Sends immediately',
+      subject: s2Subject ? s2Subject.value : "Quick thought on {{company}}'s pipeline",
+      body: s2Body ? s2Body.value : '',
+      attachment: rvSteps[0] ? rvSteps[0].attachment : { name: 'Capability Overview Q1.pdf', size: '2.4 MB' },
+      edited: rvSteps[0] ? rvSteps[0].edited : false
+    }
+  ];
+  if (followUpCount >= 1) rvSteps.push({
+    label: 'Follow-up 1', stepDesc: 'Follow-up #1', delay: 'After 3 days',
+    subject: "Just making sure this didn't get buried",
+    body: s3aBody ? s3aBody.value : '',
+    attachment: rvSteps[1] ? rvSteps[1].attachment : null,
+    edited: rvSteps[1] ? rvSteps[1].edited : false
+  });
+  if (followUpCount >= 2) rvSteps.push({
+    label: 'Follow-up 2', stepDesc: 'Follow-up #2', delay: 'After 5 days',
+    subject: "One last thought before I leave you alone",
+    body: s3bBody ? s3bBody.value : '',
+    attachment: rvSteps[2] ? rvSteps[2].attachment : null,
+    edited: rvSteps[2] ? rvSteps[2].edited : false
+  });
+  if (followUpCount >= 3) rvSteps.push({
+    label: 'Follow-up 3', stepDesc: 'Follow-up #3', delay: 'After 7 days',
+    subject: "I'll leave it here",
+    body: s3cBody ? s3cBody.value : '',
+    attachment: rvSteps[3] ? rvSteps[3].attachment : null,
+    edited: rvSteps[3] ? rvSteps[3].edited : false
+  });
+
+  rvCurrentTab = 0;
+  rvRenderTabs();
+  rvRenderPreview();
 }
+
+// ── REVIEW SCREEN STATE ──
+let rvSteps = [];
+let rvCurrentTab = 0;
+let rvIsEditing = false;
+
+function rvRenderTabs() {
+  const row = document.getElementById('rv-tab-row');
+  if (!row) return;
+  row.innerHTML = '';
+  rvSteps.forEach((s, i) => {
+    const btn = document.createElement('button');
+    btn.textContent = s.label;
+    btn.style.cssText = [
+      'padding:10px 16px',
+      'font-family:var(--outfit)',
+      'font-size:12px',
+      'font-weight:600',
+      'border:none',
+      'border-right:1px solid rgba(255,255,255,0.08)',
+      'cursor:pointer',
+      'transition:all 0.15s',
+      'white-space:nowrap',
+      'position:relative',
+      i === rvCurrentTab
+        ? 'background:rgba(255,20,147,0.12);color:#ff1493;border-bottom:2px solid #ff1493;'
+        : 'background:transparent;color:rgba(160,160,184,1);border-bottom:2px solid transparent;'
+    ].join(';');
+    if (s.edited) {
+      const dot = document.createElement('span');
+      dot.style.cssText = 'position:absolute;top:6px;right:6px;width:5px;height:5px;border-radius:50%;background:#EF9F27;';
+      btn.appendChild(dot);
+    }
+    btn.onclick = () => rvSwitchTab(i);
+    row.appendChild(btn);
+  });
+}
+
+function rvSwitchTab(i) {
+  if (rvIsEditing) rvCancelEdit();
+  rvCurrentTab = i;
+  rvRenderTabs();
+  rvRenderPreview();
+  rvHideSavedToast();
+}
+
+function rvRenderPreview() {
+  const s = rvSteps[rvCurrentTab];
+  if (!s) return;
+  document.getElementById('rv-step-label').textContent = s.stepDesc;
+  document.getElementById('rv-delay-label').textContent = s.delay;
+  document.getElementById('rv-preview-subject').textContent = s.subject;
+  document.getElementById('rv-preview-body').textContent = s.body;
+
+  const attachEl = document.getElementById('rv-preview-attach');
+  if (s.attachment) {
+    attachEl.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;font-size:12px;">'
+      + '<span>📎</span>'
+      + '<span style="color:var(--text);flex:1;">' + s.attachment.name + '</span>'
+      + '<span style="color:var(--text-dim);">' + s.attachment.size + '</span>'
+      + '</div>';
+  } else {
+    attachEl.innerHTML = '<div style="padding:8px 12px;background:rgba(255,255,255,0.03);border:1px dashed rgba(255,255,255,0.1);border-radius:8px;font-size:12px;color:var(--text-dim);">No attachment on this step</div>';
+  }
+}
+
+function rvEnterEdit() {
+  const s = rvSteps[rvCurrentTab];
+  document.getElementById('rv-edit-subject').value = s.subject;
+  document.getElementById('rv-edit-body').value = s.body;
+
+  const currentEl = document.getElementById('rv-edit-attach-current');
+  const addBtn    = document.getElementById('rv-add-attach-btn');
+  if (s.attachment) {
+    currentEl.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;margin-bottom:8px;">'
+      + '<span>📎</span>'
+      + '<span style="font-size:12px;color:var(--text);flex:1;">' + s.attachment.name + '</span>'
+      + '<button onclick="rvRemoveAttach()" style="background:none;border:none;font-size:11px;color:var(--red,#ff4c4c);cursor:pointer;font-family:var(--outfit);">Remove</button>'
+      + '</div>';
+    addBtn.style.display = 'none';
+  } else {
+    currentEl.innerHTML = '';
+    addBtn.style.display = 'flex';
+  }
+
+  document.getElementById('rv-preview').style.display = 'none';
+  document.getElementById('rv-edit').style.display = 'block';
+  document.getElementById('rv-edit-btn').style.display = 'none';
+  rvIsEditing = true;
+  rvHideSavedToast();
+}
+
+function rvCancelEdit() {
+  document.getElementById('rv-preview').style.display = 'block';
+  document.getElementById('rv-edit').style.display = 'none';
+  document.getElementById('rv-edit-btn').style.display = '';
+  rvIsEditing = false;
+}
+
+function rvSaveEdit() {
+  const s = rvSteps[rvCurrentTab];
+  s.subject = document.getElementById('rv-edit-subject').value;
+  s.body    = document.getElementById('rv-edit-body').value;
+  s.edited  = true;
+
+  document.getElementById('rv-preview').style.display = 'block';
+  document.getElementById('rv-edit').style.display = 'none';
+  document.getElementById('rv-edit-btn').style.display = '';
+  rvIsEditing = false;
+
+  rvRenderTabs();
+  rvRenderPreview();
+  rvShowSavedToast();
+}
+
+function rvRemoveAttach() {
+  rvSteps[rvCurrentTab].attachment = null;
+  document.getElementById('rv-edit-attach-current').innerHTML = '';
+  document.getElementById('rv-add-attach-btn').style.display = 'flex';
+}
+
+function rvSimulateAttach() {
+  rvSteps[rvCurrentTab].attachment = { name: 'Attachment.pdf', size: '1.2 MB' };
+  const currentEl = document.getElementById('rv-edit-attach-current');
+  currentEl.innerHTML = '<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.15);border-radius:8px;margin-bottom:8px;">'
+    + '<span>📎</span>'
+    + '<span style="font-size:12px;color:var(--text);flex:1;">Attachment.pdf</span>'
+    + '<button onclick="rvRemoveAttach()" style="background:none;border:none;font-size:11px;color:var(--red,#ff4c4c);cursor:pointer;font-family:var(--outfit);">Remove</button>'
+    + '</div>';
+  document.getElementById('rv-add-attach-btn').style.display = 'none';
+}
+
+function rvShowSavedToast() {
+  const toast = document.getElementById('rv-saved-toast');
+  const label = rvSteps[rvCurrentTab].label;
+  document.getElementById('rv-saved-text').textContent = 'Changes saved to ' + label;
+  toast.style.display = 'flex';
+  clearTimeout(rvToastTimer);
+  rvToastTimer = setTimeout(rvHideSavedToast, 4000);
+}
+
+function rvHideSavedToast() {
+  const toast = document.getElementById('rv-saved-toast');
+  if (toast) toast.style.display = 'none';
+}
+
+let rvToastTimer = null;
 
 // ── IMPORT ──
 function selectImport(el, type) {
