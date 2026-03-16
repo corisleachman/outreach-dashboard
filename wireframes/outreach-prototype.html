@@ -1,0 +1,2325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>outreach. — Clickable Prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0a0a0b;
+    --surface: #111113;
+    --surface-2: #18181b;
+    --border: #222226;
+    --border-2: #2e2e34;
+    --accent: #c8f060;
+    --accent-dim: rgba(200,240,96,0.12);
+    --accent-mid: rgba(200,240,96,0.25);
+    --text: #f0f0ee;
+    --text-mid: #8a8a90;
+    --text-dim: #4a4a52;
+    --red: #ff4c4c;
+    --red-dim: rgba(255,76,76,0.1);
+    --orange: #ff9d42;
+    --mono: 'DM Mono', monospace;
+    --sans: 'Syne', sans-serif;
+  }
+
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* ── LAYOUT ── */
+  .prototype-shell {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── PROTOTYPE NAV ── */
+  .proto-nav {
+    width: 220px;
+    flex-shrink: 0;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    overflow-y: auto;
+  }
+  .proto-nav-logo {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--accent);
+    padding: 0 20px 16px;
+    letter-spacing: -0.5px;
+  }
+  .proto-nav-logo span { color: var(--text-mid); }
+  .proto-nav-section {
+    font-size: 9px;
+    letter-spacing: 0.12em;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    padding: 16px 20px 8px;
+    font-weight: 500;
+  }
+  .proto-nav-item {
+    padding: 8px 20px;
+    font-size: 11px;
+    color: var(--text-mid);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.15s;
+    border-left: 2px solid transparent;
+  }
+  .proto-nav-item:hover { color: var(--text); background: var(--surface-2); }
+  .proto-nav-item.active { color: var(--accent); border-left-color: var(--accent); background: var(--accent-dim); }
+  .proto-nav-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; flex-shrink: 0; }
+  .proto-nav-badge {
+    margin-left: auto;
+    font-size: 9px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  /* ── SCREEN AREA ── */
+  .screen-area {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .screen {
+    position: absolute;
+    inset: 0;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity 0.25s, transform 0.25s;
+  }
+  .screen.active {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateY(0);
+  }
+
+  /* ── APP SHELL ── */
+  .app-topbar {
+    height: 52px;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .app-logo {
+    font-family: var(--sans);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.5px;
+  }
+  .app-logo span { color: var(--accent); }
+  .app-topbar-mid { flex: 1; }
+  .app-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: var(--accent);
+    color: var(--bg);
+    font-size: 11px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--sans);
+  }
+
+  /* ── COMMON COMPONENTS ── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 16px;
+    border-radius: 6px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+    text-decoration: none;
+    white-space: nowrap;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--bg);
+  }
+  .btn-primary:hover { background: #d4f570; transform: translateY(-1px); }
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--border-2);
+  }
+  .btn-secondary:hover { color: var(--text); border-color: var(--text-mid); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-mid);
+  }
+  .btn-ghost:hover { color: var(--text); }
+  .btn-danger {
+    background: var(--red-dim);
+    color: var(--red);
+    border: 1px solid rgba(255,76,76,0.2);
+  }
+  .btn-danger:hover { background: rgba(255,76,76,0.2); }
+  .btn-sm { padding: 6px 12px; font-size: 11px; }
+  .btn-lg { padding: 12px 24px; font-size: 13px; }
+  .btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+
+  .input {
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    width: 100%;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .input:focus { border-color: var(--accent); }
+  .input::placeholder { color: var(--text-dim); }
+
+  textarea.input { resize: vertical; min-height: 120px; line-height: 1.6; }
+
+  .label {
+    font-size: 11px;
+    color: var(--text-mid);
+    margin-bottom: 6px;
+    display: block;
+  }
+  .field { margin-bottom: 16px; }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+  }
+  .badge-accent { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(200,240,96,0.2); }
+  .badge-neutral { background: var(--surface-2); color: var(--text-mid); border: 1px solid var(--border); }
+  .badge-red { background: var(--red-dim); color: var(--red); border: 1px solid rgba(255,76,76,0.2); }
+
+  /* ── TOAST SYSTEM ── */
+  .toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    pointer-events: none;
+  }
+  .toast {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    padding: 12px 16px;
+    font-size: 12px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 300px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    animation: toastIn 0.3s ease forwards;
+    pointer-events: all;
+  }
+  .toast.exiting { animation: toastOut 0.3s ease forwards; }
+  .toast-icon { font-size: 14px; flex-shrink: 0; }
+  .toast-text { flex: 1; line-height: 1.4; }
+  .toast-accent { border-left: 2px solid var(--accent); }
+  .toast-error { border-left: 2px solid var(--red); }
+  .toast-neutral { border-left: 2px solid var(--text-dim); }
+
+  @keyframes toastIn {
+    from { opacity: 0; transform: translateX(20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes toastOut {
+    from { opacity: 1; transform: translateX(0); }
+    to { opacity: 0; transform: translateX(20px); }
+  }
+
+  /* ── MODAL ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box {
+    background: var(--surface);
+    border: 1px solid var(--border-2);
+    border-radius: 12px;
+    padding: 28px;
+    width: 480px;
+    max-width: calc(100vw - 40px);
+    transform: translateY(12px);
+    transition: transform 0.25s;
+    box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+  }
+  .modal-overlay.open .modal-box { transform: translateY(0); }
+  .modal-title {
+    font-family: var(--sans);
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+  .modal-sub {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-top: 24px;
+  }
+
+  /* ── PROGRESS STEPS ── */
+  .progress-steps {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+  .step-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+  .step-item.active { color: var(--text); }
+  .step-item.done { color: var(--accent); }
+  .step-num {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 1px solid var(--border-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    transition: all 0.2s;
+  }
+  .step-item.active .step-num { border-color: var(--text); color: var(--text); background: var(--surface-2); }
+  .step-item.done .step-num { border-color: var(--accent); background: var(--accent); color: var(--bg); }
+  .step-line { flex: 1; height: 1px; background: var(--border); margin: 0 8px; min-width: 20px; }
+
+  /* ── TABS ── */
+  .tab-bar {
+    display: flex;
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+    padding: 0 24px;
+    overflow-x: auto;
+    background: var(--surface);
+    position: sticky;
+    top: 52px;
+    z-index: 90;
+  }
+  .tab {
+    padding: 14px 16px;
+    font-size: 12px;
+    color: var(--text-mid);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    white-space: nowrap;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .tab-count {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-size: 10px;
+    color: var(--text-dim);
+  }
+  .tab.active .tab-count { background: var(--accent-dim); border-color: rgba(200,240,96,0.3); color: var(--accent); }
+
+  /* ── PAGE CONTENT ── */
+  .page-content {
+    padding: 32px 24px;
+    max-width: 860px;
+  }
+  .page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .page-title {
+    font-family: var(--sans);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+  }
+  .page-sub {
+    font-size: 12px;
+    color: var(--text-mid);
+    margin-top: 4px;
+  }
+
+  /* ── PROSPECT ROWS ── */
+  .prospect-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .prospect-row.fading { opacity: 0; transform: translateX(10px); }
+  .prospect-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-mid);
+    flex-shrink: 0;
+    font-family: var(--sans);
+    font-weight: 600;
+  }
+  .prospect-info { flex: 1; min-width: 0; }
+  .prospect-name { font-size: 12px; font-weight: 500; color: var(--text); }
+  .prospect-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .prospect-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+  /* ── PILLS ── */
+  .pill-group { display: flex; gap: 6px; }
+  .pill {
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid var(--border-2);
+    color: var(--text-mid);
+    background: transparent;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+  .pill:hover { border-color: var(--text-mid); color: var(--text); }
+  .pill.contact { border-color: rgba(200,240,96,0.4); color: var(--accent); background: var(--accent-dim); }
+  .pill.skip { border-color: rgba(255,76,76,0.3); color: var(--red); background: var(--red-dim); }
+  .pill.later { border-color: rgba(255,157,66,0.3); color: var(--orange); background: rgba(255,157,66,0.1); }
+
+  /* ── SELECT TYPE CARDS ── */
+  .type-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 16px;
+  }
+  .type-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .type-card:hover { border-color: var(--text-dim); }
+  .type-card.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .type-card-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 3px; }
+  .type-card-desc { font-size: 11px; color: var(--text-mid); }
+
+  /* ── TONE PILLS ── */
+  .tone-pill {
+    padding: 7px 14px;
+    border-radius: 6px;
+    font-size: 11px;
+    cursor: pointer;
+    border: 1px solid var(--border-2);
+    color: var(--text-mid);
+    background: transparent;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+  .tone-pill.selected { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  /* ── SEQUENCE STEPS ── */
+  .sequence-step {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 12px;
+    transition: all 0.2s;
+  }
+  .sequence-step:hover { border-color: var(--border-2); }
+  .step-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    cursor: pointer;
+    background: var(--surface-2);
+  }
+  .step-num-badge {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    background: var(--border);
+    color: var(--text-mid);
+    font-size: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--sans);
+    font-weight: 700;
+  }
+  .step-num-badge.s1 { background: var(--accent); color: var(--bg); }
+  .step-header-info { flex: 1; }
+  .step-header-title { font-size: 12px; font-weight: 500; color: var(--text); }
+  .step-header-meta { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .step-body { padding: 16px; display: none; border-top: 1px solid var(--border); }
+  .step-body.open { display: block; }
+
+  /* ── ADD STEP BUTTON ── */
+  .add-step-btn {
+    width: 100%;
+    padding: 12px;
+    border: 1px dashed var(--border-2);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text-dim);
+    font-size: 12px;
+    font-family: var(--mono);
+    cursor: pointer;
+    transition: all 0.15s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .add-step-btn:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  /* ── CHIPS ── */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .chip {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border-2);
+    font-size: 11px;
+    color: var(--text-mid);
+    cursor: pointer;
+    background: transparent;
+    font-family: var(--mono);
+    transition: all 0.15s;
+  }
+  .chip:hover { border-color: var(--text-dim); color: var(--text); }
+  .chip.selected { border-color: var(--accent); color: var(--accent); background: var(--accent-dim); }
+
+  /* ── DELAY SELECTOR ── */
+  .delay-selector {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .delay-selector input[type=range] {
+    flex: 1;
+    accent-color: var(--accent);
+  }
+  .delay-value {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    min-width: 60px;
+    text-align: right;
+  }
+
+  /* ── TOGGLE ── */
+  .toggle-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .toggle-label { font-size: 12px; color: var(--text); }
+  .toggle-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
+  .toggle {
+    width: 36px;
+    height: 20px;
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--accent); border-color: var(--accent); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: white;
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: all 0.2s;
+  }
+  .toggle.on::after { left: calc(100% - 16px); }
+
+  /* ── DASHBOARD STAT CARDS ── */
+  .stat-cards {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 28px;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  .stat-label { font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .stat-value { font-family: var(--sans); font-size: 28px; font-weight: 700; color: var(--text); }
+  .stat-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+  .stat-accent { color: var(--accent); }
+
+  /* ── CAMPAIGN CARD ── */
+  .campaign-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+    margin-bottom: 12px;
+  }
+  .campaign-card:hover { border-color: var(--border-2); background: var(--surface-2); }
+  .campaign-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 12px;
+  }
+  .campaign-name { font-family: var(--sans); font-size: 15px; font-weight: 600; color: var(--text); }
+  .campaign-meta { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+  .campaign-stats {
+    display: flex;
+    gap: 16px;
+  }
+  .campaign-stat-item { text-align: center; }
+  .campaign-stat-num { font-family: var(--sans); font-size: 18px; font-weight: 700; }
+  .campaign-stat-label { font-size: 10px; color: var(--text-dim); }
+
+  /* ── CELEBRATION ── */
+  .celebration-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 40px;
+    min-height: calc(100vh - 52px);
+  }
+  .celebration-icon {
+    font-size: 56px;
+    margin-bottom: 24px;
+    animation: pop 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  .celebration-title {
+    font-family: var(--sans);
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -1px;
+    margin-bottom: 12px;
+  }
+  .celebration-sub {
+    font-size: 14px;
+    color: var(--text-mid);
+    max-width: 380px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+  .celebration-stats {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  .cel-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 24px;
+    text-align: center;
+  }
+  .cel-stat-num {
+    font-family: var(--sans);
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+  }
+  .cel-stat-label { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+  @keyframes pop {
+    from { transform: scale(0); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* ── MILESTONE TOAST ── */
+  .milestone-toast {
+    background: var(--surface);
+    border: 1px solid rgba(200,240,96,0.3);
+    border-radius: 10px;
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    max-width: 320px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 0 1px rgba(200,240,96,0.1);
+  }
+  .milestone-icon {
+    font-size: 24px;
+    flex-shrink: 0;
+  }
+  .milestone-text strong {
+    display: block;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--accent);
+    margin-bottom: 2px;
+    font-family: var(--sans);
+  }
+  .milestone-text span { font-size: 11px; color: var(--text-mid); }
+
+  /* ── DO NOT CONTACT MODAL ── */
+  .danger-modal .modal-box {
+    border-color: rgba(255,76,76,0.3);
+  }
+  .danger-modal .modal-title { color: var(--red); }
+
+  /* ── ONBOARDING WIZARD ── */
+  .wizard-wrap {
+    min-height: calc(100vh - 52px);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  .wizard-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 36px;
+    width: 100%;
+    max-width: 560px;
+  }
+  .wizard-step-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 8px;
+  }
+  .wizard-title {
+    font-family: var(--sans);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.5px;
+    margin-bottom: 8px;
+  }
+  .wizard-sub {
+    font-size: 12px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 28px;
+  }
+  .wizard-hint {
+    background: var(--accent-dim);
+    border: 1px solid rgba(200,240,96,0.15);
+    border-radius: 6px;
+    padding: 10px 14px;
+    font-size: 11px;
+    color: var(--accent);
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* ── IMPORT OPTIONS ── */
+  .import-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .import-option {
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.15s;
+  }
+  .import-option:hover { border-color: var(--accent); background: var(--accent-dim); }
+  .import-option.selected { border-color: var(--accent); background: var(--accent-dim); }
+  .import-option-icon { font-size: 18px; }
+  .import-option-title { font-size: 12px; font-weight: 500; color: var(--text); }
+  .import-option-sub { font-size: 11px; color: var(--text-mid); margin-top: 2px; }
+  .import-option-badge { margin-left: auto; }
+
+  /* ── LOGIN SCREEN ── */
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+  }
+  .login-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 48px 40px;
+    width: 400px;
+    text-align: center;
+  }
+  .login-logo {
+    font-family: var(--sans);
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin-bottom: 8px;
+    color: var(--text);
+  }
+  .login-logo span { color: var(--accent); }
+  .login-tagline {
+    font-size: 13px;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 36px;
+  }
+  .gmail-btn {
+    width: 100%;
+    padding: 13px 20px;
+    background: white;
+    color: #1a1a1a;
+    border: none;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.15s;
+  }
+  .gmail-btn:hover { background: #f5f5f5; transform: translateY(-1px); }
+  .gmail-icon { width: 18px; height: 18px; background: #ea4335; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 10px; font-weight: 700; }
+  .login-terms {
+    font-size: 10px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    margin-top: 20px;
+  }
+
+  /* ── STATUS DROPDOWN ── */
+  .status-select {
+    background: var(--surface-2);
+    border: 1px solid var(--border-2);
+    border-radius: 6px;
+    padding: 5px 10px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text);
+    cursor: pointer;
+    outline: none;
+  }
+  .status-select:focus { border-color: var(--accent); }
+
+  /* ── SCROLL HIDE ── */
+  ::-webkit-scrollbar { width: 4px; height: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+  /* ── EMPTY STATE ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 20px;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .empty-state-icon { font-size: 32px; margin-bottom: 12px; }
+  .empty-state-title { font-family: var(--sans); font-size: 16px; font-weight: 600; color: var(--text-mid); margin-bottom: 6px; }
+  .empty-state-sub { font-size: 12px; line-height: 1.6; max-width: 280px; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--border); margin: 20px 0; }
+
+  /* ── PROTO INFO BAR ── */
+  .proto-info {
+    position: fixed;
+    bottom: 0;
+    left: 220px;
+    right: 0;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    padding: 8px 24px;
+    font-size: 10px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    z-index: 9998;
+  }
+  .proto-info-badge {
+    background: var(--accent-dim);
+    color: var(--accent);
+    border: 1px solid rgba(200,240,96,0.2);
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 9px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  /* ── SEND GUARD ── */
+  .dev-guard {
+    background: rgba(255,157,66,0.08);
+    border: 1px solid rgba(255,157,66,0.2);
+    border-radius: 6px;
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--orange);
+    margin-bottom: 16px;
+  }
+
+  /* ── CONFETTI ── */
+  .confetti-piece {
+    position: fixed;
+    width: 8px;
+    height: 8px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 9997;
+  }
+  @keyframes confettiFall {
+    from { opacity: 1; transform: translateY(-10px) rotate(0deg); }
+    to { opacity: 0; transform: translateY(100vh) rotate(720deg); }
+  }
+</style>
+</head>
+<body>
+
+<div class="prototype-shell">
+
+  <!-- ── PROTOTYPE NAV ── -->
+  <nav class="proto-nav">
+    <div class="proto-nav-logo">outreach<span>.</span></div>
+
+    <div class="proto-nav-section">Journey 1 — Activation</div>
+    <div class="proto-nav-item active" onclick="goto('s-login')"><span class="proto-nav-dot"></span> Login / OAuth</div>
+    <div class="proto-nav-item" onclick="goto('s-onboard-1')"><span class="proto-nav-dot"></span> Step 1: Add Prospects</div>
+    <div class="proto-nav-item" onclick="goto('s-onboard-2')"><span class="proto-nav-dot"></span> Step 2: Write Message</div>
+    <div class="proto-nav-item" onclick="goto('s-onboard-3')"><span class="proto-nav-dot"></span> Step 3: Follow-up</div>
+    <div class="proto-nav-item" onclick="goto('s-onboard-4')"><span class="proto-nav-dot"></span> Step 4: Send Campaign</div>
+    <div class="proto-nav-item" onclick="goto('s-activated')"><span class="proto-nav-dot"></span> ✦ Activated!</div>
+
+    <div class="proto-nav-section">Journey 2 — Dashboard</div>
+    <div class="proto-nav-item" onclick="goto('s-campaigns')"><span class="proto-nav-dot"></span> Campaigns list</div>
+    <div class="proto-nav-item" onclick="goto('s-review')"><span class="proto-nav-dot"></span> Review tab</div>
+    <div class="proto-nav-item" onclick="goto('s-drafts')"><span class="proto-nav-dot"></span> Drafts tab</div>
+    <div class="proto-nav-item" onclick="goto('s-sent')"><span class="proto-nav-dot"></span> Sent tab</div>
+
+    <div class="proto-nav-section">Journey 3 — Sequence Builder</div>
+    <div class="proto-nav-item" onclick="goto('s-sequence')"><span class="proto-nav-dot"></span> Sequence Builder</div>
+
+    <div class="proto-nav-section">Journey 4 — Emotional Design</div>
+    <div class="proto-nav-item" onclick="goto('s-milestones')"><span class="proto-nav-dot"></span> Milestones & Toasts</div>
+  </nav>
+
+  <!-- ── SCREENS ── -->
+
+  <!-- LOGIN -->
+  <div id="s-login" class="screen active">
+    <div class="login-screen">
+      <div class="login-card">
+        <div class="login-logo">outreach<span>.</span></div>
+        <p class="login-tagline">Consistent outreach, without the overhead.<br>Connect your Gmail to get started.</p>
+        <button class="gmail-btn" onclick="simulateOAuth()">
+          <div class="gmail-icon">G</div>
+          Continue with Google
+        </button>
+        <p class="login-terms">Your email stays yours. We never store credentials or read your inbox without permission.<br>By continuing you agree to our Terms of Service.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 1: ADD PROSPECTS -->
+  <div id="s-onboard-1" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="wizard-wrap">
+      <div class="wizard-card">
+        <div class="progress-steps">
+          <div class="step-item active"><div class="step-num">1</div><span>Add prospects</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">2</div><span>Write message</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">3</div><span>Follow-up</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">4</div><span>Send</span></div>
+        </div>
+
+        <div class="wizard-step-label">Step 1 of 4</div>
+        <div class="wizard-title">Who do you want to reach out to?</div>
+        <p class="wizard-sub">Add the people you want to contact. You can start with just a few — most campaigns begin with 5–10 prospects.</p>
+
+        <div class="import-options">
+          <div class="import-option" onclick="selectImport(this, 'paste')">
+            <span class="import-option-icon">📋</span>
+            <div>
+              <div class="import-option-title">Paste emails</div>
+              <div class="import-option-sub">Drop in a list of email addresses</div>
+            </div>
+            <div class="import-option-badge"><span class="badge badge-accent">Quickest</span></div>
+          </div>
+          <div class="import-option" onclick="selectImport(this, 'csv')">
+            <span class="import-option-icon">📄</span>
+            <div>
+              <div class="import-option-title">Upload CSV</div>
+              <div class="import-option-sub">Import from LinkedIn Sales Nav, Apollo, or any spreadsheet</div>
+            </div>
+          </div>
+          <div class="import-option" onclick="selectImport(this, 'manual')">
+            <span class="import-option-icon">✏️</span>
+            <div>
+              <div class="import-option-title">Add manually</div>
+              <div class="import-option-sub">Enter prospects one by one</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="paste-area" style="display:none; margin-bottom:16px;">
+          <div class="field">
+            <label class="label">Paste email addresses</label>
+            <textarea class="input" placeholder="james@agencyname.com&#10;sarah@consultingfirm.co.uk&#10;mike@fractional.io" rows="5" id="email-paste"></textarea>
+          </div>
+          <div class="wizard-hint">💡 Paste one email per line, or separate with commas.</div>
+        </div>
+
+        <div id="csv-area" style="display:none; margin-bottom:16px;">
+          <div style="border: 2px dashed var(--border-2); border-radius: 8px; padding: 32px; text-align: center; cursor: pointer; transition: all 0.15s;" onmouseenter="this.style.borderColor='var(--accent)'" onmouseleave="this.style.borderColor='var(--border-2)'" onclick="simulateCSV()">
+            <div style="font-size: 28px; margin-bottom: 8px;">📁</div>
+            <div style="font-size: 12px; color: var(--text-mid);">Drop your CSV here, or click to choose a file</div>
+            <div style="font-size: 11px; color: var(--text-dim); margin-top: 6px;">Expects: name, email, company, linkedin_url</div>
+          </div>
+        </div>
+
+        <div id="prospects-loaded" style="display:none; margin-bottom:16px;">
+          <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-bottom: 12px;">
+            <div style="padding: 10px 14px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 11px; color: var(--text-mid);">8 prospects imported</span>
+              <span class="badge badge-accent">✓ Mapped</span>
+            </div>
+            <div class="prospect-row" style="padding: 10px 14px; border-bottom: 1px solid var(--border);">
+              <div class="prospect-avatar">JM</div>
+              <div class="prospect-info"><div class="prospect-name">James Mitchell</div><div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="5a303b373f291a3435282e323b3d3f34392374393537">[email&#160;protected]</a> · North Agency</div></div>
+            </div>
+            <div class="prospect-row" style="padding: 10px 14px; border-bottom: 1px solid var(--border);">
+              <div class="prospect-avatar">ST</div>
+              <div class="prospect-info"><div class="prospect-name">Sarah Thompson</div><div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d6a5b7a4b7be96b5b9b8a5a3baa2b5b9f8b5b9f8a3bd">[email&#160;protected]</a> · ConsultCo</div></div>
+            </div>
+            <div class="prospect-row" style="padding: 10px 14px;">
+              <div class="prospect-avatar">+6</div>
+              <div class="prospect-info"><div class="prospect-name" style="color: var(--text-dim);">6 more prospects</div></div>
+            </div>
+          </div>
+          <div class="wizard-hint">✓ Step complete — your prospects are ready. Let's write your first message.</div>
+        </div>
+
+        <div style="display: flex; justify-content: flex-end;">
+          <button class="btn btn-primary btn-lg" onclick="onboard1Next()">Write first message →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 2: WRITE MESSAGE -->
+  <div id="s-onboard-2" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="wizard-wrap">
+      <div class="wizard-card" style="max-width: 620px;">
+        <div class="progress-steps">
+          <div class="step-item done"><div class="step-num">✓</div><span>Prospects</span></div>
+          <div class="step-line"></div>
+          <div class="step-item active"><div class="step-num">2</div><span>Write message</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">3</div><span>Follow-up</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">4</div><span>Send</span></div>
+        </div>
+
+        <div class="wizard-step-label">Step 2 of 4</div>
+        <div class="wizard-title">Write your first message</div>
+        <p class="wizard-sub">Pick a message type and tone. We'll suggest a starter — edit it to sound like you.</p>
+
+        <div class="field">
+          <label class="label">What kind of message is this?</label>
+          <div class="type-cards">
+            <div class="type-card selected" onclick="selectType(this)">
+              <div class="type-card-title">Value drop</div>
+              <div class="type-card-desc">Share something useful to open the door</div>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <div class="type-card-title">Follow-up</div>
+              <div class="type-card-desc">Chase a previous message or conversation</div>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <div class="type-card-title">Check-in</div>
+              <div class="type-card-desc">Warm touch with no hard ask</div>
+            </div>
+            <div class="type-card" onclick="selectType(this)">
+              <div class="type-card-title">Post-meeting</div>
+              <div class="type-card-desc">Follow up after you've spoken</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Tone</label>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="tone-pill selected" onclick="selectTone(this)">Calm & Commercial</button>
+            <button class="tone-pill" onclick="selectTone(this)">Direct & Confident</button>
+            <button class="tone-pill" onclick="selectTone(this)">Light Touch, Relational</button>
+          </div>
+        </div>
+
+        <div class="field">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+            <label class="label" style="margin: 0;">Suggested starter</label>
+            <div style="display: flex; gap: 6px;">
+              <button class="btn btn-secondary btn-sm" onclick="insertStarter()">Insert starter</button>
+              <button class="btn btn-ghost btn-sm" style="opacity:0.5; cursor:not-allowed; display: flex; align-items: center; gap:4px;"><span>🔒</span> Generate with AI</button>
+            </div>
+          </div>
+          <div id="starter-preview" style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; font-size: 12px; line-height: 1.7; color: var(--text-mid); margin-bottom: 10px; font-style: italic;">
+            Hi {{first_name}},<br><br>
+            Noticed you're scaling the team at {{company}} — thought this might be timely.<br><br>
+            We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes to share what we've seen work?<br><br>
+            Best,<br>Coris
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Your message — edit to sound like you</label>
+          <div class="field"><label class="label">Subject line</label><input class="input" id="subject-input" value="Quick thought on {{company}}'s pipeline"></div>
+          <textarea class="input" id="body-input" rows="7">Hi {{first_name}},
+
+Noticed you're scaling the team at {{company}} — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes to share what we've seen work?
+
+Best,
+Coris</textarea>
+          <div style="margin-top: 8px; font-size: 11px; color: var(--text-dim);">💡 Shorter messages tend to get more replies.</div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <button class="btn btn-secondary" onclick="goto('s-onboard-1')">← Back</button>
+          <button class="btn btn-primary btn-lg" onclick="goto('s-onboard-3'); showToast('✓', 'Message saved', 'accent')">Add a follow-up →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 3: FOLLOW-UP -->
+  <div id="s-onboard-3" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="wizard-wrap">
+      <div class="wizard-card" style="max-width: 620px;">
+        <div class="progress-steps">
+          <div class="step-item done"><div class="step-num">✓</div><span>Prospects</span></div>
+          <div class="step-line"></div>
+          <div class="step-item done"><div class="step-num">✓</div><span>Message</span></div>
+          <div class="step-line"></div>
+          <div class="step-item active"><div class="step-num">3</div><span>Follow-up</span></div>
+          <div class="step-line"></div>
+          <div class="step-item"><div class="step-num">4</div><span>Send</span></div>
+        </div>
+
+        <div class="wizard-step-label">Step 3 of 4 — optional</div>
+        <div class="wizard-title">Add a follow-up?</div>
+        <div class="wizard-hint">💡 Most replies happen on the second or third message. A single follow-up doubles your chances.</div>
+
+        <div id="followup-choice" style="display: flex; flex-direction: column; gap: 8px; margin-bottom: 24px;">
+          <div class="import-option selected" onclick="toggleFollowup(true)">
+            <span class="import-option-icon">✉️</span>
+            <div>
+              <div class="import-option-title">Yes, add a follow-up</div>
+              <div class="import-option-sub">Sends automatically after a delay if there's no reply</div>
+            </div>
+          </div>
+          <div class="import-option" onclick="toggleFollowup(false)">
+            <span class="import-option-icon">→</span>
+            <div>
+              <div class="import-option-title">Skip for now</div>
+              <div class="import-option-sub">You can add follow-ups to your campaign later</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="followup-builder" style="display:block;">
+          <div class="field">
+            <label class="label">Send follow-up after</label>
+            <div class="delay-selector">
+              <input type="range" min="1" max="14" value="3" id="delay-range" oninput="updateDelay(this.value)">
+              <span class="delay-value" id="delay-display">3 days</span>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Why would they reply to this?</label>
+            <div class="chips" style="margin-bottom: 12px;">
+              <button class="chip selected" onclick="this.classList.toggle('selected')">Friendly nudge</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">New information</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">Useful resource</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">Clear next step</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">Meeting follow-up</button>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Follow-up message</label>
+            <textarea class="input" rows="5">Hi {{first_name}},
+
+Just wanted to make sure this didn't get buried. Happy to keep it brief if easier — even a quick call would be helpful.
+
+Coris</textarea>
+          </div>
+
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Reply to original Gmail thread</div>
+              <div class="toggle-sub">Keeps context — recommended for follow-ups</div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 24px;">
+          <button class="btn btn-secondary" onclick="goto('s-onboard-2')">← Back</button>
+          <button class="btn btn-primary btn-lg" onclick="goto('s-onboard-4'); showToast('✓', 'Sequence ready', 'accent')">Review & send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ONBOARD 4: SEND CAMPAIGN -->
+  <div id="s-onboard-4" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="wizard-wrap">
+      <div class="wizard-card">
+        <div class="progress-steps">
+          <div class="step-item done"><div class="step-num">✓</div><span>Prospects</span></div>
+          <div class="step-line"></div>
+          <div class="step-item done"><div class="step-num">✓</div><span>Message</span></div>
+          <div class="step-line"></div>
+          <div class="step-item done"><div class="step-num">✓</div><span>Follow-up</span></div>
+          <div class="step-line"></div>
+          <div class="step-item active"><div class="step-num">4</div><span>Send</span></div>
+        </div>
+
+        <div class="wizard-step-label">Step 4 of 4</div>
+        <div class="wizard-title">Ready to send</div>
+        <p class="wizard-sub">Review your campaign before it goes out. Once sent, outreach starts immediately.</p>
+
+        <div style="background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; margin-bottom: 24px;">
+          <div style="padding: 16px 20px; border-bottom: 1px solid var(--border);">
+            <div style="font-size: 10px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 6px;">Campaign</div>
+            <div style="font-family: var(--sans); font-size: 16px; font-weight: 600; color: var(--text);">My First Campaign</div>
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0;">
+            <div style="padding: 16px 20px; border-right: 1px solid var(--border); text-align: center;">
+              <div style="font-family: var(--sans); font-size: 24px; font-weight: 700; color: var(--accent);">8</div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 3px;">Prospects</div>
+            </div>
+            <div style="padding: 16px 20px; border-right: 1px solid var(--border); text-align: center;">
+              <div style="font-family: var(--sans); font-size: 24px; font-weight: 700; color: var(--text);">2</div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 3px;">Steps</div>
+            </div>
+            <div style="padding: 16px 20px; text-align: center;">
+              <div style="font-family: var(--sans); font-size: 24px; font-weight: 700; color: var(--text);">3d</div>
+              <div style="font-size: 11px; color: var(--text-dim); margin-top: 3px;">Follow-up delay</div>
+            </div>
+          </div>
+          <div style="padding: 12px 20px; background: var(--accent-dim); border-top: 1px solid rgba(200,240,96,0.1);">
+            <div style="font-size: 11px; color: var(--accent);">Sending from: <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="8eede1fce7fdceebf6efe3fee2eba0ede1e3">[email&#160;protected]</a> via Gmail</div>
+          </div>
+        </div>
+
+        <div class="dev-guard">
+          🔧 Dev mode — no real emails will be sent. This simulates the send flow.
+        </div>
+
+        <button class="btn btn-primary btn-lg" style="width: 100%; justify-content: center; font-size: 14px; padding: 14px;" onclick="sendCampaign()">
+          Send campaign to 8 prospects →
+        </button>
+
+        <div style="text-align: center; margin-top: 12px;">
+          <button class="btn btn-ghost btn-sm" onclick="goto('s-onboard-3')">← Go back and edit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVATED! -->
+  <div id="s-activated" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="celebration-screen">
+      <div class="celebration-icon" id="cel-icon">🎯</div>
+      <div class="celebration-title">Your outreach is live.</div>
+      <p class="celebration-sub">8 emails are on their way. Follow-ups will go out automatically in 3 days if there's no reply. You'll see everything in your dashboard.</p>
+      <div class="celebration-stats">
+        <div class="cel-stat">
+          <div class="cel-stat-num">8</div>
+          <div class="cel-stat-label">Emails sent</div>
+        </div>
+        <div class="cel-stat">
+          <div class="cel-stat-num">1</div>
+          <div class="cel-stat-label">Campaign live</div>
+        </div>
+        <div class="cel-stat">
+          <div class="cel-stat-num">3d</div>
+          <div class="cel-stat-label">Next touchpoint</div>
+        </div>
+      </div>
+      <div style="display: flex; gap: 12px;">
+        <button class="btn btn-primary btn-lg" onclick="goto('s-campaigns')">Go to dashboard →</button>
+        <button class="btn btn-secondary btn-lg" onclick="goto('s-onboard-1')">Start another campaign</button>
+      </div>
+      <div style="margin-top: 24px; font-size: 11px; color: var(--text-dim);">You can close this now. Your outreach is moving.</div>
+    </div>
+  </div>
+
+  <!-- CAMPAIGNS LIST -->
+  <div id="s-campaigns" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <button class="btn btn-primary btn-sm" onclick="showModal('campaign-modal')">+ New campaign</button>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good morning, Coris.</div>
+          <div class="page-sub">Your outreach is running. Here's where things stand.</div>
+        </div>
+      </div>
+
+      <div class="stat-cards">
+        <div class="stat-card">
+          <div class="stat-label">Active campaigns</div>
+          <div class="stat-value">2</div>
+          <div class="stat-sub">1 paused</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Prospects</div>
+          <div class="stat-value">47</div>
+          <div class="stat-sub">of 100 free tier</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sent this week</div>
+          <div class="stat-value stat-accent">14</div>
+          <div class="stat-sub">↑ 3 from last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Active replies</div>
+          <div class="stat-value">3</div>
+          <div class="stat-sub">2 meetings booked</div>
+        </div>
+      </div>
+
+      <div class="campaign-card" onclick="goto('s-review')">
+        <div class="campaign-card-top">
+          <div>
+            <div class="campaign-name">My First Campaign</div>
+            <div class="campaign-meta">Started Mar 12 · Agency owners · 2-step sequence</div>
+          </div>
+          <span class="badge badge-accent">Active</span>
+        </div>
+        <div class="campaign-stats">
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">8</div>
+            <div class="campaign-stat-label">Prospects</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--accent);">8</div>
+            <div class="campaign-stat-label">Sent</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">1</div>
+            <div class="campaign-stat-label">Replies</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">5</div>
+            <div class="campaign-stat-label">Follow-ups due</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="campaign-card">
+        <div class="campaign-card-top">
+          <div>
+            <div class="campaign-name">Fractional CFO outreach — Q1</div>
+            <div class="campaign-meta">Started Feb 28 · Finance leads · 3-step sequence</div>
+          </div>
+          <span class="badge badge-neutral">Paused</span>
+        </div>
+        <div class="campaign-stats">
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">39</div>
+            <div class="campaign-stat-label">Prospects</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">31</div>
+            <div class="campaign-stat-label">Sent</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--accent);">4</div>
+            <div class="campaign-stat-label">Replies</div>
+          </div>
+          <div class="campaign-stat-item">
+            <div class="campaign-stat-num" style="color: var(--text);">2</div>
+            <div class="campaign-stat-label">Meetings</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REVIEW TAB -->
+  <div id="s-review" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <button class="btn btn-secondary btn-sm" onclick="goto('s-campaigns')">← Campaigns</button>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab active">Review <span class="tab-count">6</span></div>
+      <div class="tab" onclick="goto('s-drafts')">Drafts <span class="tab-count">4</span></div>
+      <div class="tab">LinkedIn <span class="tab-count">8</span></div>
+      <div class="tab" onclick="goto('s-sent')">Sent <span class="tab-count">8</span></div>
+      <div class="tab">Follow-up <span class="tab-count">5</span></div>
+      <div class="tab">Nurture <span class="tab-count">2</span></div>
+      <div class="tab">Conversations <span class="tab-count">3</span></div>
+    </div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Review</div>
+          <div class="page-sub">Decide who to contact before any emails go out.</div>
+        </div>
+      </div>
+
+      <div id="review-list">
+        <div class="prospect-row" id="pr-1">
+          <div class="prospect-avatar">JM</div>
+          <div class="prospect-info">
+            <div class="prospect-name">James Mitchell</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d3b9b2beb6a093bdbca1a7bbb2b4b6bdb0aafdb0bcbe">[email&#160;protected]</a> · North Agency · Head of Growth</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-1', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-1', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-1', 'skip')">Skip</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="pr-2">
+          <div class="prospect-avatar">ST</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Sarah Thompson</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6c5d7c4d7def6d5d9d8c5c3dac2d5d998d5d998c3dd">[email&#160;protected]</a> · ConsultCo · Managing Director</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-2', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-2', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-2', 'skip')">Skip</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="pr-3">
+          <div class="prospect-avatar">MP</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Marcus Peters</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4b262a39283e380b3d2e253f3e392e38652224">[email&#160;protected]</a> · Ventures Group · Founder</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-3', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-3', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-3', 'skip')">Skip</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="pr-4">
+          <div class="prospect-avatar">AL</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Alice Lowe</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="7d1c11141e183d1e0f181c09140b18111c1f531e1210">[email&#160;protected]</a> · Creative Lab · CEO</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-4', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-4', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-4', 'skip')">Skip</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="pr-5">
+          <div class="prospect-avatar">RK</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Ravi Kumar</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="d9abb8afb099aabab8b5bcb1b6acaabcf7bab6">[email&#160;protected]</a> · ScaleHouse · VP Sales</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-5', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-5', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-5', 'skip')">Skip</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="pr-6">
+          <div class="prospect-avatar">HC</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Helen Clarke</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="83ebe6efe6edc3f7ebe6ecf3f0ade0ec">[email&#160;protected]</a> · The Ops Company · COO</div>
+          </div>
+          <div class="pill-group">
+            <button class="pill" onclick="reviewAction(this, 'pr-6', 'contact')">Contact</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-6', 'later')">Later</button>
+            <button class="pill" onclick="reviewAction(this, 'pr-6', 'skip')">Skip</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- DRAFTS TAB -->
+  <div id="s-drafts" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <button class="btn btn-secondary btn-sm" onclick="goto('s-campaigns')">← Campaigns</button>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab" onclick="goto('s-review')">Review <span class="tab-count">4</span></div>
+      <div class="tab active">Drafts <span class="tab-count">4</span></div>
+      <div class="tab">LinkedIn <span class="tab-count">8</span></div>
+      <div class="tab" onclick="goto('s-sent')">Sent <span class="tab-count">8</span></div>
+      <div class="tab">Follow-up <span class="tab-count">5</span></div>
+      <div class="tab">Nurture <span class="tab-count">2</span></div>
+      <div class="tab">Conversations <span class="tab-count">3</span></div>
+    </div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Drafts</div>
+          <div class="page-sub">Ready to send. Review and fire when you're happy.</div>
+        </div>
+        <button class="btn btn-primary" onclick="showToast('✓', '4 emails queued to send', 'accent')">Send all drafts</button>
+      </div>
+
+      <div id="drafts-list">
+        <div class="prospect-row" id="dr-1">
+          <div class="prospect-avatar">JM</div>
+          <div class="prospect-info">
+            <div class="prospect-name">James Mitchell</div>
+            <div class="prospect-meta" style="color: var(--text-mid);">Quick thought on North Agency's pipeline</div>
+          </div>
+          <div class="prospect-actions">
+            <button class="btn btn-secondary btn-sm">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="sendDraft('dr-1', 'james@northagency.com')">Send</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="dr-2">
+          <div class="prospect-avatar">ST</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Sarah Thompson</div>
+            <div class="prospect-meta" style="color: var(--text-mid);">Quick thought on ConsultCo's pipeline</div>
+          </div>
+          <div class="prospect-actions">
+            <button class="btn btn-secondary btn-sm">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="sendDraft('dr-2', 'sarah@consultco.co.uk')">Send</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="dr-3">
+          <div class="prospect-avatar">MP</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Marcus Peters</div>
+            <div class="prospect-meta" style="color: var(--text-mid);">Quick thought on Ventures Group's pipeline</div>
+          </div>
+          <div class="prospect-actions">
+            <button class="btn btn-secondary btn-sm">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="sendDraft('dr-3', 'marcus@ventures.io')">Send</button>
+          </div>
+        </div>
+        <div class="prospect-row" id="dr-4">
+          <div class="prospect-avatar">AL</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Alice Lowe</div>
+            <div class="prospect-meta" style="color: var(--text-mid);">Quick thought on Creative Lab's pipeline</div>
+          </div>
+          <div class="prospect-actions">
+            <button class="btn btn-secondary btn-sm">Edit</button>
+            <button class="btn btn-primary btn-sm" onclick="sendDraft('dr-4', 'alice@creativelab.com')">Send</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="drafts-empty" style="display:none;">
+        <div class="empty-state">
+          <div class="empty-state-icon">✓</div>
+          <div class="empty-state-title">All drafts sent</div>
+          <p class="empty-state-sub">Your outreach is moving. Check back tomorrow to see replies and handle follow-ups.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SENT TAB -->
+  <div id="s-sent" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <button class="btn btn-secondary btn-sm" onclick="goto('s-campaigns')">← Campaigns</button>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab" onclick="goto('s-review')">Review <span class="tab-count">2</span></div>
+      <div class="tab" onclick="goto('s-drafts')">Drafts <span class="tab-count">0</span></div>
+      <div class="tab">LinkedIn <span class="tab-count">8</span></div>
+      <div class="tab active">Sent <span class="tab-count">8</span></div>
+      <div class="tab">Follow-up <span class="tab-count">5</span></div>
+      <div class="tab">Nurture <span class="tab-count">2</span></div>
+      <div class="tab">Conversations <span class="tab-count">3</span></div>
+    </div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Sent</div>
+          <div class="page-sub">The master record of everyone you've contacted.</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">JM</div>
+          <div class="prospect-info">
+            <div class="prospect-name">James Mitchell</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="294348444c5a6947465b5d41484e4c474a50074a4644">[email&#160;protected]</a> · Sent Mar 14</div>
+          </div>
+          <select class="status-select" onchange="handleStatusChange(this, 'James Mitchell')">
+            <option value="2" selected>First email sent → Follow-up</option>
+            <option value="1">First email drafted</option>
+            <option value="3">Follow-up drafted</option>
+            <option value="4">2nd follow-up sent</option>
+            <option value="5">Reply received → Conversations</option>
+            <option value="6">Conversation ongoing</option>
+            <option value="7">Closed — meeting booked</option>
+            <option value="8">Closed — no response</option>
+            <option value="9">Closed — not a fit</option>
+            <option value="10">Closed — in place already</option>
+            <option value="11">Closed — no need for support</option>
+            <option value="12">On maternity/redirected</option>
+            <option value="13">Email bounced</option>
+            <option value="14" style="color: var(--red);">DO NOT CONTACT</option>
+          </select>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">ST</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Sarah Thompson</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="9fecfeedfef7dffcf0f1eceaf3ebfcf0b1fcf0b1eaf4">[email&#160;protected]</a> · Sent Mar 14</div>
+          </div>
+          <select class="status-select" onchange="handleStatusChange(this, 'Sarah Thompson')">
+            <option value="5" selected>Reply received → Conversations</option>
+            <option value="1">First email drafted</option>
+            <option value="2">First email sent → Follow-up</option>
+            <option value="3">Follow-up drafted</option>
+            <option value="4">2nd follow-up sent</option>
+            <option value="6">Conversation ongoing</option>
+            <option value="7">Closed — meeting booked</option>
+            <option value="8">Closed — no response</option>
+            <option value="9">Closed — not a fit</option>
+            <option value="10">Closed — in place already</option>
+            <option value="11">Closed — no need for support</option>
+            <option value="12">On maternity/redirected</option>
+            <option value="13">Email bounced</option>
+            <option value="14" style="color: var(--red);">DO NOT CONTACT</option>
+          </select>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">MP</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Marcus Peters</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="177a7665746264576172796362657264397e78">[email&#160;protected]</a> · Sent Mar 14</div>
+          </div>
+          <select class="status-select" onchange="handleStatusChange(this, 'Marcus Peters')">
+            <option value="2" selected>First email sent → Follow-up</option>
+            <option value="1">First email drafted</option>
+            <option value="3">Follow-up drafted</option>
+            <option value="4">2nd follow-up sent</option>
+            <option value="5">Reply received → Conversations</option>
+            <option value="6">Conversation ongoing</option>
+            <option value="7">Closed — meeting booked</option>
+            <option value="8">Closed — no response</option>
+            <option value="9">Closed — not a fit</option>
+            <option value="10">Closed — in place already</option>
+            <option value="11">Closed — no need for support</option>
+            <option value="12">On maternity/redirected</option>
+            <option value="13">Email bounced</option>
+            <option value="14" style="color: var(--red);">DO NOT CONTACT</option>
+          </select>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">AL</div>
+          <div class="prospect-info">
+            <div class="prospect-name">Alice Lowe</div>
+            <div class="prospect-meta"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="e98885808a8ca98a9b8c889d809f8c85888bc78a8684">[email&#160;protected]</a> · Sent Mar 13</div>
+          </div>
+          <select class="status-select" onchange="handleStatusChange(this, 'Alice Lowe')">
+            <option value="13" selected>Email bounced</option>
+            <option value="1">First email drafted</option>
+            <option value="2">First email sent → Follow-up</option>
+            <option value="3">Follow-up drafted</option>
+            <option value="4">2nd follow-up sent</option>
+            <option value="5">Reply received</option>
+            <option value="6">Conversation ongoing</option>
+            <option value="7">Closed — meeting booked</option>
+            <option value="8">Closed — no response</option>
+            <option value="9">Closed — not a fit</option>
+            <option value="10">Closed — in place already</option>
+            <option value="11">Closed — no need for support</option>
+            <option value="12">On maternity/redirected</option>
+            <option value="14" style="color: var(--red);">DO NOT CONTACT</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SEQUENCE BUILDER -->
+  <div id="s-sequence" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <button class="btn btn-secondary btn-sm" onclick="goto('s-campaigns')">← Back</button>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="page-content" style="max-width: 680px;">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Sequence Builder</div>
+          <div class="page-sub">My First Campaign · Up to 6 steps</div>
+        </div>
+        <button class="btn btn-primary">Save sequence</button>
+      </div>
+
+      <!-- Step 1 -->
+      <div class="sequence-step">
+        <div class="step-header" onclick="toggleStep('seq-1')">
+          <div class="step-num-badge s1">1</div>
+          <div class="step-header-info">
+            <div class="step-header-title">Initial outreach</div>
+            <div class="step-header-meta">Value drop · Calm & Commercial · Sends immediately</div>
+          </div>
+          <span class="badge badge-accent">Step 1</span>
+        </div>
+        <div class="step-body open" id="seq-1">
+          <div class="field">
+            <label class="label">Message type</label>
+            <div class="type-cards" style="grid-template-columns: repeat(4,1fr);">
+              <div class="type-card selected" onclick="selectType(this)" style="padding: 10px;">
+                <div class="type-card-title" style="font-size:11px;">Value drop</div>
+              </div>
+              <div class="type-card" onclick="selectType(this)" style="padding: 10px;">
+                <div class="type-card-title" style="font-size:11px;">Follow-up</div>
+              </div>
+              <div class="type-card" onclick="selectType(this)" style="padding: 10px;">
+                <div class="type-card-title" style="font-size:11px;">Check-in</div>
+              </div>
+              <div class="type-card" onclick="selectType(this)" style="padding: 10px;">
+                <div class="type-card-title" style="font-size:11px;">Post-meeting</div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Tone</label>
+            <div style="display: flex; gap: 6px;">
+              <button class="tone-pill selected" onclick="selectTone(this)">Calm & Commercial</button>
+              <button class="tone-pill" onclick="selectTone(this)">Direct & Confident</button>
+              <button class="tone-pill" onclick="selectTone(this)">Light Touch, Relational</button>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Subject line</label>
+            <input class="input" value="Quick thought on {{company}}'s pipeline">
+          </div>
+          <div class="field">
+            <label class="label">Message body</label>
+            <textarea class="input" rows="5">Hi {{first_name}},
+
+Noticed you're scaling the team at {{company}} — thought this might be timely.
+
+Worth 15 minutes?
+
+Coris</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="sequence-step">
+        <div class="step-header" onclick="toggleStep('seq-2')">
+          <div class="step-num-badge">2</div>
+          <div class="step-header-info">
+            <div class="step-header-title">Follow-up #1</div>
+            <div class="step-header-meta">Follow-up · Calm & Commercial · 3 days after Step 1</div>
+          </div>
+          <span class="badge badge-neutral">Step 2</span>
+        </div>
+        <div class="step-body" id="seq-2">
+          <div class="field">
+            <label class="label">Delay after previous step</label>
+            <div class="delay-selector">
+              <input type="range" min="1" max="14" value="3" id="delay2" oninput="document.getElementById('delay2-v').textContent=this.value+' days'">
+              <span class="delay-value" id="delay2-v">3 days</span>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Why would they reply to this?</label>
+            <div class="chips">
+              <button class="chip selected" onclick="this.classList.toggle('selected')">Friendly nudge</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">New information</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">Useful resource</button>
+              <button class="chip" onclick="this.classList.toggle('selected')">Clear next step</button>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <div>
+              <div class="toggle-label">Reply to original Gmail thread</div>
+              <div class="toggle-sub">Sends as a reply, keeping context</div>
+            </div>
+            <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+          </div>
+          <div class="field" style="margin-top:16px;">
+            <label class="label">Message body</label>
+            <textarea class="input" rows="4">Hi {{first_name}},
+
+Just making sure this didn't get buried. Even a quick "not now" is useful to know.
+
+Coris</textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add step -->
+      <div id="add-step-wrap">
+        <button class="add-step-btn" onclick="addStep()" id="add-step-btn">
+          + Add step <span style="font-size:10px; color: var(--text-dim);">(4 remaining)</span>
+        </button>
+      </div>
+
+      <div style="margin-top: 16px; font-size: 11px; color: var(--text-dim); text-align: center;">
+        Maximum 6 steps. Sequences stop automatically when a prospect replies.
+      </div>
+    </div>
+  </div>
+
+  <!-- MILESTONES & TOASTS -->
+  <div id="s-milestones" class="screen">
+    <div class="app-topbar">
+      <div class="app-logo">outreach<span>.</span></div>
+      <div class="app-topbar-mid"></div>
+      <div class="app-avatar">CL</div>
+    </div>
+    <div class="page-content">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Emotional Design System</div>
+          <div class="page-sub">Click each trigger to preview the real interactions.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div style="font-family: var(--sans); font-size: 14px; font-weight: 600; margin-bottom: 4px;">Toasts</div>
+        <div style="font-size: 11px; color: var(--text-mid); margin-bottom: 16px;">Contextual feedback messages shown after key actions.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="showToast('✓', 'Email sent to james@northagency.com', 'accent')">Send toast</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('✓', 'Campaign saved', 'accent')">Save toast</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('⚠', 'Send failed — James Mitchell is still in Drafts', 'error')">Error toast</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('→', '8 prospects imported', 'neutral')">Import toast</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('✓', 'Prospect moved to Nurture', 'neutral')">Nurture toast</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div style="font-family: var(--sans); font-size: 14px; font-weight: 600; margin-bottom: 4px;">Milestone moments</div>
+        <div style="font-size: 11px; color: var(--text-mid); margin-bottom: 16px;">Temporary — auto-dismiss after 10 seconds, never persist across page navigation.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="showMilestone('🎯', 'First email sent', 'Your outreach is officially moving.')">First send</button>
+          <button class="btn btn-secondary btn-sm" onclick="showMilestone('📬', 'First reply', 'Someone replied. They noticed.')">First reply</button>
+          <button class="btn btn-secondary btn-sm" onclick="showMilestone('📅', 'Meeting booked', 'That\'s the whole point. Nice one.')">Meeting booked</button>
+          <button class="btn btn-secondary btn-sm" onclick="showMilestone('🔥', '10 emails sent', 'Consistent outreach is how this works.')">10 sent</button>
+          <button class="btn btn-secondary btn-sm" onclick="showMilestone('✦', 'Campaign complete', 'You finished a full sequence. That\'s rare.')">Campaign done</button>
+        </div>
+      </div>
+
+      <div class="card" style="margin-bottom: 16px;">
+        <div style="font-family: var(--sans); font-size: 14px; font-weight: 600; margin-bottom: 4px;">Momentum prompts</div>
+        <div style="font-size: 11px; color: var(--text-mid); margin-bottom: 16px;">In-context nudges during the workflow — not intrusive.</div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+          <button class="btn btn-secondary btn-sm" onclick="showToast('↑', 'You have 5 follow-ups ready — takes about 4 minutes', 'neutral')">Follow-up nudge</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('💬', '2 replies waiting in Conversations', 'accent')">Reply nudge</button>
+          <button class="btn btn-secondary btn-sm" onclick="showToast('✓', 'You\'re done for today. Your outreach is moving.', 'accent')">Done for today</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="font-family: var(--sans); font-size: 14px; font-weight: 600; margin-bottom: 4px;">Activation celebration</div>
+        <div style="font-size: 11px; color: var(--text-mid); margin-bottom: 16px;">Shown once — when a user sends their first campaign.</div>
+        <button class="btn btn-primary btn-sm" onclick="goto('s-onboard-4'); setTimeout(sendCampaign, 300)">Simulate first send →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ── MODALS ── -->
+<div class="modal-overlay" id="campaign-modal">
+  <div class="modal-box">
+    <div class="modal-title">Name your campaign</div>
+    <p class="modal-sub">Give it a name that describes who you're reaching out to. You can rename it later.</p>
+    <div class="field">
+      <label class="label">Campaign name</label>
+      <input class="input" placeholder="e.g. Agency founders — Q1 outreach" id="campaign-name-input">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="hideModal('campaign-modal')">Cancel</button>
+      <button class="btn btn-primary" onclick="createCampaign()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay danger-modal" id="dnc-modal">
+  <div class="modal-box">
+    <div class="modal-title">DO NOT CONTACT</div>
+    <p class="modal-sub">This action is irreversible. <span id="dnc-name"></span> will be permanently blocked from all future outreach from this account.</p>
+    <div style="background: var(--red-dim); border: 1px solid rgba(255,76,76,0.2); border-radius: 6px; padding: 12px; font-size: 12px; color: var(--red); margin-bottom: 4px;">
+      This cannot be undone. Are you absolutely sure?
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary" onclick="cancelDNC()">Cancel</button>
+      <button class="btn btn-danger" onclick="confirmDNC()">Yes, DO NOT CONTACT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ── TOAST CONTAINER ── -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- ── MILESTONE CONTAINER ── -->
+<div id="milestone-container" style="position:fixed; top:72px; right:24px; z-index: 9998; pointer-events:none;"></div>
+
+<!-- ── PROTO INFO BAR ── -->
+<div class="proto-info">
+  <span class="proto-info-badge">Prototype</span>
+  <span>outreach. · Clickable prototype · All journeys specced from 2.9–2.13 engineering docs</span>
+  <span style="margin-left: auto;">No real emails are sent · dev-mode simulation only</span>
+</div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+  // ── NAVIGATION ──
+  function goto(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(screenId).classList.add('active');
+
+    // Update nav
+    document.querySelectorAll('.proto-nav-item').forEach(item => {
+      item.classList.remove('active');
+      if (item.getAttribute('onclick') && item.getAttribute('onclick').includes(screenId)) {
+        item.classList.add('active');
+      }
+    });
+  }
+
+  // ── TOAST SYSTEM ──
+  function showToast(icon, text, type = 'accent') {
+    const container = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    const cls = type === 'accent' ? 'toast-accent' : type === 'error' ? 'toast-error' : 'toast-neutral';
+    toast.className = `toast ${cls}`;
+    toast.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${text}</span>`;
+    container.appendChild(toast);
+
+    setTimeout(() => {
+      toast.classList.add('exiting');
+      setTimeout(() => toast.remove(), 300);
+    }, 3500);
+  }
+
+  // ── MILESTONE TOASTS ──
+  function showMilestone(icon, title, subtitle) {
+    const container = document.getElementById('milestone-container');
+    const el = document.createElement('div');
+    el.className = 'milestone-toast';
+    el.style.pointerEvents = 'all';
+    el.innerHTML = `
+      <div class="milestone-icon">${icon}</div>
+      <div class="milestone-text"><strong>${title}</strong><span>${subtitle}</span></div>
+    `;
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(20px)';
+    el.style.transition = 'all 0.3s';
+    container.appendChild(el);
+    requestAnimationFrame(() => {
+      el.style.opacity = '1';
+      el.style.transform = 'translateX(0)';
+    });
+
+    setTimeout(() => {
+      el.style.opacity = '0';
+      el.style.transform = 'translateX(20px)';
+      setTimeout(() => el.remove(), 300);
+    }, 10000);
+  }
+
+  // ── MODALS ──
+  function showModal(id) {
+    document.getElementById(id).classList.add('open');
+  }
+  function hideModal(id) {
+    document.getElementById(id).classList.remove('open');
+  }
+
+  // ── OAUTH SIMULATION ──
+  function simulateOAuth() {
+    const btn = document.querySelector('.gmail-btn');
+    btn.textContent = 'Connecting...';
+    btn.disabled = true;
+    setTimeout(() => {
+      goto('s-onboard-1');
+      showToast('✓', 'Gmail connected — coris@example.com', 'accent');
+    }, 1200);
+  }
+
+  // ── IMPORT ──
+  function selectImport(el, type) {
+    document.querySelectorAll('#s-onboard-1 .import-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+
+    document.getElementById('paste-area').style.display = 'none';
+    document.getElementById('csv-area').style.display = 'none';
+    document.getElementById('prospects-loaded').style.display = 'none';
+
+    if (type === 'paste') document.getElementById('paste-area').style.display = 'block';
+    if (type === 'csv') document.getElementById('csv-area').style.display = 'block';
+    if (type === 'manual') {
+      document.getElementById('prospects-loaded').style.display = 'block';
+    }
+  }
+
+  function simulateCSV() {
+    const csvArea = document.getElementById('csv-area');
+    csvArea.innerHTML = `<div style="text-align:center; padding: 20px; color: var(--accent); font-size: 12px; animation: toastIn 0.3s ease forwards;">
+      <div style="font-size: 24px; margin-bottom: 8px;">✓</div>
+      <div>8 prospects found — Mapped automatically</div>
+    </div>`;
+    setTimeout(() => {
+      document.getElementById('csv-area').style.display = 'none';
+      document.getElementById('prospects-loaded').style.display = 'block';
+      showToast('✓', '8 prospects imported from CSV', 'accent');
+    }, 1000);
+  }
+
+  function onboard1Next() {
+    const paste = document.getElementById('email-paste');
+    if (paste && paste.value.trim()) {
+      showToast('✓', 'Prospects added', 'accent');
+    }
+    document.getElementById('prospects-loaded').style.display = 'block';
+    goto('s-onboard-2');
+  }
+
+  // ── MESSAGE TYPE / TONE ──
+  function selectType(el) {
+    const group = el.closest('.type-cards');
+    group.querySelectorAll('.type-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function selectTone(el) {
+    const group = el.parentElement;
+    group.querySelectorAll('.tone-pill').forEach(p => p.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function insertStarter() {
+    const preview = document.getElementById('starter-preview');
+    const body = document.getElementById('body-input');
+    if (body && preview) {
+      // Already has content — this simulates inserting
+      showToast('✓', 'Starter inserted — edit to make it yours', 'neutral');
+    }
+  }
+
+  // ── FOLLOW-UP TOGGLE ──
+  function toggleFollowup(show) {
+    const opts = document.querySelectorAll('#followup-choice .import-option');
+    opts.forEach(o => o.classList.remove('selected'));
+    opts[show ? 0 : 1].classList.add('selected');
+    document.getElementById('followup-builder').style.display = show ? 'block' : 'none';
+  }
+
+  function updateDelay(v) {
+    document.getElementById('delay-display').textContent = v + ' day' + (v > 1 ? 's' : '');
+  }
+
+  // ── SEND CAMPAIGN ──
+  function sendCampaign() {
+    const btn = document.querySelector('#s-onboard-4 .btn-primary');
+    if (!btn) return;
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      launchConfetti();
+      goto('s-activated');
+      setTimeout(() => {
+        showMilestone('🎯', 'First campaign sent!', 'Your outreach is officially moving.');
+      }, 800);
+    }, 1500);
+  }
+
+  function launchConfetti() {
+    const colors = ['#c8f060', '#ffffff', '#a0d840', '#e8ff9a'];
+    for (let i = 0; i < 40; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.top = '-10px';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.animationDuration = (1.5 + Math.random() * 2) + 's';
+        el.style.animationDelay = Math.random() * 0.5 + 's';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3000);
+      }, i * 40);
+    }
+  }
+
+  // ── REVIEW PILLS ──
+  function reviewAction(btn, rowId, action) {
+    const row = document.getElementById(rowId);
+    const pills = row.querySelectorAll('.pill');
+    pills.forEach(p => { p.classList.remove('contact', 'skip', 'later'); });
+    btn.classList.add(action);
+
+    const name = row.querySelector('.prospect-name').textContent;
+    const msgs = {
+      contact: `${name} added to Drafts`,
+      later: `${name} moved to Later`,
+      skip: `${name} skipped`
+    };
+    const types = { contact: 'accent', later: 'neutral', skip: 'error' };
+    const icons = { contact: '✓', later: '→', skip: '✕' };
+    showToast(icons[action], msgs[action], types[action]);
+
+    // Fade after 1s
+    setTimeout(() => {
+      row.classList.add('fading');
+      setTimeout(() => {
+        row.remove();
+      }, 300);
+    }, 1000);
+  }
+
+  // ── SEND DRAFT ──
+  function sendDraft(rowId, email) {
+    const row = document.getElementById(rowId);
+    const btn = row.querySelector('.btn-primary');
+    btn.textContent = 'Sending...';
+    btn.disabled = true;
+    setTimeout(() => {
+      showToast('✓', `Email sent to ${email}`, 'accent');
+      row.classList.add('fading');
+      setTimeout(() => {
+        row.remove();
+        checkDraftsEmpty();
+      }, 300);
+    }, 800);
+  }
+
+  function checkDraftsEmpty() {
+    const list = document.getElementById('drafts-list');
+    const empty = document.getElementById('drafts-empty');
+    if (list && list.querySelectorAll('.prospect-row').length === 0) {
+      empty.style.display = 'block';
+      showMilestone('🔥', 'All drafts sent!', 'Consistent outreach is how this works.');
+    }
+  }
+
+  // ── STATUS CHANGE ──
+  let pendingDNCSelect = null;
+  let pendingDNCName = null;
+
+  function handleStatusChange(select, name) {
+    if (select.value === '14') {
+      pendingDNCSelect = select;
+      pendingDNCName = name;
+      document.getElementById('dnc-name').textContent = name;
+      showModal('dnc-modal');
+      // Reset to previous
+      select.value = '2';
+    } else {
+      const labels = {
+        '5': 'Conversations',
+        '7': 'Conversations',
+        '8': 'Nurture',
+        '9': 'Nurture',
+        '13': 'Bounced'
+      };
+      const dest = labels[select.value];
+      if (dest) {
+        showToast('→', `${name} moved to ${dest}`, 'neutral');
+      } else {
+        showToast('✓', `Status updated`, 'neutral');
+      }
+    }
+  }
+
+  function cancelDNC() {
+    hideModal('dnc-modal');
+    pendingDNCSelect = null;
+    pendingDNCName = null;
+  }
+
+  function confirmDNC() {
+    if (pendingDNCSelect) {
+      pendingDNCSelect.value = '14';
+    }
+    hideModal('dnc-modal');
+    showToast('✕', `${pendingDNCName} marked DO NOT CONTACT`, 'error');
+    pendingDNCSelect = null;
+    pendingDNCName = null;
+  }
+
+  // ── SEQUENCE BUILDER ──
+  function toggleStep(id) {
+    const body = document.getElementById(id);
+    body.classList.toggle('open');
+  }
+
+  let stepCount = 2;
+  function addStep() {
+    if (stepCount >= 6) return;
+    stepCount++;
+
+    const remaining = 6 - stepCount;
+    const btn = document.getElementById('add-step-btn');
+    btn.querySelector('span').textContent = `(${remaining} remaining)`;
+    if (stepCount >= 6) btn.disabled = true;
+
+    const wrap = document.getElementById('add-step-wrap');
+    const newStep = document.createElement('div');
+    newStep.className = 'sequence-step';
+    newStep.innerHTML = `
+      <div class="step-header" onclick="toggleStep('seq-${stepCount}')">
+    
