@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Emotional design moments</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.10);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:220px;}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+.tb{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.92);border-bottom:1px solid var(--b);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;padding:0 24px 0 56px;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
+.lay{display:flex;padding-top:var(--th);min-height:100vh;}
+.sb{width:var(--sw);flex-shrink:0;position:fixed;top:var(--th);left:0;bottom:0;background:rgba(13,9,20,0.6);border-right:1px solid var(--b);padding:20px 0;z-index:90;}
+.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:var(--tm);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;}
+.ni:hover{color:var(--t);background:var(--s);}
+.ni.on{color:var(--t);border-left-color:var(--pink);background:var(--pd);}
+.mn{margin-left:var(--sw);flex:1;padding:36px 40px;position:relative;z-index:1;max-width:760px;}
+.sc{display:none;}.sc.on{display:block;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);border-color:var(--b2);}
+.bg_{background:transparent;color:var(--tm);}.bg_:hover{color:var(--t);}
+.bsm{padding:7px 14px;font-size:12px;}
+
+/* ── SECTION LABELS ── */
+.sec-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--td);margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px 22px;margin-bottom:16px;}
+
+/* ── TRIGGER GRID ── */
+.trigger-grid{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:6px;}
+.trig{padding:7px 14px;border-radius:8px;border:1px solid var(--b2);background:var(--s);font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);cursor:pointer;transition:all 0.15s;}
+.trig:hover{color:var(--t);border-color:var(--b2);}
+.trig.pink:hover{color:var(--pink);border-color:rgba(255,20,147,0.4);background:var(--pd);}
+.trig.cyan:hover{color:var(--cyan);border-color:rgba(0,212,255,0.3);background:var(--cd);}
+.trig.amber:hover{color:var(--amber);border-color:rgba(255,157,66,0.3);background:rgba(255,157,66,0.08);}
+.trig.green:hover{color:var(--green);border-color:rgba(100,220,120,0.3);background:var(--gd);}
+.trig.red:hover{color:#ff4c4c;border-color:rgba(255,76,76,0.3);background:rgba(255,76,76,0.08);}
+
+/* ── TOAST (standard) ── */
+.toast-zone{position:fixed;top:72px;right:24px;z-index:9998;display:flex;flex-direction:column;gap:8px;pointer-events:none;width:300px;}
+.toast{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;padding:13px 16px;display:flex;align-items:center;gap:10px;box-shadow:0 8px 32px rgba(0,0,0,0.5);animation:tIn 0.35s cubic-bezier(0.34,1.3,0.64,1);pointer-events:all;backdrop-filter:blur(12px);}
+.toast-icon{font-size:15px;flex-shrink:0;}
+.toast-text{font-size:13px;color:var(--t);line-height:1.4;flex:1;}
+.toast.accent{border-left:2px solid var(--cyan);}
+.toast.milestone-style{border-left:2px solid var(--pink);}
+.toast.error{border-left:2px solid #ff4c4c;}
+.toast.neutral{border-left:2px solid var(--td);}
+.toast.success{border-left:2px solid var(--green);}
+@keyframes tIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:translateX(0);}}
+@keyframes tOut{from{opacity:1;transform:translateX(0);}to{opacity:0;transform:translateX(16px);}}
+
+/* ── MILESTONE TOAST (bigger, special) ── */
+.milestone-wrap{position:fixed;top:80px;right:24px;z-index:9999;width:300px;pointer-events:none;}
+.milestone-toast{background:linear-gradient(135deg,rgba(26,15,46,0.98),rgba(13,9,20,0.98));border:1px solid rgba(255,20,147,0.3);border-radius:14px;padding:18px 18px 16px;box-shadow:0 12px 48px rgba(255,20,147,0.2),0 4px 16px rgba(0,0,0,0.5);animation:mIn 0.5s cubic-bezier(0.34,1.4,0.64,1);backdrop-filter:blur(16px);}
+@keyframes mIn{from{opacity:0;transform:translateX(20px) scale(0.95);}to{opacity:1;transform:translateX(0) scale(1);}}
+.m-glow{position:absolute;inset:0;border-radius:14px;background:radial-gradient(ellipse at top right,rgba(255,20,147,0.08),transparent 60%);pointer-events:none;}
+.m-icon{font-size:28px;margin-bottom:10px;display:block;}
+.m-title{font-family:var(--of);font-size:16px;font-weight:800;letter-spacing:-0.02em;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:3px;}
+.m-sub{font-size:12px;color:var(--tm);line-height:1.5;}
+.m-dismiss{font-family:var(--of);font-size:10px;font-weight:600;color:var(--td);text-transform:uppercase;letter-spacing:0.08em;margin-top:10px;cursor:pointer;transition:color 0.15s;}
+.m-dismiss:hover{color:var(--tm);}
+
+/* ── MOMENTUM PROMPT ── */
+.momentum-prompt{position:fixed;bottom:32px;right:24px;z-index:9997;max-width:290px;background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:12px;padding:14px 16px;box-shadow:0 8px 32px rgba(0,0,0,0.5);display:flex;gap:12px;align-items:flex-start;animation:tIn 0.35s ease;backdrop-filter:blur(12px);}
+.mp-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.mp-body{flex:1;}
+.mp-text{font-size:13px;color:var(--t);line-height:1.5;margin-bottom:8px;}
+.mp-actions{display:flex;gap:6px;}
+.mp-btn{padding:5px 11px;border-radius:6px;border:1px solid var(--b2);background:transparent;font-family:var(--of);font-size:11px;font-weight:700;color:var(--tm);cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;transition:all 0.15s;}
+.mp-btn:hover{color:var(--t);}
+.mp-btn.primary{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.mp-btn.primary:hover{background:rgba(255,20,147,0.18);}
+.mp-close{width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--td);cursor:pointer;flex-shrink:0;margin-top:1px;transition:color 0.15s;}
+.mp-close:hover{color:var(--tm);}
+
+/* ── DONE FOR TODAY SCREEN ── */
+.done-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - var(--th));text-align:center;padding:60px 20px;}
+.done-icon{font-size:52px;margin-bottom:20px;}
+.done-title{font-family:var(--of);font-size:32px;font-weight:800;letter-spacing:-0.03em;color:var(--t);margin-bottom:10px;}
+.done-sub{font-size:15px;color:var(--tm);line-height:1.7;max-width:380px;margin:0 auto 36px;}
+.done-stats{display:flex;gap:0;background:var(--s);border:1px solid var(--b);border-radius:14px;overflow:hidden;margin-bottom:36px;}
+.done-stat{flex:1;padding:20px 16px;text-align:center;border-right:1px solid var(--b);}
+.done-stat:last-child{border-right:none;}
+.done-stat-num{font-family:var(--of);font-size:30px;font-weight:800;line-height:1;margin-bottom:6px;}
+.done-stat-num.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.done-stat-num.green{color:var(--green);}
+.done-stat-num.cyan{color:var(--cyan);}
+.done-stat-label{font-size:11px;color:var(--td);}
+.done-streak{display:inline-flex;align-items:center;gap:8px;background:var(--pd);border:1px solid rgba(255,20,147,0.2);border-radius:20px;padding:6px 16px;font-family:var(--of);font-size:12px;font-weight:700;color:var(--pink);margin-bottom:32px;}
+.done-copy{font-size:13px;color:var(--td);font-style:italic;max-width:280px;margin:0 auto 28px;}
+
+/* ── PBAR ── */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 20px);z-index:999;background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+<header class="tb"><div class="logo">outreach.</div><div class="av">CL</div></header>
+<div class="lay">
+<aside class="sb">
+  <a class="ni on" href="dashboard-home.html">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+    Campaigns
+  </a>
+  <a class="ni" href="#">Follow-up<span style="margin-left:auto;background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;font-family:Outfit,sans-serif;">5</span></a>
+  <a class="ni" href="#">Conversations</a>
+  <a class="ni" href="#">Nurture</a>
+</aside>
+<main class="mn">
+
+<!-- ═══ SCREEN 1: MILESTONE TOASTS & MOMENTS ═══ -->
+<div id="s-milestones" class="sc on">
+  <div style="margin-bottom:28px;">
+    <h1 style="font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;">Emotional design moments</h1>
+    <p style="font-size:13px;color:var(--tm);">Toasts, milestones, and momentum prompts — click to trigger each one.</p>
+  </div>
+
+  <!-- STANDARD TOASTS -->
+  <div class="sec-label">Standard toasts</div>
+  <div class="card" style="margin-bottom:24px;">
+    <p style="font-size:12px;color:var(--tm);margin-bottom:14px;line-height:1.6;">Lightweight confirmation and feedback. Appear top-right, auto-dismiss after 3 seconds.</p>
+    <div class="trigger-grid">
+      <div class="trig cyan" onclick="showToast('✓','Email sent to james@northagency.com','accent')">Send confirmation</div>
+      <div class="trig cyan" onclick="showToast('✓','Draft saved','accent')">Draft saved</div>
+      <div class="trig cyan" onclick="showToast('↑','47 prospects imported from CSV','accent')">Import complete</div>
+      <div class="trig cyan" onclick="showToast('✓','Prospect moved to Nurture','neutral')">Moved to Nurture</div>
+      <div class="trig cyan" onclick="showToast('✓','Follow-up sent to sarah@consultco.co.uk','accent')">Follow-up sent</div>
+      <div class="trig amber" onclick="showToast('⚠','Send failed — James Mitchell is still in Drafts','error')">Send failure</div>
+      <div class="trig red" onclick="showToast('⛔','Marked DO NOT CONTACT','error')">DO NOT CONTACT</div>
+      <div class="trig green" onclick="showToast('✓','Meeting booked — 24 Mar at 10am','success')">Meeting booked</div>
+    </div>
+  </div>
+
+  <!-- MILESTONE TOASTS -->
+  <div class="sec-label">Milestone moments</div>
+  <div class="card" style="margin-bottom:24px;">
+    <p style="font-size:12px;color:var(--tm);margin-bottom:14px;line-height:1.6;">Bigger, more considered celebrations for meaningful events. Larger card, gradient title, auto-dismiss after 6 seconds. Fires once per milestone lifetime.</p>
+    <div class="trigger-grid">
+      <div class="trig pink" onclick="showMilestone('🎯','First email sent','Your outreach is officially moving.')">First email sent</div>
+      <div class="trig pink" onclick="showMilestone('📬','First reply received','Someone replied. They noticed.')">First reply</div>
+      <div class="trig pink" onclick="showMilestone('📅','Meeting booked','That\'s the whole point. Nice one.')">Meeting booked</div>
+      <div class="trig pink" onclick="showMilestone('🔥','10 emails sent','Consistent outreach is how this works.')">10 sent</div>
+      <div class="trig pink" onclick="showMilestone('✦','Campaign complete','You finished a full sequence. That\'s rare.')">Campaign done</div>
+      <div class="trig pink" onclick="showMilestone('💬','First conversation','They\'re talking. Keep it going.')">First conversation</div>
+    </div>
+  </div>
+
+  <!-- MOMENTUM PROMPTS -->
+  <div class="sec-label">Momentum prompts</div>
+  <div class="card">
+    <p style="font-size:12px;color:var(--tm);margin-bottom:14px;line-height:1.6;">Gentle nudges that appear bottom-right when there's something actionable waiting. Dismiss on next user action or after 10 seconds. Never persist across page navigation.</p>
+    <div class="trigger-grid">
+      <div class="trig amber" onclick="showMomentum('↑','You have 5 follow-ups ready','Takes about 4 minutes.','Start follow-ups')">Follow-up nudge</div>
+      <div class="trig amber" onclick="showMomentum('💬','2 replies waiting','Your conversations are moving.','View replies')">Replies waiting</div>
+      <div class="trig amber" onclick="showMomentum('📋','3 prospects to review','Quick — approve or skip.','Review now')">Review queue</div>
+      <div class="trig amber" onclick="showMomentum('🌙','Good session today','4 sent, 1 reply. Come back tomorrow.','Done for today')">End of session</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ SCREEN 2: DONE FOR TODAY ═══ -->
+<div id="s-done" class="sc">
+  <div class="done-wrap">
+    <div class="done-icon">✓</div>
+    <h1 class="done-title">You're done for today.</h1>
+    <p class="done-sub">Your outreach is moving. That's what matters.<br>Come back tomorrow to keep the rhythm going.</p>
+
+    <div class="done-streak">🔥 4-week streak — keep it up</div>
+
+    <div class="done-stats">
+      <div class="done-stat">
+        <div class="done-stat-num pink">4</div>
+        <div class="done-stat-label">Emails sent</div>
+      </div>
+      <div class="done-stat">
+        <div class="done-stat-num">3</div>
+        <div class="done-stat-label">Follow-ups done</div>
+      </div>
+      <div class="done-stat">
+        <div class="done-stat-num green">2</div>
+        <div class="done-stat-label">Replies handled</div>
+      </div>
+      <div class="done-stat">
+        <div class="done-stat-num cyan">1</div>
+        <div class="done-stat-label">Meeting booked</div>
+      </div>
+    </div>
+
+    <p class="done-copy">"Consistency compounds. A few emails a day is how pipelines get built."</p>
+
+    <button class="btn bs" onclick="show('s-milestones')">← Back to dashboard</button>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- TOAST ZONES -->
+<div class="toast-zone" id="toast-zone"></div>
+<div class="milestone-wrap" id="milestone-zone"></div>
+<div id="momentum-zone"></div>
+
+<div class="pbar">
+  <span>Screen:</span>
+  <button style="color:#ff1493" onclick="show('s-milestones')">Toasts &amp; milestones</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s-done')">Done for today</button>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+/* ── STANDARD TOAST ── */
+function showToast(icon, text, type='accent'){
+  const zone = document.getElementById('toast-zone');
+  const el = document.createElement('div');
+  el.className = 'toast ' + type;
+  el.innerHTML = `<span class="toast-icon">${icon}</span><span class="toast-text">${text}</span>`;
+  zone.appendChild(el);
+  // auto-remove
+  setTimeout(()=>{
+    el.style.animation = 'tOut 0.3s ease forwards';
+    setTimeout(()=>el.remove(), 300);
+  }, 3200);
+}
+
+/* ── MILESTONE TOAST ── */
+function showMilestone(icon, title, subtitle){
+  const zone = document.getElementById('milestone-zone');
+  // clear any existing
+  zone.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'milestone-toast';
+  el.style.position = 'relative';
+  el.innerHTML = `
+    <div class="m-glow"></div>
+    <span class="m-icon">${icon}</span>
+    <div class="m-title">${title}</div>
+    <div class="m-sub">${subtitle}</div>
+    <div class="m-dismiss" onclick="this.closest('.milestone-toast').remove()">Dismiss</div>
+  `;
+  zone.appendChild(el);
+  setTimeout(()=>{
+    if(el.parentNode){
+      el.style.animation = 'tOut 0.4s ease forwards';
+      setTimeout(()=>el.remove(), 400);
+    }
+  }, 6000);
+}
+
+/* ── MOMENTUM PROMPT ── */
+function showMomentum(icon, text, sub, cta){
+  const zone = document.getElementById('momentum-zone');
+  zone.innerHTML = '';
+  const el = document.createElement('div');
+  el.className = 'momentum-prompt';
+  el.innerHTML = `
+    <span class="mp-icon">${icon}</span>
+    <div class="mp-body">
+      <div class="mp-text"><strong>${text}</strong><br><span style="font-size:12px;color:var(--tm)">${sub}</span></div>
+      <div class="mp-actions">
+        <button class="mp-btn primary" onclick="this.closest('.momentum-prompt').remove();showToast('→','${cta}','accent')">${cta} →</button>
+        <button class="mp-btn" onclick="this.closest('.momentum-prompt').remove()">Dismiss</button>
+      </div>
+    </div>
+    <span class="mp-close" onclick="this.closest('.momentum-prompt').remove()">✕</span>
+  `;
+  zone.appendChild(el);
+  // auto-expire after 10s
+  setTimeout(()=>{
+    if(el.parentNode){
+      el.style.animation='tOut 0.3s ease forwards';
+      setTimeout(()=>el.remove(),300);
+    }
+  }, 10000);
+}
+</script>
+</body>
+</html>
