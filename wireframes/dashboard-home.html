@@ -261,7 +261,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         <div class="campaigns-label">Your campaigns</div>
       </div>
 
-      <div class="campaign-card" id="cc-1">
+      <div class="campaign-card" id="cc-1" style="cursor:pointer;" onclick="window.location.href='campaign-view.html'">
         <div class="campaign-card-top">
           <div>
             <div class="campaign-name">Agency founders — Q1</div>
@@ -277,13 +277,13 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         </div>
         <div class="campaign-progress"><div class="campaign-progress-fill" style="width:100%"></div></div>
         <div class="action-strip">
-          <button class="action-pill has-items" onclick="toast('→','Opening follow-up queue','t-pink')"><span class="ap-count">5</span> Follow-ups due</button>
-          <button class="action-pill has-replies" onclick="toast('→','Opening conversations','t-cyan')"><span class="ap-count">1</span> New reply</button>
-          <button class="action-pill" onclick="toast('→','Opening campaign','t-cyan')">View campaign →</button>
+          <button class="action-pill has-items" onclick="event.stopPropagation();toast('→','Opening follow-up queue','t-pink')"><span class="ap-count">5</span> Follow-ups due</button>
+          <button class="action-pill has-replies" onclick="event.stopPropagation();toast('→','Opening conversations','t-cyan')"><span class="ap-count">1</span> New reply</button>
+          <button class="action-pill" onclick="window.location.href='campaign-view.html'">View campaign →</button>
         </div>
       </div>
 
-      <div class="campaign-card">
+      <div class="campaign-card" style="cursor:pointer;" onclick="window.location.href='campaign-view.html'">
         <div class="campaign-card-top">
           <div>
             <div class="campaign-name">Fractional CFO — Q1</div>
@@ -299,8 +299,8 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         </div>
         <div class="campaign-progress"><div class="campaign-progress-fill" style="width:79%"></div></div>
         <div class="action-strip">
-          <button class="action-pill" onclick="toast('→','Resuming campaign','t-cyan')">Resume campaign</button>
-          <button class="action-pill" onclick="toast('→','Opening campaign','t-cyan')">View campaign →</button>
+          <button class="action-pill" onclick="window.location.href='campaign-view.html'">Resume campaign</button>
+          <button class="action-pill" onclick="window.location.href='campaign-view.html'">View campaign →</button>
         </div>
       </div>
     </div>
