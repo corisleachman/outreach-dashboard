@@ -148,17 +148,18 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
 const B = 'https://corisleachman.github.io/outreach-dashboard/wireframes/';
 const P1 = B + 'outreach-prototype.html';
 const W2 = B + 'outreach-wizard-v2.html';
+const DH = B + 'dashboard-home.html';
 
 const JOURNEYS = [
   { group: 'Activation & onboarding' },
   { name: 'Sign-up → Gmail OAuth',               status: 'none' },
   { name: 'Campaign wizard — activation loop',   status: 'review', url: W2 },
-  { name: 'Empty state — first login',            status: 'none' },
+  { name: 'Empty state — first login',            status: 'built', url: B + 'dashboard-home.html' },
   { name: 'Free tier cap + upgrade prompt',       status: 'none' },
 
   { group: 'Campaign management' },
-  { name: 'Campaigns list / home dashboard',     status: 'built', url: P1 },
-  { name: 'Create new campaign',                 status: 'built', url: P1 },
+  { name: 'Campaigns list / home dashboard',     status: 'built', url: B + 'dashboard-home.html' },
+  { name: 'Create new campaign',                 status: 'built', url: B + 'dashboard-home.html' },
   { name: 'Campaign settings',                   status: 'none' },
 
   { group: 'Prospect import & review' },
