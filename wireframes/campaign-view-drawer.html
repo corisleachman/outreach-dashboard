@@ -418,17 +418,17 @@ textarea.d-input{resize:none;line-height:1.7;}
         <input type="text" placeholder="Search name, role, or agency…">
       </div>
 
-      <!-- CARD 1 — expanded -->
+      <!-- CARD -->
       <div class="prospect-card drawer-mode" id="card-hs">
         <div class="pc-header" onclick="openProspectDrawer('hs')">
           <div class="pc-av">HS</div>
           <div class="pc-info">
             <div class="pc-name">Howard Sullivan</div>
-            <div class="pc-sub">Founder and Executive Creative Director, YouStudio · YouStudio – Experience Design Agency · Greater London, England, United Kingdom</div>
+            <div class="pc-sub">Founder and Executive Creative Director · YouStudio – Experience Design Agency · Greater London</div>
           </div>
           <div class="pc-right">
-            <span class="catch-badge">● Catch-all</span>
-            <a class="li-btn" href="#" onclick="return false">
+            <span class="catch-badge">&#9679; Catch-all</span>
+            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
             <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-hs')" title="Skip">
@@ -437,10 +437,13 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-hs','Howard Sullivan')" title="Approve">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-
+            <div class="icon-btn" onclick="event.stopPropagation();openProspectDrawer('hs')" title="View details" style="border-color:var(--cyan);color:var(--cyan);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h8a1 1 0 001-1V7.5M7 1h4m0 0v4m0-4L5.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
           </div>
         </div>
-      <!-- CARD 2 — collapsed -->
+      </div>
+      <!-- CARD -->
       <div class="prospect-card drawer-mode" id="card-mj">
         <div class="pc-header" onclick="openProspectDrawer('mj')">
           <div class="pc-av">MJ</div>
@@ -449,20 +452,23 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">CEO · Latitude Agency · London, England, United Kingdom</div>
           </div>
           <div class="pc-right">
-            <span class="catch-badge">● Catch-all</span>
-            <a class="li-btn" href="#" onclick="return false">
+            <span class="catch-badge">&#9679; Catch-all</span>
+            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
-            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-mj')">
+            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-mj')" title="Skip">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
-            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-mj','Mark Jory')">
+            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-mj','Mark Jory')" title="Approve">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-
+            <div class="icon-btn" onclick="event.stopPropagation();openProspectDrawer('mj')" title="View details" style="border-color:var(--cyan);color:var(--cyan);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h8a1 1 0 001-1V7.5M7 1h4m0 0v4m0-4L5.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
           </div>
         </div>
-      <!-- CARD 3 — collapsed -->
+      </div>
+      <!-- CARD -->
       <div class="prospect-card drawer-mode" id="card-sc">
         <div class="pc-header" onclick="openProspectDrawer('sc')">
           <div class="pc-av" style="background:var(--cd);border-color:rgba(0,212,255,0.2);color:var(--cyan)">SC</div>
@@ -472,20 +478,21 @@ textarea.d-input{resize:none;line-height:1.7;}
           </div>
           <div class="pc-right">
             <span class="bdg bdg-g" style="font-size:9px;padding:2px 7px;">Verified</span>
-            <a class="li-btn" href="#" onclick="return false">
+            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
-            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-sc')">
+            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-sc')" title="Skip">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
             </div>
-            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-sc','Sophie Clarke')">
+            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-sc','Sophie Clarke')" title="Approve">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
-            <div class="icon-btn expand" id="exp-sc">
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            <div class="icon-btn" onclick="event.stopPropagation();openProspectDrawer('sc')" title="View details" style="border-color:var(--cyan);color:var(--cyan);">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M4.5 2H2a1 1 0 00-1 1v7a1 1 0 001 1h8a1 1 0 001-1V7.5M7 1h4m0 0v4m0-4L5.5 6.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
         </div>
+      </div>
     </div>
 
     <!-- DRAFTS TAB -->
