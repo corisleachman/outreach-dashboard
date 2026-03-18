@@ -769,6 +769,30 @@ textarea.input.tall { min-height: 180px; }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+
+/* ── DIMMED SIDEBAR (focus mode) ── */
+.wizard-sidebar {
+  position: fixed; top: var(--topbar-h, 56px); left: 0; bottom: 0; width: 56px;
+  background: rgba(13,9,20,0.5); border-right: 1px solid rgba(255,255,255,0.05);
+  display: flex; flex-direction: column; align-items: center;
+  padding: 16px 0; z-index: 90;
+}
+.ws-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0.2; cursor: not-allowed; position: relative; color: rgba(255,255,255,0.5);
+}
+.ws-icon:hover::after {
+  content: "Finish setup first";
+  position: absolute; left: calc(100% + 10px);
+  background: rgba(20,10,35,0.96); color: rgba(255,255,255,0.8);
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 6px;
+  padding: 5px 10px; font-size: 11px; font-weight: 500;
+  white-space: nowrap; pointer-events: none; z-index: 999;
+  font-family: 'Outfit', sans-serif;
+}
+.wizard-sidebar .ws-icon:hover { opacity: 0.3; }
+
 </style>
 </head>
 <body>
@@ -779,6 +803,17 @@ textarea.input.tall { min-height: 180px; }
   </svg>
 </a>
 
+<!-- ── DIMMED SIDEBAR (focus mode — disabled during onboarding) ── -->
+<aside class="wizard-sidebar">
+  <div class="ws-icon" title="Finish setup first">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+    </svg>
+  </div>
+</aside>
 
 <div class="bg-orb orb-1"></div>
 <div class="bg-orb orb-2"></div>
