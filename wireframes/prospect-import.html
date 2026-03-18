@@ -126,12 +126,39 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 </aside>
 <main class="mn">
 
+<!-- S0: PASTE EMAILS -->
+<div id="s0" class="sc">
+  <div class="ph">
+    <div><div class="pt">Add prospects</div><div class="psub">Agency founders — Q2</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="show('s0')">Paste emails</div>
+    <div class="tab" onclick="show('s1')">Upload CSV</div>
+    <div class="tab" onclick="show('s3')">Add manually</div>
+  </div>
+  <div class="hint hint-c">💡 Paste one email per line, or comma-separated. We'll extract valid addresses automatically.</div>
+  <div class="card">
+    <div class="fld">
+      <label class="lbl">Email addresses</label>
+      <textarea class="inp" rows="8" placeholder="james@northagency.com&#10;sarah@consultco.co.uk&#10;mike@scalehouse.io&#10;&#10;Or comma-separated: james@northagency.com, sarah@consultco.co.uk"></textarea>
+    </div>
+    <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--tm);margin-bottom:16px;line-height:1.6;">
+      Paste-only imports will have <strong style="color:var(--t)">email addresses only</strong> — no names or companies. You can fill those in later in the Review tab, or add them now by switching to Add manually.
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn bg_ bsm" onclick="show('s1')">Upload CSV instead</button>
+      <button class="btn bp bsm" onclick="show('s4');toast('✓','6 emails detected and imported','tc')">Import emails →</button>
+    </div>
+  </div>
+</div>
+
 <!-- S1: UPLOAD ZONE -->
 <div id="s1" class="sc on">
   <div class="ph">
     <div><div class="pt">Add prospects</div><div class="psub">Agency founders — Q2</div></div>
   </div>
   <div class="tabs">
+    <div class="tab" onclick="show('s0')">Paste emails</div>
     <div class="tab on" onclick="show('s1')">Upload CSV</div>
     <div class="tab" onclick="show('s3')">Add manually</div>
   </div>
@@ -180,6 +207,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     <div><div class="pt">Add prospect manually</div><div class="psub">Agency founders — Q2</div></div>
   </div>
   <div class="tabs">
+    <div class="tab" onclick="show('s0')">Paste emails</div>
     <div class="tab" onclick="show('s1')">Upload CSV</div>
     <div class="tab on">Add manually</div>
   </div>
@@ -265,6 +293,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 
 <div class="pbar">
   <span>State:</span>
+  <button style="color:#ff9d42" onclick="show('s0')">Paste</button>
+  <span style="opacity:.3">·</span>
   <button style="color:#ff1493" onclick="show('s1')">Upload</button>
   <span style="opacity:.3">·</span>
   <button style="color:#ff9d42" onclick="show('s2')">Mapping</button>
