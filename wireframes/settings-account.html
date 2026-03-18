@@ -70,9 +70,16 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .pack-card:hover{border-color:var(--b2);}
 .pack-card.sel{border-color:var(--pink);background:var(--pd);}
 .pack-card.sel::after{content:"Default";position:absolute;top:10px;right:10px;background:var(--gr);color:white;font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:2px 7px;border-radius:10px;}
-.pack-name{font-family:var(--of);font-size:14px;font-weight:700;margin-bottom:3px;}
-.pack-tone{font-size:11px;color:var(--cyan);margin-bottom:7px;}
-.pack-eg{font-size:12px;color:var(--tm);line-height:1.5;font-style:italic;}
+.pack-name{font-family:var(--of);font-size:14px;font-weight:700;margin-bottom:4px;}
+.pack-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.pack-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;
+  padding:2px 7px;border-radius:3px;background:var(--s2);border:1px solid var(--b2);color:var(--td);}
+.pack-card.sel .pack-tag{background:var(--pd);border-color:rgba(255,20,147,0.2);color:var(--pink);}
+.pack-preview{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:6px;
+  padding:10px 12px;font-size:12px;color:var(--tm);line-height:1.7;font-style:italic;margin-bottom:8px;}
+.pack-attrs{display:flex;flex-wrap:wrap;gap:10px;}
+.pack-attr{font-size:10px;color:var(--td);}
+.pack-attr span{color:var(--tm);font-weight:500;}
 /* billing */
 .bill-card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px;margin-bottom:12px;}
 .bill-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
@@ -166,28 +173,74 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 
   <!-- PERSONALITY PACKS -->
   <div id="s-packs" class="sc">
-    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:20px;">Select your global default — this applies to all new messages. You can override per message or per sequence step.</p>
+    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:6px;">Choose how your AI-generated outreach messages are written. This sets your global default — you can override it per message or per sequence step.</p>
+    <p style="font-size:12px;color:var(--td);margin-bottom:20px;">This controls the <strong style="color:var(--tm)">writing style of messages sent to your prospects</strong>, not the product interface itself.</p>
     <div class="pack-grid">
+
+      <!-- CALM PROFESSIONAL -->
       <div class="pack-card sel" onclick="selectPack(this)">
-        <div class="pack-name">Calm &amp; Commercial</div>
-        <div class="pack-tone">Measured · Professional · Clear</div>
-        <div class="pack-eg">"Noticed you're scaling the team — thought this might be timely. Worth 15 minutes?"</div>
+        <div class="pack-name">Calm Professional</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Measured</span>
+          <span class="pack-tag">Low pressure</span>
+          <span class="pack-tag">Soft CTA</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>I thought it might be useful to share something we've been seeing with teams in your space.<br><br>Happy to explain if helpful."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>High</span></div>
+          <div class="pack-attr">Directness: <span>Moderate</span></div>
+          <div class="pack-attr">Close: <span>Supportive</span></div>
+        </div>
       </div>
+
+      <!-- DIRECT OPERATOR -->
       <div class="pack-card" onclick="selectPack(this)">
-        <div class="pack-name">Direct &amp; Confident</div>
-        <div class="pack-tone">Assertive · Efficient · No-nonsense</div>
-        <div class="pack-eg">"I'll cut straight to it — we help companies like yours build a repeatable pipeline."</div>
+        <div class="pack-name">Direct Operator</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Concise</span>
+          <span class="pack-tag">Confident</span>
+          <span class="pack-tag">Clear ask</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>Quick thought.<br><br>We've been helping teams solve [problem].<br><br>Worth a quick chat?"</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Low</span></div>
+          <div class="pack-attr">Directness: <span>High</span></div>
+          <div class="pack-attr">Close: <span>Clear ask</span></div>
+        </div>
       </div>
+
+      <!-- FRIENDLY NETWORKER -->
       <div class="pack-card" onclick="selectPack(this)">
-        <div class="pack-name">Light Touch, Relational</div>
-        <div class="pack-tone">Warm · Conversational · Low pressure</div>
-        <div class="pack-eg">"Came across something that made me think of you — figured it was worth a quick share."</div>
+        <div class="pack-name">Friendly Networker</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Warm</span>
+          <span class="pack-tag">Relational</span>
+          <span class="pack-tag">Soft CTA</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>Hope you're having a good week.<br><br>Something crossed my desk that reminded me of what you're working on — just thought I'd share in case it's useful."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Casual</span></div>
+          <div class="pack-attr">Directness: <span>Low</span></div>
+          <div class="pack-attr">Close: <span>Relational</span></div>
+        </div>
       </div>
+
+      <!-- CURIOUS RESEARCHER -->
       <div class="pack-card" onclick="selectPack(this)">
-        <div class="pack-name">Post-meeting</div>
-        <div class="pack-tone">Thoughtful · Action-oriented · Grateful</div>
-        <div class="pack-eg">"Really enjoyed our chat — as discussed, I'll send over the overview today."</div>
+        <div class="pack-name">Curious Researcher</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Thoughtful</span>
+          <span class="pack-tag">Observational</span>
+          <span class="pack-tag">Question close</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>I noticed your team recently launched [X].<br><br>Curious how you're thinking about [challenge]."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Thoughtful</span></div>
+          <div class="pack-attr">Directness: <span>Moderate</span></div>
+          <div class="pack-attr">Close: <span>Question</span></div>
+        </div>
       </div>
+
     </div>
     <div style="display:flex;justify-content:flex-end;margin-top:18px;">
       <button class="btn bp bsm" onclick="toast('✓','Default personality pack saved','tc')">Save default</button>
