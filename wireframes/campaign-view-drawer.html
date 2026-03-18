@@ -784,9 +784,9 @@ Coris</textarea>
 
 // ── PROSPECT DETAIL DRAWER ──
 const PROSPECTS = {
-  hs: { av:'HS', avClass:'', name:'Howard Sullivan', role:'Founder & Executive Creative Director · YouStudio', first:'Howard', last:'Sullivan', email:'', emailBadge:true, company:'YouStudio – Experience Design Agency', industry:'Design Services', size:'51–200', about:'A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany & Co. YouStudio is a strategically led creative design agency.' },
-  mj: { av:'MJ', avClass:'', name:'Mark Jory', role:'CEO · Latitude Agency · London', first:'Mark', last:'Jory', email:'', emailBadge:true, company:'Latitude Agency', industry:'Marketing', size:'11–50', about:'CEO of Latitude Agency, a growth-focused agency based in London.' },
-  sc: { av:'SC', avClass:'teal', name:'Sophie Clarke', role:'Managing Director · Fold Studio', first:'Sophie', last:'Clarke', email:'sophie@foldstudio.co.uk', emailBadge:false, company:'Fold Studio', industry:'Design', size:'1–10', about:'Managing Director at Fold Studio, an independent design agency based in London.' },
+  hs: { av:'HS', avClass:'', name:'Howard Sullivan', role:'Founder & Executive Creative Director · YouStudio', first:'Howard', last:'Sullivan', email:'', emailBadge:true, website:'youstudio.com', company:'YouStudio – Experience Design Agency', industry:'Design Services', size:'51–200', about:'A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany & Co. YouStudio is a strategically led creative design agency.' },
+  mj: { av:'MJ', avClass:'', name:'Mark Jory', role:'CEO · Latitude Agency · London', first:'Mark', last:'Jory', email:'', emailBadge:true, website:'latitudeagency.co.uk', company:'Latitude Agency', industry:'Marketing', size:'11–50', about:'CEO of Latitude Agency, a growth-focused agency based in London.' },
+  sc: { av:'SC', avClass:'teal', name:'Sophie Clarke', role:'Managing Director · Fold Studio', first:'Sophie', last:'Clarke', email:'sophie@foldstudio.co.uk', emailBadge:false, website:'foldstudio.co.uk', company:'Fold Studio', industry:'Design', size:'1–10', about:'Managing Director at Fold Studio, an independent design agency based in London.' },
 };
 let currentPD = null;
 
@@ -807,6 +807,12 @@ function openProspectDrawer(id) {
   document.getElementById('pd-industry').textContent = p.industry;
   document.getElementById('pd-size').textContent = p.size;
   document.getElementById('pd-about').textContent = p.about;
+  // Store website on the input for generateEmail() to use
+  const emailInput = document.getElementById('pd-email');
+  emailInput.dataset.website = p.website || '';
+  emailInput.dataset.firstname = p.first || '';
+  // Show or hide the "No email found" prompt
+  updateEmailPrompt();
   // Show overlay and slide drawer in
   const overlay = document.getElementById('pd-overlay');
   const drawer  = document.getElementById('pd-drawer');
@@ -823,6 +829,45 @@ function closePD() {
   drawer.style.transform = 'translateX(100%)';
   currentPD = null;
 }
+function updateEmailPrompt() {
+  const emailInput = document.getElementById('pd-email');
+  const prompt = document.getElementById('pd-email-prompt');
+  if (!prompt) return;
+  const isEmpty = !emailInput.value || emailInput.value.trim() === '';
+  const hasWebsite = !!emailInput.dataset.website;
+  prompt.style.display = (isEmpty && hasWebsite) ? 'flex' : 'none';
+}
+
+function generateEmail() {
+  const emailInput = document.getElementById('pd-email');
+  const badge = document.getElementById('pd-email-badge');
+  const first = (emailInput.dataset.firstname || '').toLowerCase().trim();
+  let domain = (emailInput.dataset.website || '').trim()
+    .replace(/^https?:\/\//i, '')   // strip protocol
+    .replace(/^www\./i, '')          // strip www.
+    .split('/')[0];                  // strip any path
+  if (!first || !domain) return;
+  const generated = first + '@' + domain;
+  emailInput.value = generated;
+  // Mark as generated (not catch-all) — show a different badge
+  if (badge) {
+    badge.textContent = '✦ Generated';
+    badge.style.background = 'rgba(0,212,255,0.08)';
+    badge.style.borderColor = 'rgba(0,212,255,0.25)';
+    badge.style.color = '#00d4ff';
+    badge.style.display = 'inline-flex';
+  }
+  updateEmailPrompt();
+  // Pulse the input to confirm
+  emailInput.style.borderColor = '#00d4ff';
+  emailInput.style.boxShadow = '0 0 0 3px rgba(0,212,255,0.12)';
+  setTimeout(() => {
+    emailInput.style.borderColor = '';
+    emailInput.style.boxShadow = '';
+  }, 1800);
+  toast('✦', 'Email generated: ' + generated, 'tc');
+}
+
 function approveFromDrawer() {
   if (!currentPD) return;
   closePD();
@@ -974,7 +1019,11 @@ function toast(icon, text, cls='tc'){
         </div>
         <div style="grid-column:span 2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
           <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;display:flex;align-items:center;gap:6px;">Email <span id="pd-email-badge" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:2px 6px;border-radius:3px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);color:#ff9d42;">● Catch-all</span></div>
-          <input id="pd-email" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" placeholder="Not yet verified">
+          <div id="pd-email-prompt" style="display:none;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:6px;">
+            <span style="font-size:11px;color:#8a8a9a;">No email found</span>
+            <button onclick="generateEmail()" style="padding:4px 10px;border-radius:5px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);color:#00d4ff;font-family:Outfit,sans-serif;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;">Generate email</button>
+          </div>
+          <input id="pd-email" oninput="updateEmailPrompt()" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;transition:border-color 0.2s,box-shadow 0.2s;" placeholder="Not yet verified">
         </div>
       </div>
 
