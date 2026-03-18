@@ -539,13 +539,11 @@ textarea.d-input{resize:none;line-height:1.7;}
     <div id="tc-drafts" class="tc">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <div style="font-size:12px;color:var(--tm);">15 drafts ready to send.</div>
-      <div class="search-bar">
+        <button class="btn bp bsm" onclick="openDrawer('bulk')">Send all drafts →</button>
+      </div>
+      <div class="search-bar" style="margin-bottom:16px;">
         <span class="search-icon">⌕</span>
         <input type="text" placeholder="Search name, role, or agency…">
-      </div>
-
-
-        <button class="btn bp bsm" onclick="openDrawer('bulk')">Send all drafts →</button>
       </div>
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div class="draft-row" onclick="openDrawer('draft','James Mitchell','james@northagency.com','Quick thought on your pipeline — worth 10 minutes?')">
@@ -586,17 +584,15 @@ textarea.d-input{resize:none;line-height:1.7;}
 
     <!-- LINKEDIN TAB -->
     <div id="tc-linkedin" class="tc">
-      <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
         <div class="btn bs bsm on-filter" style="border-color:rgba(255,20,147,0.3);color:var(--pink);background:var(--pd);" onclick="filterLI(this,'none')">No connection <span style="opacity:0.6;margin-left:4px;">28</span></div>
-      <div class="search-bar">
-        <span class="search-icon">⌕</span>
-        <input type="text" placeholder="Search name, role, or agency…">
-      </div>
-
-
         <div class="btn bs bsm" onclick="filterLI(this,'sent')">Connection sent <span style="opacity:0.6;margin-left:4px;">12</span></div>
         <div class="btn bs bsm" onclick="filterLI(this,'accepted')">Accepted <span style="opacity:0.6;margin-left:4px;">7</span></div>
         <div class="btn bs bsm" onclick="filterLI(this,'unable')">Unable to connect <span style="opacity:0.6;margin-left:4px;">0</span></div>
+      </div>
+      <div class="search-bar" style="margin-bottom:16px;">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
       </div>
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div class="trow"><div class="tr-av">JM</div><div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Head of Growth</div></div><div class="tr-right"><select class="status-sel"><option>No connection yet</option><option>Connection sent</option><option>Connection accepted</option><option>Unable to connect</option><option>Chose not to connect</option></select><a class="li-btn" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a></div></div>
