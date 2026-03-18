@@ -1,0 +1,1078 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Campaign view</title>
+<style>
+*,*::before,*::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  /* Palette */
+  --bg:        #F5F4F1;   /* warm off-white */
+  --bg-2:      #EFEDE9;   /* slightly deeper, for surfaces */
+  --bg-3:      #E8E5E0;   /* borders, dividers */
+  --black:     #0E0E0E;   /* primary text */
+  --grey-1:    #3A3A3A;   /* secondary text */
+  --grey-2:    #757575;   /* tertiary text */
+  --grey-3:    #ADADAD;   /* placeholder, disabled */
+  --teal:      #1A6B6B;   /* deep teal — primary accent */
+  --teal-mid:  #2A8A8A;   /* teal mid for hovers */
+  --teal-dim:  rgba(26,107,107,0.08);
+  --teal-border: rgba(26,107,107,0.25);
+  --white:     #FFFFFF;
+  --red:       #C0392B;
+  --amber:     #B8600A;
+  --green:     #1A6B3C;
+
+  /* Type */
+  --hv: Helvetica Neue, Helvetica, Arial, sans-serif;
+
+  /* Layout */
+  --th: 52px;
+  --sw: 56px;
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--black);
+  font-family: var(--hv);
+  min-height: 100vh;
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── TOPBAR ── */
+.topbar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: var(--th);
+  background: var(--bg);
+  border-bottom: 1px solid var(--bg-3);
+  z-index: 200;
+  display: flex; align-items: center;
+  padding: 0 24px 0 calc(var(--sw) + 20px);
+}
+.logo {
+  font-size: 16px; font-weight: 700; letter-spacing: -0.3px;
+  color: var(--black); margin-right: 20px; flex-shrink: 0;
+}
+.breadcrumb {
+  display: flex; align-items: center; gap: 8px; flex: 1; min-width: 0;
+}
+.bc-link {
+  font-size: 13px; color: var(--grey-2); text-decoration: none;
+  transition: color 0.1s;
+}
+.bc-link:hover { color: var(--black); }
+.bc-sep { color: var(--grey-3); font-size: 13px; }
+.bc-current {
+  font-size: 13px; font-weight: 500; color: var(--black);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.topbar-right {
+  display: flex; align-items: center; gap: 12px; flex-shrink: 0;
+}
+.plan-pill {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.08em; padding: 3px 8px; border-radius: 3px;
+  border: 1px solid var(--bg-3); color: var(--grey-2);
+}
+.av {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--black); color: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+  flex-shrink: 0;
+}
+
+/* ── SLIM SIDEBAR ── */
+.sidebar {
+  position: fixed; top: var(--th); left: 0; bottom: 0;
+  width: var(--sw);
+  background: var(--bg);
+  border-right: 1px solid var(--bg-3);
+  display: flex; flex-direction: column;
+  align-items: center; padding: 14px 0;
+  z-index: 190;
+}
+.si {
+  width: 36px; height: 36px; border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: background 0.12s; position: relative;
+  text-decoration: none; color: var(--grey-2); border: none; background: transparent;
+}
+.si:hover { background: var(--bg-2); color: var(--black); }
+.si.on { background: var(--teal-dim); color: var(--teal); }
+.si svg { display: block; }
+.si-tip {
+  position: absolute; left: calc(100% + 10px);
+  background: var(--black); color: var(--white);
+  border-radius: 4px; padding: 5px 9px;
+  font-size: 11px; font-weight: 500; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity 0.12s;
+  z-index: 300;
+}
+.si:hover .si-tip { opacity: 1; }
+.si-bottom { margin-top: auto; }
+
+/* ── LAYOUT ── */
+.layout { display: flex; padding-top: var(--th); min-height: 100vh; }
+.main { margin-left: var(--sw); flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+/* ── CAMPAIGN HEADER ── */
+.campaign-header {
+  position: sticky; top: var(--th); z-index: 100;
+  background: var(--bg);
+  border-bottom: 1px solid var(--bg-3);
+  padding: 18px 32px 0;
+}
+.ch-top {
+  display: flex; align-items: flex-start;
+  justify-content: space-between; gap: 16px; margin-bottom: 16px;
+}
+.ch-name {
+  font-size: 20px; font-weight: 700; letter-spacing: -0.3px;
+  color: var(--black); margin-bottom: 4px;
+}
+.ch-meta {
+  font-size: 12px; color: var(--grey-2);
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.ch-meta-dot { color: var(--grey-3); }
+.ch-meta a { color: var(--grey-2); text-decoration: underline; text-underline-offset: 2px; }
+.ch-meta a:hover { color: var(--black); }
+.ch-actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+/* Stats strip */
+.stats-strip {
+  display: flex; gap: 0;
+  border-top: 1px solid var(--bg-3);
+  margin: 0 0 0 0;
+}
+.stat-item {
+  padding: 12px 20px;
+  border-right: 1px solid var(--bg-3);
+  min-width: 100px;
+}
+.stat-item:first-child { padding-left: 0; }
+.stat-item:last-child { border-right: none; }
+.stat-num {
+  font-size: 22px; font-weight: 700; letter-spacing: -0.5px;
+  color: var(--black); line-height: 1; margin-bottom: 3px;
+}
+.stat-num.accent { color: var(--teal); }
+.stat-lbl {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--grey-3);
+}
+
+/* Tab bar */
+.tab-bar {
+  display: flex; gap: 0; margin-top: 4px;
+  overflow-x: auto;
+}
+.tab-bar::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 10px 16px;
+  font-size: 12px; font-weight: 500; letter-spacing: 0.01em;
+  color: var(--grey-2); cursor: pointer;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap; transition: color 0.12s;
+  display: flex; align-items: center; gap: 6px;
+  user-select: none;
+}
+.tab:hover { color: var(--black); }
+.tab.on { color: var(--teal); border-bottom-color: var(--teal); font-weight: 600; }
+.tab-count {
+  font-size: 10px; font-weight: 600;
+  background: var(--bg-2); border: 1px solid var(--bg-3);
+  border-radius: 3px; padding: 1px 5px; color: var(--grey-2);
+}
+.tab.on .tab-count {
+  background: var(--teal-dim); border-color: var(--teal-border); color: var(--teal);
+}
+
+/* ── TAB CONTENT ── */
+.tab-content { flex: 1; padding: 24px 32px 40px; }
+.tc { display: none; }
+.tc.on { display: block; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  padding: 8px 16px; border-radius: 4px;
+  font-family: var(--hv); font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.12s;
+  letter-spacing: 0.01em; white-space: nowrap;
+}
+.btn-primary { background: var(--black); color: var(--white); }
+.btn-primary:hover { background: var(--grey-1); }
+.btn-secondary {
+  background: transparent; color: var(--black);
+  border: 1px solid var(--bg-3);
+}
+.btn-secondary:hover { border-color: var(--grey-3); background: var(--bg-2); }
+.btn-teal { background: var(--teal); color: var(--white); }
+.btn-teal:hover { background: var(--teal-mid); }
+.btn-ghost { background: transparent; color: var(--grey-2); border: none; }
+.btn-ghost:hover { color: var(--black); }
+.btn-sm { padding: 6px 12px; font-size: 11px; }
+
+/* ── SEARCH ── */
+.search-row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; gap: 12px;
+}
+.search-wrap {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--white); border: 1px solid var(--bg-3);
+  border-radius: 4px; padding: 0 12px; flex: 1; max-width: 380px;
+}
+.search-wrap input {
+  flex: 1; border: none; outline: none; padding: 9px 0;
+  font-family: var(--hv); font-size: 13px; color: var(--black);
+  background: transparent;
+}
+.search-wrap input::placeholder { color: var(--grey-3); }
+.search-ico { color: var(--grey-3); font-size: 13px; }
+.tab-desc { font-size: 12px; color: var(--grey-2); }
+
+/* ── PROSPECT CARDS ── */
+.prospect-card {
+  background: var(--white);
+  border: 1px solid var(--bg-3);
+  border-radius: 6px;
+  margin-bottom: 8px;
+  transition: border-color 0.12s;
+  overflow: hidden;
+}
+.prospect-card:hover { border-color: var(--grey-3); }
+.prospect-card.expanded { border-color: var(--grey-3); }
+
+.pc-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 13px 16px; cursor: pointer; user-select: none;
+}
+.pc-av {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--bg-2); border: 1px solid var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: var(--grey-1);
+  flex-shrink: 0; letter-spacing: 0.02em;
+}
+.pc-av.teal-av {
+  background: var(--teal-dim); border-color: var(--teal-border); color: var(--teal);
+}
+.pc-info { flex: 1; min-width: 0; }
+.pc-name {
+  font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 2px;
+}
+.pc-sub {
+  font-size: 11px; color: var(--grey-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.pc-right {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+
+/* catch-all badge */
+.catch-badge {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+  padding: 3px 7px; border-radius: 3px;
+  background: rgba(184,96,10,0.08); border: 1px solid rgba(184,96,10,0.2);
+  color: var(--amber);
+}
+.verified-badge {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+  padding: 3px 7px; border-radius: 3px;
+  background: rgba(26,107,60,0.07); border: 1px solid rgba(26,107,60,0.2);
+  color: var(--green);
+}
+
+/* icon buttons */
+.ic-btn {
+  width: 28px; height: 28px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.12s; flex-shrink: 0;
+  border: 1px solid var(--bg-3); background: transparent; color: var(--grey-2);
+}
+.ic-btn:hover { border-color: var(--grey-3); color: var(--black); background: var(--bg-2); }
+.ic-btn.approve {
+  background: var(--teal); border-color: var(--teal); color: var(--white);
+}
+.ic-btn.approve:hover { background: var(--teal-mid); border-color: var(--teal-mid); }
+.ic-btn.li { background: transparent; border-color: rgba(10,102,194,0.3); }
+.ic-btn.li:hover { background: rgba(10,102,194,0.06); }
+
+/* expanded body */
+.pc-body { display: none; padding: 0 16px 16px; }
+.pc-body.open { display: block; }
+
+.pc-divider { height: 1px; background: var(--bg-3); margin-bottom: 14px; }
+
+.pc-fields {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px;
+}
+.pf-2col { grid-column: span 2; }
+.pf-label {
+  font-size: 10px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.09em; color: var(--grey-3); margin-bottom: 5px;
+  display: flex; align-items: center; gap: 6px;
+}
+.pf-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--bg-3);
+  border-radius: 4px; padding: 8px 10px;
+  font-family: var(--hv); font-size: 13px; color: var(--black);
+  outline: none; transition: border-color 0.12s;
+}
+.pf-input:focus { border-color: var(--teal); }
+.pf-input::placeholder { color: var(--grey-3); }
+.pf-value { font-size: 13px; color: var(--black); padding-top: 3px; }
+
+.about-text {
+  font-size: 12px; color: var(--grey-2); line-height: 1.7;
+  max-height: 58px; overflow: hidden;
+}
+.about-text.open { max-height: none; }
+.about-more {
+  color: var(--teal); cursor: pointer; font-size: 12px;
+  background: none; border: none; font-family: var(--hv); padding: 0;
+}
+.about-more:hover { text-decoration: underline; }
+
+.pc-actions {
+  display: flex; gap: 8px; justify-content: flex-end;
+  padding-top: 12px; border-top: 1px solid var(--bg-3);
+  margin-top: 4px;
+}
+
+/* ── TABLE ROWS ── */
+.trow {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px; border-bottom: 1px solid var(--bg-3);
+  transition: background 0.1s; cursor: default;
+}
+.trow:last-child { border-bottom: none; }
+.trow:hover { background: var(--bg); }
+.tr-av {
+  width: 30px; height: 30px; border-radius: 50%;
+  background: var(--bg-2); border: 1px solid var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 700; color: var(--grey-1);
+  flex-shrink: 0;
+}
+.tr-av.teal { background: var(--teal-dim); border-color: var(--teal-border); color: var(--teal); }
+.tr-av.green { background: rgba(26,107,60,0.08); border-color: rgba(26,107,60,0.2); color: var(--green); }
+.tr-info { flex: 1; min-width: 0; }
+.tr-name { font-size: 13px; font-weight: 500; color: var(--black); }
+.tr-sub { font-size: 11px; color: var(--grey-2); margin-top: 2px; }
+.tr-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+/* status select */
+.status-sel {
+  background: var(--bg); border: 1px solid var(--bg-3); border-radius: 4px;
+  padding: 5px 8px; font-family: var(--hv); font-size: 11px; color: var(--black);
+  cursor: pointer; outline: none; max-width: 200px;
+}
+.status-sel:hover { border-color: var(--grey-3); }
+
+/* badges */
+.bdg {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+  padding: 3px 8px; border-radius: 3px;
+}
+.bdg-teal { background: var(--teal-dim); border: 1px solid var(--teal-border); color: var(--teal); }
+.bdg-green { background: rgba(26,107,60,0.07); border: 1px solid rgba(26,107,60,0.2); color: var(--green); }
+.bdg-amber { background: rgba(184,96,10,0.08); border: 1px solid rgba(184,96,10,0.2); color: var(--amber); }
+.bdg-grey { background: var(--bg-2); border: 1px solid var(--bg-3); color: var(--grey-2); }
+
+/* LI filter pills */
+.pill-row { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.pill {
+  padding: 5px 12px; border-radius: 20px;
+  border: 1px solid var(--bg-3); background: var(--white);
+  font-size: 12px; font-weight: 500; color: var(--grey-2);
+  cursor: pointer; transition: all 0.12s;
+}
+.pill:hover { border-color: var(--grey-3); color: var(--black); }
+.pill.on { border-color: var(--teal); color: var(--teal); background: var(--teal-dim); }
+
+/* group header */
+.grp-hdr {
+  padding: 8px 16px; background: var(--bg);
+  border-bottom: 1px solid var(--bg-3);
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--grey-3);
+}
+
+/* table shell */
+.tbl-shell {
+  background: var(--white); border: 1px solid var(--bg-3);
+  border-radius: 6px; overflow: hidden;
+}
+
+/* draft row */
+.draft-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-bottom: 1px solid var(--bg-3);
+  cursor: pointer; transition: background 0.1s;
+}
+.draft-row:last-child { border-bottom: none; }
+.draft-row:hover { background: var(--bg); }
+.dr-subject { font-size: 12px; color: var(--grey-2); margin-top: 2px; }
+
+/* empty tab */
+.tab-empty {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; padding: 80px 20px; text-align: center;
+}
+.te-icon { font-size: 24px; margin-bottom: 12px; opacity: 0.3; }
+.te-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.te-sub { font-size: 13px; color: var(--grey-2); line-height: 1.6; max-width: 280px; }
+
+/* ── DRAWER ── */
+.drawer-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.18);
+  z-index: 400; opacity: 0; pointer-events: none; transition: opacity 0.2s;
+}
+.drawer-overlay.open { opacity: 1; pointer-events: all; }
+.drawer {
+  position: fixed; top: var(--th); right: 0; bottom: 0; width: 480px;
+  max-width: 100vw; background: var(--white);
+  border-left: 1px solid var(--bg-3);
+  display: flex; flex-direction: column;
+  transform: translateX(100%); transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+  z-index: 401;
+}
+.drawer-overlay.open .drawer { transform: translateX(0); }
+.drawer-header {
+  padding: 18px 20px; border-bottom: 1px solid var(--bg-3);
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.drawer-title { font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 3px; }
+.drawer-sub { font-size: 12px; color: var(--teal); }
+.drawer-close {
+  margin-left: auto; width: 26px; height: 26px; border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: var(--grey-2); font-size: 14px;
+  border: 1px solid var(--bg-3); background: transparent; flex-shrink: 0;
+  transition: all 0.12s;
+}
+.drawer-close:hover { color: var(--black); border-color: var(--grey-3); }
+.drawer-body { flex: 1; overflow-y: auto; padding: 18px 20px; }
+.d-label {
+  font-size: 10px; font-weight: 700; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--grey-3); margin-bottom: 5px;
+}
+.d-fld { margin-bottom: 14px; }
+.d-input {
+  width: 100%; background: var(--bg); border: 1px solid var(--bg-3);
+  border-radius: 4px; padding: 9px 11px;
+  font-family: var(--hv); font-size: 13px; color: var(--black);
+  outline: none; transition: border-color 0.12s;
+}
+.d-input:focus { border-color: var(--teal); }
+textarea.d-input { resize: none; line-height: 1.7; }
+.d-confirm {
+  background: rgba(26,107,60,0.06); border: 1px solid rgba(26,107,60,0.18);
+  border-radius: 4px; padding: 10px 12px;
+  font-size: 12px; color: var(--green); line-height: 1.6; margin-bottom: 14px;
+}
+.drawer-footer {
+  padding: 14px 20px; border-top: 1px solid var(--bg-3);
+  display: flex; gap: 8px; justify-content: flex-end;
+}
+
+/* ── TOAST ── */
+.tz {
+  position: fixed; bottom: 24px; right: 24px; z-index: 900;
+  display: flex; flex-direction: column; gap: 7px; pointer-events: none;
+}
+.tst {
+  background: var(--black); color: var(--white);
+  border-radius: 4px; padding: 11px 14px;
+  font-size: 12px; font-weight: 500;
+  display: flex; align-items: center; gap: 9px; max-width: 280px;
+  animation: tIn 0.25s ease; pointer-events: all;
+}
+.tst.teal { border-left: 3px solid var(--teal); }
+.tst.green { border-left: 3px solid #2ecc71; }
+.tst.amber { border-left: 3px solid var(--amber); }
+@keyframes tIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+/* ── DEV PBAR ── */
+.pbar {
+  position: fixed; bottom: 20px; left: calc(var(--sw) + 16px); z-index: 999;
+  background: var(--black); color: rgba(255,255,255,0.4);
+  border-radius: 4px; padding: 6px 12px;
+  display: flex; gap: 8px; align-items: center;
+  font-family: var(--hv); font-size: 11px;
+}
+.pbar button {
+  background: none; border: none; font-family: var(--hv);
+  font-size: 11px; font-weight: 600; cursor: pointer; padding: 0;
+  color: rgba(255,255,255,0.7);
+}
+.pbar button:hover { color: white; }
+
+/* home link */
+.hi {
+  position: fixed; top: 10px; left: 10px; z-index: 9999;
+  width: 28px; height: 28px; border-radius: 4px;
+  background: var(--bg-2); border: 1px solid var(--bg-3);
+  display: flex; align-items: center; justify-content: center;
+  text-decoration: none; transition: all 0.12s; color: var(--grey-2);
+}
+.hi:hover { background: var(--bg-3); color: var(--black); }
+</style>
+</head>
+<body>
+
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi" title="Dev hub">
+  <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+    <path d="M1 5.5L6 1L11 5.5V11H7.5V8H4.5V11H1V5.5Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
+  </svg>
+</a>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">outreach.</div>
+  <nav class="breadcrumb">
+    <a class="bc-link" href="dashboard-home.html">Campaigns</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-current" id="bc-name">Agency founders — Q1</span>
+  </nav>
+  <div class="topbar-right">
+    <span class="plan-pill">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="si on" href="dashboard-home.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+      <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.2"/>
+    </svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <a class="si si-bottom" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<!-- LAYOUT -->
+<div class="layout">
+<main class="main">
+
+  <!-- CAMPAIGN HEADER -->
+  <div class="campaign-header">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name" id="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta">
+          <span>47 prospects</span>
+          <span class="ch-meta-dot">·</span>
+          <span>Started 12 Mar 2026</span>
+          <span class="ch-meta-dot">·</span>
+          <span>3-step sequence</span>
+          <span class="ch-meta-dot">·</span>
+          <a href="#" onclick="toast('Opening message editor','teal');return false">Edit message</a>
+        </div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn btn-secondary btn-sm" onclick="toast('Opening import','teal')">+ Add prospects</button>
+        <button class="btn btn-primary btn-sm" onclick="switchTab('review')">Review queue →</button>
+      </div>
+    </div>
+
+    <div class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-num accent">15</div>
+        <div class="stat-lbl">Drafts ready</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">Responded</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">8</div>
+        <div class="stat-lbl">Meetings set</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">139</div>
+        <div class="stat-lbl">LinkedIn sent</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">0</div>
+        <div class="stat-lbl">LinkedIn due</div>
+      </div>
+    </div>
+
+    <div class="tab-bar">
+      <div class="tab on" data-tab="review" onclick="switchTab('review')">Review <span class="tab-count">563</span></div>
+      <div class="tab" data-tab="drafts" onclick="switchTab('drafts')">Drafts <span class="tab-count">15</span></div>
+      <div class="tab" data-tab="linkedin" onclick="switchTab('linkedin')">LinkedIn</div>
+      <div class="tab" data-tab="sent" onclick="switchTab('sent')">Sent</div>
+      <div class="tab" data-tab="followup" onclick="switchTab('followup')">Follow-up <span class="tab-count">14</span></div>
+      <div class="tab" data-tab="nurture" onclick="switchTab('nurture')">Nurture</div>
+      <div class="tab" data-tab="conversations" onclick="switchTab('conversations')">Conversations</div>
+    </div>
+  </div>
+
+  <!-- TAB CONTENT -->
+  <div class="tab-content">
+
+    <!-- REVIEW -->
+    <div id="tc-review" class="tc on">
+      <div class="search-row">
+        <div>
+          <div style="font-size:14px;font-weight:600;margin-bottom:3px;">Prospect review</div>
+          <div class="tab-desc">Imports awaiting vetting — approve to trigger first email draft, or skip to dismiss.</div>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="toast('Refreshing…','teal')">↻ Refresh</button>
+      </div>
+      <div class="search-wrap" style="max-width:100%;margin-bottom:16px;">
+        <span class="search-ico">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+      <!-- CARD 1 — expanded -->
+      <div class="prospect-card expanded" id="card-hs">
+        <div class="pc-header" onclick="toggleCard('hs')">
+          <div class="pc-av">HS</div>
+          <div class="pc-info">
+            <div class="pc-name">Howard Sullivan</div>
+            <div class="pc-sub">Founder and Executive Creative Director · YouStudio – Experience Design Agency · Greater London</div>
+          </div>
+          <div class="pc-right">
+            <span class="catch-badge">● Catch-all</span>
+            <a class="ic-btn li" href="#" onclick="event.stopPropagation();return false" title="LinkedIn">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.2v.3M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <button class="ic-btn" onclick="event.stopPropagation();skipCard('hs')" title="Skip">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+            <button class="ic-btn approve" onclick="event.stopPropagation();approveCard('hs','Howard Sullivan')" title="Approve">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ic-btn" onclick="toggleCard('hs')" id="chev-hs" style="border:none">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-body open" id="body-hs">
+          <div class="pc-divider"></div>
+          <div class="pc-fields">
+            <div><div class="pf-label">First name</div><input class="pf-input" value="Howard"></div>
+            <div><div class="pf-label">Last name</div><input class="pf-input" value="Sullivan"></div>
+            <div class="pf-2col"><div class="pf-label">Organisation</div><input class="pf-input" value="YouStudio – Experience Design Agency"></div>
+            <div class="pf-2col">
+              <div class="pf-label">Email <span class="catch-badge" style="margin-left:4px;font-size:9px;">● Catch-all</span></div>
+              <input class="pf-input" placeholder="Not yet verified">
+            </div>
+            <div><div class="pf-label">Industry</div><div class="pf-value">Design Services</div></div>
+            <div><div class="pf-label">Org size</div><div class="pf-value">51–200</div></div>
+            <div class="pf-2col">
+              <div class="pf-label">About</div>
+              <div class="about-text" id="about-hs">A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany &amp; Co to reimagine experience, bringing brands closer to people. YouStudio is a strategically led creative design agency working to define the next chapter of retail.
+                <button class="about-more" onclick="document.getElementById('about-hs').classList.toggle('open')">…more</button>
+              </div>
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn btn-ghost btn-sm" onclick="skipCard('hs')">Skip</button>
+            <button class="btn btn-teal btn-sm" onclick="approveCard('hs','Howard Sullivan')">Approve →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 -->
+      <div class="prospect-card" id="card-mj">
+        <div class="pc-header" onclick="toggleCard('mj')">
+          <div class="pc-av">MJ</div>
+          <div class="pc-info">
+            <div class="pc-name">Mark Jory</div>
+            <div class="pc-sub">CEO · Latitude Agency · London, England</div>
+          </div>
+          <div class="pc-right">
+            <span class="catch-badge">● Catch-all</span>
+            <a class="ic-btn li" href="#" onclick="event.stopPropagation();return false">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.2v.3M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <button class="ic-btn" onclick="event.stopPropagation();skipCard('mj')" title="Skip">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+            <button class="ic-btn approve" onclick="event.stopPropagation();approveCard('mj','Mark Jory')" title="Approve">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ic-btn" onclick="toggleCard('mj')" style="border:none">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-body" id="body-mj">
+          <div class="pc-divider"></div>
+          <div class="pc-fields">
+            <div><div class="pf-label">First name</div><input class="pf-input" value="Mark"></div>
+            <div><div class="pf-label">Last name</div><input class="pf-input" value="Jory"></div>
+            <div class="pf-2col"><div class="pf-label">Organisation</div><input class="pf-input" value="Latitude Agency"></div>
+            <div class="pf-2col"><div class="pf-label">Email <span class="catch-badge" style="margin-left:4px;font-size:9px;">● Catch-all</span></div><input class="pf-input" placeholder="Not yet verified"></div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn btn-ghost btn-sm" onclick="skipCard('mj')">Skip</button>
+            <button class="btn btn-teal btn-sm" onclick="approveCard('mj','Mark Jory')">Approve →</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 -->
+      <div class="prospect-card" id="card-sc">
+        <div class="pc-header" onclick="toggleCard('sc')">
+          <div class="pc-av teal-av">SC</div>
+          <div class="pc-info">
+            <div class="pc-name">Sophie Clarke</div>
+            <div class="pc-sub">Managing Director · Fold Studio · London</div>
+          </div>
+          <div class="pc-right">
+            <span class="verified-badge">✓ Verified</span>
+            <a class="ic-btn li" href="#" onclick="event.stopPropagation();return false">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.2v.3M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <button class="ic-btn" onclick="event.stopPropagation();skipCard('sc')" title="Skip">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1l8 8M9 1L1 9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+            <button class="ic-btn approve" onclick="event.stopPropagation();approveCard('sc','Sophie Clarke')" title="Approve">
+              <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button class="ic-btn" onclick="toggleCard('sc')" style="border:none">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="pc-body" id="body-sc">
+          <div class="pc-divider"></div>
+          <div class="pc-fields">
+            <div><div class="pf-label">First name</div><input class="pf-input" value="Sophie"></div>
+            <div><div class="pf-label">Last name</div><input class="pf-input" value="Clarke"></div>
+            <div class="pf-2col"><div class="pf-label">Organisation</div><input class="pf-input" value="Fold Studio"></div>
+            <div class="pf-2col"><div class="pf-label">Email</div><input class="pf-input" value="sophie@foldstudio.co.uk"></div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn btn-ghost btn-sm" onclick="skipCard('sc')">Skip</button>
+            <button class="btn btn-teal btn-sm" onclick="approveCard('sc','Sophie Clarke')">Approve →</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRAFTS -->
+    <div id="tc-drafts" class="tc">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div class="tab-desc">15 drafts ready to send.</div>
+        <button class="btn btn-primary btn-sm" onclick="openDrawer('bulk')">Send all →</button>
+      </div>
+      <div class="tbl-shell">
+        <div class="draft-row" onclick="openDrawer('draft','James Mitchell','james@northagency.com','Quick thought on your pipeline — worth 10 minutes?')">
+          <div class="tr-av teal">JM</div>
+          <div class="tr-info">
+            <div class="tr-name">James Mitchell</div>
+            <div class="dr-subject">Quick thought on your pipeline — worth 10 minutes?</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();openDrawer('draft','James Mitchell','james@northagency.com','Quick thought on your pipeline — worth 10 minutes?')">Edit &amp; send</button>
+        </div>
+        <div class="draft-row" onclick="openDrawer('draft','Sarah Thompson','sarah@consultco.co.uk','Scaling ConsultCo — a thought')">
+          <div class="tr-av">ST</div>
+          <div class="tr-info">
+            <div class="tr-name">Sarah Thompson</div>
+            <div class="dr-subject">Scaling ConsultCo — a thought</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation()">Edit &amp; send</button>
+        </div>
+        <div class="draft-row" onclick="openDrawer('draft','Marcus Peters','marcus@ventures.io','Worth 15 minutes?')">
+          <div class="tr-av">MP</div>
+          <div class="tr-info">
+            <div class="tr-name">Marcus Peters</div>
+            <div class="dr-subject">Worth 15 minutes?</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation()">Edit &amp; send</button>
+        </div>
+        <div class="draft-row" style="cursor:default;justify-content:center;">
+          <span style="font-size:12px;color:var(--grey-3)">+ 12 more drafts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKEDIN -->
+    <div id="tc-linkedin" class="tc">
+      <div class="pill-row">
+        <div class="pill on" onclick="togglePill(this)">No connection <span style="color:var(--grey-3);margin-left:4px">28</span></div>
+        <div class="pill" onclick="togglePill(this)">Connection sent <span style="color:var(--grey-3);margin-left:4px">12</span></div>
+        <div class="pill" onclick="togglePill(this)">Accepted <span style="color:var(--grey-3);margin-left:4px">7</span></div>
+        <div class="pill" onclick="togglePill(this)">Unable to connect <span style="color:var(--grey-3);margin-left:4px">0</span></div>
+      </div>
+      <div class="tbl-shell">
+        <div class="trow">
+          <div class="tr-av">JM</div>
+          <div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Head of Growth</div></div>
+          <div class="tr-right">
+            <select class="status-sel"><option>No connection yet</option><option>Connection sent</option><option>Connection accepted</option><option>Unable to connect</option></select>
+            <a class="ic-btn li" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.2v.3M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+          </div>
+        </div>
+        <div class="trow">
+          <div class="tr-av">ST</div>
+          <div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Managing Director</div></div>
+          <div class="tr-right">
+            <select class="status-sel"><option>No connection yet</option><option>Connection sent</option><option selected>Connection accepted</option></select>
+            <a class="ic-btn li" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.2v.3M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SENT -->
+    <div id="tc-sent" class="tc">
+      <div class="tab-desc" style="margin-bottom:16px">Master record of every emailed prospect. Update status as conversations develop.</div>
+      <div class="tbl-shell">
+        <div class="trow">
+          <div class="tr-av">JM</div>
+          <div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Sent 14 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel">
+              <option selected>First email sent → Follow-up</option>
+              <option>Follow-up drafted</option><option>2nd follow-up sent</option>
+              <option>Reply received → Conversations</option>
+              <option>Closed — meeting booked</option>
+              <option>Closed — no response → Nurture</option>
+              <option>Closed — not a fit → Nurture</option>
+              <option>Email bounced</option>
+              <option>DO NOT CONTACT</option>
+            </select>
+          </div>
+        </div>
+        <div class="trow">
+          <div class="tr-av green">ST</div>
+          <div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Sent 13 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel"><option selected>Reply received → Conversations</option></select>
+            <span class="bdg bdg-green">Reply</span>
+          </div>
+        </div>
+        <div class="trow">
+          <div class="tr-av green">HC</div>
+          <div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Sent 12 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel"><option selected>Closed — meeting booked</option></select>
+            <span class="bdg bdg-teal">Meeting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOLLOW-UP -->
+    <div id="tc-followup" class="tc">
+      <div class="tab-desc" style="margin-bottom:16px">14 prospects due for follow-up. Sequences pause automatically on reply.</div>
+      <div class="tbl-shell">
+        <div class="grp-hdr">Due today · 3</div>
+        <div class="trow">
+          <div class="tr-av teal">JM</div>
+          <div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">Follow-up #1 · 3 days no reply</div></div>
+          <div class="tr-right"><span class="bdg bdg-amber">Due today</span><button class="btn btn-secondary btn-sm" onclick="openDrawer('followup','James Mitchell','james@northagency.com','Follow-up #1')">Compose</button></div>
+        </div>
+        <div class="trow">
+          <div class="tr-av">MP</div>
+          <div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">Follow-up #1 · 3 days no reply</div></div>
+          <div class="tr-right"><span class="bdg bdg-amber">Due today</span><button class="btn btn-secondary btn-sm">Compose</button></div>
+        </div>
+        <div class="grp-hdr" style="border-top:1px solid var(--bg-3)">Upcoming · 11</div>
+        <div class="trow">
+          <div class="tr-av">AL</div>
+          <div class="tr-info"><div class="tr-name">Alice Lowe</div><div class="tr-sub">Follow-up #1 in 2 days</div></div>
+          <div class="tr-right"><span class="bdg bdg-grey">In 2 days</span></div>
+        </div>
+        <div class="trow" style="justify-content:center;cursor:default;">
+          <span style="font-size:12px;color:var(--grey-3)">+ 11 more upcoming</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- NURTURE -->
+    <div id="tc-nurture" class="tc">
+      <div class="tab-desc" style="margin-bottom:16px">Prospects parked for re-contact. Surfaces automatically when the time comes.</div>
+      <div class="tbl-shell">
+        <div class="trow">
+          <div class="tr-av" style="background:rgba(184,96,10,0.08);border-color:rgba(184,96,10,0.2);color:var(--amber)">MP</div>
+          <div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">"Come back in Q2" · Re-contact: 1 Apr</div></div>
+          <div class="tr-right"><span class="bdg bdg-amber">Due soon</span><button class="btn btn-secondary btn-sm" onclick="toast('Opening composer','teal')">Re-contact</button></div>
+        </div>
+        <div class="trow">
+          <div class="tr-av">DH</div>
+          <div class="tr-info"><div class="tr-name">Dan Hughes</div><div class="tr-sub">Closed — no need right now · Re-contact: May</div></div>
+          <span class="bdg bdg-grey">May 2026</span>
+        </div>
+        <div class="trow">
+          <div class="tr-av">LW</div>
+          <div class="tr-info"><div class="tr-name">Laura Webb</div><div class="tr-sub">Maternity until Aug · Re-contact: Sep</div></div>
+          <span class="bdg bdg-grey">Sep 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONVERSATIONS -->
+    <div id="tc-conversations" class="tc">
+      <div class="tab-desc" style="margin-bottom:16px">Active replies and meetings. Move each forward or close it out.</div>
+      <div class="tbl-shell">
+        <div class="trow">
+          <div class="tr-av green">ST</div>
+          <div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Replied 2 hours ago</div></div>
+          <div class="tr-right"><span class="bdg bdg-green">New reply</span><button class="btn btn-secondary btn-sm" onclick="toast('Opening thread','teal')">View thread</button></div>
+        </div>
+        <div class="trow">
+          <div class="tr-av green">HC</div>
+          <div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Meeting booked · 24 Mar, 10am</div></div>
+          <div class="tr-right"><span class="bdg bdg-teal">Meeting</span><button class="btn btn-secondary btn-sm" onclick="toast('Opening thread','teal')">View</button></div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /tab-content -->
+</main>
+</div>
+
+<!-- DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer">
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-title" id="d-title">James Mitchell</div>
+        <div class="drawer-sub" id="d-sub">james@northagency.com</div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()">✕</button>
+    </div>
+    <div class="drawer-body">
+      <div id="d-confirm" class="d-confirm" style="display:none">
+        This will be sent to <strong id="d-confirm-to">james@northagency.com</strong>. Are you sure?
+      </div>
+      <div class="d-fld"><div class="d-label">Subject</div>
+        <input class="d-input" id="d-subject" value="Quick thought on your pipeline — worth 10 minutes?">
+      </div>
+      <div class="d-fld"><div class="d-label">Message</div>
+        <textarea class="d-input" id="d-body" rows="14">Hi James,
+
+Noticed North Agency has been growing fast — exciting momentum.
+
+I help agency leaders build consistent outreach systems so the pipeline keeps moving even when delivery gets busy.
+
+Worth a quick 10 minutes?
+
+Coris</textarea>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn btn-ghost btn-sm" onclick="closeDrawer()">Cancel</button>
+      <button class="btn btn-secondary btn-sm" onclick="toast('Draft saved','teal');closeDrawer()">Save draft</button>
+      <button class="btn btn-primary btn-sm" onclick="handleSend()">Send →</button>
+    </div>
+  </div>
+</div>
+
+<div class="tz" id="tz"></div>
+
+<div class="pbar">
+  <span>Tab:</span>
+  <button onclick="switchTab('review')">Review</button>
+  <button onclick="switchTab('drafts')">Drafts</button>
+  <button onclick="switchTab('linkedin')">LinkedIn</button>
+  <button onclick="switchTab('sent')">Sent</button>
+  <button onclick="switchTab('followup')">Follow-up</button>
+  <button onclick="switchTab('nurture')">Nurture</button>
+  <button onclick="switchTab('conversations')">Conv.</button>
+</div>
+
+<script>
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('on', t.dataset.tab === name));
+  document.querySelectorAll('.tc').forEach(c => c.classList.toggle('on', c.id === 'tc-' + name));
+}
+
+function toggleCard(id) {
+  const body = document.getElementById('body-' + id);
+  const card = document.getElementById('card-' + id);
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  card.classList.toggle('expanded', !isOpen);
+}
+
+function approveCard(id, name) {
+  const card = document.getElementById('card-' + id);
+  card.style.transition = 'opacity 0.25s, transform 0.25s';
+  card.style.opacity = '0'; card.style.transform = 'translateX(8px)';
+  setTimeout(() => card.remove(), 250);
+  toast(name + ' approved — draft created', 'green');
+}
+
+function skipCard(id) {
+  const card = document.getElementById('card-' + id);
+  card.style.transition = 'opacity 0.2s';
+  card.style.opacity = '0';
+  setTimeout(() => card.remove(), 200);
+  toast('Prospect skipped', 'teal');
+}
+
+let sendConfirmed = false;
+function openDrawer(type, name, email, subject) {
+  sendConfirmed = false;
+  document.getElementById('d-confirm').style.display = 'none';
+  document.querySelector('.drawer-footer .btn-primary').textContent = 'Send →';
+  if (type === 'bulk') {
+    document.getElementById('d-title').textContent = 'Send all drafts';
+    document.getElementById('d-sub').textContent = '15 prospects';
+    document.getElementById('d-subject').value = '—';
+    document.getElementById('d-body').value = 'Sending all 15 drafts in this campaign.';
+  } else {
+    document.getElementById('d-title').textContent = name || 'Draft';
+    document.getElementById('d-sub').textContent = email || '';
+    if (subject) document.getElementById('d-subject').value = subject;
+  }
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+function handleSend() {
+  const email = document.getElementById('d-sub').textContent;
+  if (!sendConfirmed) {
+    sendConfirmed = true;
+    document.getElementById('d-confirm').style.display = 'block';
+    document.getElementById('d-confirm-to').textContent = email;
+    document.querySelector('.drawer-footer .btn-primary').textContent = 'Confirm →';
+  } else {
+    closeDrawer();
+    toast('Sent to ' + email, 'green');
+  }
+}
+
+function togglePill(el) {
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+}
+
+function toast(text, type = 'teal') {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + type;
+  e.innerHTML = '<span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity = '0'; e.style.transition = 'opacity 0.2s'; setTimeout(() => e.remove(), 200); }, 3000);
+}
+</script>
+</body>
+</html>
