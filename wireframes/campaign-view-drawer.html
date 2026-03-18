@@ -427,7 +427,6 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">Founder and Executive Creative Director · YouStudio – Experience Design Agency · Greater London</div>
           </div>
           <div class="pc-right">
-            <span class="catch-badge">&#9679; Catch-all</span>
             <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
@@ -452,7 +451,6 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">CEO · Latitude Agency · London, England, United Kingdom</div>
           </div>
           <div class="pc-right">
-            <span class="catch-badge">&#9679; Catch-all</span>
             <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
@@ -477,7 +475,6 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">Managing Director · Fold Studio · London, England, United Kingdom</div>
           </div>
           <div class="pc-right">
-            <span class="bdg bdg-g" style="font-size:9px;padding:2px 7px;">Verified</span>
             <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
@@ -831,11 +828,24 @@ function closePD() {
 }
 function updateEmailPrompt() {
   const emailInput = document.getElementById('pd-email');
-  const prompt = document.getElementById('pd-email-prompt');
-  if (!prompt) return;
+  const badge = document.getElementById('pd-email-badge');
+  if (!badge) return;
   const isEmpty = !emailInput.value || emailInput.value.trim() === '';
-  const hasWebsite = !!emailInput.dataset.website;
-  prompt.style.display = (isEmpty && hasWebsite) ? 'flex' : 'none';
+  if (isEmpty) {
+    badge.textContent = 'No email found — Generate';
+    badge.style.background = 'rgba(255,157,66,0.08)';
+    badge.style.borderColor = 'rgba(255,157,66,0.2)';
+    badge.style.color = '#ff9d42';
+    badge.style.cursor = 'pointer';
+    badge.onclick = generateEmail;
+  } else {
+    // Email is present — show nothing (hide badge for verified emails)
+    badge.textContent = '';
+    badge.style.background = 'transparent';
+    badge.style.borderColor = 'transparent';
+    badge.style.cursor = 'default';
+    badge.onclick = null;
+  }
 }
 
 function generateEmail() {
@@ -843,29 +853,29 @@ function generateEmail() {
   const badge = document.getElementById('pd-email-badge');
   const first = (emailInput.dataset.firstname || '').toLowerCase().trim();
   let domain = (emailInput.dataset.website || '').trim()
-    .replace(/^https?:\/\//i, '')   // strip protocol
-    .replace(/^www\./i, '')          // strip www.
-    .split('/')[0];                  // strip any path
+    .replace(/^https?:\/\//, '')
+    .replace(/^www\./, '')
+    .split('/')[0];
   if (!first || !domain) return;
   const generated = first + '@' + domain;
   emailInput.value = generated;
-  // Mark as generated (not catch-all) — show a different badge
+  // Badge becomes "Generated" — stays in place, no layout shift
   if (badge) {
-    badge.textContent = '✦ Generated';
+    badge.textContent = '\u2736 Generated';
     badge.style.background = 'rgba(0,212,255,0.08)';
     badge.style.borderColor = 'rgba(0,212,255,0.25)';
     badge.style.color = '#00d4ff';
-    badge.style.display = 'inline-flex';
+    badge.style.cursor = 'default';
+    badge.onclick = null;
   }
-  updateEmailPrompt();
-  // Pulse the input to confirm
+  // Pulse the input
   emailInput.style.borderColor = '#00d4ff';
   emailInput.style.boxShadow = '0 0 0 3px rgba(0,212,255,0.12)';
   setTimeout(() => {
     emailInput.style.borderColor = '';
     emailInput.style.boxShadow = '';
   }, 1800);
-  toast('✦', 'Email generated: ' + generated, 'tc');
+  toast('\u2736', 'Email generated: ' + generated, 'tc');
 }
 
 function approveFromDrawer() {
@@ -1018,12 +1028,11 @@ function toast(icon, text, cls='tc'){
           <input id="pd-last" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" value="Sullivan">
         </div>
         <div style="grid-column:span 2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
-          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;display:flex;align-items:center;gap:6px;">Email <span id="pd-email-badge" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:2px 6px;border-radius:3px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);color:#ff9d42;">● Catch-all</span></div>
-          <div id="pd-email-prompt" style="display:none;align-items:center;justify-content:flex-end;gap:8px;margin-bottom:6px;">
-            <span style="font-size:11px;color:#8a8a9a;">No email found</span>
-            <button onclick="generateEmail()" style="padding:4px 10px;border-radius:5px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.25);color:#00d4ff;font-family:Outfit,sans-serif;font-size:10px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap;">Generate email</button>
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;display:flex;align-items:center;justify-content:space-between;">
+            <span>Email</span>
+            <span id="pd-email-badge" onclick="generateEmail()" style="cursor:pointer;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:3px 8px;border-radius:4px;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);color:#ff9d42;white-space:nowrap;">No email found — Generate</span>
           </div>
-          <input id="pd-email" oninput="updateEmailPrompt()" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;transition:border-color 0.2s,box-shadow 0.2s;" placeholder="Not yet verified">
+          <input id="pd-email" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;transition:border-color 0.2s,box-shadow 0.2s;" placeholder="Not yet verified">
         </div>
       </div>
 
