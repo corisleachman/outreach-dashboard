@@ -539,6 +539,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <div id="tc-drafts" class="tc">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
         <div style="font-size:12px;color:var(--tm);">15 drafts ready to send.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
         <button class="btn bp bsm" onclick="openDrawer('bulk')">Send all drafts →</button>
       </div>
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
@@ -582,6 +588,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <div id="tc-linkedin" class="tc">
       <div style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
         <div class="btn bs bsm on-filter" style="border-color:rgba(255,20,147,0.3);color:var(--pink);background:var(--pd);" onclick="filterLI(this,'none')">No connection <span style="opacity:0.6;margin-left:4px;">28</span></div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
         <div class="btn bs bsm" onclick="filterLI(this,'sent')">Connection sent <span style="opacity:0.6;margin-left:4px;">12</span></div>
         <div class="btn bs bsm" onclick="filterLI(this,'accepted')">Accepted <span style="opacity:0.6;margin-left:4px;">7</span></div>
         <div class="btn bs bsm" onclick="filterLI(this,'unable')">Unable to connect <span style="opacity:0.6;margin-left:4px;">0</span></div>
@@ -596,6 +608,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <!-- SENT TAB -->
     <div id="tc-sent" class="tc">
       <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Master record of every emailed prospect. Update status as conversations develop.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div class="trow">
           <div class="tr-av">JM</div>
@@ -641,6 +659,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <!-- FOLLOW-UP TAB -->
     <div id="tc-followup" class="tc">
       <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">14 prospects due for follow-up. Sequences pause automatically when they reply.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div style="padding:9px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);">Due today · 3</div>
         <div class="trow"><div class="tr-av">JM</div><div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Follow-up #1 · 3 days no reply</div></div><div class="tr-right"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="openDrawer('followup','James Mitchell','james@northagency.com','Follow-up #1')">Compose</button></div></div>
@@ -654,6 +678,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <!-- NURTURE TAB -->
     <div id="tc-nurture" class="tc">
       <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Prospects parked for re-contact. We'll surface them when the time comes.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div class="trow"><div class="tr-av" style="background:var(--ad);border-color:rgba(255,157,66,0.2);color:var(--amber)">MP</div><div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">marcus@ventures.io · "Come back in Q2" · Re-contact: 1 Apr</div></div><div class="tr-right"><span class="bdg bdg-a">Due soon</span><button class="btn bs bsm" onclick="toast('→','Opening follow-up composer','tc')">Re-contact</button></div></div>
         <div class="trow"><div class="tr-av">DH</div><div class="tr-info"><div class="tr-name">Dan Hughes</div><div class="tr-sub">dan@agencyco.io · Closed — no need right now · Re-contact: May</div></div><div class="tr-right"><span class="bdg bdg-n">May 2026</span></div></div>
@@ -664,6 +694,12 @@ textarea.d-input{resize:none;line-height:1.7;}
     <!-- CONVERSATIONS TAB -->
     <div id="tc-conversations" class="tc">
       <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Active replies and meetings. Move each one forward or close it out.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
       <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
         <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">ST</div><div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Replied 2 hours ago</div></div><div class="tr-right"><span class="bdg bdg-g">New reply</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View thread</button></div></div>
         <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">HC</div><div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Meeting booked · 24 Mar, 10am</div></div><div class="tr-right"><span class="bdg bdg-g">Meeting</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View</button></div></div>
