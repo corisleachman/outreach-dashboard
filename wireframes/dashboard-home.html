@@ -277,6 +277,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         </div>
         <div class="campaign-progress"><div class="campaign-progress-fill" style="width:100%"></div></div>
         <div class="action-strip">
+          <button class="action-pill" onclick="event.stopPropagation();window.location.href='prospect-import.html'" style="margin-right:auto;">+ Add prospects</button>
           <button class="action-pill has-items" onclick="event.stopPropagation();toast('→','Opening follow-up queue','t-pink')"><span class="ap-count">5</span> Follow-ups due</button>
           <button class="action-pill has-replies" onclick="event.stopPropagation();toast('→','Opening conversations','t-cyan')"><span class="ap-count">1</span> New reply</button>
           <button class="action-pill" onclick="window.location.href='campaign-view.html'">View campaign →</button>
@@ -299,6 +300,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         </div>
         <div class="campaign-progress"><div class="campaign-progress-fill" style="width:79%"></div></div>
         <div class="action-strip">
+          <button class="action-pill" onclick="event.stopPropagation();window.location.href='prospect-import.html'" style="margin-right:auto;">+ Add prospects</button>
           <button class="action-pill" onclick="window.location.href='campaign-view.html'">Resume campaign</button>
           <button class="action-pill" onclick="window.location.href='campaign-view.html'">View campaign →</button>
         </div>
