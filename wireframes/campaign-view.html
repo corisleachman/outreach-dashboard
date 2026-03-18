@@ -263,6 +263,23 @@ textarea.d-input{resize:none;line-height:1.7;}
 .d-confirm{background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:8px;
   padding:10px 13px;font-size:12px;color:var(--green);line-height:1.5;margin-bottom:14px;}
 
+
+/* ── BOUNCE TAB ── */
+.banner{border-radius:10px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;}
+.banner-a{background:var(--ad);border:1px solid rgba(255,157,66,0.2);}
+.banner-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.banner-title{font-family:var(--of);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:3px;}
+.banner-sub{font-size:12px;color:var(--amber);opacity:0.8;line-height:1.5;}
+.grp-hdr{padding:9px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);
+  font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);}
+.pav-a{background:var(--ad);border:1px solid rgba(255,157,66,0.25)!important;color:var(--amber)!important;}
+.pav-r{background:var(--rd);border:1px solid rgba(255,76,76,0.25)!important;color:var(--red)!important;}
+.btn.ba{background:var(--ad);border:1px solid rgba(255,157,66,0.25);color:var(--amber);}
+.btn.ba:hover{background:rgba(255,157,66,0.18);}
+.pt{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);margin-bottom:2px;}
+.psub{font-size:12px;color:var(--tm);margin-bottom:16px;}
+
 /* ── TOAST ── */
 .tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
 .tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
@@ -375,6 +392,7 @@ textarea.d-input{resize:none;line-height:1.7;}
       <div class="tab" data-tab="followup" onclick="switchTab('followup')">Follow-up <span class="tab-count" id="tc-fu">14</span></div>
       <div class="tab" data-tab="nurture" onclick="switchTab('nurture')">Nurture</div>
       <div class="tab" data-tab="conversations" onclick="switchTab('conversations')">Conversations</div>
+      <div class="tab" data-tab="bounced" onclick="switchTab('bounced')">Bounced</div>
     </div>
   </div>
 
@@ -700,6 +718,49 @@ textarea.d-input{resize:none;line-height:1.7;}
         <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">ST</div><div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Replied 2 hours ago</div></div><div class="tr-right"><span class="bdg bdg-g">New reply</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View thread</button></div></div>
         <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">HC</div><div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Meeting booked · 24 Mar, 10am</div></div><div class="tr-right"><span class="bdg bdg-g">Meeting</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View</button></div></div>
       </div>
+    </div>
+
+
+    <!-- BOUNCED TAB -->
+    <div id="tc-bounced" class="tc">
+      <div class="search-bar" style="margin-bottom:16px;">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+  <div class="pt">Bounced emails</div>
+  <div class="psub">Hard bounces detected — try the next address permutation.</div>
+  <div class="banner banner-a">
+    <span class="banner-icon">↩</span>
+    <div>
+      <div class="banner-title">3 emails bounced in the last 24 hours</div>
+      <div class="banner-sub">We've found alternative addresses to try. Review and retry each one.</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="grp-hdr">Bounced — alternatives available</div>
+    <div class="pr">
+      <div class="pav pav-a">AL</div>
+      <div style="flex:1"><div class="pn">Alice Lowe</div><div class="pm">alice@creativelab.com bounced · Try: alowe@creativelab.com</div></div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn ba bsm" onclick="toast('✓','Draft queued for alowe@creativelab.com','tc')">Retry</button>
+        <button class="btn bs bsm" onclick="toast('✓','Marked undeliverable','tr')">Skip</button>
+      </div>
+    </div>
+    <div class="pr">
+      <div class="pav pav-a">DH</div>
+      <div style="flex:1"><div class="pn">Dan Hughes</div><div class="pm">dan@agencyco.io bounced · Try: d.hughes@agencyco.io</div></div>
+      <div style="display:flex;gap:6px;">
+        <button class="btn ba bsm" onclick="toast('✓','Draft queued','tc')">Retry</button>
+        <button class="btn bs bsm">Skip</button>
+      </div>
+    </div>
+    <div class="pr">
+      <div class="pav pav-r">LW</div>
+      <div style="flex:1"><div class="pn">Laura Webb</div><div class="pm">laura@design.co bounced · No alternative found</div></div>
+      <button class="btn bs bsm">Mark undeliverable</button>
+    </div>
+  </div>
     </div>
 
   </div><!-- /tab-content -->
