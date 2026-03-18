@@ -730,12 +730,21 @@ let taskCount = 5;
 function openGWPanel() {
   gwOpen = true;
   document.getElementById('gw-overlay').classList.add('open');
-  document.getElementById('fab-btn').style.transform = 'scale(0.92)';
+  // Hide FAB while panel is open to avoid overlap
+  const fw = document.getElementById('fab-wrap');
+  fw.style.transition = 'opacity 0.15s, transform 0.15s';
+  fw.style.opacity = '0';
+  fw.style.transform = 'translateY(8px)';
+  fw.style.pointerEvents = 'none';
 }
 function closeGWPanel() {
   gwOpen = false;
   document.getElementById('gw-overlay').classList.remove('open');
-  document.getElementById('fab-btn').style.transform = '';
+  // Restore FAB
+  const fw = document.getElementById('fab-wrap');
+  fw.style.opacity = '1';
+  fw.style.transform = '';
+  fw.style.pointerEvents = '';
 }
 function toggleGWPanel() {
   if (gwOpen) closeGWPanel(); else openGWPanel();
