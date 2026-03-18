@@ -724,79 +724,6 @@ textarea.d-input{resize:none;line-height:1.7;}
 </div>
 
 
-<!-- ═══ PROSPECT DETAIL DRAWER ═══ -->
-<div class="pd-overlay" id="pd-overlay" onclick="if(event.target===this)closePD()">
-  <div class="pd-drawer">
-    <div class="pd-header">
-      <div class="pd-av" id="pd-av">HS</div>
-      <div>
-        <div class="pd-name" id="pd-name">Howard Sullivan</div>
-        <div class="pd-role" id="pd-role">Founder & Executive Creative Director · YouStudio</div>
-      </div>
-      <div class="pd-close" onclick="closePD()">✕</div>
-    </div>
-    <div class="pd-body">
-
-      <div class="pd-section">
-        <div class="pd-section-label">Contact details</div>
-        <div class="pd-field-grid">
-          <div class="pd-field">
-            <div class="pd-fl">First name</div>
-            <input class="pd-input" id="pd-first" value="Howard">
-          </div>
-          <div class="pd-field">
-            <div class="pd-fl">Last name</div>
-            <input class="pd-input" id="pd-last" value="Sullivan">
-          </div>
-          <div class="pd-field pd-field-2col">
-            <div class="pd-fl">Email <span id="pd-email-badge" style="margin-left:6px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:2px 6px;border-radius:3px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);color:var(--amber);">● Catch-all</span></div>
-            <input class="pd-input" id="pd-email" placeholder="Not yet verified">
-          </div>
-        </div>
-      </div>
-
-      <div class="pd-section">
-        <div class="pd-section-label">Organisation</div>
-        <div class="pd-field-grid">
-          <div class="pd-field pd-field-2col">
-            <div class="pd-fl">Company</div>
-            <input class="pd-input" id="pd-company" value="YouStudio – Experience Design Agency">
-          </div>
-          <div class="pd-field">
-            <div class="pd-fl">Industry</div>
-            <div class="pd-fv" id="pd-industry">Design Services</div>
-          </div>
-          <div class="pd-field">
-            <div class="pd-fl">Org size</div>
-            <div class="pd-fv" id="pd-size">51–200</div>
-          </div>
-          <div class="pd-field pd-field-2col">
-            <div class="pd-fl">LinkedIn</div>
-            <div class="pd-fv"><a href="#" onclick="return false" id="pd-li">View profile →</a></div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pd-section">
-        <div class="pd-section-label">About</div>
-        <div class="pd-about" id="pd-about">A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany &amp; Co. YouStudio is a strategically led creative design agency working to define the next chapter of retail.</div>
-      </div>
-
-      <div class="pd-section">
-        <div class="pd-section-label">Notes</div>
-        <textarea class="pd-input" rows="3" placeholder="Add any context about this prospect…" style="resize:none;line-height:1.6;"></textarea>
-      </div>
-
-    </div>
-    <div class="pd-footer">
-      <span class="pd-skip" onclick="skipFromDrawer()">✕ Skip prospect</span>
-      <div style="display:flex;gap:8px;">
-        <button class="btn bs bsm" onclick="toast('✓','Changes saved','tc');closePD()">Save</button>
-        <button class="btn bp bsm" onclick="approveFromDrawer()">✓ Approve &rarr;</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- ═══ SEND DRAWER ═══ -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)closeDrawer()">
@@ -1007,6 +934,88 @@ function toast(icon, text, cls='tc'){
   z.appendChild(e);
   setTimeout(()=>{ e.style.animation='none'; e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(),300); }, 3200);
 }
+
+// ── PROSPECT DETAIL DRAWER — created via JS to avoid stacking context issues ──
+(function() {
+  const drawerHTML = `
+<div class="pd-overlay" id="pd-overlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);z-index:9000;opacity:0;pointer-events:none;transition:opacity 0.22s;">
+  <div id="pd-drawer" style="position:fixed;top:56px;right:0;bottom:0;width:480px;max-width:calc(100vw - 56px);background:#130a20;border-left:1px solid rgba(255,255,255,0.13);z-index:9001;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);">
+    
+    <div style="padding:18px 20px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:flex-start;gap:12px;flex-shrink:0;">
+      <div id="pd-av" style="width:40px;height:40px;border-radius:50%;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;justify-content:center;font-family:Outfit,sans-serif;font-size:13px;font-weight:700;color:#ff1493;flex-shrink:0;">HS</div>
+      <div style="flex:1;min-width:0;">
+        <div id="pd-name" style="font-family:Outfit,sans-serif;font-size:16px;font-weight:700;color:#f0f0ee;margin-bottom:3px;">Howard Sullivan</div>
+        <div id="pd-role" style="font-size:12px;color:#8a8a9a;">Founder · YouStudio</div>
+      </div>
+      <div onclick="closePD()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid rgba(255,255,255,0.13);display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8a9a;font-size:14px;transition:all 0.15s;flex-shrink:0;line-height:1;">✕</div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:18px 20px;">
+      
+      <div style="font-family:Outfit,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#444456;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,0.07);">Contact details</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">First name</div>
+          <input id="pd-first" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" value="Howard">
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">Last name</div>
+          <input id="pd-last" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" value="Sullivan">
+        </div>
+        <div style="grid-column:span 2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;display:flex;align-items:center;gap:6px;">Email <span id="pd-email-badge" style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:2px 6px;border-radius:3px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);color:#ff9d42;">● Catch-all</span></div>
+          <input id="pd-email" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" placeholder="Not yet verified">
+        </div>
+      </div>
+
+      <div style="font-family:Outfit,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#444456;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,0.07);">Organisation</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;">
+        <div style="grid-column:span 2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">Company</div>
+          <input id="pd-company" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:8px 10px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;" value="YouStudio">
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">Industry</div>
+          <div id="pd-industry" style="font-size:13px;color:#f0f0ee;">Design Services</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">Org size</div>
+          <div id="pd-size" style="font-size:13px;color:#f0f0ee;">51–200</div>
+        </div>
+        <div style="grid-column:span 2;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;">
+          <div style="font-size:9px;font-family:Outfit,sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:#444456;margin-bottom:5px;">LinkedIn</div>
+          <a id="pd-li" href="#" onclick="return false" style="font-size:13px;color:#00d4ff;text-decoration:none;">View profile →</a>
+        </div>
+      </div>
+
+      <div style="font-family:Outfit,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#444456;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,0.07);">About</div>
+      <div id="pd-about" style="font-size:12px;color:#8a8a9a;line-height:1.7;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:7px;padding:11px 13px;margin-bottom:20px;"></div>
+
+      <div style="font-family:Outfit,sans-serif;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#444456;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,0.07);">Notes</div>
+      <textarea style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:6px;padding:9px 11px;font-family:DM Sans,sans-serif;font-size:13px;color:#f0f0ee;outline:none;resize:none;line-height:1.6;min-height:80px;" placeholder="Add any context about this prospect…"></textarea>
+
+    </div>
+
+    <div style="padding:14px 20px;border-top:1px solid rgba(255,255,255,0.07);display:flex;gap:8px;justify-content:space-between;align-items:center;flex-shrink:0;">
+      <span onclick="skipFromDrawer()" style="font-size:12px;color:#444456;cursor:pointer;">✕ Skip prospect</span>
+      <div style="display:flex;gap:8px;">
+        <button onclick="toast('✓','Changes saved','tc');closePD()" style="padding:6px 12px;border-radius:7px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);color:#8a8a9a;font-family:Outfit,sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">Save</button>
+        <button onclick="approveFromDrawer()" style="padding:6px 12px;border-radius:7px;background:linear-gradient(135deg,#ff1493,#00d4ff);border:none;color:white;font-family:Outfit,sans-serif;font-size:12px;font-weight:700;cursor:pointer;text-transform:uppercase;letter-spacing:0.05em;">✓ Approve →</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+
+  const wrapper = document.createElement('div');
+  wrapper.innerHTML = drawerHTML;
+  document.body.appendChild(wrapper.firstElementChild);
+  
+  // Click backdrop to close
+  document.getElementById('pd-overlay').addEventListener('click', function(e) {
+    if (e.target === this) closePD();
+  });
+})();
+
 </script>
 </body>
 </html>
