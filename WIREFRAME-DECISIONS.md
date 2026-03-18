@@ -1,7 +1,7 @@
 # WIREFRAME-DECISIONS.md
 
 Outreach — Wireframe Decisions Log  
-Last updated: March 2026
+Last updated: March 2026 (updated)
 
 ---
 
@@ -153,9 +153,34 @@ If a global cross-campaign view of follow-ups or conversations is added in futur
 
 ### 3.5 Prospect cards — Review tab
 
-Prospect cards in the Review tab expand in place when clicked to reveal editable fields (name, email, organisation, industry, org size, about). This is the current implementation.
+**Decision locked:** Clicking a prospect row in the Review tab opens a **right-side drawer** (480px wide, slides in from the right, overlays content without pushing the list). The expand-in-place behaviour has been removed.
 
-**Under consideration (not yet implemented):** A right-side drawer showing richer prospect detail. The expand-in-place and drawer approaches were reviewed. The drawer is preferred for richer detail but has not been built into the campaign view yet. The expand-in-place remains current behaviour.
+The drawer contains:
+- Editable fields: first name, last name, email, company
+- Read-only fields: industry, org size, LinkedIn link
+- About section
+- Notes textarea (free text)
+- Footer: Skip (left) · Save / Approve → (right)
+
+Two versions of the campaign view exist for comparison:
+- `campaign-view.html` — expand-in-place (original)
+- `campaign-view-drawer.html` — right drawer (new, preferred)
+
+**Mobile note:** The right drawer will need to become a full-screen overlay or bottom sheet on mobile. Expand-in-place would translate to mobile without changes. This trade-off is noted for when mobile is addressed (Layer 5+).
+
+---
+
+### 3.5a Email generation in the prospect drawer
+
+When a prospect has no email address, the drawer shows an inline status badge in the email label row (right-aligned). The badge reads *"No email found — Generate"* and is itself clickable. No separate element appears above the field — the badge is always present in the label row, preventing layout shift.
+
+Clicking the badge:
+1. Derives an email from `firstname@domain.com` using the prospect's first name and website domain (stripping `https://`, `www.`, and any path)
+2. Populates the email input field
+3. Switches the badge to *"✦ Generated"* (cyan) — stays in the same position
+4. Pulses the input briefly to confirm
+
+**Catch-all and Verified badges** have been removed from the prospect card rows in the Review tab — they were a hangover from an earlier spreadsheet-based workflow and are no longer needed.
 
 ---
 
@@ -277,7 +302,11 @@ Two approaches were wireframed for a "guided workflow" feature. A final decision
 - FAB hides when the panel is open; restores on close
 - Panel closes on backdrop click or ✕
 
-**Option B is currently preferred** but a final decision has not been locked. Do not implement either approach until a decision is confirmed.
+**Decision locked: Option B — Floating task panel.**
+
+The FAB sits fixed at the bottom-right of the screen on all authenticated pages. It shows a live task count badge. Clicking it opens the right-side panel (360px wide) overlaying the current view. The FAB hides while the panel is open and restores on close.
+
+Do not implement Option A (full task runner).
 
 ---
 
@@ -315,8 +344,8 @@ The following questions were raised during wireframing but have not been resolve
 
 | # | Question | Relevant phase |
 |---|---|---|
-| 1 | Guided Workflow: Option A (task runner) or Option B (FAB + panel)? | New feature |
-| 2 | Prospect detail: expand-in-place (current) or right drawer? | Phase 2.10 / campaign view |
+| 1 | ~~Guided Workflow: Option A or Option B?~~ **Resolved — Option B (FAB + panel)** | New feature |
+| 2 | ~~Prospect detail: expand-in-place or right drawer?~~ **Resolved — right drawer** | Phase 2.10 / campaign view |
 | 3 | Campaign settings tab: what does it contain? | Campaign view |
 | 4 | User-configurable product voice: spec and phase TBD | Layer 5+ |
 
