@@ -807,10 +807,20 @@ function openProspectDrawer(id) {
   document.getElementById('pd-industry').textContent = p.industry;
   document.getElementById('pd-size').textContent = p.size;
   document.getElementById('pd-about').textContent = p.about;
-  document.getElementById('pd-overlay').classList.add('open');
+  // Show overlay and slide drawer in
+  const overlay = document.getElementById('pd-overlay');
+  const drawer  = document.getElementById('pd-drawer');
+  overlay.style.opacity = '1';
+  overlay.style.pointerEvents = 'all';
+  drawer.style.transform = 'translateX(0)';
 }
 function closePD() {
-  document.getElementById('pd-overlay').classList.remove('open');
+  const overlay = document.getElementById('pd-overlay');
+  const drawer  = document.getElementById('pd-drawer');
+  if (!overlay) return;
+  overlay.style.opacity = '0';
+  overlay.style.pointerEvents = 'none';
+  drawer.style.transform = 'translateX(100%)';
   currentPD = null;
 }
 function approveFromDrawer() {
@@ -1014,6 +1024,8 @@ function toast(icon, text, cls='tc'){
   document.getElementById('pd-overlay').addEventListener('click', function(e) {
     if (e.target === this) closePD();
   });
+  // Also remove the 'open' class approach entirely — use direct style control
+  
 })();
 
 </script>
