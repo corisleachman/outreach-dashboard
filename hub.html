@@ -119,7 +119,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
     </a>
     <a href="wireframes/campaign-view-v3.html" target="_blank" class="quick-link">
       <div class="ql-icon ql-pink">🗂</div>
-      <div class="ql-info"><div class="ql-title">Campaign view v3</div><div class="ql-desc">Clean rewrite — all features working</div></div>
+      <div class="ql-info"><div class="ql-title">Campaign view v3</div><div class="ql-desc">Canonical — incl. Edit sequence drawer</div></div>
       <span class="ql-arrow">→</span>
     </a>
   </div>
@@ -163,14 +163,14 @@ const DH = B + 'dashboard-home.html';
 const JOURNEYS = [
   { group: 'Activation & onboarding' },
   { name: 'Sign-up → Gmail OAuth',               status: 'built',  url: B + 'signup-oauth.html' },
-  { name: 'Campaign wizard — activation loop',   status: 'review', url: W2 },
+  { name: 'Campaign wizard — activation loop',   status: 'review', url: B + 'outreach-wizard-v3.html' },
   { name: 'Empty state — first login',            status: 'built',  url: DH },
   { name: 'Free tier cap + upgrade prompt',       status: 'built',  url: B + 'pricing-upgrade.html' },
 
   { group: 'Campaign management' },
   { name: 'Campaigns list / home dashboard',     status: 'built',  url: DH },
   { name: 'Create new campaign',                 status: 'built',  url: DH },
-  { name: 'Campaign view (persistent shell)',   status: 'built', url: B + 'campaign-view.html' },
+  { name: 'Campaign view (persistent shell)',   status: 'done',  url: B + 'campaign-view-v3.html' },
   { name: 'Campaign settings',                   status: 'none' },
 
   { group: 'Prospect import & review' },
@@ -181,7 +181,7 @@ const JOURNEYS = [
 
   { group: 'Message creation' },
   { name: 'Message editor',                      status: 'built',  url: W2 },
-  { name: 'Sequence builder',                    status: 'review', url: W2 },
+  { name: 'Sequence builder',                    status: 'done',   url: B + 'campaign-view-v3.html' },
   { name: 'AI draft generation (Pro)',            status: 'built',  url: B + 'ai-drafts.html' },
   { name: 'Personality pack selection',          status: 'built',  url: B + 'settings-account.html' },
 
