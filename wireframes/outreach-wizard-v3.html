@@ -838,6 +838,15 @@ textarea.input.tall { min-height: 180px; }
     background: rgba(0,212,255,0.07);
   }
 
+  
+  /* Type description line */
+  .type-desc-line {
+    font-size: 12px; color: var(--text-mid); line-height: 1.5;
+    min-height: 20px; margin-bottom: 14px; margin-top: -8px;
+    padding: 0 2px;
+    transition: opacity 0.2s;
+  }
+
   </style>
 </head>
 <body>
@@ -976,6 +985,8 @@ textarea.input.tall { min-height: 180px; }
           <button class="chip" onclick="selectChipTone(this,'light')">Light Touch</button>
         </div>
       </div>
+      <!-- Type description — updates on chip select -->
+      <div class="type-desc-line" id="type-desc">Open with something useful — share an insight, resource, or relevant observation.</div>
 
       <div class="card">
         <div class="card-title">Your message</div>
@@ -1399,18 +1410,29 @@ Coris</textarea>
 <script>
 
   // V3 chip selectors
+  const TYPE_DESCS = {
+    value_drop: 'Open with something useful — share an insight, resource, or relevant observation.',
+    follow_up: 'Chase a previous conversation — reference your last touchpoint and prompt a reply.',
+    check_in: 'Warm touch, no hard ask — keep the relationship alive without pushing for anything.',
+    post_meeting: 'Follow up after speaking — recap the conversation and confirm next steps.',
+  };
   function selectChipType(el, type) {
     el.closest('.selector-bar').querySelectorAll('.chip').forEach(c => {
-      if (c.onclick.toString().includes('ChipType')) c.classList.remove('sel-type');
+      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipType')) c.classList.remove('sel-type');
     });
     el.classList.add('sel-type');
-    // Reuse v2 template swap logic
     selectType(null, type);
     updateTemplate();
+    // Update description line
+    const desc = document.getElementById('type-desc');
+    if (desc && TYPE_DESCS[type]) {
+      desc.style.opacity = '0';
+      setTimeout(() => { desc.textContent = TYPE_DESCS[type]; desc.style.opacity = '1'; }, 120);
+    }
   }
   function selectChipTone(el, tone) {
     el.closest('.selector-bar').querySelectorAll('.chip').forEach(c => {
-      if (c.onclick.toString().includes('ChipTone')) c.classList.remove('sel-tone');
+      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipTone')) c.classList.remove('sel-tone');
     });
     el.classList.add('sel-tone');
     selectTone(null, tone);
@@ -1849,5 +1871,19 @@ document.querySelectorAll('textarea.input').forEach(ta => {
   ta.style.transition = 'opacity 0.2s';
 });
 </script>
+
+<!-- V3 comparison bar -->
+<div style="position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;
+  background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;
+  padding:7px 16px;display:flex;gap:12px;align-items:center;
+  font-family:'Outfit',sans-serif;font-size:11px;color:rgba(255,255,255,0.4);
+  backdrop-filter:blur(12px);">
+  <span>Wizard</span>
+  <span style="opacity:0.3">·</span>
+  <span style="color:rgba(255,255,255,0.7);font-weight:600;">v3 — compact</span>
+  <span style="opacity:0.3">·</span>
+  <a href="outreach-wizard-v2.html" style="color:#00d4ff;text-decoration:none;font-weight:600;">Compare v2 →</a>
+</div>
+
 </body>
 </html>
