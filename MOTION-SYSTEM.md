@@ -83,7 +83,7 @@ Priority order within each group is top → bottom.
 
 | # | Effect | Description | Priority |
 |---|---|---|---|
-| B1 | Velocity-linked scan | Scan line accelerates on the heartbeat peak and slows in the rest period — matches the cardiac curve rather than linear sweep | High |
+| B1 | Velocity-linked scan | ~~Built in electric3.html — rejected.~~ Compresses all motion into the beat spike, causing boxes at the same scroll depth to fire simultaneously. Loses the "passing through" feel. **Linear sweep (electric2.html) is canonical — do not revisit.** | ~~High~~ Closed |
 | B2 | Form field scan | Input fields and selects in the access section get a brief border flare as the scan passes through them individually | Medium |
 | B3 | Particle trail | Short-lived particles (3–5px dots) spawn at the scan line's position as it crosses each box, drift upward and fade | Low |
 
@@ -139,7 +139,8 @@ Priority order within each group is top → bottom.
 | File | Location | Description |
 |---|---|---|
 | `electric.html` | `corisleachman/beta-invite` | Beta page — Electric Dreams, heartbeat pulse only |
-| `electric2.html` | `corisleachman/beta-invite` | Beta page — Electric Dreams, heartbeat + scan effect |
+| `electric2.html` | `corisleachman/beta-invite` | Beta page — Electric Dreams, heartbeat + scan effect. **Canonical beta page.** |
+| `electric3.html` | `corisleachman/beta-invite` | Velocity-linked scan experiment — rejected. Linear sweep (electric2) preferred. |
 | `MOTION-SYSTEM.md` | `corisleachman/outreach-dashboard` | This document |
 
 ---
