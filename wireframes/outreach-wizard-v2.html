@@ -612,6 +612,10 @@ textarea.input.tall { min-height: 180px; }
 }
 .prospect-name-sm { font-size: 13px; font-weight: 500; color: var(--text); }
 .prospect-meta-sm { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+  /* Prevent browser auto-link styling on email addresses in prospect rows */
+  .prospect-meta-sm a, .prospect-meta-sm a:link, .prospect-meta-sm a:visited {
+    color: inherit; text-decoration: none; pointer-events: none; cursor: default;
+  }
 
 /* ── SEND SUMMARY ── */
 .summary-grid {
@@ -793,7 +797,11 @@ textarea.input.tall { min-height: 180px; }
 }
 .wizard-sidebar .ws-icon:hover { opacity: 0.3; }
 
-</style>
+
+  /* Kill auto-detected mailto links throughout wizard */
+  a[href^="mailto"] { color: inherit !important; text-decoration: none !important; pointer-events: none; cursor: default; }
+
+  </style>
 </head>
 <body>
 <!-- HOME ICON -->
