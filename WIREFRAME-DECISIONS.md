@@ -583,3 +583,124 @@ A fixed bottom bar on wizard v3 reads: *"Wizard · v3 — compact · Compare v2 
 ---
 
 *End of WIREFRAME-DECISIONS.md*
+
+---
+
+## SECTION 16 — Edit Sequence drawer (March 2026, Session 3)
+
+### 16.1 "Edit sequence" entry point
+
+The campaign header previously had an "Edit message" text link in the meta line below the campaign name. This has been replaced with a proper **"Edit sequence" button** in the action strip on the right of the campaign header, grouped with "+ Add prospects" and "LI message".
+
+**Button order (left to right):**
+`≡ Edit sequence` · `+ Add prospects` · `in LI message`
+
+The meta line now reads: `47 prospects · Started 12 Mar 2026 · 3-step sequence` — no link, just informational.
+
+**Rationale:** "Edit message" was misleading once sequences with multiple steps were introduced. Promoting it to a button in the action strip gives it the correct visual weight and groups all campaign-level configuration actions in one place.
+
+---
+
+### 16.2 Edit sequence — right-side drawer (not a modal, not a full page)
+
+Clicking "Edit sequence" opens a **right-side drawer** (520px wide) that slides in from the right edge of the screen. The campaign view — including the prospect list — remains visible behind a semi-transparent overlay.
+
+This was a deliberate UX decision: users should be able to **glance at their prospects while thinking about messaging**. A full-page navigation or centred modal would break that context. The drawer preserves it.
+
+**Drawer behaviour:**
+- Slides in with a 280ms cubic-bezier transition
+- `visibility:hidden` when closed (prevents content bleed-through beneath prospect rows)
+- Resets to collapsed/clean state every time it opens (no stale expanded state from previous session)
+- Overlay click or Cancel button both close without saving
+- Save changes button closes and shows a toast confirmation
+
+---
+
+### 16.3 Step cards — collapsed by default
+
+Steps are displayed as **vertical cards** with a connector line between them. All cards are **collapsed by default** on open. Each collapsed card shows:
+- Step number (circle, pink for Step 1, grey for follow-ups)
+- Message type badge (pink)
+- Tone badge (cyan)
+- Delay text (e.g. "3 days after step 1")
+- Trash icon (follow-up steps only — Step 1 cannot be deleted)
+- Chevron ▼
+
+Clicking anywhere on the card header expands it. The drawer body scrolls to the top of the expanded card.
+
+---
+
+### 16.4 Expanded step editor fields
+
+When a step card is expanded, it reveals (in order):
+
+**Step 1 (initial email):**
+1. Message type chips (Value drop / Follow-up / Check-in / Post-meeting)
+2. Tone chips (Calm & Commercial / Direct & Confident / Light Touch)
+3. Subject line input
+4. Body copy textarea
+5. Attachment drop zone
+
+**Follow-up steps (Steps 2+):**
+1. Delay — number input + "days" label
+2. Message type chips
+3. Tone chips
+4. Thread toggle ("Reply to original Gmail thread" — on by default, pink when active)
+5. Subject reveal — slides in below the toggle when threading is turned off
+6. Body copy textarea
+7. Attachment drop zone
+
+**Chip selection behaviour:** Clicking a chip selects it (highlighted pink for type, cyan for tone), deselects the others, and **immediately updates the badge in the collapsed card header** so the summary is always accurate.
+
+**Thread toggle behaviour:** Identical pattern to the wizard (`outreach-wizard-v3.html`). Toggle off = grey, subject field slides in with max-height animation. Toggle on = pink, subject field collapses. Same `.seq-tog` CSS class and `seqToggleThread()` JS function.
+
+---
+
+### 16.5 Deleting a follow-up step
+
+Clicking the trash icon on a collapsed or expanded follow-up card shows an **inline confirmation row** inside the card (red background tint):
+
+> *Remove this follow-up?* · [Cancel] [Remove]
+
+Confirming triggers:
+1. Height collapses to zero with opacity fade (320ms)
+2. Step is removed from DOM
+3. Remaining steps are **renumbered sequentially** (1, 2, 3… not 1, 2, 4)
+4. The "Add follow-up" button reappears if it was hidden (max 6 steps)
+
+**Numbering implementation note:** New steps use a `uid` based on `Date.now()` for their DOM element IDs to prevent ID collisions after delete+add cycles. The visible step number is always derived from the step's position in the DOM, not its ID.
+
+---
+
+### 16.6 Adding a follow-up step
+
+The "+ Add follow-up" dashed button appears below the last step (hidden when 6 steps exist). Clicking it:
+1. Inserts a new step card below the current last step
+2. Animates in (fade + translateY)
+3. Auto-expands the new card
+4. Scrolls it into view
+5. Hides the add button if the sequence is now at 6 steps
+
+---
+
+### 16.7 JS extracted to external file
+
+`campaign-view-v3.html` grew to ~110KB which caused the Cloudflare CDN to truncate the inline `<script>` block, silently breaking all JS. The script block has been extracted to `wireframes/campaign-view-v3.js` and referenced with `<script src="campaign-view-v3.js"></script>`.
+
+This is now the standard pattern for any wireframe file that grows beyond ~80KB.
+
+---
+
+### 16.8 Open decisions updated
+
+| # | Question | Status |
+|---|---|---|
+| 1 | ~~Guided Workflow: Option A or B?~~ | **Resolved — Option B (FAB + panel)** |
+| 2 | ~~Prospect detail: expand-in-place or right drawer?~~ | **Resolved — right drawer** |
+| 3 | Campaign settings tab: what does it contain? | **Partially resolved** — LI message template is first identified piece. Edit sequence is now a header-level action (not a settings tab item). Full campaign settings tab TBD. |
+| 4 | User-configurable product voice | Still open — Layer 5+ |
+| 5 | Sequence builder — where does it live in the nav? | **Resolved** — "Edit sequence" button in campaign header opens a right-side drawer. Not a tab, not a full page. |
+
+---
+
+*End of WIREFRAME-DECISIONS.md*
