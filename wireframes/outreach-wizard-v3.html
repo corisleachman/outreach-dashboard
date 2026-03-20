@@ -1451,26 +1451,36 @@ Coris</textarea>
     post_meeting: 'Follow up after speaking — recap the conversation and confirm next steps.',
   };
   function selectChipType(el, type) {
-    el.closest('.selector-bar').querySelectorAll('.chip').forEach(c => {
-      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipType')) c.classList.remove('sel-type');
+    // Deselect all type chips
+    document.querySelectorAll('.selector-bar .chip').forEach(c => {
+      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipType')) {
+        c.classList.remove('sel-type');
+      }
     });
     el.classList.add('sel-type');
-    selectType(null, type);
-    updateTemplate();
-    // Update description line
+    // Set global and update template directly
+    currentType = type;
+    if (typeof applyTemplate === 'function') applyTemplate();
+    // Crossfade description
     const desc = document.getElementById('type-desc');
     if (desc && TYPE_DESCS[type]) {
+      desc.style.transition = 'opacity 0.15s';
       desc.style.opacity = '0';
-      setTimeout(() => { desc.textContent = TYPE_DESCS[type]; desc.style.opacity = '1'; }, 120);
+      setTimeout(() => {
+        desc.textContent = TYPE_DESCS[type];
+        desc.style.opacity = '1';
+      }, 150);
     }
   }
   function selectChipTone(el, tone) {
-    el.closest('.selector-bar').querySelectorAll('.chip').forEach(c => {
-      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipTone')) c.classList.remove('sel-tone');
+    document.querySelectorAll('.selector-bar .chip').forEach(c => {
+      if (c.getAttribute('onclick') && c.getAttribute('onclick').includes('ChipTone')) {
+        c.classList.remove('sel-tone');
+      }
     });
     el.classList.add('sel-tone');
-    selectTone(null, tone);
-    updateTemplate();
+    currentTone = tone;
+    if (typeof applyTemplate === 'function') applyTemplate();
   }
 
   // ── SCREEN NAVIGATION ──
