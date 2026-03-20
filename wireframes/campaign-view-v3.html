@@ -1631,7 +1631,19 @@ function closeSeq() {
   document.getElementById('seq-drawer').classList.remove('open');
 }
 function toggleSeqCard(id) {
-  document.getElementById(id).classList.toggle('expanded');
+  const card = document.getElementById(id);
+  const wasExpanded = card.classList.contains('expanded');
+  card.classList.toggle('expanded');
+  if (!wasExpanded) {
+    // Scroll the step row to the top of the drawer body
+    setTimeout(() => {
+      const stepRow = card.closest('.seq-step');
+      const body = document.querySelector('#seq-drawer .seq-body');
+      if (stepRow && body) {
+        body.scrollTo({ top: stepRow.offsetTop - body.offsetTop - 12, behavior: 'smooth' });
+      }
+    }, 30);
+  }
 }
 function showDelConfirm(dcId) {
   document.getElementById(dcId).classList.add('show');
