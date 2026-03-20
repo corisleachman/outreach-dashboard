@@ -195,6 +195,7 @@ function removeStep(rowId) {
   });
   setTimeout(() => {
     row.remove();
+    if (seqStepCount > 1) seqStepCount--;
     renumberSteps();
     // Show add btn if under max
     const addRow = document.getElementById('seq-add-row');
@@ -244,39 +245,44 @@ function pickChip(el, cardId, group) {
 }
 let seqStepCount = 3;
 function addFollowUp() {
-  if (seqStepCount >= 6) {
+  // Count current steps from DOM (source of truth)
+  const body = document.querySelector('#seq-drawer .seq-body');
+  const currentSteps = body.querySelectorAll('.seq-step').length;
+  if (currentSteps >= 6) {
     toast('—', 'Maximum 6 steps in a sequence', 'tc');
     return;
   }
-  seqStepCount++;
+  seqStepCount = currentSteps + 1;
   const n = seqStepCount;
+  // Use a unique suffix to avoid ID collisions after delete+add cycles
+  const uid = 's' + Date.now();
   const addRow = document.getElementById('seq-add-row');
   // Show connector on previous last step
   updateLastConnector();
   const stepHTML = `
-  <div class="seq-step" id="step${n}row" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s,transform 0.25s;">
+  <div class="seq-step" id="step${uid}row" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s,transform 0.25s;">
     <div class="seq-step-left">
-      <div class="seq-step-num sn" id="num${n}">${n}</div>
+      <div class="seq-step-num sn" id="num${uid}">${n}</div>
       <div class="seq-connector" style="display:none;"></div>
     </div>
     <div class="seq-step-body">
-      <div class="seq-card" id="sc${n}">
-        <div class="seq-card-hdr" onclick="toggleSeqCard('sc${n}')">
+      <div class="seq-card" id="sc${uid}">
+        <div class="seq-card-hdr" onclick="toggleSeqCard('sc${uid}')">
           <div class="seq-card-tags">
-            <span class="seq-badge type" id="sc${n}-type-badge">Follow-up</span>
-            <span class="seq-badge tone" id="sc${n}-tone-badge">Calm &amp; Commercial</span>
+            <span class="seq-badge type" id="sc${uid}-type-badge">Follow-up</span>
+            <span class="seq-badge tone" id="sc${uid}-tone-badge">Calm &amp; Commercial</span>
             <span class="seq-delay-txt">5 days after step ${n-1}</span>
           </div>
-          <span class="seq-card-del" title="Remove step" onclick="event.stopPropagation();showDelConfirm('dc${n}')">
+          <span class="seq-card-del" title="Remove step" onclick="event.stopPropagation();showDelConfirm('dc${uid}')">
             <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/></svg>
           </span>
           <span class="seq-card-chevron">▼</span>
         </div>
-        <div class="seq-del-confirm" id="dc${n}">
+        <div class="seq-del-confirm" id="dc${uid}">
           <span class="seq-del-msg">Remove this follow-up?</span>
           <div class="seq-del-btns">
-            <button class="btn bs bsm" onclick="hideDelConfirm('dc${n}')" style="font-size:11px;padding:4px 10px;">Cancel</button>
-            <button class="btn bsm" onclick="removeStep('step${n}row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+            <button class="btn bs bsm" onclick="hideDelConfirm('dc${uid}')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+            <button class="btn bsm" onclick="removeStep('step${uid}row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
           </div>
         </div>
         <div class="seq-editor">
@@ -289,19 +295,19 @@ function addFollowUp() {
           </div>
           <div>
             <div class="seq-field-lbl">Message type</div>
-            <div class="seq-chips" data-card="sc${n}" data-group="type">
-              <span class="seq-chip" onclick="pickChip(this,'sc${n}','type')">Value drop</span>
-              <span class="seq-chip sel-type" onclick="pickChip(this,'sc${n}','type')">Follow-up</span>
-              <span class="seq-chip" onclick="pickChip(this,'sc${n}','type')">Check-in</span>
-              <span class="seq-chip" onclick="pickChip(this,'sc${n}','type')">Post-meeting</span>
+            <div class="seq-chips" data-card="sc${uid}" data-group="type">
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Value drop</span>
+              <span class="seq-chip sel-type" onclick="pickChip(this,'sc${uid}','type')">Follow-up</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Check-in</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Post-meeting</span>
             </div>
           </div>
           <div>
             <div class="seq-field-lbl">Tone</div>
-            <div class="seq-chips" data-card="sc${n}" data-group="tone">
-              <span class="seq-chip sel-tone" onclick="pickChip(this,'sc${n}','tone')">Calm &amp; Commercial</span>
-              <span class="seq-chip" onclick="pickChip(this,'sc${n}','tone')">Direct &amp; Confident</span>
-              <span class="seq-chip" onclick="pickChip(this,'sc${n}','tone')">Light Touch</span>
+            <div class="seq-chips" data-card="sc${uid}" data-group="tone">
+              <span class="seq-chip sel-tone" onclick="pickChip(this,'sc${uid}','tone')">Calm &amp; Commercial</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','tone')">Direct &amp; Confident</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','tone')">Light Touch</span>
             </div>
           </div>
           <div>
@@ -310,9 +316,9 @@ function addFollowUp() {
                 <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
                 <div class="seq-toggle-sub">Keeps context — recommended</div>
               </div>
-              <div class="seq-tog on" id="tog${n}" onclick="seqToggleThread(this,'sr${n}')"></div>
+              <div class="seq-tog on" id="tog${uid}" onclick="seqToggleThread(this,'sr${uid}')"></div>
             </div>
-            <div class="seq-subject-reveal" id="sr${n}">
+            <div class="seq-subject-reveal" id="sr${uid}">
               <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
             </div>
           </div>
@@ -333,16 +339,15 @@ function addFollowUp() {
   </div>`;
   addRow.insertAdjacentHTML('beforebegin', stepHTML);
   requestAnimationFrame(() => {
-    const newRow = document.getElementById(`step${n}row`);
+    const newRow = document.getElementById(`step${uid}row`);
     if (newRow) { newRow.style.opacity='1'; newRow.style.transform='translateY(0)'; }
   });
   setTimeout(() => {
-    toggleSeqCard(`sc${n}`);
-    // scroll new step into view
-    const newRow = document.getElementById(`step${n}row`);
+    toggleSeqCard(`sc${uid}`);
+    const newRow = document.getElementById(`step${uid}row`);
     if (newRow) newRow.scrollIntoView({behavior:'smooth', block:'nearest'});
   }, 60);
-  if (seqStepCount >= 6) addRow.style.display = 'none';
+  if (currentSteps + 1 >= 6) addRow.style.display = 'none';
   updateLastConnector();
 }
 function saveSeq() {
