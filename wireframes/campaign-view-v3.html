@@ -384,8 +384,9 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
   background:#0f0a1a;border-left:1px solid var(--b2);
   box-shadow:-24px 0 64px rgba(0,0,0,0.5);
   display:flex;flex-direction:column;z-index:701;
-  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
-#seq-drawer.open{transform:translateX(0);}
+  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0.28s;
+  visibility:hidden;}
+#seq-drawer.open{transform:translateX(0);visibility:visible;transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0s;}
 .seq-hdr{padding:16px 18px;border-bottom:1px solid var(--b);
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
 .seq-title{font-family:var(--of);font-size:14px;font-weight:700;color:var(--t);
