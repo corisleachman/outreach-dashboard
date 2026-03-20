@@ -11,7 +11,7 @@
   --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--ad:rgba(255,157,66,0.1);--gd:rgba(100,220,120,0.1);--rd:rgba(255,76,76,0.1);
   --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
   --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
-  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:220px;}
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:56px;}
 html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
 .orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
 .o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
@@ -22,10 +22,10 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .logo{font-family:var(--of);font-size:18px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
 .av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
 .lay{display:flex;padding-top:var(--th);min-height:100vh;}
-.sb{width:var(--sw);flex-shrink:0;position:fixed;top:var(--th);left:0;bottom:0;background:rgba(13,9,20,0.6);border-right:1px solid var(--b);padding:20px 0;z-index:90;}
-.ni{display:flex;align-items:center;gap:10px;padding:9px 20px;font-size:13px;color:var(--tm);cursor:pointer;transition:all 0.15s;border-left:2px solid transparent;text-decoration:none;}
-.ni:hover{color:var(--t);background:var(--s);}
-.ni.on{color:var(--t);border-left-color:var(--pink);background:var(--pd);}
+
+
+
+
 .mn{margin-left:var(--sw);flex:1;padding:36px 40px;position:relative;z-index:1;max-width:840px;}
 .sc{display:none;}.sc.on{display:block;}
 .pt{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;}
@@ -96,6 +96,24 @@ textarea.inp{resize:none;line-height:1.7;}
 .tst.tg{border-left:2px solid var(--green);}
 .tst.tr{border-left:2px solid var(--red);}
 @keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
 </style>
 </head>
 <body>
@@ -105,18 +123,10 @@ textarea.inp{resize:none;line-height:1.7;}
 </a>
 <header class="tb"><div class="logo">outreach.</div><div class="av">CL</div></header>
 <div class="lay">
-<aside class="sb">
-  <a class="ni" href="dashboard-home.html">
-    <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="1" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="1" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="8" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
-    Campaigns
-  </a>
-  <a class="ni on" id="nav-fu" onclick="setNav('nav-fu');show('s-fu')" href="#">
-    Follow-up<span style="margin-left:auto;background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;font-family:Outfit,sans-serif;">5</span>
-  </a>
-  <a class="ni" id="nav-conv" onclick="setNav('nav-conv');show('s-conv')" href="#">
-    Conversations<span style="margin-left:auto;background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);border-radius:10px;padding:1px 6px;font-size:10px;font-weight:700;font-family:Outfit,sans-serif;">3</span>
-  </a>
-  <a class="ni" id="nav-nur" onclick="setNav('nav-nur');show('s-nur')" href="#">Nurture</a>
+<aside class="sidebar">
+  <a class="si on" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
 </aside>
 <main class="mn">
 
