@@ -57,17 +57,19 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
   display:flex;flex-direction:column;align-items:center;padding:16px 0;
   z-index:190;gap:4px;}
-.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
   cursor:pointer;transition:all 0.15s;border:1px solid transparent;text-decoration:none;
-  position:relative;color:var(--tm);}
-.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
-.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);}
-.si.on svg{opacity:1;color:var(--pink);}
-.si svg{display:block;opacity:0.7;transition:opacity 0.15s;color:var(--tm);flex-shrink:0;}
-.si:hover svg{opacity:0.8;}
+  position:relative;color:rgba(255,255,255,0.6);}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.25);color:#ff1493;}
+.si svg{display:block;flex-shrink:0;}
 .si-bottom{margin-top:auto;}
-.si:hover 
-.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s,visibility 0.15s;z-index:9999;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:#f0f0ee;border:1px solid rgba(255,255,255,0.13);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity 0.15s,visibility 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
 
 /* ── LAYOUT ── */
 .layout{display:flex;padding-top:var(--th);min-height:100vh;}
@@ -345,6 +347,10 @@ textarea.d-input{resize:none;line-height:1.7;}
       </div>
       <div class="ch-actions">
         <button class="btn bs bsm" onclick="window.location.href='prospect-import.html'">+ Add prospects</button>
+        <button class="btn bs bsm" onclick="openLIConfig()" title="Configure LinkedIn message" style="color:var(--cyan);border-color:rgba(0,212,255,0.25);">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2" fill="#0a66c2"/><path d="M4 5.5v4M4 3.5v.01M6.5 9.5V7c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+          LI message
+        </button>
         <button class="btn bp bsm" onclick="switchTab('review')">Review queue →</button>
       </div>
     </div>
@@ -417,7 +423,7 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">Founder and Executive Creative Director · YouStudio – Experience Design Agency · Greater London</div>
           </div>
           <div class="pc-right">
-            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
+            <a class="li-btn" href="https://www.linkedin.com/search/results/people/?keywords=Howard%20Sullivan" target="_blank" onclick="event.stopPropagation();copyLIMessage('Howard','YouStudio')" title="Copy LinkedIn message &amp; search Howard Sullivan">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
             <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-hs')" title="Skip">
@@ -441,7 +447,7 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">CEO · Latitude Agency · London, England, United Kingdom</div>
           </div>
           <div class="pc-right">
-            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
+            <a class="li-btn" href="https://www.linkedin.com/search/results/people/?keywords=Mark%20Jory" target="_blank" onclick="event.stopPropagation();copyLIMessage('Mark','Latitude Agency')" title="Copy LinkedIn message &amp; search Mark Jory">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
             <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-mj')" title="Skip">
@@ -465,7 +471,7 @@ textarea.d-input{resize:none;line-height:1.7;}
             <div class="pc-sub">Managing Director · Fold Studio · London, England, United Kingdom</div>
           </div>
           <div class="pc-right">
-            <a class="li-btn" href="#" onclick="event.stopPropagation();return false">
+            <a class="li-btn" href="https://www.linkedin.com/search/results/people/?keywords=Sophie%20Clarke" target="_blank" onclick="event.stopPropagation();copyLIMessage('Sophie','Fold Studio')" title="Copy LinkedIn message &amp; search Sophie Clarke">
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
             </a>
             <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-sc')" title="Skip">
@@ -769,6 +775,36 @@ Coris</textarea>
 
 <script>
 
+
+// ── LINKEDIN MESSAGE ──
+let liMessage = "Hi {{first_name}}, I wanted to connect to introduce myself and the fractional new business support I help agencies with. I've sent over an email with a bit more info — if it resonates, I'd love to chat.\n\nCheers\nCoris";
+
+function openLIConfig() {
+  document.getElementById('li-message-input').value = liMessage;
+  document.getElementById('li-modal-overlay').classList.add('open');
+}
+function closeLIConfig() {
+  document.getElementById('li-modal-overlay').classList.remove('open');
+}
+function saveLIMessage() {
+  liMessage = document.getElementById('li-message-input').value;
+  closeLIConfig();
+  toast('✓', 'LinkedIn message saved', 'tc');
+}
+function copyLIMessage(firstName, company) {
+  const merged = liMessage
+    .replace(/{{first_name}}/g, firstName || 'there')
+    .replace(/{{company}}/g, company || 'your company');
+  navigator.clipboard.writeText(merged).then(() => {
+    const el = document.getElementById('li-copied');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }).catch(() => {
+    // Fallback for non-https
+    toast('✓', 'Message ready — paste into LinkedIn', 'tc');
+  });
+}
+
 // ── PROSPECT DETAIL DRAWER ──
 const PROSPECTS = {
   hs: { av:'HS', avClass:'', name:'Howard Sullivan', role:'Founder & Executive Creative Director · YouStudio', first:'Howard', last:'Sullivan', email:'', emailBadge:true, website:'youstudio.com', company:'YouStudio – Experience Design Agency', industry:'Design Services', size:'51–200', about:'A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany & Co. YouStudio is a strategically led creative design agency.' },
@@ -990,6 +1026,36 @@ function toast(icon, text, cls='tc'){
   setTimeout(()=>{ e.style.animation='none'; e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(),300); }, 3200);
 }
 
+
+// ── LINKEDIN MESSAGE ──
+let liMessage = "Hi {{first_name}}, I wanted to connect to introduce myself and the fractional new business support I help agencies with. I've sent over an email with a bit more info — if it resonates, I'd love to chat.\n\nCheers\nCoris";
+
+function openLIConfig() {
+  document.getElementById('li-message-input').value = liMessage;
+  document.getElementById('li-modal-overlay').classList.add('open');
+}
+function closeLIConfig() {
+  document.getElementById('li-modal-overlay').classList.remove('open');
+}
+function saveLIMessage() {
+  liMessage = document.getElementById('li-message-input').value;
+  closeLIConfig();
+  toast('✓', 'LinkedIn message saved', 'tc');
+}
+function copyLIMessage(firstName, company) {
+  const merged = liMessage
+    .replace(/{{first_name}}/g, firstName || 'there')
+    .replace(/{{company}}/g, company || 'your company');
+  navigator.clipboard.writeText(merged).then(() => {
+    const el = document.getElementById('li-copied');
+    el.classList.add('show');
+    setTimeout(() => el.classList.remove('show'), 2500);
+  }).catch(() => {
+    // Fallback for non-https
+    toast('✓', 'Message ready — paste into LinkedIn', 'tc');
+  });
+}
+
 // ── PROSPECT DETAIL DRAWER — created via JS to avoid stacking context issues ──
 (function() {
   const drawerHTML = `
@@ -1077,5 +1143,34 @@ function toast(icon, text, cls='tc'){
 })();
 
 </script>
+
+<!-- ═══ LINKEDIN MESSAGE CONFIG MODAL ═══ -->
+<div class="li-modal-overlay" id="li-modal-overlay" onclick="if(event.target===this)closeLIConfig()">
+  <div class="li-modal">
+    <div class="li-modal-header">
+      <div class="li-modal-title">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" style="display:inline-block;vertical-align:-3px;margin-right:7px;"><rect x="1" y="1" width="14" height="14" rx="2" fill="#0a66c2"/><path d="M4.5 6.5v5M4.5 4v.01M7 11.5V8.5c0-1.1.9-2 2-2s2 .9 2 2v3" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+        LinkedIn message template
+      </div>
+      <div onclick="closeLIConfig()" style="cursor:pointer;color:var(--tm);font-size:16px;line-height:1;padding:2px 6px;">✕</div>
+    </div>
+    <div class="li-modal-body">
+      <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">
+        When you click the LinkedIn icon on a prospect row, this message is copied to your clipboard with <code style="background:var(--s2);padding:1px 5px;border-radius:3px;font-size:12px;">{{first_name}}</code> merged in automatically.
+      </p>
+      <div style="font-size:10px;font-family:var(--of);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:6px;">Your message</div>
+      <textarea id="li-message-input" style="width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.13);border-radius:8px;padding:12px 14px;font-family:'DM Sans',sans-serif;font-size:13px;color:#f0f0ee;outline:none;resize:vertical;min-height:140px;line-height:1.7;transition:border-color 0.2s;" placeholder="Hi {{first_name}}, I wanted to connect..."></textarea>
+      <p style="font-size:11px;color:var(--td);margin-top:8px;">Use <code style="background:var(--s2);padding:1px 4px;border-radius:3px;">{{first_name}}</code> and <code style="background:var(--s2);padding:1px 4px;border-radius:3px;">{{company}}</code> as merge tags.</p>
+    </div>
+    <div class="li-modal-footer">
+      <button class="btn bs bsm" onclick="closeLIConfig()">Cancel</button>
+      <button class="btn bp bsm" onclick="saveLIMessage()">Save message</button>
+    </div>
+  </div>
+</div>
+
+<!-- LI copy confirmation -->
+<div class="li-copied" id="li-copied">✓ LinkedIn message copied to clipboard</div>
+
 </body>
 </html>
