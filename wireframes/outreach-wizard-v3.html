@@ -1695,7 +1695,7 @@ let rvToastTimer = null;
 // ── IMPORT ──
 function selectImport(el, type) {
   document.querySelectorAll('.import-opt').forEach(o => o.classList.remove('sel'));
-  el.classList.add('sel');
+  if (el) el.classList.add('sel');
   document.getElementById('paste-area').style.display = 'none';
   document.getElementById('csv-area').style.display = 'none';
   document.getElementById('prospects-loaded').style.display = 'none';
