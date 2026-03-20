@@ -847,6 +847,33 @@ textarea.input.tall { min-height: 180px; }
     transition: opacity 0.2s;
   }
 
+  
+  /* ── V3: IMPORT TABS ── */
+  .import-tabs {
+    display: flex; gap: 0; margin-bottom: 20px;
+    background: var(--surface); border: 1px solid var(--border-2);
+    border-radius: 10px; overflow: hidden;
+  }
+  .import-tab {
+    flex: 1; padding: 12px 16px; border: none; background: transparent;
+    font-family: var(--outfit); font-size: 13px; font-weight: 600;
+    color: var(--text-mid); cursor: pointer; transition: all 0.15s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    position: relative; border-right: 1px solid var(--border-2);
+  }
+  .import-tab:last-child { border-right: none; }
+  .import-tab:hover { background: var(--surface-2); color: var(--text); }
+  .import-tab.active {
+    background: var(--pink-dim); color: var(--pink);
+    border-bottom: 2px solid var(--pink);
+  }
+  .import-tab-badge {
+    font-size: 9px; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.07em; padding: 2px 6px; border-radius: 3px;
+    background: rgba(255,20,147,0.15); color: var(--pink);
+    border: 1px solid rgba(255,20,147,0.25);
+  }
+
   </style>
 </head>
 <body>
@@ -898,20 +925,17 @@ textarea.input.tall { min-height: 180px; }
       <h1 class="step-title">Who do you want<br>to reach out to?</h1>
       <p class="step-sub">Add the people you want to contact. You can start small — most campaigns begin with 5–10 prospects.</p>
 
-      <div class="import-options">
-        <div class="import-opt sel" onclick="selectImport(this,'paste')">
-          <span class="import-opt-icon">📋</span>
-          <div><div class="import-opt-title">Paste emails</div><div class="import-opt-sub">Drop in a list of email addresses</div></div>
-          <div class="import-opt-badge"><span class="badge-pill">Quickest</span></div>
-        </div>
-        <div class="import-opt" onclick="selectImport(this,'csv')">
-          <span class="import-opt-icon">📄</span>
-          <div><div class="import-opt-title">Upload CSV</div><div class="import-opt-sub">From LinkedIn Sales Nav, Apollo, or any spreadsheet</div></div>
-        </div>
-        <div class="import-opt" onclick="selectImport(this,'manual')">
-          <span class="import-opt-icon">✏️</span>
-          <div><div class="import-opt-title">Add manually</div><div class="import-opt-sub">Enter prospects one by one</div></div>
-        </div>
+      <div class="import-tabs" id="import-tabs">
+        <button class="import-tab active" onclick="switchImportTab(this,'paste')" data-method="paste">
+          📋 Paste emails
+          <span class="import-tab-badge">Quickest</span>
+        </button>
+        <button class="import-tab" onclick="switchImportTab(this,'csv')" data-method="csv">
+          📄 Upload CSV
+        </button>
+        <button class="import-tab" onclick="switchImportTab(this,'manual')" data-method="manual">
+          ✏️ Add manually
+        </button>
       </div>
 
       <div id="paste-area" style="margin-bottom:20px;">
@@ -1408,6 +1432,16 @@ Coris</textarea>
 <div class="toast-zone" id="toast-zone"></div>
 
 <script>
+
+
+  // V3 import tab switching
+  function switchImportTab(el, method) {
+    // Update active tab
+    document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    // Show/hide the relevant content areas (reuse existing selectImport logic)
+    selectImport(null, method);
+  }
 
   // V3 chip selectors
   const TYPE_DESCS = {
