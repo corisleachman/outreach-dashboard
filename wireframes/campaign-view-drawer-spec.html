@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>campaign-view-drawer — Feature Spec</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0d0914;color:#f0f0ee;font-family:'Outfit',sans-serif;padding:48px 40px;max-width:900px;margin:0 auto;}
+h1{font-size:28px;font-weight:800;letter-spacing:-0.02em;background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:6px;}
+.meta{font-size:13px;color:#8a8a9a;margin-bottom:40px;}
+h2{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:#444456;margin:36px 0 14px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,0.07);}
+h3{font-size:14px;font-weight:700;color:#f0f0ee;margin:18px 0 8px;}
+.section{margin-bottom:12px;}
+.card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:16px 20px;margin-bottom:10px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:2px 8px;border-radius:4px;margin-right:4px;margin-bottom:4px;}
+.tag-pink{background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);color:#ff1493;}
+.tag-cyan{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:#00d4ff;}
+.tag-green{background:rgba(100,220,120,0.08);border:1px solid rgba(100,220,120,0.2);color:#64dc78;}
+.tag-amber{background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);color:#ff9d42;}
+.tag-grey{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:#8a8a9a;}
+ul{list-style:none;padding:0;}
+ul li{font-size:13px;color:#c0c0cc;line-height:1.8;padding-left:14px;position:relative;}
+ul li::before{content:'·';position:absolute;left:0;color:#444456;}
+code{font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:3px;color:#00d4ff;}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+.check{color:#64dc78;margin-right:6px;}
+.warn{color:#ff9d42;margin-right:6px;}
+.divider{height:1px;background:rgba(255,255,255,0.06);margin:32px 0;}
+.fn-list{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+.fn{font-family:'DM Mono',monospace;font-size:11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:4px;padding:3px 8px;color:#8a8a9a;}
+table{width:100%;border-collapse:collapse;font-size:13px;margin-top:8px;}
+th{text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#444456;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,0.07);}
+td{padding:9px 12px;color:#c0c0cc;border-bottom:1px solid rgba(255,255,255,0.04);}
+tr:last-child td{border-bottom:none;}
+</style>
+</head>
+<body>
+
+<h1>campaign-view-drawer.html</h1>
+<div class="meta">Feature specification for clean rewrite · outreach. wireframe prototype · March 2026</div>
+
+<h2>Shell &amp; Layout</h2>
+<div class="card">
+  <h3>Persistent shell</h3>
+  <ul>
+    <li>Fixed topbar (56px): logo left, breadcrumb <code>Campaigns / Agency founders — Q1</code>, plan badge + avatar right</li>
+    <li>Slim sidebar (56px wide): Campaigns icon <span class="tag tag-pink">active</span>, Summary icon → <code>summary-and-workflow.html</code>, Settings cog (pinned bottom) → <code>settings-account.html</code></li>
+    <li>Icons: visible at ~0.6 opacity at rest, full opacity on hover, pink tint when active. Tooltips appear on hover only (never permanently)</li>
+    <li>Settings icon pinned to bottom via <code>margin-top:auto</code></li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Campaign header (sticky below topbar)</h3>
+  <ul>
+    <li>Campaign name (large, bold) + meta line: prospects count · start date · sequence steps · "Edit message" link</li>
+    <li>Stats strip: Drafts ready (pink) · Responded · Meetings set · LinkedIn sent · LinkedIn due</li>
+    <li>Action buttons: <code>+ Add prospects</code> → <code>prospect-import.html</code>, <code>LI message</code> button (cyan, opens LinkedIn config modal)</li>
+    <li>Dev campaign switcher (bottom bar): switch between Agency founders Q1 and Fractional CFO Q1</li>
+  </ul>
+</div>
+
+<h2>Tab Bar — 8 tabs</h2>
+<div class="row">
+  <span class="tag tag-pink">Review <code>563</code></span>
+  <span class="tag tag-cyan">Drafts <code>15</code></span>
+  <span class="tag tag-grey">LinkedIn</span>
+  <span class="tag tag-grey">Sent</span>
+  <span class="tag tag-amber">Follow-up <code>14</code></span>
+  <span class="tag tag-grey">Nurture</span>
+  <span class="tag tag-green">Conversations</span>
+  <span class="tag tag-amber">Bounced</span>
+</div>
+<ul style="margin-top:12px;">
+  <li>Clicking a tab shows its content panel, hides all others</li>
+  <li>Active tab: pink text + pink bottom border</li>
+  <li>Search bar above the list on every tab</li>
+</ul>
+
+<h2>Tab 1 — Review</h2>
+<div class="card">
+  <ul>
+    <li>Header: "Prospect review" title + subtitle + Refresh button</li>
+    <li>3 prospect cards: Howard Sullivan (HS), Mark Jory (MJ), Sophie Clarke (SC)</li>
+    <li>Each card row: avatar · name · subtitle · LinkedIn button · Skip (×) · Approve (✓) · Detail icon (↗)</li>
+    <li><span class="check">✓</span>Clicking anywhere on the row (or detail icon) opens the <strong>prospect detail drawer</strong></li>
+    <li>Skip button: card fades and removes from list, toast confirms</li>
+    <li>Approve button: card fades and removes, toast confirms</li>
+    <li>No catch-all or verified badges on rows (removed)</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Prospect detail drawer (right panel)</h3>
+  <ul>
+    <li>Slides in from right (480px wide), overlays content without pushing list</li>
+    <li>Backdrop (dimmed overlay behind drawer) — clicking it closes drawer</li>
+    <li>Header: avatar · name · role · ✕ close button</li>
+    <li>Fields: first name (editable) · last name (editable) · email (editable) · company (editable)</li>
+    <li>Read-only: industry · org size · LinkedIn link</li>
+    <li>About section · Notes textarea</li>
+    <li><strong>Email generation:</strong> when email is empty, label row shows <code>No email found — Generate</code> badge (amber, clickable). Clicking derives <code>firstname@domain.com</code> from stored website, populates field, badge becomes <code>✦ Generated</code> (cyan). No layout shift.</li>
+    <li>Footer: Skip prospect (left) · Save · Approve → (right)</li>
+    <li>Approve/Skip from drawer has same effect as row buttons</li>
+  </ul>
+  <div class="row" style="margin-top:10px;">
+    <span class="tag tag-grey">Prospects: hs · mj · sc</span>
+    <span class="tag tag-cyan">hs: howard@youstudio.com (no email)</span>
+    <span class="tag tag-cyan">mj: mark@latitudeagency.co.uk (no email)</span>
+    <span class="tag tag-green">sc: sophie@foldstudio.co.uk (has email)</span>
+  </div>
+</div>
+
+<h2>Tab 2 — Drafts</h2>
+<div class="card">
+  <ul>
+    <li>Header row: draft count + "Send all" button (opens send drawer in bulk mode)</li>
+    <li>4 draft rows: James Mitchell, Sarah Thompson, Marcus Peters, Helen Clarke</li>
+    <li>Each row: avatar · name · subject line preview · Edit button · Send button</li>
+    <li>Send button opens the <strong>send drawer</strong> for that prospect</li>
+  </ul>
+</div>
+
+<div class="card">
+  <h3>Send drawer (right panel)</h3>
+  <ul>
+    <li>Slides in from right (520px wide)</li>
+    <li>Two modes: single prospect send · bulk send all</li>
+    <li>Single mode: shows prospect name + email, subject line (editable), body (editable), attachment zone</li>
+    <li>2-step confirm: "Send email" button → confirmation message appears → "Confirm send" button</li>
+    <li>On confirm: toast shows email address, drawer closes, row fades from list</li>
+    <li>Bulk mode: shows count of drafts, same 2-step confirm</li>
+  </ul>
+</div>
+
+<h2>Tab 3 — LinkedIn</h2>
+<div class="card">
+  <ul>
+    <li>Filter pill bar: No connection · Connection sent · Connection accepted · Unable to connect · Chose not to connect</li>
+    <li>Prospect rows with LinkedIn status dropdown per row</li>
+    <li><strong>LinkedIn button on each row:</strong> opens LinkedIn people search for that person in new tab AND copies the LinkedIn message template (with <code>{{first_name}}</code> merged) to clipboard</li>
+    <li>Clipboard copy shows cyan confirmation bar: "✓ LinkedIn message copied to clipboard"</li>
+  </ul>
+</div>
+
+<h2>Tab 4 — Sent</h2>
+<div class="card">
+  <ul>
+    <li>Master record of all emailed prospects</li>
+    <li>Each row has a 14-option status dropdown</li>
+  </ul>
+  <table>
+    <tr><th>#</th><th>Status option</th></tr>
+    <tr><td>1</td><td>First email drafted</td></tr>
+    <tr><td>2</td><td>First email sent → Follow-up</td></tr>
+    <tr><td>3</td><td>Follow-up drafted</td></tr>
+    <tr><td>4</td><td>2nd follow-up sent</td></tr>
+    <tr><td>5</td><td>Reply received → Conversations</td></tr>
+    <tr><td>6</td><td>Conversation ongoing → Conversations</td></tr>
+    <tr><td>7</td><td>Closed — meeting booked → Conversations</td></tr>
+    <tr><td>8</td><td>Closed — no response → Nurture</td></tr>
+    <tr><td>9</td><td>Closed — not a fit → Nurture</td></tr>
+    <tr><td>10</td><td>Closed — in place already → Nurture</td></tr>
+    <tr><td>11</td><td>Closed — no need for support → Nurture</td></tr>
+    <tr><td>12</td><td>On maternity / redirected → Nurture</td></tr>
+    <tr><td>13</td><td>Email bounced → Bounced</td></tr>
+    <tr><td>14</td><td>DO NOT CONTACT (confirmation required)</td></tr>
+  </table>
+</div>
+
+<h2>Tab 5 — Follow-up</h2>
+<div class="card">
+  <ul>
+    <li>Subtitle: "14 prospects due for follow-up. Sequences pause automatically when they reply."</li>
+    <li>Two groups: Due today · Upcoming</li>
+    <li>Each row: avatar · name · subtitle · days since sent · Follow-up button</li>
+    <li>Follow-up button opens compose toast/action</li>
+  </ul>
+</div>
+
+<h2>Tab 6 — Nurture</h2>
+<div class="card">
+  <ul>
+    <li>Subtitle: "Prospects parked for re-contact. We'll surface them when the time comes."</li>
+    <li>Prospect rows with re-contact date and notes</li>
+  </ul>
+</div>
+
+<h2>Tab 7 — Conversations</h2>
+<div class="card">
+  <ul>
+    <li>Subtitle: "Active replies and meetings. Move each one forward or close it out."</li>
+    <li>Prospect rows with reply snippet and action buttons</li>
+  </ul>
+</div>
+
+<h2>Tab 8 — Bounced</h2>
+<div class="card">
+  <ul>
+    <li>Amber banner: "3 emails bounced in the last 24 hours — We've found alternative addresses to try."</li>
+    <li>Group: "Bounced — alternatives available"</li>
+    <li>3 rows: Howard Sullivan (try alowe@creativelab.com), Dan Hughes (try d.hughes@agencyco.io), Laura Webb (no alternative found)</li>
+    <li>Each row: Retry button (amber) · Skip button</li>
+  </ul>
+</div>
+
+<h2>LinkedIn Message Config Modal</h2>
+<div class="card">
+  <ul>
+    <li>Opened via "LI message" button in campaign header</li>
+    <li>Centre-screen modal overlay (not a side drawer)</li>
+    <li>Textarea with default message pre-filled: <em>"Hi {{first_name}}, I wanted to connect to introduce myself and the fractional new business support I help agencies with..."</em></li>
+    <li>Supports merge tags: <code>{{first_name}}</code> · <code>{{company}}</code></li>
+    <li>Save button stores message for session · Cancel closes without saving</li>
+    <li>Message is per-campaign (stored in JS for this wireframe)</li>
+  </ul>
+</div>
+
+<h2>JavaScript Functions</h2>
+<div class="fn-list">
+  <span class="fn">switchTab(name)</span>
+  <span class="fn">openProspectDrawer(id)</span>
+  <span class="fn">closePD()</span>
+  <span class="fn">updateEmailPrompt()</span>
+  <span class="fn">generateEmail()</span>
+  <span class="fn">approveFromDrawer()</span>
+  <span class="fn">skipFromDrawer()</span>
+  <span class="fn">approveCard(id, name)</span>
+  <span class="fn">skipCard(id)</span>
+  <span class="fn">openDrawer(type, name, email, subject)</span>
+  <span class="fn">closeDrawer()</span>
+  <span class="fn">confirmSend()</span>
+  <span class="fn">filterLI(el, filter)</span>
+  <span class="fn">setCampaign(name, count, seq)</span>
+  <span class="fn">openLIConfig()</span>
+  <span class="fn">closeLIConfig()</span>
+  <span class="fn">saveLIMessage()</span>
+  <span class="fn">copyLIMessage(firstName, company)</span>
+  <span class="fn">toast(icon, text, cls)</span>
+</div>
+
+<h2>Navigation</h2>
+<div class="card">
+  <ul>
+    <li>Logo / "Campaigns" breadcrumb → <code>dashboard-home.html</code></li>
+    <li>Sidebar campaigns icon → <code>dashboard-home.html</code></li>
+    <li>Sidebar summary icon → <code>summary-and-workflow.html</code></li>
+    <li>Sidebar settings icon → <code>settings-account.html</code></li>
+    <li>+ Add prospects button → <code>prospect-import.html</code></li>
+    <li>Home icon (top left) → hub page</li>
+  </ul>
+</div>
+
+<h2>Design Tokens</h2>
+<div class="card">
+  <ul>
+    <li>Background: <code>#0d0914</code> · Surface: <code>rgba(255,255,255,0.04)</code> · Surface 2: <code>rgba(255,255,255,0.07)</code></li>
+    <li>Pink: <code>#ff1493</code> · Cyan: <code>#00d4ff</code> · Green: <code>#64dc78</code> · Amber: <code>#ff9d42</code> · Red: <code>#ff4c4c</code></li>
+    <li>Text: <code>#f0f0ee</code> · Text mid: <code>#8a8a9a</code> · Text dim: <code>#444456</code></li>
+    <li>Topbar height: <code>56px</code> · Sidebar width: <code>56px</code></li>
+    <li>Fonts: Outfit (headings, UI labels) · DM Sans (body, inputs)</li>
+    <li>Gradient: <code>linear-gradient(135deg, #ff1493, #00d4ff)</code></li>
+  </ul>
+</div>
+
+<div class="divider"></div>
+<div style="font-size:12px;color:#444456;text-align:center;">outreach. · campaign-view-drawer feature spec · for clean rewrite</div>
+
+</body>
+</html>
