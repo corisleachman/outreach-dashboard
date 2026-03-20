@@ -114,9 +114,9 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   justify-content:center;cursor:pointer;transition:all 0.15s;
   border:1px solid transparent;text-decoration:none;color:var(--tm);
   position:relative;background:transparent;}
-.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);} .si:hover svg{opacity:1;}
 .si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
-.si svg{display:block;}
+.si svg{display:block;color:var(--tm);opacity:0.7;transition:opacity 0.15s;}
 .si-tip{position:absolute;left:calc(100% + 10px);
   background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
   border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;
