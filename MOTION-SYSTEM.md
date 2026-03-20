@@ -174,3 +174,122 @@ Priority order within each group is top → bottom.
 ---
 
 *End of MOTION-SYSTEM.md*
+---
+
+## Section 7 — Light / Dark Mode Themes
+
+### 7.1 Overview
+
+Both modes share the same Electric Dreams design language and motion system.
+The dark mode is the primary experience. Light mode is an optional preference
+for users who find dark mode heavy for daily use. Toggle will live in user
+settings (Phase 2.19 or later in the dashboard).
+
+**Reference files (beta page):**
+| File | Mode | Status |
+|---|---|---|
+| `electric6.html` | Dark — canonical | Approved |
+| `electric-light.html` | Light — canonical | Approved |
+
+---
+
+### 7.2 Dark Mode Tokens (electric6 — canonical)
+
+| Token | Value | Notes |
+|---|---|---|
+| `--bg` | `#0d0914` | Deep purple-black |
+| `--t` | `#f4f4f2` | Near-white text |
+| `--tm` | `#a8a8b8` | Mid text |
+| `--td` | `#6b6b80` | Dim text |
+| `--pink` | `#ff1493` | Neon pink |
+| `--cyan` | `#00d4ff` | Neon cyan |
+| `--amber` | `#ff9d42` | Amber accent |
+| `--grad` | `135deg, #ff1493, #00d4ff` | Primary gradient |
+| `--glow-pink` | `rgba(255,20,147,0.25)` | |
+| `--glow-cyan` | `rgba(0,212,255,0.2)` | |
+| `--s` | `rgba(255,255,255,0.04)` | Surface |
+| `--s2` | `rgba(255,255,255,0.07)` | Surface raised |
+| `--b` | `rgba(255,255,255,0.07)` | Border |
+| `--b2` | `rgba(255,255,255,0.13)` | Border strong |
+| Nav bg | `rgba(13,9,20,0.7)` | Frosted dark |
+| Card bg | `var(--s)` | |
+| Footer bg | `rgba(13,9,20,0.8)` | |
+
+**Pulse canvas — dark:**
+| Param | Value |
+|---|---|
+| Palette | `[255,20,147]` pink × 2, `[0,212,255]` cyan × 2, `[180,10,120]` deep pink, `[80,160,220]` slate |
+| `OPACITY_BASE` | `0.10` |
+| `OPACITY_FLARE` | `0.14` |
+
+---
+
+### 7.3 Light Mode Tokens (electric-light — canonical)
+
+| Token | Value | Notes |
+|---|---|---|
+| `--bg` | `#faf8ff` | Warm off-white, faint purple tint |
+| `--t` | `#1a1525` | Purple-tinted near-black |
+| `--tm` | `#5a5070` | Mid text |
+| `--td` | `#8a80a0` | Dim text |
+| `--pink` | `#c4006a` | Muted deep ink pink — not neon |
+| `--cyan` | `#007a99` | Calm teal — not neon |
+| `--amber` | `#b06010` | Muted amber |
+| `--grad` | `135deg, #c4006a, #007a99` | Same direction, muted values |
+| `--glow-pink` | `rgba(196,0,106,0.15)` | Reduced — glows spread on light bg |
+| `--glow-cyan` | `rgba(0,122,153,0.12)` | Reduced |
+| `--s` | `rgba(90,60,120,0.04)` | Surface |
+| `--s2` | `rgba(90,60,120,0.07)` | Surface raised |
+| `--b` | `rgba(90,60,120,0.10)` | Border |
+| `--b2` | `rgba(90,60,120,0.18)` | Border strong |
+| Nav bg | `rgba(250,248,255,0.85)` | Frosted light |
+| Card bg | `rgba(255,255,255,0.7)` + `backdrop-filter: blur(8px)` | Float effect |
+| Footer bg | `rgba(240,236,252,0.9)` | |
+
+**Pulse canvas — light:**
+| Param | Value |
+|---|---|
+| Palette | `[160,0,90]` plum × 2, `[0,100,130]` teal × 2, `[120,20,100]` deep plum, `[80,120,160]` slate |
+| `OPACITY_BASE` | `0.12` | Slightly higher — light surfaces absorb colour |
+| `OPACITY_FLARE` | `0.16` | |
+
+---
+
+### 7.4 Key principles for light mode
+
+1. **Muted, not pastel.** The pink and cyan are darkened versions of the
+   dark mode accents — ink-like, not washed out. Saturation stays high,
+   brightness comes down.
+
+2. **Glows need restraint.** On dark backgrounds, glows are contained.
+   On light backgrounds they spread further and bloom — all box-shadow
+   values were roughly halved.
+
+3. **Cards float.** Light surfaces need depth cues. Cards use
+   `rgba(255,255,255,0.7)` + `backdrop-filter: blur(8px)` rather than
+   the dark mode's near-transparent tint.
+
+4. **Blob palette inverts.** The pulse canvas blobs use dark plum/teal
+   values so they're visible against the light background. Opacity nudged
+   slightly up for the same reason.
+
+5. **The thread holds.** `--bg: #faf8ff` has a faint purple tint — the
+   same purple that dominates `#0d0914`. The two modes feel like the same
+   product in different light, not two different products.
+
+---
+
+### 7.5 Dashboard implementation notes
+
+When Phase 2.19 (light/dark mode) is built:
+- Store preference in `users.settings` as `theme: 'dark' | 'light'`
+- Apply at the `:root` level via a `data-theme="light"` attribute on `<html>`
+- All tokens swap via CSS custom properties — no component-level changes needed
+- The pulse canvas palette swap requires a JS check on load:
+  `const isLight = document.documentElement.dataset.theme === 'light'`
+  then select the appropriate `PALETTE` array before starting the animation loop
+- Scan effect CSS classes (`scan-lit-pink`, `scan-lit-cyan`) work in both modes
+  since they reference the already-swapped `--pink` / `--cyan` tokens
+- Default to dark mode unless the user has explicitly set light preference
+  or `prefers-color-scheme: light` is detected on first visit
+
