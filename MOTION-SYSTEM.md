@@ -36,6 +36,31 @@ a harmonic of it (2.5s, 10s).
 
 ---
 
+## Section 1b — Electric6 Canonical Values
+
+These are the approved tuning values for the canonical beta page (electric6).
+Use as reference when porting the motion system to the dashboard.
+
+| Parameter | Value | Note |
+|---|---|---|
+| `BLOB_COUNT` | 9 | |
+| `RADIUS_MIN` | 110px | |
+| `RADIUS_MAX` | 240px | |
+| `CYCLE_MS` | 8000ms | Slower than original 5s — calmer |
+| `PULSE_SWELL` | 0.22 | Noticeable but soft |
+| `OPACITY_BASE` | 0.10 | |
+| `OPACITY_FLARE` | 0.14 | |
+| `BLUR_PX` | 55px | |
+| `STAGGER` | 0.15 | |
+| Scan `LIT_MS` | 280ms | Brief flare |
+| Scan `FADE_MS` | 1400ms | Long slow return |
+| Scan border opacity | 0.35 | Half of electric4's 0.75 |
+| Scan glow | 10px | Half of electric4's 18px |
+| CSS orb opacity | 0.08 | |
+| CSS orb blur | 140px | |
+
+---
+
 ## Section 2 — Palette
 
 Electric Dreams motion palette. Used for scan glow, border flares,
@@ -85,7 +110,7 @@ Priority order within each group is top → bottom.
 |---|---|---|---|
 | B1 | Velocity-linked scan | ~~Built in electric3.html — rejected.~~ Compresses all motion into the beat spike, causing boxes at the same scroll depth to fire simultaneously. Loses the "passing through" feel. **Linear sweep (electric2.html) is canonical — do not revisit.** | ~~High~~ Closed |
 | B2 | Form field scan | Input fields and selects in the access section get a brief border flare as the scan passes through them individually | Medium |
-| B3 | Particle trail | Short-lived particles (3–5px dots) spawn at the scan line's position as it crosses each box, drift upward and fade | Low |
+| B3 | Particle trail | Built in electric4.html. Iterated: size reduced (0.8–1.8px), opacity 0.5, random 360° scatter, life 90–180 frames. Effect felt too busy alongside scan — dropped from canonical version (electric6). Available to revisit in isolation. | Closed |
 
 ### 4.2 Dashboard — Campaign Cards
 
@@ -139,8 +164,11 @@ Priority order within each group is top → bottom.
 | File | Location | Description |
 |---|---|---|
 | `electric.html` | `corisleachman/beta-invite` | Beta page — Electric Dreams, heartbeat pulse only |
-| `electric2.html` | `corisleachman/beta-invite` | Beta page — Electric Dreams, heartbeat + scan effect. **Canonical beta page.** |
-| `electric3.html` | `corisleachman/beta-invite` | Velocity-linked scan experiment — rejected. Linear sweep (electric2) preferred. |
+| `electric2.html` | `corisleachman/beta-invite` | Beta page — heartbeat + scan. Superseded by electric6. |
+| `electric3.html` | `corisleachman/beta-invite` | Velocity-linked scan experiment — rejected. Linear sweep preferred. |
+| `electric4.html` | `corisleachman/beta-invite` | Heartbeat + scan + particles. Too intense ("nightclub / police car"). Reference only. |
+| `electric5.html` | `corisleachman/beta-invite` | Pulled-back attempt — too quiet, barely noticeable. Reference only. |
+| `electric6.html` | `corisleachman/beta-invite` | **Canonical beta page.** Heartbeat + subtle scan. 8s cycle, blobs at middle opacity, scan flare at 35% intensity, 1.4s fade. Approved. |
 | `MOTION-SYSTEM.md` | `corisleachman/outreach-dashboard` | This document |
 
 ---
