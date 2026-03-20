@@ -63,14 +63,11 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
 .si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);}
 .si.on svg{opacity:1;color:var(--pink);}
-.si svg{opacity:0.7;transition:opacity 0.15s;color:var(--tm);}
+.si svg{display:block;opacity:0.7;transition:opacity 0.15s;color:var(--tm);flex-shrink:0;}
 .si:hover svg{opacity:0.8;}
 .si-bottom{margin-top:auto;}
 .si:hover 
-.si-tip{position:absolute;left:calc(100% + 10px);background:rgba(20,10,35,0.96);
-  border:1px solid var(--b2);border-radius:6px;padding:5px 10px;
-  font-family:var(--of);font-size:11px;font-weight:600;color:var(--t);
-  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:300;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s,visibility 0.15s;z-index:9999;}
 
 /* ── LAYOUT ── */
 .layout{display:flex;padding-top:var(--th);min-height:100vh;}
