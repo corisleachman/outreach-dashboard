@@ -145,6 +145,13 @@ function handleSend() {
 // LINKEDIN
 // ══════════════════════════════════════════
 function openSequence() {
+  // Always open clean — collapse all cards, scroll to top
+  document.querySelectorAll('#seq-drawer .seq-card').forEach(c => c.classList.remove('expanded'));
+  document.querySelectorAll('#seq-drawer .seq-del-confirm').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('#seq-drawer .seq-subject-reveal').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('#seq-drawer .seq-tog').forEach(t => { if (!t.classList.contains('on')) t.classList.add('on'); });
+  const body = document.querySelector('#seq-drawer .seq-body');
+  if (body) body.scrollTop = 0;
   document.getElementById('seq-overlay').classList.add('open');
   document.getElementById('seq-drawer').classList.add('open');
 }
