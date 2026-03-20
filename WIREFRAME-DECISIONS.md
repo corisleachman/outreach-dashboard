@@ -1,7 +1,7 @@
 # WIREFRAME-DECISIONS.md
 
 Outreach — Wireframe Decisions Log  
-Last updated: March 2026 (updated)
+Last updated: March 2026 (session 2 update)
 
 ---
 
@@ -348,6 +348,237 @@ The following questions were raised during wireframing but have not been resolve
 | 2 | ~~Prospect detail: expand-in-place or right drawer?~~ **Resolved — right drawer** | Phase 2.10 / campaign view |
 | 3 | Campaign settings tab: what does it contain? | Campaign view |
 | 4 | User-configurable product voice: spec and phase TBD | Layer 5+ |
+
+
+---
+
+## SECTION 10 — Campaign View Clean Rewrite (March 2026, Session 2)
+
+### 10.1 campaign-view-v3.html — canonical file
+
+The previous `campaign-view-drawer.html` became irreparably fragile through accumulated CSS and JS patches (multiple conflicting rules, orphaned functions, JS-created DOM elements causing stacking context failures). It has been **retired as a reference file only** and replaced with a clean rewrite.
+
+**Canonical file going forward: `campaign-view-v3.html`**
+
+All prototype navigation (dashboard-home, prospect-import, wizard) now links to `campaign-view-v3.html`.
+
+`campaign-view-drawer.html` remains at its URL as a reference for any features that may need to be cross-checked.
+
+---
+
+### 10.2 Architecture principles for the rewrite
+
+The rewrite was done in one clean pass with these rules:
+- One CSS block, no duplicates, no conflicting rules
+- All overlays as static HTML with `position:fixed` and CSS-controlled visibility (`display:none` default)
+- No JS-created DOM elements — all panels exist in the HTML from the start
+- One JS block, no orphaned functions
+- Pre-push validation: script tag balance, duplicate ID check, all `getElementById` calls verified against HTML, all called functions verified as defined, all `switchTab` calls verified against `tc-` div IDs
+
+---
+
+### 10.3 Three overlays — consistent pattern
+
+All three overlays in `campaign-view-v3.html` use the same pattern:
+
+| Overlay | ID (backdrop) | ID (panel) | Trigger |
+|---|---|---|---|
+| Prospect detail | `pd-backdrop` | `pd-panel` | Click prospect card row |
+| Send email | `sd-backdrop` | `sd-panel` | Click Send button on draft row |
+| LinkedIn config | `li-backdrop` | `li-modal` | Click "LI message" button in header |
+
+**Pattern:** backdrop and panel both start hidden (`display:none`). Opening adds class `open` to both. Backdrop click closes. CSS `.open` rule shows the element. Panel slides via `transform:translateX(100%)` → `translateX(0)`.
+
+---
+
+### 10.4 LinkedIn features
+
+**LinkedIn button behaviour (Review, LinkedIn tabs):**
+- Clicking the LinkedIn icon opens a LinkedIn people search for that prospect in a new tab
+- Simultaneously copies the campaign's LinkedIn message template to clipboard, with `{{first_name}}` and `{{company}}` merged
+- A cyan confirmation bar fades in at the bottom of the screen: *"✓ LinkedIn message copied to clipboard"*
+
+**LinkedIn message config modal:**
+- Opened via "LI message" button (cyan, with LinkedIn icon) in the campaign header
+- Campaign-scoped message template (different campaigns can have different messages)
+- Default message pre-filled: *"Hi {{first_name}}, I wanted to connect to introduce myself and the fractional new business support I help agencies with…"*
+- Supports merge tags: `{{first_name}}` · `{{company}}`
+- Save stores for session · Cancel closes without saving
+
+**Decision:** LinkedIn message is campaign-scoped, not global. This resolves open question 3 (Campaign settings) partially — the LI message is the first piece of campaign-level configuration identified.
+
+---
+
+### 10.5 Email generation in prospect drawer
+
+When a prospect has no email address imported, the email field label row shows a badge (right-aligned, amber): *"No email found — Generate"*
+
+Clicking the badge:
+1. Derives `firstname@domain.com` from the prospect's first name + website domain (strips `https://`, `www.`, any path)
+2. Populates the email input
+3. Switches badge to *"✦ Generated"* (cyan, non-clickable)
+4. Pulses the input border briefly to confirm
+
+**No layout shift** — the badge is always present in the label row at a fixed size; it never appears or disappears, only changes its text and colour.
+
+---
+
+### 10.6 Prospect drawer — confirmed behaviour
+
+- Opens by clicking anywhere on a prospect card row, or the detail icon (↗) in the action buttons
+- 480px wide, slides in from right, overlays the list without pushing it
+- Contains: first name, last name, email (with generation), company, industry, org size, LinkedIn link, about, notes textarea
+- Footer: Skip prospect (left) · Save · Approve → (right)
+- Approve and Skip from drawer have identical effect to the row buttons (card fades and removes)
+- Backdrop click closes the drawer
+
+---
+
+## SECTION 11 — Dashboard Home Updates (March 2026, Session 2)
+
+### 11.1 Campaign card — toggle and kebab
+
+**Toggle switch** replaces the old "Active / Paused" status badge on each campaign card.
+- Green glowing toggle = Active
+- Grey toggle = Paused
+- Clicking toggles state and updates label text
+- Uses `stopPropagation` so it doesn't navigate into the campaign
+
+**Three-dot kebab menu** in the top-right of each card.
+- Options: Rename · Archive · Delete
+- Rename: triggers a prompt with current name pre-filled, updates card name on confirm
+- Archive: shows toast confirmation
+- Delete: native confirm dialog with "cannot be undone" warning
+- Menu closes on any outside click
+- Kebab and toggle are horizontally centre-aligned using `align-items:center` on `.campaign-card-top`
+- Gap of `12px` between the toggle label and the kebab box
+
+### 11.2 Sidebar standardised
+
+Dashboard home sidebar updated to match the slim icon pattern used across all other pages:
+- 56px wide, icon-only, three items
+- Campaigns (active state), Summary → `summary-and-workflow.html`, Settings (pinned bottom) → `settings-account.html`
+- Settings pinned via `margin-top:auto`
+
+---
+
+## SECTION 12 — Sidebar standardisation (all pages, March 2026 Session 2)
+
+### 12.1 Canonical sidebar — confirmed across all files
+
+The following files were updated to use the canonical slim sidebar:
+
+| File | Change |
+|---|---|
+| `campaign-view.html` | Added missing Summary icon |
+| `campaign-view-v3.html` | Built in from scratch — correct |
+| `prospect-import.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `followup-nurture-conversations.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `ai-drafts.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `error-edge-cases.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `emotional-design.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `settings-account.html` | Replaced old `.sb`/`.ni` wide sidebar |
+| `pricing-upgrade.html` | Added full topbar + sidebar (had neither) |
+| `dashboard-home.html` | Replaced wide text-label sidebar with slim icons |
+| `summary-and-workflow.html` | Reference implementation — unchanged |
+
+### 12.2 Canonical sidebar CSS pattern
+
+```css
+.sidebar { position:fixed; top:var(--th); left:0; bottom:0; width:var(--sw);
+  background:rgba(13,9,20,0.7); border-right:1px solid var(--b);
+  display:flex; flex-direction:column; align-items:center;
+  padding:14px 0; z-index:190; gap:4px; }
+.si { width:36px; height:36px; border-radius:8px; ... color:rgba(255,255,255,0.55); }
+.si:hover { color:rgba(255,255,255,0.9); }
+.si.on { background:var(--pd); color:var(--pink); }
+.si svg { display:block; flex-shrink:0; }
+.si-bottom { margin-top:auto; }
+.si-tip { position:absolute; left:calc(100% + 10px); opacity:0; visibility:hidden; }
+.si:hover .si-tip { opacity:1; visibility:visible; }
+```
+
+**Critical rules:**
+- `display:block` on `.si svg` is mandatory — without it SVGs collapse to zero size
+- `visibility:hidden` (not just `opacity:0`) on `.si-tip` — prevents text showing through in some browsers
+- `margin-top:auto` on `.si-bottom` — required for settings icon to pin to foot of sidebar
+
+---
+
+## SECTION 13 — Typography and colour adjustments (March 2026, Session 2)
+
+### 13.1 Grey text lifted across all pages
+
+The dim text tokens were too dark to read comfortably against the dark backgrounds. Updated values:
+
+| Token | Old value | New value | Usage |
+|---|---|---|---|
+| `--td` / `--text-dim` | `#444456` | `#6b6b80` / `#7a7a90` | Labels, subtitles, meta text |
+| `--tm` / `--text-mid` | `#8a8a9a` | `#a8a8b8` | Secondary text, inactive tabs |
+
+Applied to: `campaign-view-v3.html`, `dashboard-home.html`
+
+### 13.2 Font sizes bumped in campaign-view-v3
+
+| Element | Old size | New size |
+|---|---|---|
+| `.psub` (prospect card subtitles) | 11px | 12px |
+| `.tsub` (table row subtitles) | 11px | 12px |
+| `.sl` (stat strip labels) | 9px | 10px |
+
+---
+
+## SECTION 14 — Wizard v3 (outreach-wizard-v3.html)
+
+### 14.1 What changed from v2
+
+The activation wizard has a v3 variant at `outreach-wizard-v3.html`. Key differences from v2:
+
+**Step 1 — Import:**
+- Three import methods are now **horizontal tabs** instead of vertical card rows
+- Tab order: Paste emails (default, with "Quickest" badge) · Upload CSV · Add manually
+- Clicking a tab switches the active state and shows the relevant input area
+
+**Step 2 — Write message:**
+- Message type and tone selectors are combined into a single **compact selector bar** above the message card
+- Type chips: Value drop · Follow-up · Check-in · Post-meeting (pink when selected)
+- Tone chips: Calm & Commercial · Direct & Confident · Light Touch (cyan when selected)
+- A **description line** sits between the selector bar and the message card, showing a one-line explanation of the selected type — cross-fades when the type changes
+- Subject line and body textarea are visible **above the fold** without scrolling
+
+**Navigation:**
+- `dashboard-home.html` now links to `outreach-wizard-v3.html` (not v2)
+- v2 remains available at its URL as a reference
+
+### 14.2 Comparison bar
+
+A fixed bottom bar on wizard v3 reads: *"Wizard · v3 — compact · Compare v2 →"* with a cyan link to `outreach-wizard-v2.html`.
+
+---
+
+## SECTION 15 — New files added (March 2026, Session 2)
+
+| File | Description |
+|---|---|
+| `wireframes/campaign-view-v3.html` | Clean rewrite of campaign view — canonical going forward |
+| `wireframes/campaign-view-drawer-spec.html` | Feature specification for the v3 rewrite (also linked from hub) |
+| `wireframes/outreach-wizard-v3.html` | Wizard with compact step 2 and horizontal import tabs |
+| `wireframes/summary-and-workflow.html` | Summary page (Today + This week) + Guided Workflow A and B |
+
+### Hub quick links added
+- Campaign view spec → `wireframes/campaign-view-drawer-spec.html`
+- Campaign view v3 → `wireframes/campaign-view-v3.html`
+
+---
+
+## SECTION 9 — Decisions still open (updated)
+
+| # | Question | Status |
+|---|---|---|
+| 1 | ~~Guided Workflow: Option A or B?~~ | **Resolved — Option B (FAB + panel)** |
+| 2 | ~~Prospect detail: expand-in-place or right drawer?~~ | **Resolved — right drawer** |
+| 3 | Campaign settings tab: what does it contain? | **Partially resolved** — LI message template is first identified piece of campaign-level config. Full campaign settings tab TBD. |
+| 4 | User-configurable product voice: spec and phase TBD | Still open — Layer 5+ |
 
 ---
 
