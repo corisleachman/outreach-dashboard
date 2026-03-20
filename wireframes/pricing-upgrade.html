@@ -95,9 +95,66 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .tst.tp{border-left:2px solid var(--pink);}
 .tst.tg{border-left:2px solid var(--green);}
 @keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+
+  --th:56px; --sw:56px;
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:-0.5px;background:linear-gradient(135deg,#ff1493,#00d4ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
+.plan-badge{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ff1493,#00d4ff);
+  display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;
+  font-size:11px;font-weight:700;color:white;}
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:'Outfit',sans-serif;font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+/* ── LAYOUT OFFSET ── */
+.pg{padding-top:calc(var(--th) + 20px);padding-left:calc(var(--sw) + 20px);}
+
 </style>
 </head>
 <body>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">outreach.</div>
+  <div class="topbar-right">
+    <span class="plan-badge">Free</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="si" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
 <div class="orb o1"></div><div class="orb o2"></div>
 <a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
   <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
