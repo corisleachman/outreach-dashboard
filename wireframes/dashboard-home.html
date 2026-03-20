@@ -44,9 +44,9 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
 
 /* SIDEBAR */
 .sidebar { width: var(--sidebar-w); flex-shrink: 0; position: fixed; top: var(--topbar-h); left: 0; bottom: 0; background: rgba(13,9,20,0.7); border-right: 1px solid var(--border); padding: 14px 0; display: flex; flex-direction: column; align-items: center; z-index: 90; gap: 4px; }
-.nav-item { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; text-decoration: none; color: var(--text-mid); position: relative; background: transparent; }
-.nav-item:hover { background: var(--surface-2); border-color: var(--border-2); color: var(--text); }
-.nav-item.active { background: var(--pink-dim); border-color: rgba(255,20,147,0.25); color: var(--pink); }
+.nav-item { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; text-decoration: none; color: var(--text-mid); position: relative; background: transparent; opacity: 0.75; }
+.nav-item:hover { background: var(--surface-2); border-color: var(--border-2); color: var(--text); opacity: 1; }
+.nav-item.active { background: var(--pink-dim); border-color: rgba(255,20,147,0.25); color: var(--pink); opacity: 1; }
 .nav-item svg { display: block; opacity: 0.5; transition: opacity 0.15s; }
 .nav-item:hover svg, .nav-item.active svg { opacity: 1; }
 .nav-tip { position: absolute; left: calc(100% + 10px); background: rgba(20,10,35,0.97); color: var(--text); border: 1px solid var(--border-2); border-radius: 6px; padding: 5px 10px; font-family: var(--outfit); font-size: 11px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 300; }
