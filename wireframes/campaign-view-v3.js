@@ -343,8 +343,6 @@ function saveSeq() {
   toast('✓', 'Sequence saved', 'tc');
 }
 function openLI() {
-
-function openLI() {
   document.getElementById('li-input').value = liMsg;
   document.getElementById('li-backdrop').classList.add('open');
 }
