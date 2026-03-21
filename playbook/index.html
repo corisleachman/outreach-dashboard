@@ -1,0 +1,1528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta property="og:title" content="outreach. — Channel Activation Playbook">
+<meta property="og:description" content="Detailed playbook for GTM activation: LinkedIn, Cold Email, TikTok, Content, and Referrals. With tool stack and Claude automation.">
+<meta property="og:type" content="website">
+<title>outreach. — Channel Activation Playbook</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+/* ── TOKENS ── */
+:root {
+  --bg:    #0d0914;
+  --s:     rgba(255,255,255,0.04);
+  --s2:    rgba(255,255,255,0.07);
+  --b:     rgba(255,255,255,0.07);
+  --b2:    rgba(255,255,255,0.13);
+  --t:     #f4f4f2;
+  --tm:    #a8a8b8;
+  --td:    #6b6b80;
+  --pink:  #ff1493;
+  --cyan:  #00d4ff;
+  --green: #64dc78;
+  --amber: #ff9d42;
+  --grad:  linear-gradient(135deg, #ff1493, #00d4ff);
+  --grad-text: linear-gradient(135deg, #ff1493 0%, #00d4ff 100%);
+  --glow-pink: rgba(255,20,147,0.25);
+  --glow-cyan: rgba(0,212,255,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--t);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ── NOISE TEXTURE OVERLAY ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+  opacity: 0.4;
+}
+
+/* ── BACKGROUND GLOW ORBS ── */
+.bg-orbs {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(140px);
+  opacity: 0.08;
+}
+.orb-1 { width: 600px; height: 600px; background: var(--pink); top: -200px; right: -100px; animation: drift1 18s ease-in-out infinite; }
+.orb-2 { width: 500px; height: 500px; background: var(--cyan);  bottom: 20%; left: -150px; animation: drift2 22s ease-in-out infinite; }
+.orb-3 { width: 400px; height: 400px; background: var(--amber); top: 40%; right: 15%; animation: drift3 26s ease-in-out infinite; opacity: 0.05; }
+
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-60px,80px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(80px,-60px)} }
+@keyframes drift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-40px,60px)} 66%{transform:translate(50px,-30px)} }
+
+/* ── LAYOUT ── */
+.wrap { position: relative; z-index: 1; }
+.container { max-width: 1200px; margin: 0 auto; padding: 0 40px; }
+.container-sm { max-width: 900px; margin: 0 auto; padding: 0 40px; }
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 20px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(13,9,20,0.7);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--b);
+}
+.nav-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--t);
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+.nav-logo span {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── MAIN CONTENT ── */
+main {
+  padding-top: 120px;
+  padding-bottom: 80px;
+}
+
+/* ── HERO ── */
+.hero {
+  text-align: center;
+  padding: 60px 0;
+  margin-bottom: 80px;
+}
+.hero h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 56px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.hero h1 span {
+  background: var(--grad-text);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--tm);
+  max-width: 700px;
+  margin: 0 auto 40px;
+  line-height: 1.6;
+}
+
+/* ── TABS ── */
+.tabs-container {
+  margin-bottom: 60px;
+}
+.tab-buttons {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--b);
+  padding-bottom: 24px;
+}
+.tab-button {
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid var(--b);
+  color: var(--tm);
+  font-size: 14px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+.tab-button:hover {
+  border-color: var(--pink);
+  color: var(--t);
+}
+.tab-button.active {
+  background: var(--grad);
+  border-color: var(--pink);
+  color: white;
+}
+
+.tab-content {
+  display: none;
+  animation: fadeIn 0.3s ease;
+}
+.tab-content.active {
+  display: block;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* ── SECTION CARDS ── */
+.section-header {
+  margin-bottom: 40px;
+}
+.section-header h2 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+.section-header p {
+  font-size: 18px;
+  color: var(--tm);
+  line-height: 1.6;
+}
+
+.card {
+  background: var(--s2);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+  transition: all 0.3s ease;
+}
+.card:hover {
+  border-color: rgba(255,20,147,0.3);
+  box-shadow: 0 0 10px rgba(255,20,147,0.05);
+}
+
+.card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: var(--t);
+}
+.card p {
+  color: var(--tm);
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+.card ul {
+  list-style: none;
+  margin-bottom: 16px;
+}
+.card li {
+  padding-left: 24px;
+  margin-bottom: 8px;
+  position: relative;
+  color: var(--tm);
+  font-size: 15px;
+  line-height: 1.6;
+}
+.card li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--pink);
+  font-weight: 600;
+}
+
+/* ── CALL TO ACTION ── */
+.cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  background: var(--grad);
+  color: white;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 12px;
+}
+.cta-button:hover {
+  transform: translate(0, -2px);
+  box-shadow: 0 8px 20px rgba(255,20,147,0.3);
+}
+
+/* ── TABLES ── */
+.table-container {
+  overflow-x: auto;
+  margin: 20px 0;
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+th {
+  background: var(--s2);
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--b);
+  font-weight: 600;
+  color: var(--t);
+}
+td {
+  padding: 12px;
+  border-bottom: 1px solid var(--b);
+  color: var(--tm);
+}
+tr:hover {
+  background: var(--s2);
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 40px;
+  border-top: 1px solid var(--b);
+  color: var(--td);
+  font-size: 14px;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .container, .container-sm { padding: 0 20px; }
+  .hero h1 { font-size: 36px; }
+  .tab-buttons { flex-direction: column; }
+  .tab-button { width: 100%; }
+  .card { padding: 20px; }
+}
+</style>
+</head>
+<body>
+
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav>
+  <a href="#" class="nav-logo">outreach<span>.</span></a>
+  <div style="font-size: 12px; color: var(--tm);">Channel Activation Playbook</div>
+</nav>
+
+<div class="wrap">
+  <main class="container-sm">
+    
+    <div class="hero">
+      <h1>Channel Activation <span>Playbook</span></h1>
+      <p>Detailed execution plans for LinkedIn, Cold Email, TikTok, Content, and Referrals. With tool stack and Claude automation strategies.</p>
+    </div>
+
+    <div class="tabs-container">
+      
+      <!-- TAB BUTTONS -->
+      <div class="tab-buttons">
+        <button class="tab-button active" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-button" onclick="switchTab('linkedin')">LinkedIn</button>
+        <button class="tab-button" onclick="switchTab('email')">Cold Email</button>
+        <button class="tab-button" onclick="switchTab('tiktok')">TikTok</button>
+        <button class="tab-button" onclick="switchTab('content')">Content</button>
+        <button class="tab-button" onclick="switchTab('referral')">Referral</button>
+        <button class="tab-button" onclick="switchTab('tools')">Tool Stack</button>
+        <button class="tab-button" onclick="switchTab('claude')">Claude Automation</button>
+      </div>
+
+      <!-- TAB CONTENT -->
+
+      <!-- OVERVIEW TAB -->
+      <div id="overview" class="tab-content active">
+        <div class="section-header">
+          <h2>Playbook Overview</h2>
+          <p>Your go-to-market playbook: What to do each month, how long it takes, and what Claude automates.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 12-Month Goals</h3>
+          <ul>
+            <li><strong>Signups:</strong> 280–350 by March 2027</li>
+            <li><strong>Paying customers:</strong> 20–35 by March 2027</li>
+            <li><strong>Monthly revenue:</strong> £248+ MRR by year-end</li>
+            <li><strong>Timeline compression:</strong> 50% faster with Claude automation (6 months vs 12)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 Channel Breakdown (Cumulative Signups)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Phase</th>
+                <th>Timeline</th>
+                <th>Target Signups</th>
+                <th>Primary Channel</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Phase 1</strong></td>
+                <td>Apr–May 2026</td>
+                <td>20–30</td>
+                <td>Network + Slack</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 2</strong></td>
+                <td>Jun–Aug 2026</td>
+                <td>50–80</td>
+                <td>LinkedIn Sales Nav + Cold Email</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 3</strong></td>
+                <td>Sep–Nov 2026</td>
+                <td>40–60</td>
+                <td>TikTok + Blog + ProductHunt</td>
+              </tr>
+              <tr>
+                <td><strong>Phase 4</strong></td>
+                <td>Dec–Mar 2027</td>
+                <td>30–50+</td>
+                <td>Paid Ads + Organic Spillover</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🔧 Your Weekly Time Commitment</h3>
+          <p>Marketing hours: <strong>5–10 hrs/week</strong> (excluding product development)</p>
+          <ul>
+            <li>LinkedIn outreach: 2–3 hrs/week</li>
+            <li>Cold email & follow-up: 1–2 hrs/week</li>
+            <li>TikTok content: 2–3 hrs/week (May onwards)</li>
+            <li>Community & content: 1–2 hrs/week (Sep onwards)</li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--green);"><strong>Claude automation saves:</strong> 34–46 hrs/month of repetitive work.</p>
+        </div>
+
+        <div class="card">
+          <h3>💡 Key Success Factors</h3>
+          <ul>
+            <li>≥50% activation rate (Phase 2.10 must ship clean)</li>
+            <li>≥40% 30-day retention (Phase 2.11–2.13 improve stickiness)</li>
+            <li>≥10% free-to-paid conversion (Phase 2.14 pricing UX critical)</li>
+            <li>Disciplined execution: Track metrics weekly, kill what doesn't work monthly</li>
+          </ul>
+        </div>
+
+        <p style="margin-top: 40px; text-align: center; color: var(--td); font-size: 14px;">
+          Use the tabs above to dive into each channel's detailed execution plan.
+        </p>
+      </div>
+
+      <!-- LINKEDIN TAB -->
+      <div id="linkedin" class="tab-content">
+        <div class="section-header">
+          <h2>LinkedIn Sales Nav + Dripify</h2>
+          <p>Targeted high-intent lead generation via LinkedIn connections and cold email.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Channel Goal</h3>
+          <p><strong>8–16 signups/month</strong> by Jun–Aug via:</p>
+          <ul>
+            <li>LinkedIn Sales Nav searches (targeted, high-intent)</li>
+            <li>Dripify automation (connection requests + DM follow-ups)</li>
+            <li>Cold email outreach (via your outreach. tool)</li>
+            <li>Conversion path: Connection → DM → Email → Beta signup</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>April: Build Your Search & List</h3>
+          <h4 style="margin-top: 20px; color: var(--pink);">Week 1–2: Sales Nav Configuration</h4>
+          <p><strong>Create 3 Saved Searches in LinkedIn Sales Nav:</strong></p>
+          <ul>
+            <li><strong>Search 1 (Primary):</strong> New Business Directors in your industry
+              <ul style="margin-top: 8px; margin-left: 20px;">
+                <li>Job title: "new business" OR "business development" OR "growth"</li>
+                <li>Industry: [Your primary industry]</li>
+                <li>Company size: 10–500 people</li>
+                <li>Location: UK</li>
+                <li>Seniority: Director, VP, C-level</li>
+              </ul>
+            </li>
+            <li><strong>Search 2 (Adjacent):</strong> Growth/New Biz in adjacent industries</li>
+            <li><strong>Search 3 (Agency/Services):</strong> Agency owners/business dev leads</li>
+          </ul>
+          <p style="margin-top: 16px;"><strong>Target:</strong> 150–300 new profiles/week (export weekly)</p>
+
+          <h4 style="margin-top: 24px; color: var(--pink);">Week 3–4: Dripify Setup</h4>
+          <p><strong>Install Dripify and create campaigns:</strong></p>
+          <ul>
+            <li><strong>Campaign 1 (LinkedIn Connections):</strong> Auto-send 10–15 personalized connection requests/day</li>
+            <li><strong>Campaign 2 (DM Follow-ups):</strong> Auto-send DM on day 3 after connection accepted</li>
+            <li><strong>Campaign 3 (Email Transition):</strong> Route warm connections to cold email sequences</li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--amber);"><strong>Note:</strong> Detailed templates and messaging strategies are in the full playbook document.</p>
+        </div>
+
+        <div class="card">
+          <h3>May–August: Scale & Optimize</h3>
+          <p><strong>Weekly routine:</strong></p>
+          <ul>
+            <li><strong>Monday:</strong> Review past week's acceptance rate, DM response rate, email conversion (1 hr)</li>
+            <li><strong>Tue–Thu:</strong> Send 30–45 connection requests (10–15/day, 2–3 hrs total)</li>
+            <li><strong>Friday:</strong> Prepare next week's templates; A/B test messaging (1 hr)</li>
+          </ul>
+          <p style="margin-top: 16px;"><strong>Monthly targets:</strong></p>
+          <ul>
+            <li>May: 3–5 signups from LinkedIn</li>
+            <li>June: 8–12 signups</li>
+            <li>July–August: 12–16 signups/month</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 LinkedIn KPIs & Targets</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Target</th>
+                <th>Action if Below</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Connection acceptance rate</td>
+                <td>5–10%</td>
+                <td>&lt;3% → swap template/angle</td>
+              </tr>
+              <tr>
+                <td>DM response rate</td>
+                <td>10–15%</td>
+                <td>&lt;5% → message is weak</td>
+              </tr>
+              <tr>
+                <td>Email open rate (from DM leads)</td>
+                <td>20–30%</td>
+                <td>&lt;15% → subject line weak</td>
+              </tr>
+              <tr>
+                <td>Email → signup conversion</td>
+                <td>3–5%</td>
+                <td>&lt;1% → product angle needs work</td>
+              </tr>
+              <tr>
+                <td>Monthly signups</td>
+                <td>8–16 by Jun–Aug</td>
+                <td>&lt;5 → reassess targeting/messaging</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Tools Required</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Essential?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>LinkedIn Sales Nav</strong></td>
+                <td>~£60/month</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td><strong>Dripify</strong></td>
+                <td>~£20–30/month</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td><strong>outreach. (your tool)</strong></td>
+                <td>Free</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td>Lemlist (optional upgrade)</td>
+                <td>~£30/month</td>
+                <td>⚠️ Nice to have</td>
+              </tr>
+              <tr>
+                <td>Hunter.io (email finding)</td>
+                <td>~£20/month</td>
+                <td>⚠️ Use free tier first</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 16px;"><strong>Subtotal:</strong> £80–110/month</p>
+        </div>
+
+        <div style="background: rgba(255,20,147,0.05); border: 1px solid rgba(255,20,147,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Next: Dive deeper into messaging templates, timing, and optimization?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">We can detail:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>Exact Dripify message templates for each campaign</li>
+            <li>A/B testing strategy (which elements to test first)</li>
+            <li>Integration with cold email (warm hand-off process)</li>
+            <li>How Claude automates list enrichment (Hunter.io API)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- COLD EMAIL TAB -->
+      <div id="email" class="tab-content">
+        <div class="section-header">
+          <h2>Cold Email (Outreach. + Enrichment + Sequences)</h2>
+          <p>Multi-touch email sequences to targeted, enriched lists.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Channel Goal</h3>
+          <p><strong>5–10 signups/month</strong> by Jun–Aug via:</p>
+          <ul>
+            <li>Build targeted email lists (from multiple sources)</li>
+            <li>Enrich with valid email addresses (Hunter.io)</li>
+            <li>Multi-touch sequences (3–5 emails over 21 days)</li>
+            <li>Track opens/clicks/replies in outreach.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>April: List Building & Enrichment Setup</h3>
+          <h4 style="margin-top: 20px; color: var(--pink);">Week 1–2: Define Target Segments</h4>
+          <p><strong>Identify 3–4 list sources:</strong></p>
+          <ul>
+            <li><strong>List Source 1:</strong> Direct network + warm intros (100–200 people, high intent)</li>
+            <li><strong>List Source 2:</strong> Company websites (50–100 agencies; scrape team pages)</li>
+            <li><strong>List Source 3:</strong> Purchased/enriched B2B list (Apollo.io, ZoomInfo; 500–1000 emails)</li>
+            <li><strong>List Source 4:</strong> Content-generated leads (blog, TikTok sign-ups; grows over time)</li>
+          </ul>
+
+          <h4 style="margin-top: 24px; color: var(--pink);">Week 3–4: Email Enrichment & Segmentation</h4>
+          <p><strong>Process:</strong></p>
+          <ul>
+            <li>Combine all lists into master spreadsheet (columns: First name, Last name, Email, Company, Title, Source, LinkedIn URL, Quality)</li>
+            <li>Enrich emails with Hunter.io (find missing addresses, verify validity)</li>
+            <li>Deduplicate and remove invalid emails</li>
+            <li><strong>Segment by quality:</strong>
+              <ul style="margin-top: 8px; margin-left: 20px;">
+                <li>Segment A: High-intent (know you, warm intro, perfect ICP match) → 50–150 emails</li>
+                <li>Segment B: Medium-intent (similar role, adjacent industry) → 150–400 emails</li>
+                <li>Segment C: Broad (purchased list, broader targeting) → 200–500 emails</li>
+              </ul>
+            </li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--amber);"><strong>Note:</strong> Will send Segment A first (lowest risk, highest conversion); then B; then C.</p>
+        </div>
+
+        <div class="card">
+          <h3>May–August: Sequence Execution</h3>
+          <p><strong>Create 3 email sequence templates in outreach.:</strong></p>
+          <ul>
+            <li><strong>Template 1 (Warm Intro):</strong> For Segment A (3 emails, day 0 → day 5 → day 12)</li>
+            <li><strong>Template 2 (Soft Product Angle):</strong> For Segment B (3 emails, day 0 → day 7 → day 14)</li>
+            <li><strong>Template 3 (Curiosity Hook):</strong> For Segment C (3 emails, day 0 → day 8 → day 16)</li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--amber);"><strong>Full email copy is in the detailed playbook document. We'll detail each template in Q&A.</strong></p>
+          
+          <p style="margin-top: 20px;"><strong>Send schedule:</strong></p>
+          <ul>
+            <li>Segment A: May week 1–2 (14/day, 2-hour windows)</li>
+            <li>Segment B: May week 3+ (30/day, 3-day send window)</li>
+            <li>Segment C: June onwards (50–75/day, 5-day send window)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 Cold Email KPIs</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Target</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Email deliverability rate</td>
+                <td>&gt;95%</td>
+                <td>Use warm-up tool; monitor bounces</td>
+              </tr>
+              <tr>
+                <td>Open rate (Segment A)</td>
+                <td>25–35%</td>
+                <td>High-intent; watch for bad subject lines</td>
+              </tr>
+              <tr>
+                <td>Open rate (Segment B)</td>
+                <td>15–25%</td>
+                <td>A/B test subject lines</td>
+              </tr>
+              <tr>
+                <td>Open rate (Segment C)</td>
+                <td>8–15%</td>
+                <td>Broad list; lower expected</td>
+              </tr>
+              <tr>
+                <td>Click rate (all)</td>
+                <td>3–8%</td>
+                <td>Depends on CTA; track by segment</td>
+              </tr>
+              <tr>
+                <td>Signup rate (% of opens)</td>
+                <td>1–3%</td>
+                <td>Track funnel: open → click → signup</td>
+              </tr>
+              <tr>
+                <td>Monthly signups</td>
+                <td>4–8 by Jun; 8–10 by Aug</td>
+                <td>Ramp volume; optimize templates</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Tools Required</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Essential?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>outreach. (your own tool)</strong></td>
+                <td>Free</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td><strong>Hunter.io</strong></td>
+                <td>£20/month</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td>Warm-up tool (Lemwarm, Bounceless)</td>
+                <td>£15–30/month</td>
+                <td>✅ If budget allows</td>
+              </tr>
+              <tr>
+                <td>Lemlist (optional upgrade)</td>
+                <td>£30–50/month</td>
+                <td>⚠️ Nice if budget allows</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 16px;"><strong>Subtotal:</strong> £20–80/month</p>
+        </div>
+
+        <div style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Next: Get granular on cold email templates?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">We can detail:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>Exact email copy for Segment A, B, C (all 3 emails in each sequence)</li>
+            <li>Subject line testing strategy and variants</li>
+            <li>Integration: Clay.com + Make automation for list building (scrape company websites)</li>
+            <li>How Claude analyzes performance and generates new subject lines</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- TIKTOK TAB -->
+      <div id="tiktok" class="tab-content">
+        <div class="section-header">
+          <h2>TikTok (Organic Video Content)</h2>
+          <p>2–3 videos/week driving organic reach and brand building.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Channel Goal</h3>
+          <p><strong>2–5 signups/month by Jun; 5–10/month by Aug–Sep</strong> via:</p>
+          <ul>
+            <li>Consistent content posting (2–3/week)</li>
+            <li>Build followers (target 500 by Jul, 1K by Oct)</li>
+            <li>Drive traffic to beta page via bio link + video CTAs</li>
+            <li>Establish personal brand in industry</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>April–May: Content Strategy & Batch Recording</h3>
+          <h4 style="margin-top: 20px; color: var(--pink);">Week 1: Content Pillars & Idea Bank</h4>
+          <p><strong>Define 5 content pillar categories:</strong></p>
+          <ul>
+            <li><strong>Pillar 1: Cold Email Fails</strong> (Relatable, funny) — 1–2/week</li>
+            <li><strong>Pillar 2: Industry Insights</strong> (Authority, frameworks) — 1/week</li>
+            <li><strong>Pillar 3: Product Demos</strong> (Soft launch, dog-fooding) — 1/week (Jun onwards)</li>
+            <li><strong>Pillar 4: Behind-the-Scenes</strong> (Relatability, founder story) — 1/week</li>
+            <li><strong>Pillar 5: User Wins</strong> (Social proof) — 1–2/week (Jun onwards)</li>
+          </ul>
+
+          <h4 style="margin-top: 24px; color: var(--pink);">Week 2–3: Batch Recording & Editing</h4>
+          <p><strong>Record 20–30 videos in one session (4–6 hrs):</strong></p>
+          <ul>
+            <li>Format: Vertical video (9:16), 15–60 seconds</li>
+            <li>Content mix: 60% cold email fails/insights, 30% product/founder, 10% user stories</li>
+            <li>Edit with CapCut (free): Add captions, music, graphics, brand colors</li>
+            <li>Export: 1080×1920 (vertical), MP4 format</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>May–August: Scaling & Engagement</h3>
+          <p><strong>Weekly routine (3–4 hrs/week):</strong></p>
+          <ul>
+            <li><strong>Content creation:</strong> Record 5–8 new videos (batch recording, 2 hrs/week)</li>
+            <li><strong>Post schedule:</strong> 2–3 posts/week (Tue + Thu + weekend)</li>
+            <li><strong>Community engagement:</strong> Reply to comments, follow relevant accounts (1 hr/week)</li>
+            <li><strong>Analytics & optimization:</strong> Review which content got >500 views, document what worked (30 min/week)</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>Monthly targets:</strong></p>
+          <ul>
+            <li>May: Post 8–10 videos; aim for 100 followers</li>
+            <li>June: 50–100 followers; 1–2 signups</li>
+            <li>July–August: 300–500 followers; 5–8 signups/month</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 TikTok KPIs</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Target</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Videos posted/week</td>
+                <td>2–3</td>
+                <td>Consistency matters; algorithm rewards regularity</td>
+              </tr>
+              <tr>
+                <td>Avg views per video (Month 1)</td>
+                <td>100–300</td>
+                <td>&gt;100 views = algorithmic reach</td>
+              </tr>
+              <tr>
+                <td>Avg views per video (Month 2–3)</td>
+                <td>300–1K</td>
+                <td>Scale content that's working</td>
+              </tr>
+              <tr>
+                <td>Engagement rate</td>
+                <td>&gt;5% of views</td>
+                <td>High engagement = algorithm boost</td>
+              </tr>
+              <tr>
+                <td>Click-through rate (bio link)</td>
+                <td>2–5% of viewers</td>
+                <td>Track via UTM params on beta page</td>
+              </tr>
+              <tr>
+                <td>Followers/month</td>
+                <td>50–150/month</td>
+                <td>Compound growth; by Oct should be 500+</td>
+              </tr>
+              <tr>
+                <td>Monthly signups</td>
+                <td>2–3 (Apr–May); 5–8 (Aug–Sep)</td>
+                <td>Ramp as followers grow</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Tools Required</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Essential?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>CapCut</strong></td>
+                <td>Free</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td><strong>TikTok Creator Account</strong></td>
+                <td>Free</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td>Buffer / Later (scheduling)</td>
+                <td>£15–30/month</td>
+                <td>⚠️ Nice if batch recording</td>
+              </tr>
+              <tr>
+                <td>Adobe Premiere / Descript</td>
+                <td>£15–50/month</td>
+                <td>⚠️ If budget allows</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 16px;"><strong>Subtotal:</strong> Free–£30/month</p>
+        </div>
+
+        <div style="background: rgba(100,220,120,0.05); border: 1px solid rgba(100,220,120,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Next: Detailed video content calendar?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">We can detail:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>20 specific video ideas with full scripts (cold email fails, insights, demos, BTS)</li>
+            <li>Exact hashtag strategy and posting times</li>
+            <li>How Claude auto-generates video scripts and posting calendar (Automation #6–7)</li>
+            <li>Engagement strategy (how to reply to comments, build community)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CONTENT TAB -->
+      <div id="content" class="tab-content">
+        <div class="section-header">
+          <h2>Content & SEO (Blog + LinkedIn + Community)</h2>
+          <p>1 blog article/month, 1–2 LinkedIn posts/week, community engagement.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Channel Goal</h3>
+          <p><strong>5–15 signups/month by Sep–Nov</strong> via:</p>
+          <ul>
+            <li>Blog articles (1/month, targeting long-tail keywords)</li>
+            <li>LinkedIn personal brand posts (1–2/week, educational)</li>
+            <li>Indie Hackers community engagement</li>
+            <li>ProductHunt launch (credibility)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>September: Blog + LinkedIn Planning</h3>
+          <h4 style="margin-top: 20px; color: var(--pink);">Week 1: Content Calendar & Topic Clusters</h4>
+          <p><strong>Define 8–12 blog article topics (1/month through Year 1):</strong></p>
+          <ul>
+            <li><strong>Article 1 (Sep):</strong> "5 Cold Email Frameworks for Consultants & New Business Dirs"</li>
+            <li><strong>Article 2 (Oct):</strong> "How to Scale Prospect Outreach Without Hiring a Sales Team"</li>
+            <li><strong>Article 3 (Nov):</strong> "Email Follow-Up Best Practices: The Complete Guide"</li>
+            <li>[+5–9 more articles through Year 1]</li>
+          </ul>
+
+          <h4 style="margin-top: 24px; color: var(--pink);">Week 2–4: Article 1 Research, Outline & Draft</h4>
+          <p><strong>Timeline: 8–10 hrs per article</strong></p>
+          <ul>
+            <li>Research (3–4 hrs): Google top articles, interview users, compile frameworks</li>
+            <li>Outline (1 hr): Structure with H2s and subheadings</li>
+            <li>Draft (4–5 hrs): Write naturally, include examples, 2000–2500 words</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Sep–Nov: Publishing & Promotion</h3>
+          <p><strong>Weekly routine (2–3 hrs/week):</strong></p>
+          <ul>
+            <li><strong>LinkedIn personal brand posts:</strong> 1–2 posts/week (educational content, soft product mentions)</li>
+            <li><strong>Community engagement:</strong> Indie Hackers, Reddit, HackerNews (1 hr/week)</li>
+            <li><strong>ProductHunt launch:</strong> Late Sep/Early Oct (one-day event)</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>Blog publishing process:</strong></p>
+          <ul>
+            <li>Publish on Ghost or Medium (your domain for SEO)</li>
+            <li>SEO optimization: Meta title, description, internal links</li>
+            <li>Promote on LinkedIn, HackerNews, Indie Hackers, Reddit</li>
+            <li>Add CTA: "Try outreach. beta (free)"</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 Content & SEO KPIs</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Target</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Blog articles/month</td>
+                <td>1</td>
+                <td>Consistency; SEO takes 3–4 months to compound</td>
+              </tr>
+              <tr>
+                <td>Blog traffic (monthly visitors)</td>
+                <td>50 (Sep), 150 (Nov)</td>
+                <td>Low initially; ramps by month 3</td>
+              </tr>
+              <tr>
+                <td>Blog signups (% of visitors)</td>
+                <td>2–5%</td>
+                <td>CTA at end + linked product page</td>
+              </tr>
+              <tr>
+                <td>LinkedIn posts/week</td>
+                <td>1–2</td>
+                <td>Regular cadence builds followers</td>
+              </tr>
+              <tr>
+                <td>LinkedIn followers/month</td>
+                <td>20–50</td>
+                <td>Compound from content + engagement</td>
+              </tr>
+              <tr>
+                <td>ProductHunt ranking</td>
+                <td>Top 10–20</td>
+                <td>Nice to have; not essential</td>
+              </tr>
+              <tr>
+                <td>Monthly signups</td>
+                <td>2–3 (Sep); 5–8 (Oct–Nov)</td>
+                <td>Ramp as content compounds</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Tools Required</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Essential?</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Blog platform (Ghost, Webflow)</strong></td>
+                <td>£10–30/month</td>
+                <td>✅ YES</td>
+              </tr>
+              <tr>
+                <td>Grammarly Pro</td>
+                <td>£10/month</td>
+                <td>⚠️ Nice to have</td>
+              </tr>
+              <tr>
+                <td>Canva Pro</td>
+                <td>£10/month</td>
+                <td>⚠️ Nice to have</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="margin-top: 16px;"><strong>Subtotal:</strong> £10–30/month</p>
+        </div>
+
+        <div style="background: rgba(255,157,66,0.05); border: 1px solid rgba(255,157,66,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Next: Detailed content calendar?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">We can detail:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>8–12 blog article titles, outlines, and SEO keywords</li>
+            <li>LinkedIn post templates and content calendar (monthly pre-written posts)</li>
+            <li>How Claude auto-generates blog outlines and LinkedIn content (Automation #8)</li>
+            <li>ProductHunt launch strategy and timing</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- REFERRAL TAB -->
+      <div id="referral" class="tab-content">
+        <div class="section-header">
+          <h2>Referral Program (Viral Loop)</h2>
+          <p>Built into outreach., free to activate.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Channel Goal</h3>
+          <p><strong>3–5 signups/month by Jun; 8–12/month by Aug–Sep</strong> via:</p>
+          <ul>
+            <li>In-app referral mechanism (1 month Pro free for both sides)</li>
+            <li>Email campaigns to early users</li>
+            <li>Social sharing buttons on beta page</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>May: Setup & Seed</h3>
+          <h4 style="margin-top: 20px; color: var(--pink);">Week 1–2: Create Referral Mechanism (Built into outreach.)</h4>
+          <p><strong>In-app setup:</strong></p>
+          <ul>
+            <li>Generate unique referral code per user (e.g., `CORIS_ABC123`)</li>
+            <li>Create shareable link: `outreach-app-theta.vercel.app?ref=CORIS_ABC123`</li>
+            <li>Message: "Invite a friend. You both get 1 month Pro free."</li>
+            <li>Track: `referred_by` column in users table (attribute signups to referrer)</li>
+            <li>Conversion: When referred user upgrades to Pro, award 1-month free to both</li>
+          </ul>
+
+          <h4 style="margin-top: 24px; color: var(--pink);">Week 3–4: Seed + Soft Campaign</h4>
+          <p><strong>Email to May cohort (existing users):</strong></p>
+          <ul>
+            <li>Subject: "Know someone who'd love outreach.? Get both 1 month free"</li>
+            <li>Send to users with 2+ campaigns sent (engaged users only)</li>
+            <li>Include unique referral link in email</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>In-app toast:</strong></p>
+          <ul>
+            <li>Trigger: After user sends first campaign</li>
+            <li>Message: "Great job! Know someone else doing cold outreach? Share this link—you both get 1 month Pro free."</li>
+            <li>One-time toast (doesn't repeat)</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>Jun–Aug: Monitor & Amplify</h3>
+          <p><strong>Weekly tracking (5 min/week):</strong></p>
+          <ul>
+            <li>Dashboard: How many referrals generated? How many converted to paid?</li>
+            <li>Calculate: Referral → signup conversion rate (target: 20–30%)</li>
+            <li>Recognize top referrers (optional, builds community)</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>Monthly email to all users:</strong></p>
+          <ul>
+            <li>Share "Referral leaderboard" (gamifies it)</li>
+            <li>Offer bonus: Top referrer gets extra Pro month + mention in newsletter</li>
+            <li>Builds FOMO; incentivizes sharing</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>📊 Referral KPIs</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Metric</th>
+                <th>Target</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Referral links generated/month</td>
+                <td>5–15</td>
+                <td>Low initially; ramps with user base</td>
+              </tr>
+              <tr>
+                <td>Referred signups/month</td>
+                <td>1–3 (Jun–Jul); 4–8 (Aug–Sep)</td>
+                <td>Track via `referred_by` column</td>
+              </tr>
+              <tr>
+                <td>Referral → Pro conversion rate</td>
+                <td>20–30%</td>
+                <td>Higher intent than organic; likely to convert</td>
+              </tr>
+              <tr>
+                <td>Monthly signups from referral</td>
+                <td>1–3 (Jun); 4–8 (Aug–Sep)</td>
+                <td>Compounds with larger user base</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🛠️ Tools Required</h3>
+          <p><strong>None! Built into outreach.</strong></p>
+          <p style="margin-top: 12px; color: var(--green);">Referral tracking, attribution, and rewards all handled by your product.</p>
+        </div>
+      </div>
+
+      <!-- TOOL STACK TAB -->
+      <div id="tools" class="tab-content">
+        <div class="section-header">
+          <h2>Complete Tool Stack</h2>
+          <p>Prioritized by ROI. Total budget: £50–200/month.</p>
+        </div>
+
+        <div class="card">
+          <h3>🎯 Must-Have Tools (£80–110/month)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Purpose</th>
+                <th>Where Used</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>LinkedIn Sales Nav</strong></td>
+                <td>£60/month</td>
+                <td>Saved searches, lead targeting</td>
+                <td>LinkedIn channel</td>
+              </tr>
+              <tr>
+                <td><strong>Dripify</strong></td>
+                <td>£20–30/month</td>
+                <td>LinkedIn automation (connections + DMs)</td>
+                <td>LinkedIn channel</td>
+              </tr>
+              <tr>
+                <td><strong>Hunter.io</strong></td>
+                <td>£20/month</td>
+                <td>Email enrichment, verification</td>
+                <td>Cold email channel</td>
+              </tr>
+              <tr>
+                <td><strong>outreach. (your tool)</strong></td>
+                <td>Free</td>
+                <td>Email sending, campaign tracking</td>
+                <td>Cold email + dog-fooding</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>💡 Highly Recommended Add-Ons (£15–50/month)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Purpose</th>
+                <th>Why Useful</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Warm-up tool</strong> (Lemwarm, Bounceless)</td>
+                <td>£15–30/month</td>
+                <td>Email warm-up, deliverability</td>
+                <td>Dramatically improves inbox placement (60% → 90%)</td>
+              </tr>
+              <tr>
+                <td><strong>Blog platform</strong> (Ghost, Webflow)</td>
+                <td>£10–30/month</td>
+                <td>Host blog, SEO ownership</td>
+                <td>Own your domain; SEO halo for product</td>
+              </tr>
+              <tr>
+                <td><strong>CapCut</strong></td>
+                <td>Free</td>
+                <td>TikTok video editing</td>
+                <td>Best-in-class, free, mobile-friendly</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>⚡ Optional Upgrades (If Budget Allows)</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Tool</th>
+                <th>Cost</th>
+                <th>Purpose</th>
+                <th>Use Case</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Lemlist</td>
+                <td>£30–50/month</td>
+                <td>Advanced email personalization + tracking</td>
+                <td>Use instead of outreach. for Segments B/C if doing high volume</td>
+              </tr>
+              <tr>
+                <td>Clay.com</td>
+                <td>Free/£20+/month</td>
+                <td>Web scraping, data enrichment</td>
+                <td>Automate building prospect lists from company websites</td>
+              </tr>
+              <tr>
+                <td>Canva Pro</td>
+                <td>£10/month</td>
+                <td>Image/graphic creation</td>
+                <td>Blog imagery, social graphics</td>
+              </tr>
+              <tr>
+                <td>Grammarly Pro</td>
+                <td>£10/month</td>
+                <td>Writing polish, grammar</td>
+                <td>Email + blog content quality assurance</td>
+              </tr>
+              <tr>
+                <td>Buffer / Later</td>
+                <td>£15–30/month</td>
+                <td>Social media scheduling</td>
+                <td>Optional; TikTok native scheduling is free</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>💰 Budget Scenarios</h3>
+          <p><strong>Lean (£80–110/month):</strong></p>
+          <ul>
+            <li>Sales Nav + Dripify + Hunter.io + outreach. only</li>
+            <li>No warm-up tool (affects email deliverability slightly)</li>
+            <li>Blog on free tier or Medium (lower SEO)</li>
+            <li>CapCut for TikTok editing (free)</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>Recommended (£130–160/month):</strong></p>
+          <ul>
+            <li>All must-haves + warm-up tool + Ghost blog + CapCut</li>
+            <li>Better email deliverability, owned SEO, polished brand</li>
+          </ul>
+
+          <p style="margin-top: 16px;"><strong>Fully Loaded (£190–230/month):</strong></p>
+          <ul>
+            <li>All recommended + Lemlist + Canva + Grammarly + Clay.com</li>
+            <li>Maximize efficiency; optimize all channels</li>
+          </ul>
+        </div>
+
+        <div style="background: rgba(255,20,147,0.05); border: 1px solid rgba(255,20,147,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Questions on tool setup or integration?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">We can detail:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>Exact setup steps for each tool (step-by-step screenshots)</li>
+            <li>API integrations and automations (Clay.com + Make, Hunter.io API, etc.)</li>
+            <li>Cost optimization (which tools to skip, free alternatives)</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CLAUDE AUTOMATION TAB -->
+      <div id="claude" class="tab-content">
+        <div class="section-header">
+          <h2>Claude Automation (Background Work)</h2>
+          <p>12 automations Claude can handle. 34–46 hrs/month saved. 50% timeline compression.</p>
+        </div>
+
+        <div class="card">
+          <h3>🚀 Why Claude Automation Matters</h3>
+          <p>You have access to Claude Chat, Claude Code, Claude Cowork, and Terminal. Here's what Claude can do *in the background* to compress your timeline:</p>
+          <ul>
+            <li><strong>List building & enrichment:</strong> Claude automates finding, enriching, and scoring prospects</li>
+            <li><strong>Content generation:</strong> Claude writes email templates, TikTok scripts, LinkedIn posts</li>
+            <li><strong>Analytics:</strong> Claude analyzes performance data and recommends optimizations</li>
+            <li><strong>Scheduling:</strong> Claude schedules posts, reminds you, manages calendars</li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--green);"><strong>Result:</strong> 34–46 hrs/month of repetitive work automated. You spend 5–10 hrs/week on strategy + relationship-building instead.</p>
+        </div>
+
+        <div class="card">
+          <h3>📋 12 Automations (Setup & Details)</h3>
+          <p style="color: var(--amber);"><strong>Click each to expand details in full playbook document. Brief overview below:</strong></p>
+
+          <div style="margin-top: 24px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--pink);">
+            <h4 style="color: var(--pink); margin-bottom: 8px;">Automation 1: LinkedIn enrichment script</h4>
+            <p style="font-size: 14px;">Parse LinkedIn CSV → enrich with Hunter.io API → score by ICP → output ready for Dripify (30 min/month to run)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--cyan);">
+            <h4 style="color: var(--cyan); margin-bottom: 8px;">Automation 2: Company URL → prospect list builder</h4>
+            <p style="font-size: 14px;">You give 50 company URLs → Claude builds 300+ prospect list automatically via Clay.com + Hunter.io APIs (15 min/month to trigger)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--green);">
+            <h4 style="color: var(--green); margin-bottom: 8px;">Automation 3: Google Sheets ↔ Dripify sync</h4>
+            <p style="font-size: 14px;">Your contact list auto-syncs with Dripify; no manual import/export (0 min/week—fully automated)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--pink);">
+            <h4 style="color: var(--pink); margin-bottom: 8px;">Automation 4: Email template generator</h4>
+            <p style="font-size: 14px;">You describe target persona → Claude generates 3 subject line variants, 3 email body variants, 2 follow-ups (10 min/week in Claude Chat)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--cyan);">
+            <h4 style="color: var(--cyan); margin-bottom: 8px;">Automation 5: Subject line A/B analysis</h4>
+            <p style="font-size: 14px;">Claude analyzes your outreach. campaign data, identifies winning subject lines, generates new variants (15 min/week)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--green);">
+            <h4 style="color: var(--green); margin-bottom: 8px;">Automation 6: TikTok content generator</h4>
+            <p style="font-size: 14px;">You ask → Claude generates 10 video ideas, full scripts, captions, hashtags (30 min/week)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--pink);">
+            <h4 style="color: var(--pink); margin-bottom: 8px;">Automation 7: TikTok posting calendar</h4>
+            <p style="font-size: 14px;">Claude creates weekly posting schedule, sends reminders, optionally schedules posts via Buffer API (5 min/week)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--cyan);">
+            <h4 style="color: var(--cyan); margin-bottom: 8px;">Automation 8: LinkedIn monthly content calendar</h4>
+            <p style="font-size: 14px;">Claude generates 8 LinkedIn posts for month, optimal posting times, hashtags (30 min/month)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--green);">
+            <h4 style="color: var(--green); margin-bottom: 8px;">Automation 9: LinkedIn engagement tracking</h4>
+            <p style="font-size: 14px;">Claude monitors comments on your posts, suggests replies (5 min/day)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--pink);">
+            <h4 style="color: var(--pink); margin-bottom: 8px;">Automation 10: Campaign performance dashboard</h4>
+            <p style="font-size: 14px;">Weekly email report: "This week: 200 emails sent, 28 opens, 4 signups. Best subject: X. Kill: Y" (0 min—fully automated)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--cyan);">
+            <h4 style="color: var(--cyan); margin-bottom: 8px;">Automation 11: Funnel tracking alerts</h4>
+            <p style="font-size: 14px;">Alert you if activation rate drops <50% with diagnosis and recommended fixes (0 min—fully automated)</p>
+          </div>
+
+          <div style="margin-top: 12px; padding: 16px; background: var(--s2); border-radius: 8px; border-left: 4px solid var(--green);">
+            <h4 style="color: var(--green); margin-bottom: 8px;">Automation 12: Monthly KPI dashboard + quarterly reviews</h4>
+            <p style="font-size: 14px;">Claude pulls data from Supabase, Stripe, Google Analytics, generates professional business report (0 min—fully automated)</p>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>⏱️ Time Savings Summary</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Automation Group</th>
+                <th>Time Saved/Month</th>
+                <th>Setup Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>List enrichment (Automations 1–3)</td>
+                <td>8–10 hrs</td>
+                <td>5 hrs</td>
+              </tr>
+              <tr>
+                <td>Email generation (Automations 4–5)</td>
+                <td>6–8 hrs</td>
+                <td>1 hr</td>
+              </tr>
+              <tr>
+                <td>TikTok content (Automations 6–7)</td>
+                <td>6–8 hrs</td>
+                <td>2 hrs</td>
+              </tr>
+              <tr>
+                <td>LinkedIn content (Automations 8–9)</td>
+                <td>4–6 hrs</td>
+                <td>1 hr</td>
+              </tr>
+              <tr>
+                <td>Campaign analytics (Automations 10–11)</td>
+                <td>4–6 hrs</td>
+                <td>3 hrs</td>
+              </tr>
+              <tr>
+                <td>Reporting (Automation 12)</td>
+                <td>6–8 hrs</td>
+                <td>2 hrs</td>
+              </tr>
+              <tr>
+                <td><strong>TOTAL</strong></td>
+                <td><strong>34–46 hrs/month</strong></td>
+                <td><strong>14 hrs setup</strong></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card">
+          <h3>🔧 April Setup Plan (When You Have 14 Hours)</h3>
+          <p><strong>Schedule one session with Claude Code per automation type:</strong></p>
+          <ul>
+            <li><strong>Session 1 (2.5 hrs):</strong> Automations 1–3 (list enrichment + Sheets sync)</li>
+            <li><strong>Session 2 (1.5 hrs):</strong> Automations 6–7 (TikTok content + calendar)</li>
+            <li><strong>Session 3 (1.5 hrs):</strong> Automations 8–9 (LinkedIn content + engagement)</li>
+            <li><strong>Session 4 (3 hrs):</strong> Automations 10–11 (campaign analytics + funnel tracking)</li>
+            <li><strong>Session 5 (2 hrs):</strong> Automation 12 (monthly reporting)</li>
+            <li><strong>Session 6 (1 hr):</strong> Automations 4–5 (email template generation—manual in Claude Chat, not coded)</li>
+            <li><strong>Testing & integration:</strong> 2.5 hrs (test all automations, document workflows)</li>
+          </ul>
+          <p style="margin-top: 16px; color: var(--green);"><strong>By end of April:</strong> All 12 automations live and running. Marketing time drops 80%.</p>
+        </div>
+
+        <div style="background: rgba(0,212,255,0.05); border: 1px solid rgba(0,212,255,0.2); border-radius: 12px; padding: 20px; margin-top: 24px;">
+          <p><strong>💬 Ready to build these automations?</strong></p>
+          <p style="margin-top: 12px; font-size: 14px; color: var(--tm);">Next steps:</p>
+          <ul style="margin-top: 8px; font-size: 14px;">
+            <li>Pick which automations to prioritize (list enrichment is #1, then email generation)</li>
+            <li>Schedule Claude Code sessions in April</li>
+            <li>Provide API keys (Hunter.io, Clay.com, Supabase, Stripe, Google Sheets) for integrations</li>
+            <li>I'll build and test each automation, provide documentation + runbooks</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+</div>
+
+<footer>
+  <p>outreach. — Channel Activation Playbook</p>
+  <p style="margin-top: 8px; font-size: 12px;">Updated: March 2026 | <a href="https://github.com/corisleachman/outreach-dashboard" style="color: var(--pink); text-decoration: none;">View on GitHub</a></p>
+</footer>
+
+<script>
+function switchTab(tabName) {
+  // Hide all tabs
+  const tabs = document.querySelectorAll('.tab-content');
+  tabs.forEach(tab => tab.classList.remove('active'));
+
+  // Remove active class from all buttons
+  const buttons = document.querySelectorAll('.tab-button');
+  buttons.forEach(btn => btn.classList.remove('active'));
+
+  // Show selected tab
+  document.getElementById(tabName).classList.add('active');
+
+  // Add active class to clicked button
+  event.target.classList.add('active');
+
+  // Scroll to top of content
+  window.scrollTo({ top: 200, behavior: 'smooth' });
+}
+</script>
+
+</body>
+</html>
