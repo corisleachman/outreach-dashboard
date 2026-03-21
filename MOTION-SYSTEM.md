@@ -382,4 +382,72 @@ Moving to a wrapper `::after` solves this cleanly.
 
 The wrapper is `display: inline-flex` so it hugs the button dimensions.
 The ring animation is on `.btn-ring-wrap::after`.
+---
+
+## Section 9 — Image Warp Effect
+
+### 9.1 Overview
+
+A sinusoidal wave travels horizontally (left→right) across screenshot
+images on hover. The wave displaces image pixels vertically as it passes,
+creating a fluid ripple effect — like heat haze or water moving across
+a surface. Not noise, not turbulence — a clean mathematical sine wave.
+
+**Reference:** `warp-test.html` in `corisleachman/beta-invite`
+**Status:** Approved. Ready to integrate into marketing site.
+
+---
+
+### 9.2 How it works
+
+Each image card has a Canvas element that renders the image. On
+`mouseenter`, a wave front travels from x=0 to x=1 (full width) over
+DURATION ms. Each animation frame:
+
+1. For every column of pixels, calculate distance from the wave front
+2. Columns within the band get displaced vertically by a sine wave
+3. Displacement amplitude follows a bell curve — peaks early, long decay
+4. Source pixels are sampled from a clean offscreen canvas and written
+   to the visible canvas with the vertical offset applied
+
+The wave front uses `easeOut` for travel (fast entry, slow exit).
+The overall amplitude uses a `(1-t)^2.2` decay after the peak.
+
+---
+
+### 9.3 Locked parameters
+
+| Parameter | Value | Notes |
+|---|---|---|
+| `WAVE_AMPLITUDE` | 6px | Vertical pixel displacement at peak |
+| `WAVE_FREQUENCY` | 2.5 | Ripple crests visible across the image |
+| `WAVE_FRONT_WIDTH` | 0.35 | Active band as fraction of image width |
+| `DURATION` | 3600ms | Total travel time left→right |
+| `PEAK_AT` | 0.15 | Fraction of duration when amplitude peaks |
+| Easing | `easeOut` cubic | Fast entry, long decay |
+| Trigger | `mouseenter` one-shot | Re-arms on `mouseleave` after 100ms |
+
+---
+
+### 9.4 Implementation notes
+
+- Source image sits in the DOM with `opacity: 0` — canvas renders on top
+- A clean offscreen canvas holds the unmodified image pixels permanently
+- Each frame reads from the offscreen canvas (never the distorted output)
+- The visible canvas is CSS-scaled (`width: 100%`) from native resolution
+- One-shot per hover — cannot re-trigger until mouse leaves and re-enters
+- Performance: CPU-bound pixel loop. Keep images at display resolution
+  (~100kb per image is fine). Avoid on images wider than ~1200px native.
+
+---
+
+### 9.5 Relationship to other effects
+
+The image warp is directional (left→right) — intentionally matching the
+horizontal scan line that passes through boxes on the beta page. Both
+effects share the sense of something sweeping through the content.
+
+The button ink drop is radial (from cursor origin). The scan is vertical
+(bottom→top). The image warp is horizontal (left→right). Together they
+form a consistent motion vocabulary without repeating the same direction.
 
