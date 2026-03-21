@@ -292,4 +292,94 @@ When Phase 2.19 (light/dark mode) is built:
   since they reference the already-swapped `--pink` / `--cyan` tokens
 - Default to dark mode unless the user has explicitly set light preference
   or `prefers-color-scheme: light` is detected on first visit
+---
+
+## Section 8 — Button Interaction System
+
+### 8.1 Overview
+
+All primary CTA buttons (`.btn-primary`, `.nav-cta`) share the same
+hover interaction. Two effects fire simultaneously on `mouseenter`,
+both one-shot (don't repeat until mouse leaves and re-enters).
+
+No upward lift on hover — `translateY` is explicitly removed.
+The button stays still. The effects do the responding.
+
+**Canonical file:** `pulse-variants.html` (corisleachman/beta-invite)
+
+---
+
+### 8.2 Effect 1 — Ink Drop Bloom
+
+A radial light bloom originating from the exact cursor entry point,
+expanding outward and fading like ink dispersing in water.
+
+**Implementation:** Canvas 2D overlay (`btn-ripple-canvas`) appended
+to each button. On `mouseenter`, records `(ox, oy)` relative to the
+button, then animates an expanding radial gradient.
+
+| Parameter | Value | Notes |
+|---|---|---|
+| `DURATION` | 1800ms | Total dispersion time |
+| `MAX_SCALE` | 2.8 | Ring expands to 2.8× button diagonal |
+| `PEAK_AT` | 0.08 | Opacity peaks at 8% of duration |
+| Easing | `1 - (1-t)^3` | Cubic ease-out |
+| Peak opacity | 0.22 | Subtle — internal bloom only |
+| Gradient | 4-stop radial | Bright centre, long transparent tail |
+
+**Gradient stops:**
+- `0%` — `rgba(255,255,255, opacity × 1.8)`
+- `15%` — `rgba(255,255,255, opacity × 1.2)`
+- `50%` — `rgba(255,255,255, opacity × 0.5)`
+- `100%` — `rgba(255,255,255, 0)`
+
+---
+
+### 8.3 Effect 2 — Pulse Ring
+
+A single ring expands outward from the button border and dissolves.
+Lives on a wrapper `div.btn-ring-wrap` outside the button's
+`overflow: hidden` so it can scale beyond the button edge.
+
+**Why wrapper:** The button uses `overflow: hidden` to clip the canvas
+ink drop. A `::before`/`::after` on the button itself gets clipped.
+Moving to a wrapper `::after` solves this cleanly.
+
+| Parameter | Value | Notes |
+|---|---|---|
+| Scale | `1.0` → `1.48` | 20% reduced from original 1.6 |
+| Peak opacity | `0.44` | 20% reduced from original 0.55 |
+| Duration | 1.2s | |
+| Easing | `cubic-bezier(0.2, 0.6, 0.3, 1)` | |
+| Border | `1.5px solid rgba(255,255,255,0.55)` | White ring |
+| Border radius | `100px` | Matches pill shape |
+
+---
+
+### 8.4 Interaction decisions (locked)
+
+- **No hover lift.** `translateY` removed from all button hover states.
+  The button stays physically still — effects respond, not the element.
+- **One-shot.** Both effects fire once on entry and cannot re-trigger
+  until the cursor leaves and re-enters.
+- **Origin-aware.** The ink drop always blooms from the exact pixel
+  the cursor entered — left edge, right edge, corner, centre, wherever.
+- **Warp explored, deferred.** A pixel-displacement radial warp
+  (distorting button shape/text as the ring travels) was explored but
+  not achievable at sufficient quality in CSS/Canvas without performance
+  issues. Revisit when building in the main app with access to WebGL
+  or a proper shader pipeline.
+
+---
+
+### 8.5 HTML structure
+
+```html
+<div class="btn-ring-wrap">
+  <a href="#access" class="btn-primary">Request early access →</a>
+</div>
+```
+
+The wrapper is `display: inline-flex` so it hugs the button dimensions.
+The ring animation is on `.btn-ring-wrap::after`.
 
