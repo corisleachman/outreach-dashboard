@@ -1070,10 +1070,10 @@ footer {
           
           <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--pink);">4 Warm-to-Cold Segments</h4>
           <p style="font-size: 14px; color: var(--tm); line-height: 1.8;">
-            <strong>Segment A (Personal):</strong> People you know well, recent contact. Opening: "Hey [Name], it's been a while. I built something..."<br>
-            <strong>Segment B (Ex-colleagues):</strong> Worked together, haven't spoken recently. Opening: "Been a while. Made something you might want."<br>
-            <strong>Segment C (LinkedIn-connected):</strong> Added via Sales Nav, never met. Opening: "Saw your profile. This seems relevant to what you do."<br>
-            <strong>Segment D (Cold):</strong> No prior connection. Opening: "Most people doing what you do struggle with [pain]. I built Pulse. to fix that."<br>
+            <strong>Segment A (Personal):</strong> People you know well, recent contact.<br>
+            <strong>Segment B (Ex-colleagues):</strong> Worked together, haven't spoken recently.<br>
+            <strong>Segment C (LinkedIn-connected):</strong> Added via Sales Nav, never met.<br>
+            <strong>Segment D (Cold):</strong> No prior connection.<br>
             <strong>Volume:</strong> 50 emails/week total (mixed across all segments)
           </p>
 
@@ -1084,28 +1084,86 @@ footer {
             <li><strong>Import into Pulse. using CSV import</strong> (tag with segment: A/B/C/D)</li>
             <li><strong>Why:</strong> No paid list cost, warm-by-default, full control, traceable</li>
           </ul>
+        </div>
 
-          <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--pink);">3-Email Sequence (Same Structure, Different Openings)</h4>
-          <ul>
-            <li><strong>Email #1 (Day 0):</strong> Segment-specific opening (A/B/C/D) + mention Pulse. + beta link (wait 1-2 days after Sales Nav add)</li>
-            <li><strong>Email #2 (Day 5):</strong> "Following up on my last email. Curious if it resonated?" + link (softer tone)</li>
-            <li><strong>Email #3 (Day 10):</strong> Shorter version of Email #1 (2 sentences max) + link (product angle again)</li>
-            <li><strong>CTA:</strong> Direct link to Pulse. beta page (no calendar, no soft close)</li>
-            <li><strong>Length:</strong> Very short (2-3 sentences per email, 30-50 words)</li>
-            <li><strong>Personalization:</strong> Zero (same message for all in segment, segment-specific opening is the personalization)</li>
-          </ul>
+        <div class="card">
+          <h3>📧 All Email Templates (Copy-Paste Ready)</h3>
+          
+          <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--pink);">Segment A: Personal (Email #1)</h4>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; margin-top: 12px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">Hey [Name], it's been a while. I built something you might actually use.
 
-          <h4 style="margin-top: 20px; margin-bottom: 12px; color: var(--pink);">Channel Coordination: Email + LinkedIn in Parallel</h4>
-          <p style="font-size: 14px; color: var(--tm); line-height: 1.8;">
-            Same person gets both Email + LinkedIn DM on staggered timeline:<br>
-            <strong>Day 0:</strong> Email #1 (after 1-2 day wait from Sales Nav add)<br>
-            <strong>Day 4:</strong> LinkedIn DM #1 (from Dripify, same warm angle as LinkedIn channel)<br>
-            <strong>Day 5:</strong> Email #2<br>
-            <strong>Day 8–9:</strong> LinkedIn DM #2 (soft reminder)<br>
-            <strong>Day 10:</strong> Email #3<br>
-            <strong>Day 13–14:</strong> LinkedIn DM #3 (final touch)<br>
-            <strong>Anytime they respond (email OR DM):</strong> You take over (pause automation, manual conversation)
-          </p>
+It's called Pulse.—basically Gmail + campaign management for people doing cold outreach (like you probably are). Saves hours on follow-ups.
+
+Free beta if you want to test it: [link]
+
+Cheers,
+Coris</pre>
+          </div>
+
+          <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--pink);">Segment B: Ex-Colleagues (Email #1)</h4>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; margin-top: 12px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">Been a while. Made something you might want.
+
+Called Pulse.—it's for people managing prospect outreach. Saves time on follow-ups (I know that was always a pain point for you).
+
+Free beta: [link]
+
+Cheers,
+Coris</pre>
+          </div>
+
+          <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--pink);">Segment C: LinkedIn-Connected (Email #1)</h4>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; margin-top: 12px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">Saw your profile. This seems relevant to what you do.
+
+I built Pulse.—it's a tool for managing cold outreach campaigns. Follow-ups are automatic, so nothing falls through the cracks.
+
+Free beta: [link]
+
+Cheers,
+Coris</pre>
+          </div>
+
+          <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--pink);">Segment D: Completely Cold (Email #1)</h4>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; margin-top: 12px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">Most people doing what you do struggle with follow-ups. I built Pulse. to fix that.
+
+It's basically Gmail + automatic campaign management. You control every send, follow-ups surface automatically.
+
+Free beta: [link]
+
+Cheers,
+Coris</pre>
+          </div>
+
+          <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--pink);">All Segments: Email #2 (Day 5)</h4>
+          <p style="font-size: 13px; color: var(--tm); margin-bottom: 8px;"><em>Same for all segments (A, B, C, D)</em></p>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">Following up on my last email. Curious if it resonated?
+
+No pressure, but if you're doing outreach, this will save you time.
+
+[link]
+
+Cheers</pre>
+          </div>
+
+          <h4 style="margin-top: 24px; margin-bottom: 12px; color: var(--pink);">All Segments: Email #3 (Day 10)</h4>
+          <p style="font-size: 13px; color: var(--tm); margin-bottom: 8px;"><em>Same for all segments (A, B, C, D)</em></p>
+          <div style="background: var(--b2); padding: 16px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 13px; line-height: 1.6; position: relative;">
+            <button onclick="copyToClipboard(this)" style="position: absolute; top: 8px; right: 8px; padding: 6px 12px; background: var(--pink); color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">Copy</button>
+            <pre style="margin: 0; white-space: pre-wrap; word-wrap: break-word;">One last thing: free beta of Pulse. if you want it.
+
+[link]
+
+Cheers</pre>
+          </div>
         </div>
 
         <div class="card">
@@ -1139,15 +1197,15 @@ footer {
         <div class="card">
           <h3>🛠️ June Setup Checklist</h3>
           
-          <h4 style="margin-top: 16px; color: var(--pink);">Sales Navigator + List Sourcing (Week 1)</h4>
+          <h4 style="margin-top: 16px; color: var(--pink);">Sales Navigator + List (Week 1)</h4>
           <ul>
-            <li>Create 4 saved searches: Personal contacts, Ex-colleagues, Target audience (UK+US), Broad cold</li>
-            <li>Install Lix Chrome extension</li>
+            <li>Create 4 saved searches: Personal, Ex-colleagues, Target (UK+US), Broad cold</li>
+            <li>Install Lix extension</li>
             <li>Export first batch (50–75 people, ~15–20 per segment) as CSV/Excel</li>
             <li>Verify email addresses are captured in export</li>
           </ul>
 
-          <h4 style="margin-top: 16px; color: var(--pink);">Pulse. CSV Import (Week 1)</h4>
+          <h4 style="margin-top: 16px; color: var(--pink);">Pulse. Import Setup (Week 1)</h4>
           <ul>
             <li>Create new campaign: "Cold Email - June 2026"</li>
             <li>Import CSV (map columns: Name, Email, Company, Title)</li>
@@ -1923,6 +1981,21 @@ footer {
 </footer>
 
 <script>
+// Copy to clipboard function
+function copyToClipboard(button) {
+  const preElement = button.nextElementSibling;
+  const text = preElement.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const originalText = button.textContent;
+    button.textContent = 'Copied!';
+    button.style.background = 'var(--green)';
+    setTimeout(() => {
+      button.textContent = originalText;
+      button.style.background = 'var(--pink)';
+    }, 2000);
+  });
+}
+
 // Load checklist state from localStorage on page load
 window.addEventListener('load', function() {
   const checkboxes = document.querySelectorAll('input[type="checkbox"]');
