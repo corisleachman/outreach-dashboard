@@ -792,13 +792,13 @@ footer {
         <svg width="100%" viewBox="0 0 680 900" style="margin-bottom: 24px;">
           <defs>
             <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-              <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M2 1L8 5L2 9" fill="none" stroke="var(--t)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </marker>
           </defs>
 
           <!-- Title -->
-          <text class="th" x="340" y="40" text-anchor="middle">Pulse. Annual Timeline</text>
-          <text class="ts" x="340" y="60" text-anchor="middle">Your journey from beta to scaling</text>
+          <text x="340" y="40" text-anchor="middle" font-size="18px" font-weight="500" fill="var(--t)">Pulse. Annual Timeline</text>
+          <text x="340" y="60" text-anchor="middle" font-size="12px" fill="var(--tm)">Your journey from beta to scaling</text>
 
           <!-- Central timeline line -->
           <line x1="340" y1="100" x2="340" y2="860" stroke="var(--t)" stroke-width="2" opacity="0.3"/>
@@ -808,138 +808,111 @@ footer {
           
           <!-- Left branch -->
           <line x1="340" y1="130" x2="160" y2="130" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('Tell me more about the beta testing phase')">
-            <rect class="c-blue" x="40" y="105" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="125" text-anchor="middle">Beta Testing</text>
-            <text class="ts" x="100" y="143" text-anchor="middle">Apr–May</text>
-          </g>
+          <rect x="40" y="105" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="125" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Beta Testing</text>
+          <text x="100" y="143" text-anchor="middle" font-size="12px" fill="var(--tm)">Apr–May</text>
 
           <!-- Right branch -->
           <line x1="340" y1="130" x2="520" y2="130" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What activities should I focus on during beta?')">
-            <rect class="c-teal" x="520" y="105" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="125" text-anchor="middle">Messaging</text>
-            <text class="ts" x="580" y="143" text-anchor="middle">Beta testers only</text>
-          </g>
+          <rect x="520" y="105" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--cyan)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="125" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Messaging</text>
+          <text x="580" y="143" text-anchor="middle" font-size="12px" fill="var(--tm)">Beta testers only</text>
 
-          <text class="ts" x="340" y="175" text-anchor="middle">Beta page live. Message: "Testing starts soon, sign up for early access."</text>
+          <text x="340" y="175" text-anchor="middle" font-size="12px" fill="var(--tm)">Beta page live. Message: "Testing starts soon, sign up for early access."</text>
 
           <!-- PHASE 2: Outreach Launch (June-July) -->
           <circle cx="340" cy="240" r="6" fill="var(--t)" opacity="0.6"/>
           
           <!-- Left branch -->
           <line x1="340" y1="240" x2="160" y2="240" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('Walk me through the outreach phase')">
-            <rect class="c-purple" x="40" y="215" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="235" text-anchor="middle">LinkedIn Outreach</text>
-            <text class="ts" x="100" y="253" text-anchor="middle">Jun–Aug</text>
-          </g>
+          <rect x="40" y="215" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="235" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">LinkedIn</text>
+          <text x="100" y="253" text-anchor="middle" font-size="12px" fill="var(--tm)">Jun–Aug</text>
 
           <!-- Right branch -->
           <line x1="340" y1="240" x2="520" y2="240" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What should the cold email message be?')">
-            <rect class="c-coral" x="520" y="215" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="235" text-anchor="middle">Cold Email</text>
-            <text class="ts" x="580" y="253" text-anchor="middle">Jun–Aug</text>
-          </g>
+          <rect x="520" y="215" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="235" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Cold Email</text>
+          <text x="580" y="253" text-anchor="middle" font-size="12px" fill="var(--tm)">Jun–Aug</text>
 
-          <text class="ts" x="340" y="285" text-anchor="middle">Message: "I built this tool. Would you beta test it? Sign up here."</text>
-          <text class="ts" x="340" y="305" text-anchor="middle">Target: 8–12 LinkedIn signups/week + 2–4 cold email signups/week</text>
+          <text x="340" y="285" text-anchor="middle" font-size="12px" fill="var(--tm)">Message: "I built this tool. Would you beta test it?"</text>
+          <text x="340" y="305" text-anchor="middle" font-size="12px" fill="var(--tm)">Target: 10–16 signups/week</text>
 
           <!-- PHASE 3: Beta Active (June-August) -->
           <circle cx="340" cy="370" r="6" fill="var(--t)" opacity="0.6"/>
           
           <!-- Left branch -->
           <line x1="340" y1="370" x2="160" y2="370" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('How long should beta last?')">
-            <rect class="c-green" x="40" y="345" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="365" text-anchor="middle">Active Testing</text>
-            <text class="ts" x="100" y="383" text-anchor="middle">Jun–Aug</text>
-          </g>
+          <rect x="40" y="345" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--green)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="365" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Testing</text>
+          <text x="100" y="383" text-anchor="middle" font-size="12px" fill="var(--tm)">Jun–Aug</text>
 
           <!-- Right branch -->
           <line x1="340" y1="370" x2="520" y2="370" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What feedback should I collect during beta?')">
-            <rect class="c-amber" x="520" y="345" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="365" text-anchor="middle">Collect Feedback</text>
-            <text class="ts" x="580" y="383" text-anchor="middle">Weekly check-ins</text>
-          </g>
+          <rect x="520" y="345" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="365" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Feedback</text>
+          <text x="580" y="383" text-anchor="middle" font-size="12px" fill="var(--tm)">Weekly check-ins</text>
 
-          <text class="ts" x="340" y="415" text-anchor="middle">30–50 beta testers actively using the product</text>
-          <text class="ts" x="340" y="435" text-anchor="middle">Message: "Here's your access. Let me know what you think."</text>
+          <text x="340" y="415" text-anchor="middle" font-size="12px" fill="var(--tm)">30–50 beta testers actively using</text>
 
           <!-- PHASE 4: Soft Launch (August-September) -->
           <circle cx="340" cy="500" r="6" fill="var(--t)" opacity="0.6"/>
           
           <!-- Left branch -->
           <line x1="340" y1="500" x2="160" y2="500" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What does soft launch mean?')">
-            <rect class="c-pink" x="40" y="475" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="495" text-anchor="middle">Limited Release</text>
-            <text class="ts" x="100" y="513" text-anchor="middle">Sep–Oct</text>
-          </g>
+          <rect x="40" y="475" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="495" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Limited</text>
+          <text x="100" y="513" text-anchor="middle" font-size="12px" fill="var(--tm)">Sep–Oct</text>
 
           <!-- Right branch -->
           <line x1="340" y1="500" x2="520" y2="500" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('Who should get early access after beta?')">
-            <rect class="c-teal" x="520" y="475" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="495" text-anchor="middle">Referrals</text>
-            <text class="ts" x="580" y="513" text-anchor="middle">Invite best testers</text>
-          </g>
+          <rect x="520" y="475" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--cyan)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="495" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Referrals</text>
+          <text x="580" y="513" text-anchor="middle" font-size="12px" fill="var(--tm)">Best testers</text>
 
-          <text class="ts" x="340" y="545" text-anchor="middle">Message: "Beta ends soon. It's working great, sign up before limits."</text>
-          <text class="ts" x="340" y="565" text-anchor="middle">Gather testimonials, case studies, early wins</text>
+          <text x="340" y="545" text-anchor="middle" font-size="12px" fill="var(--tm)">Message: "Beta ends soon. It's working great, sign up before limits."</text>
 
           <!-- PHASE 5: Public Launch (November) -->
           <circle cx="340" cy="630" r="6" fill="var(--t)" opacity="0.6"/>
           
           <!-- Left branch -->
           <line x1="340" y1="630" x2="160" y2="630" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('How should I announce the public launch?')">
-            <rect class="c-blue" x="40" y="605" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="625" text-anchor="middle">Public Launch</text>
-            <text class="ts" x="100" y="643" text-anchor="middle">Nov</text>
-          </g>
+          <rect x="40" y="605" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--cyan)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="625" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Public</text>
+          <text x="100" y="643" text-anchor="middle" font-size="12px" fill="var(--tm)">Launch</text>
 
           <!-- Right branch -->
           <line x1="340" y1="630" x2="520" y2="630" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What paid tiers should I offer?')">
-            <rect class="c-coral" x="520" y="605" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="625" text-anchor="middle">Pricing Live</text>
-            <text class="ts" x="580" y="643" text-anchor="middle">Free + Pro</text>
-          </g>
+          <rect x="520" y="605" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="625" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Pricing</text>
+          <text x="580" y="643" text-anchor="middle" font-size="12px" fill="var(--tm)">Free + Pro</text>
 
-          <text class="ts" x="340" y="675" text-anchor="middle">Message: "Pulse. is live for everyone. Free plan or upgrade to Pro."</text>
+          <text x="340" y="675" text-anchor="middle" font-size="12px" fill="var(--tm)">Message: "Pulse. is live. Free plan or upgrade to Pro."</text>
 
           <!-- PHASE 6: Scale & Optimize (Dec-Mar) -->
           <circle cx="340" cy="760" r="6" fill="var(--t)" opacity="0.6"/>
           
           <!-- Left branch -->
           <line x1="340" y1="760" x2="160" y2="760" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('What channels should I focus on for growth?')">
-            <rect class="c-purple" x="40" y="735" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="100" y="755" text-anchor="middle">Content + Ads</text>
-            <text class="ts" x="100" y="773" text-anchor="middle">Dec–Mar</text>
-          </g>
+          <rect x="40" y="735" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--pink)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="100" y="755" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Content</text>
+          <text x="100" y="773" text-anchor="middle" font-size="12px" fill="var(--tm)">Dec–Mar</text>
 
           <!-- Right branch -->
           <line x1="340" y1="760" x2="520" y2="760" stroke="var(--t)" stroke-width="1" opacity="0.4"/>
-          <g class="node" onclick="sendPrompt('How do I measure success after launch?')">
-            <rect class="c-green" x="520" y="735" width="120" height="50" rx="8" stroke-width="0.5"/>
-            <text class="th" x="580" y="755" text-anchor="middle">Track Metrics</text>
-            <text class="ts" x="580" y="773" text-anchor="middle">Weekly reviews</text>
-          </g>
+          <rect x="520" y="735" width="120" height="50" rx="8" fill="var(--b2)" stroke="var(--green)" stroke-width="0.5" style="cursor:pointer"/>
+          <text x="580" y="755" text-anchor="middle" font-size="14px" font-weight="500" fill="var(--t)">Metrics</text>
+          <text x="580" y="773" text-anchor="middle" font-size="12px" fill="var(--tm)">Weekly reviews</text>
 
-          <text class="ts" x="340" y="805" text-anchor="middle">Message: "Try Pulse. free. Thousands using it. Upgrade anytime."</text>
-          <text class="ts" x="340" y="825" text-anchor="middle">Target: 280+ signups, 22+ paying customers by end of year</text>
+          <text x="340" y="805" text-anchor="middle" font-size="12px" fill="var(--tm)">Target: 280+ signups, 22+ paying customers</text>
 
           <!-- Legend -->
-          <text class="ts" x="40" y="870" fill="var(--t)" opacity="0.6">Click any phase for more details</text>
+          <text x="40" y="870" font-size="12px" fill="var(--tm)" opacity="0.6">Left branch = operations | Right branch = messaging</text>
         </svg>
 
         <div class="card">
           <h3>📅 What This Timeline Means</h3>
-          <p style="margin-bottom: 16px;">Each phase branches left (operational focus) and right (messaging/growth focus). Click any phase box to explore deeper strategy.</p>
+          <p style="margin-bottom: 16px;">Each phase branches left (operational focus) and right (messaging/growth focus).</p>
           <ul>
             <li><strong>Apr–May:</strong> Beta page is live. Focus on inviting warm network to test.</li>
             <li><strong>Jun–Aug:</strong> LinkedIn + cold email campaigns active. Target 10–16 signups/week.</li>
