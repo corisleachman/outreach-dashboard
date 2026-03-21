@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Sign up / OAuth</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0914;--s:rgba(255,255,255,0.04);--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;display:flex;align-items:center;justify-content:center;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.07);top:-200px;right:-150px;}
+.o2{width:500px;height:500px;background:rgba(0,212,255,0.05);bottom:-150px;left:-150px;}
+.hi{position:fixed;top:12px;left:14px;z-index:99;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+.hi:hover{background:rgba(255,255,255,0.14);}
+.wrap{position:relative;z-index:1;width:100%;max-width:420px;padding:24px;}
+.sc{display:none;}.sc.on{display:block;}
+/* card */
+.card{background:rgba(255,255,255,0.035);border:1px solid var(--b);border-radius:18px;padding:48px 40px;text-align:center;}
+.logo{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-1.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
+.tagline{font-size:14px;color:var(--tm);line-height:1.7;margin-bottom:36px;max-width:280px;margin-left:auto;margin-right:auto;}
+.gmail-btn{width:100%;padding:15px 20px;background:white;color:#1a1a1a;border:none;border-radius:10px;font-family:var(--of);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
+.gmail-btn:hover{background:#f4f4f4;transform:translateY(-1px);}
+.g-icon{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:12px;font-weight:800;background:linear-gradient(135deg,#ea4335,#fbbc04,#34a853,#4285f4);color:transparent;position:relative;}
+.g-icon::after{content:"G";position:absolute;color:white;font-size:11px;font-weight:800;font-family:sans-serif;}
+.terms{font-size:11px;color:var(--td);line-height:1.7;margin-top:22px;}
+.terms a{color:var(--tm);text-decoration:underline;text-underline-offset:2px;}
+/* connecting */
+.spinner{width:44px;height:44px;border:2px solid rgba(255,255,255,0.08);border-top-color:var(--pink);border-radius:50%;margin:0 auto 22px;animation:spin 0.8s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.conn-title{font-family:var(--of);font-size:19px;font-weight:700;margin-bottom:8px;}
+.conn-sub{font-size:13px;color:var(--tm);line-height:1.6;}
+.progress-bar{height:3px;background:rgba(255,255,255,0.08);border-radius:2px;margin-top:28px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--gr);border-radius:2px;animation:prog 2s ease forwards;}
+@keyframes prog{from{width:0}to{width:85%}}
+/* connected */
+.success-ring{width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,rgba(100,220,120,0.15),rgba(0,212,255,0.1));border:1px solid rgba(100,220,120,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:30px;}
+.success-title{font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:6px;}
+.success-email{font-size:13px;color:var(--cyan);margin-bottom:24px;}
+.scope-list{text-align:left;background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:10px;padding:14px 16px;margin-bottom:22px;}
+.scope-item{display:flex;align-items:center;gap:10px;font-size:12px;color:var(--tm);padding:5px 0;}
+.scope-check{color:var(--green);font-size:14px;line-height:1;}
+.cta{width:100%;padding:14px;background:var(--gr);color:white;border:none;border-radius:10px;font-family:var(--of);font-size:14px;font-weight:700;cursor:pointer;transition:all 0.15s;text-transform:uppercase;letter-spacing:0.05em;}
+.cta:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(255,20,147,0.35);}
+/* switcher */
+.sw{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;display:flex;gap:10px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);z-index:99;backdrop-filter:blur(12px);}
+.sw button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi" title="Hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+<div class="wrap">
+
+  <!-- LOGIN -->
+  <div id="s1" class="sc on">
+    <div class="card">
+      <div class="logo">outreach.</div>
+      <p class="tagline">Consistent outreach, without the overhead. Connect your Gmail to get started.</p>
+      <button class="gmail-btn" onclick="startConnect()">
+        <div class="g-icon"></div>
+        Continue with Google
+      </button>
+      <p class="terms">Your email stays yours — we never store credentials or read your inbox without permission.<br>By continuing you agree to our <a href="#">Terms of Service</a>.</p>
+    </div>
+  </div>
+
+  <!-- CONNECTING -->
+  <div id="s2" class="sc">
+    <div class="card" style="padding:56px 40px;">
+      <div class="spinner"></div>
+      <div class="conn-title">Connecting to Google…</div>
+      <div class="conn-sub">Requesting the permissions needed to send emails on your behalf. This takes a moment.</div>
+      <div class="progress-bar"><div class="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- CONNECTED -->
+  <div id="s3" class="sc">
+    <div class="card">
+      <div class="success-ring">✓</div>
+      <div class="success-title">Gmail connected</div>
+      <div class="success-email">coris@example.com</div>
+      <div class="scope-list">
+        <div class="scope-item"><span class="scope-check">✓</span>Send emails on your behalf</div>
+        <div class="scope-item"><span class="scope-check">✓</span>Create and manage Gmail drafts</div>
+        <div class="scope-item"><span class="scope-check">✓</span>Detect replies to your threads</div>
+      </div>
+      <button class="cta" onclick="window.location.href='dashboard-home.html'">Go to dashboard →</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="sw">
+  <span>State:</span>
+  <button style="color:#ff1493" onclick="show('s1')">Login</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s2')">Connecting</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s3')">Connected</button>
+</div>
+
+<script>
+function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function startConnect(){show('s2');setTimeout(()=>show('s3'),2200);}
+</script>
+</body></html>

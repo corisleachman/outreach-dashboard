@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>outreach. — dev hub</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d0914; --surface: rgba(255,255,255,0.04); --surface-hover: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.07); --border-hover: rgba(255,255,255,0.15);
+  --pink: #ff1493; --cyan: #00d4ff;
+  --pink-dim: rgba(255,20,147,0.1); --cyan-dim: rgba(0,212,255,0.08);
+  --text: #f0f0ee; --text-mid: #8a8a9a; --text-dim: #444456;
+  --outfit: 'Outfit', sans-serif; --sans: 'DM Sans', sans-serif;
+  --s-none-bg: #1e1a2a; --s-none-t: #555566;
+  --s-built-bg: rgba(0,212,255,0.10); --s-built-t: #00d4ff;
+  --s-review-bg: rgba(255,157,66,0.10); --s-review-t: #ff9d42;
+  --s-done-bg: rgba(100,220,120,0.10); --s-done-t: #64dc78;
+}
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; }
+.orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: rgba(255,20,147,0.04); top: -200px; right: -100px; }
+.orb-2 { width: 400px; height: 400px; background: rgba(0,212,255,0.04); bottom: -100px; left: -100px; }
+.page { position: relative; z-index: 1; max-width: 1040px; margin: 0 auto; padding: 72px 32px 100px; }
+
+.header { margin-bottom: 56px; }
+.header-eyebrow { font-family: var(--outfit); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: 12px; }
+.header-title { font-family: var(--outfit); font-size: 48px; font-weight: 800; letter-spacing: -0.03em; line-height: 1; margin-bottom: 12px; background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header-title span { background: linear-gradient(135deg, var(--pink) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.header-sub { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+.quick-links { display: flex; gap: 10px; margin-bottom: 60px; flex-wrap: wrap; }
+.quick-link { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; text-decoration: none; transition: all 0.2s; color: inherit; flex: 1; min-width: 190px; }
+.quick-link:hover { background: var(--surface-hover); border-color: var(--border-hover); transform: translateY(-1px); }
+.quick-link:hover .ql-arrow { opacity: 1; transform: translateX(0); }
+.ql-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+.ql-pink   { background: var(--pink-dim); border: 1px solid rgba(255,20,147,0.2); }
+.ql-purple { background: rgba(130,100,220,0.1); border: 1px solid rgba(130,100,220,0.2); }
+.ql-info { flex: 1; }
+.ql-title { font-family: var(--outfit); font-size: 13px; font-weight: 600; color: var(--text); }
+.ql-desc  { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
+.ql-arrow { font-size: 14px; color: var(--text-dim); opacity: 0.4; transform: translateX(-4px); transition: all 0.2s; }
+
+.section { margin-bottom: 48px; }
+.section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
+.section-label { font-family: var(--outfit); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-dim); }
+.section-meta { font-size: 11px; color: var(--text-dim); }
+
+.legend { display: flex; gap: 18px; margin-bottom: 20px; flex-wrap: wrap; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--text-dim); }
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; }
+
+.status { display: inline-flex; align-items: center; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-family: var(--outfit); font-weight: 600; white-space: nowrap; flex-shrink: 0; }
+.s-none   { background: var(--s-none-bg);   color: var(--s-none-t); }
+.s-built  { background: var(--s-built-bg);  color: var(--s-built-t); }
+.s-review { background: var(--s-review-bg); color: var(--s-review-t); }
+.s-done   { background: var(--s-done-bg);   color: var(--s-done-t); }
+
+.pip-track { display: flex; align-items: center; gap: 3px; }
+.pip { width: 24px; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.06); }
+.pip.p-built  { background: var(--s-built-t);  opacity: 0.7; }
+.pip.p-review { background: var(--s-review-t); opacity: 0.85; }
+.pip.p-done   { background: var(--s-done-t); }
+
+.tracker { width: 100%; border-collapse: collapse; }
+.tracker thead tr { border-bottom: 1px solid var(--border); }
+.tracker th { font-family: var(--outfit); font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); padding: 0 10px 10px; text-align: left; white-space: nowrap; }
+.tracker th:first-child { padding-left: 0; }
+.tracker tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+.tracker tbody tr:last-child { border-bottom: none; }
+.tracker tbody tr:hover { background: var(--surface); }
+.tracker td { padding: 10px 10px; font-size: 12px; color: var(--text-mid); vertical-align: middle; }
+.tracker td:first-child { padding-left: 0; }
+.journey-name { font-family: var(--outfit); font-size: 13px; font-weight: 500; color: var(--text) !important; }
+.wf-link { font-size: 11px; color: var(--cyan) !important; text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+.wf-link:hover { text-decoration: underline; }
+.group-row td { padding: 22px 0 6px !important; font-family: var(--outfit); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--text-dim); border-bottom: none !important; background: transparent !important; }
+
+.footer { margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--border); font-size: 11px; color: var(--text-dim); display: flex; align-items: center; justify-content: space-between; }
+.footer-logo { font-family: var(--outfit); font-size: 13px; font-weight: 800; background: linear-gradient(135deg, var(--pink) 0%, var(--cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.header      { animation: fadeUp 0.5s ease both; }
+.quick-links { animation: fadeUp 0.5s 0.08s ease both; }
+.section     { animation: fadeUp 0.5s 0.16s ease both; }
+.footer      { animation: fadeUp 0.5s 0.24s ease both; }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="page">
+
+  <div class="header">
+    <div class="header-eyebrow">Development hub</div>
+    <h1 class="header-title">outreach<span>.</span></h1>
+    <p class="header-sub">Central links for everything in active development. Track wireframes from first build to sign-off.</p>
+  </div>
+
+  <div class="quick-links">
+    <a href="https://corisleachman.github.io/outreach-dashboard/" target="_blank" class="quick-link">
+      <div class="ql-icon ql-pink">🚀</div>
+      <div class="ql-info"><div class="ql-title">Dashboard v1</div><div class="ql-desc">Live product</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="https://corisleachman.github.io/outreach-dashboard/exploration/" target="_blank" class="quick-link">
+      <div class="ql-icon ql-purple">🎨</div>
+      <div class="ql-info"><div class="ql-title">Brand exploration</div><div class="ql-desc">Design directions & typography</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="wireframes/campaign-view-drawer-spec.html" target="_blank" class="quick-link">
+      <div class="ql-icon ql-cyan">📋</div>
+      <div class="ql-info"><div class="ql-title">Campaign view spec</div><div class="ql-desc">Feature list for rewrite</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="wireframes/campaign-view-v3.html" target="_blank" class="quick-link">
+      <div class="ql-icon ql-pink">🗂</div>
+      <div class="ql-info"><div class="ql-title">Campaign view v3</div><div class="ql-desc">Canonical — incl. Edit sequence drawer</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Wireframe tracker</div>
+      <div class="section-meta" id="progress-summary"></div>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--s-none-t)"></div>Not started</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--s-built-t)"></div>Built</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--s-review-t)"></div>In review</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--s-done-t)"></div>Signed off</div>
+    </div>
+    <table class="tracker">
+      <thead>
+        <tr>
+          <th style="width:38%">Journey</th>
+          <th style="width:16%">Status</th>
+          <th style="width:18%">Progress</th>
+          <th style="width:28%">Wireframe</th>
+        </tr>
+      </thead>
+      <tbody id="tracker-body"></tbody>
+    </table>
+  </div>
+
+  <div class="footer">
+    <span class="footer-logo">outreach.</span>
+    <span id="footer-txt">dev hub</span>
+  </div>
+</div>
+
+<script>
+const B = 'https://corisleachman.github.io/outreach-dashboard/wireframes/';
+const P1 = B + 'outreach-prototype.html';
+const W2 = B + 'outreach-wizard-v2.html';
+const DH = B + 'dashboard-home.html';
+
+const JOURNEYS = [
+  { group: 'Activation & onboarding' },
+  { name: 'Sign-up → Gmail OAuth',               status: 'built',  url: B + 'signup-oauth.html' },
+  { name: 'Campaign wizard — activation loop',   status: 'review', url: B + 'outreach-wizard-v3.html' },
+  { name: 'Empty state — first login',            status: 'built',  url: DH },
+  { name: 'Free tier cap + upgrade prompt',       status: 'built',  url: B + 'pricing-upgrade.html' },
+
+  { group: 'Campaign management' },
+  { name: 'Campaigns list / home dashboard',     status: 'built',  url: DH },
+  { name: 'Create new campaign',                 status: 'built',  url: DH },
+  { name: 'Campaign view (persistent shell)',   status: 'done',  url: B + 'campaign-view-v3.html' },
+  { name: 'Campaign settings',                   status: 'none' },
+
+  { group: 'Prospect import & review' },
+  { name: 'CSV import with column mapping',      status: 'built',  url: B + 'prospect-import.html' },
+  { name: 'Manual prospect add',                 status: 'built',  url: B + 'prospect-import.html' },
+  { name: 'Review tab — Contact / Later / Skip', status: 'built',  url: P1 },
+  { name: 'Prospect detail view',                status: 'built',  url: B + 'prospect-import.html' },
+
+  { group: 'Message creation' },
+  { name: 'Message editor',                      status: 'built',  url: W2 },
+  { name: 'Sequence builder',                    status: 'done',   url: B + 'campaign-view-v3.html' },
+  { name: 'AI draft generation (Pro)',            status: 'built',  url: B + 'ai-drafts.html' },
+  { name: 'Personality pack selection',          status: 'built',  url: B + 'settings-account.html' },
+
+  { group: 'Sending' },
+  { name: 'Drafts tab — review & send',          status: 'built',  url: P1 },
+  { name: 'Review & send — sequence check',      status: 'review', url: W2 },
+  { name: 'Post-send celebration',               status: 'built',  url: W2 },
+  { name: 'Send failure state',                  status: 'built',  url: B + 'error-edge-cases.html' },
+
+  { group: 'Tracking & follow-up' },
+  { name: 'Sent tab — 14 status options',        status: 'built',  url: P1 },
+  { name: 'Follow-up tab',                       status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Follow-up composer',                  status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Nurture tab',                         status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversations tab',                   status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'LinkedIn tab',                        status: 'built',  url: P1 },
+
+  { group: 'Replies & conversations' },
+  { name: 'Reply received → Conversations',      status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversation thread + notes',         status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Meeting booked → Won',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Closed / not a fit → Nurture',        status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'DO NOT CONTACT confirmation',         status: 'built',  url: B + 'followup-nurture-conversations.html' },
+
+  { group: 'Emotional design moments' },
+  { name: 'Milestone toasts & moments',          status: 'built',  url: B + 'emotional-design.html' },
+  { name: '"Done for today" end state',          status: 'built',  url: B + 'emotional-design.html' },
+  { name: 'Weekly rhythm summary',               status: 'built',  url: B + 'error-edge-cases.html' },
+
+  { group: 'Pricing & upgrade' },
+  { name: 'Free tier limit wall',                status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Pricing / plan comparison',           status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Stripe checkout flow',                status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Post-upgrade confirmation',           status: 'built',  url: B + 'pricing-upgrade.html' },
+
+  { group: 'Settings & account' },
+  { name: 'Account settings',                    status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Personality packs — global default',  status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Billing & plan management',           status: 'built',  url: B + 'settings-account.html' },
+
+  { group: 'Error & edge cases' },
+  { name: 'Gmail disconnected / reconnect',      status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Email bounce — retry flow',           status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Empty state — no prospects yet',      status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Sequence paused — reply detected',    status: 'built',  url: B + 'error-edge-cases.html' },
+];
+
+const META = {
+  none:   { label: 'Not started', cls: 's-none',   pips: 0, pc: '' },
+  built:  { label: 'Built',       cls: 's-built',  pips: 1, pc: 'p-built' },
+  review: { label: 'In review',   cls: 's-review', pips: 2, pc: 'p-review' },
+  done:   { label: 'Signed off',  cls: 's-done',   pips: 3, pc: 'p-done' },
+};
+
+function pips(status) {
+  const n = META[status].pips, pc = META[status].pc;
+  return [1,2,3].map(i => `<div class="pip${i<=n?' '+pc:''}"></div>`).join('');
+}
+
+let total=0, built=0, review=0, done=0;
+let rows = '';
+
+JOURNEYS.forEach(j => {
+  if (j.group) {
+    rows += `<tr class="group-row"><td colspan="4">${j.group}</td></tr>`;
+    return;
+  }
+  const m = META[j.status];
+  const name = (j.url && j.status !== 'none')
+    ? `<a class="wf-link" href="${j.url}" target="_blank">${j.name}</a>`
+    : j.name;
+  const wf = (j.url && j.status !== 'none')
+    ? `<a class="wf-link" href="${j.url}" target="_blank">View wireframe →</a>`
+    : `<span style="color:var(--text-dim)">—</span>`;
+
+  rows += `<tr>
+    <td class="journey-name">${name}</td>
+    <td><span class="status ${m.cls}">${m.label}</span></td>
+    <td><div class="pip-track">${pips(j.status)}</div></td>
+    <td>${wf}</td>
+  </tr>`;
+
+  total++;
+  if (j.status==='built')  built++;
+  if (j.status==='review') review++;
+  if (j.status==='done')   done++;
+});
+
+document.getElementById('tracker-body').innerHTML = rows;
+document.getElementById('progress-summary').textContent =
+  `${done} signed off · ${review} in review · ${built} built · ${total-built-review-done} not started`;
+document.getElementById('footer-txt').textContent =
+  `dev hub · last updated ${new Date().toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}`;
+</script>
+</body>
+</html>

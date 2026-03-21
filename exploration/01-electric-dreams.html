@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Electric Dreams Palette Exploration</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: #f8f5ff;
+  color: #1a1a1a;
+  padding: 40px;
+}
+
+.container { max-width: 1400px; margin: 0 auto; }
+
+h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.palette-info {
+  color: #666;
+  margin-bottom: 40px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.mode-label {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #666;
+  margin-bottom: 12px;
+  margin-top: 40px;
+}
+
+.mode-desc {
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-top: 60px;
+}
+
+.comparison-item h3 {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.comparison-item .desc {
+  font-size: 12px;
+  color: #888;
+  margin-bottom: 20px;
+  font-style: italic;
+}
+
+.celebration {
+  border-radius: 16px;
+  padding: 36px;
+  text-align: center;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+}
+
+.celebration-emoji {
+  font-size: 48px;
+  margin-bottom: 16px;
+  display: block;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.celebration-text {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.2;
+}
+
+.celebration-subtext {
+  font-size: 14px;
+  margin-bottom: 16px;
+  font-weight: 400;
+}
+
+.celebration-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: 24px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.metric-card {
+  border-radius: 8px;
+  padding: 16px;
+  position: relative;
+}
+
+.metric-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+}
+
+.metric-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  opacity: 0.8;
+}
+
+.metric-value {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.metric-secondary {
+  font-size: 11px;
+  opacity: 0.7;
+}
+
+/* ELECTRIC DREAMS DARK */
+.electric-dreams-dark {
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 50%, #1f1435 100%);
+  border: 2px solid #ff1493;
+}
+
+.electric-dreams-dark .celebration-text {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.electric-dreams-dark .celebration-subtext {
+  color: #00d4ff;
+}
+
+.electric-dreams-dark .celebration-badge {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(0, 212, 255, 0.4);
+}
+
+.electric-dreams-dark .metric-card {
+  background: rgba(255, 20, 147, 0.15);
+  border: 1.5px solid #ff1493;
+  color: #fff;
+}
+
+.electric-dreams-dark .metric-card::before {
+  background: linear-gradient(90deg, #ff1493 0%, #00d4ff 100%);
+}
+
+.electric-dreams-dark .metric-label {
+  color: #00d4ff;
+}
+
+.electric-dreams-dark .metric-value {
+  color: #ff1493;
+}
+
+.electric-dreams-dark .metric-secondary {
+  color: #a0a0ff;
+}
+
+/* ELECTRIC DREAMS LIGHT */
+.electric-dreams-light {
+  background: linear-gradient(135deg, #fff9f5 0%, #f5edff 50%, #f0f5ff 100%);
+  border: 2px solid #ff1493;
+}
+
+.electric-dreams-light .celebration-text {
+  background: linear-gradient(135deg, #ff1493 0%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.electric-dreams-light .celebration-subtext {
+  color: #ff1493;
+}
+
+.electric-dreams-light .celebration-badge {
+  background: linear-gradient(135deg, #ff1493 0%, #ffa500 100%);
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 20, 147, 0.3);
+}
+
+.electric-dreams-light .metric-card {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(255, 20, 147, 0.08) 100%);
+  border: 2px solid rgba(255, 20, 147, 0.4);
+  color: #1a1a1a;
+}
+
+.electric-dreams-light .metric-card::before {
+  background: linear-gradient(90deg, #ff1493 0%, #00d4ff 100%);
+}
+
+.electric-dreams-light .metric-label {
+  color: #ff1493;
+}
+
+.electric-dreams-light .metric-value {
+  color: #ff1493;
+}
+
+.electric-dreams-light .metric-secondary {
+  color: #00d4ff;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Electric Dreams</h1>
+<div class="palette-info">
+  <strong>Foundation:</strong> Deep purple/black (#1a0f2e)<br>
+  <strong>Accents:</strong> Neon cyan (#00d4ff), hot pink (#ff1493), orange (#ffa500)<br>
+  <strong>Feel:</strong> Unapologetic, vibrant, celebratory, maximum personality
+</div>
+
+<div class="mode-label">Comparison: Dark vs Light</div>
+
+<div class="comparison-grid">
+  <div class="comparison-item">
+    <h3>Dark Mode</h3>
+    <div class="desc">Deep purples with neon cyan, hot pink, orange. Metric cards bright and fully readable.</div>
+    <div class="celebration electric-dreams-dark">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comparison-item">
+    <h3>Light Mode</h3>
+    <div class="desc">Bright, clean backgrounds with neon accents. Hot pink and cyan command attention.</div>
+    <div class="celebration electric-dreams-light">
+      <span class="celebration-emoji">🎉</span>
+      <div class="celebration-text">50 sent</div>
+      <div class="celebration-subtext">Highest day yet</div>
+      <div class="celebration-badge">Personal record</div>
+      
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-label">Sequences</div>
+          <div class="metric-value">14</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Expected replies</div>
+          <div class="metric-value">~8-10</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-label">Your streak</div>
+          <div class="metric-value">7 days</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

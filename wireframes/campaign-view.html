@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Campaign view</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --ad:rgba(255,157,66,0.10);--gd:rgba(100,220,120,0.10);--rd:rgba(255,76,76,0.10);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px; /* topbar height */
+  --sw:64px; /* slim sidebar width */
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;overflow-x:hidden;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:50px;}
+
+/* ── HOME ICON ── */
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 20px 0 56px;gap:0;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-right:24px;flex-shrink:0;}
+/* breadcrumb in topbar */
+.breadcrumb{display:flex;align-items:center;gap:8px;flex:1;min-width:0;}
+.bc-campaigns{font-size:13px;color:var(--tm);cursor:pointer;text-decoration:none;white-space:nowrap;
+  transition:color 0.15s;}
+.bc-campaigns:hover{color:var(--t);}
+.bc-sep{color:var(--td);font-size:13px;flex-shrink:0;}
+.bc-name{font-size:13px;font-weight:600;color:var(--t);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.topbar-right{display:flex;align-items:center;gap:12px;flex-shrink:0;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+
+/* ── SLIM SIDEBAR ── */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:16px 0;
+  z-index:190;gap:4px;}
+.si{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;border:1px solid transparent;text-decoration:none;
+  position:relative;}
+.si:hover{background:var(--s2);border-color:var(--b2);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);}
+.si.on svg{opacity:1;color:var(--pink);}
+.si svg{opacity:0.7;transition:opacity 0.15s;color:var(--tm);}
+.si:hover svg{opacity:0.8;}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);background:rgba(20,10,35,0.96);
+  border:1px solid var(--b2);border-radius:6px;padding:5px 10px;
+  font-family:var(--of);font-size:11px;font-weight:600;color:var(--t);
+  white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-bottom{margin-top:auto;}
+.si-tip{opacity:1;}
+.si-spacer{flex:1;}
+.si-settings{margin-top:auto;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+
+/* ── CAMPAIGN HEADER ── */
+.campaign-header{
+  padding:20px 32px 0;
+  border-bottom:1px solid var(--b);
+  background:rgba(13,9,20,0.5);
+  backdrop-filter:blur(8px);
+  position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ch-meta-sep{opacity:0.4;}
+.ch-meta a{color:var(--tm);text-decoration:none;transition:color 0.15s;}
+.ch-meta a:hover{color:var(--cyan);}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+/* stats strip */
+.stats-strip{display:flex;gap:0;margin-bottom:0;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.stat-num{font-family:var(--of);font-size:20px;font-weight:800;color:var(--t);line-height:1;margin-bottom:3px;}
+.stat-num.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-num.green{color:var(--green);}
+.stat-num.cyan{color:var(--cyan);}
+.stat-lbl{font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+/* tab bar */
+.tab-bar{display:flex;gap:0;margin-top:4px;overflow-x:auto;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;
+  color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:6px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-count{background:var(--s2);border:1px solid var(--b2);border-radius:4px;
+  padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-count{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* ── TAB CONTENT ── */
+.tab-content{flex:1;padding:24px 32px;}
+.tc{display:none;}.tc.on{display:block;}
+
+/* ── PROSPECT CARDS (Review tab) ── */
+.search-bar{display:flex;align-items:center;background:rgba(255,255,255,0.04);
+  border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:16px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;padding:11px 10px;
+  font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:14px;flex-shrink:0;}
+
+.prospect-card{background:var(--s);border:1px solid var(--b);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;transition:border-color 0.15s;}
+.prospect-card:hover{border-color:var(--b2);}
+.prospect-card.expanded{border-color:var(--b2);}
+.pc-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;}
+.pc-av{width:36px;height:36px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.pc-info{flex:1;min-width:0;}
+.pc-name{font-size:14px;font-weight:600;color:var(--t);margin-bottom:2px;}
+.pc-sub{font-size:11px;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pc-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.catch-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.06em;padding:3px 8px;border-radius:4px;
+  background:rgba(255,157,66,0.12);border:1px solid rgba(255,157,66,0.25);
+  color:var(--amber);}
+.li-btn{width:28px;height:28px;border-radius:6px;background:rgba(10,102,194,0.15);
+  border:1px solid rgba(10,102,194,0.3);display:flex;align-items:center;
+  justify-content:center;cursor:pointer;text-decoration:none;flex-shrink:0;}
+.li-btn svg{color:#0a66c2;opacity:0.8;}
+.icon-btn{width:28px;height:28px;border-radius:6px;background:transparent;
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.icon-btn:hover{border-color:var(--td);background:var(--s2);}
+.icon-btn.approve{background:var(--gd);border-color:rgba(100,220,120,0.3);}
+.icon-btn.approve:hover{background:rgba(100,220,120,0.2);}
+.icon-btn.approve svg{color:var(--green);}
+.icon-btn.expand{border-color:transparent;}
+/* expanded body */
+.pc-body{padding:0 18px 18px;display:none;}
+.pc-body.open{display:block;}
+.pc-fields{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.pc-field{}
+.pf-label{font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:5px;}
+.pf-input{background:rgba(255,255,255,0.05);border:1px solid var(--b2);border-radius:6px;
+  padding:9px 12px;font-family:var(--sf);font-size:13px;color:var(--t);
+  width:100%;outline:none;transition:border-color 0.15s;}
+.pf-input:focus{border-color:var(--cyan);}
+.pf-input.email-field{width:100%;}
+.pf-2col{grid-column:span 2;}
+.email-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;}
+.email-label-row{display:flex;align-items:center;gap:6px;margin-bottom:5px;}
+.pf-about{font-size:12px;color:var(--tm);line-height:1.7;
+  max-height:72px;overflow:hidden;position:relative;}
+.pf-about.expanded{max-height:none;}
+.about-more{color:var(--cyan);cursor:pointer;font-size:12px;}
+.pc-actions{display:flex;gap:8px;justify-content:flex-end;padding-top:14px;
+  border-top:1px solid var(--b);}
+
+/* ── DRAFTS TAB ── */
+.draft-row{display:flex;align-items:center;gap:12px;padding:14px 18px;
+  border-bottom:1px solid var(--b);transition:background 0.15s;cursor:pointer;}
+.draft-row:last-child{border-bottom:none;}
+.draft-row:hover{background:var(--s2);}
+.dr-av{width:34px;height:34px;border-radius:50%;background:var(--cd);
+  border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;
+  color:var(--cyan);flex-shrink:0;}
+.dr-info{flex:1;min-width:0;}
+.dr-name{font-size:13px;font-weight:500;color:var(--t);margin-bottom:3px;}
+.dr-subject{font-size:12px;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:500px;}
+.dr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* ── GENERIC TABLE ROWS (Sent, LinkedIn etc.) ── */
+.trow{display:flex;align-items:center;gap:12px;padding:12px 18px;
+  border-bottom:1px solid var(--b);transition:background 0.15s;}
+.trow:last-child{border-bottom:none;}
+.trow:hover{background:var(--s2);}
+.tr-av{width:32px;height:32px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.15);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.tr-info{flex:1;min-width:0;}
+.tr-name{font-size:13px;font-weight:500;color:var(--t);}
+.tr-sub{font-size:11px;color:var(--td);margin-top:2px;}
+.tr-right{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+/* status select */
+.status-sel{background:var(--s2);border:1px solid var(--b2);border-radius:6px;
+  padding:5px 8px;font-family:var(--sf);font-size:11px;color:var(--t);
+  cursor:pointer;outline:none;max-width:220px;}
+/* badges */
+.bdg{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.07em;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.bdg-g{background:var(--gd);color:var(--green);border:1px solid rgba(100,220,120,0.25);}
+.bdg-c{background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.bdg-a{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.bdg-n{background:var(--s2);color:var(--tm);border:1px solid var(--b2);}
+.bdg-r{background:var(--rd);color:var(--red);border:1px solid rgba(255,76,76,0.2);}
+
+/* ── EMPTY TAB STATE ── */
+.tab-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 20px;text-align:center;}
+.te-icon{font-size:36px;margin-bottom:14px;opacity:0.5;}
+.te-title{font-family:var(--of);font-size:17px;font-weight:700;color:var(--t);margin-bottom:6px;}
+.te-sub{font-size:13px;color:var(--tm);line-height:1.6;max-width:300px;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 18px;border-radius:8px;font-family:var(--of);font-size:12px;font-weight:700;
+  cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;
+  letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
+.bg_{background:transparent;color:var(--tm);border:1px solid transparent;}.bg_:hover{color:var(--t);}
+.bsm{padding:6px 12px;font-size:11px;}
+
+/* ── DRAWER (prospect/draft compose overlay) ── */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(4px);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.25s;}
+.drawer-overlay.open{opacity:1;pointer-events:all;}
+.drawer{position:fixed;top:var(--th);right:0;bottom:0;width:520px;max-width:100vw;
+  background:#130a20;border-left:1px solid var(--b2);z-index:401;
+  display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);}
+.drawer-overlay.open .drawer{transform:translateX(0);}
+.drawer-header{padding:20px 24px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;gap:12px;}
+.drawer-title{font-family:var(--of);font-size:17px;font-weight:700;color:var(--t);margin-bottom:3px;}
+.drawer-sub{font-size:12px;color:var(--cyan);}
+.drawer-close{margin-left:auto;width:28px;height:28px;border-radius:6px;background:transparent;
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--tm);font-size:16px;flex-shrink:0;line-height:1;}
+.drawer-close:hover{color:var(--t);}
+.drawer-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.drawer-body::-webkit-scrollbar{width:3px;}
+.drawer-body::-webkit-scrollbar-thumb{background:var(--b2);}
+.drawer-footer{padding:16px 24px;border-top:1px solid var(--b);display:flex;gap:8px;justify-content:flex-end;}
+.d-label{font-size:10px;font-family:var(--of);font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:6px;}
+.d-fld{margin-bottom:14px;}
+.d-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:7px;padding:10px 13px;font-family:var(--sf);font-size:13px;color:var(--t);
+  outline:none;transition:border-color 0.2s;}
+.d-input:focus{border-color:var(--cyan);}
+textarea.d-input{resize:none;line-height:1.7;}
+.d-confirm{background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:8px;
+  padding:10px 13px;font-size:12px;color:var(--green);line-height:1.5;margin-bottom:14px;}
+
+
+/* ── BOUNCE TAB ── */
+.banner{border-radius:10px;padding:16px 18px;margin-bottom:16px;display:flex;align-items:flex-start;gap:12px;}
+.banner-a{background:var(--ad);border:1px solid rgba(255,157,66,0.2);}
+.banner-icon{font-size:18px;flex-shrink:0;margin-top:1px;}
+.banner-title{font-family:var(--of);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:3px;}
+.banner-sub{font-size:12px;color:var(--amber);opacity:0.8;line-height:1.5;}
+.grp-hdr{padding:9px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);
+  font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);}
+.pav-a{background:var(--ad);border:1px solid rgba(255,157,66,0.25)!important;color:var(--amber)!important;}
+.pav-r{background:var(--rd);border:1px solid rgba(255,76,76,0.25)!important;color:var(--red)!important;}
+.btn.ba{background:var(--ad);border:1px solid rgba(255,157,66,0.25);color:var(--amber);}
+.btn.ba:hover{background:rgba(255,157,66,0.18);}
+.pt{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);margin-bottom:2px;}
+.psub{font-size:12px;color:var(--tm);margin-bottom:16px;}
+
+/* ── TOAST ── */
+.tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;
+  max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;pointer-events:all;}
+.tst.tc{border-left:2px solid var(--cyan);}
+.tst.tp{border-left:2px solid var(--pink);}
+.tst.tg{border-left:2px solid var(--green);}
+.tst.tr{border-left:2px solid var(--red);}
+@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+
+/* ── PBAR (dev switcher) ── */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 16px);z-index:999;
+  background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;
+  font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<!-- DEV HUB LINK -->
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi" title="Dev hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+
+<!-- ═══ TOPBAR ═══ -->
+<header class="topbar">
+  <div class="logo">outreach.</div>
+  <nav class="breadcrumb">
+    <a class="bc-campaigns" href="dashboard-home.html">Campaigns</a>
+    <span class="bc-sep">/</span>
+    <span class="bc-name" id="bc-name">Agency founders — Q1</span>
+  </nav>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- ═══ SLIM SIDEBAR ═══ -->
+<aside class="sidebar">
+  <a class="si on" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<!-- ═══ LAYOUT ═══ -->
+<div class="layout">
+<main class="main">
+
+  <!-- ── CAMPAIGN HEADER (sticky) ── -->
+  <div class="campaign-header">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name" id="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta">
+          <span>47 prospects</span>
+          <span class="ch-meta-sep">·</span>
+          <span>Started 12 Mar 2026</span>
+          <span class="ch-meta-sep">·</span>
+          <span>3-step sequence</span>
+          <span class="ch-meta-sep">·</span>
+          <a href="#" onclick="toast('→','Opening message editor','tc');return false;">Edit message</a>
+        </div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm" onclick="window.location.href='prospect-import.html'">+ Add prospects</button>
+        <button class="btn bp bsm" onclick="switchTab('review')">Review queue →</button>
+      </div>
+    </div>
+
+    <!-- Stats strip -->
+    <div class="stats-strip">
+      <div class="stat-item">
+        <div class="stat-num pink">15</div>
+        <div class="stat-lbl">Drafts ready</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">2</div>
+        <div class="stat-lbl">Responded</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num green">8</div>
+        <div class="stat-lbl">Meetings set</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">139</div>
+        <div class="stat-lbl">LinkedIn sent</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num cyan">0</div>
+        <div class="stat-lbl">LinkedIn due</div>
+      </div>
+    </div>
+
+    <!-- Tab bar -->
+    <div class="tab-bar" id="tab-bar">
+      <div class="tab on" data-tab="review" onclick="switchTab('review')">Review <span class="tab-count" id="tc-review">563</span></div>
+      <div class="tab" data-tab="drafts" onclick="switchTab('drafts')">Drafts <span class="tab-count" id="tc-drafts">15</span></div>
+      <div class="tab" data-tab="linkedin" onclick="switchTab('linkedin')">LinkedIn</div>
+      <div class="tab" data-tab="sent" onclick="switchTab('sent')">Sent</div>
+      <div class="tab" data-tab="followup" onclick="switchTab('followup')">Follow-up <span class="tab-count" id="tc-fu">14</span></div>
+      <div class="tab" data-tab="nurture" onclick="switchTab('nurture')">Nurture</div>
+      <div class="tab" data-tab="conversations" onclick="switchTab('conversations')">Conversations</div>
+      <div class="tab" data-tab="bounced" onclick="switchTab('bounced')">Bounced</div>
+    </div>
+  </div>
+
+  <!-- ── TAB CONTENT ── -->
+  <div class="tab-content">
+
+    <!-- REVIEW TAB -->
+    <div id="tc-review" class="tc on">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+        <div>
+          <div style="font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);margin-bottom:2px;">Prospect review</div>
+          <div style="font-size:12px;color:var(--tm);">Lix imports awaiting vetting — approve to add to outreach and trigger first email draft, or skip to dismiss.</div>
+        </div>
+        <button class="btn bg_ bsm" onclick="toast('↻','Refreshing...','tc')" style="border-color:var(--b2)">↻ Refresh</button>
+      </div>
+
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+      <!-- CARD 1 — expanded -->
+      <div class="prospect-card expanded" id="card-hs">
+        <div class="pc-header" onclick="toggleCard('card-hs')">
+          <div class="pc-av">HS</div>
+          <div class="pc-info">
+            <div class="pc-name">Howard Sullivan</div>
+            <div class="pc-sub">Founder and Executive Creative Director, YouStudio · YouStudio – Experience Design Agency · Greater London, England, United Kingdom</div>
+          </div>
+          <div class="pc-right">
+            <span class="catch-badge">● Catch-all</span>
+            <a class="li-btn" href="#" onclick="return false">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-hs')" title="Skip">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-hs','Howard Sullivan')" title="Approve">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="icon-btn expand" onclick="toggleCard('card-hs')" id="exp-hs">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="pc-body open" id="body-hs">
+          <div class="pc-fields">
+            <div class="pc-field">
+              <div class="pf-label">First name</div>
+              <input class="pf-input" value="Howard">
+            </div>
+            <div class="pc-field">
+              <div class="pf-label">Last name</div>
+              <input class="pf-input" value="Sullivan">
+            </div>
+            <div class="pc-field pf-2col">
+              <div class="pf-label">Organisation</div>
+              <input class="pf-input" value="YouStudio – Experience Design Agency">
+            </div>
+            <div class="pc-field pf-2col">
+              <div class="pf-label">Email <span class="catch-badge" style="margin-left:6px;font-size:9px;">● Catch-all</span></div>
+              <input class="pf-input email-field" placeholder="Not yet verified">
+            </div>
+            <div class="pc-field">
+              <div class="pf-label">Industry</div>
+              <div style="font-size:13px;color:var(--t);padding-top:4px;">Design Services</div>
+            </div>
+            <div class="pc-field">
+              <div class="pf-label">Org size</div>
+              <div style="font-size:13px;color:var(--t);padding-top:4px;">51–200</div>
+            </div>
+            <div class="pc-field pf-2col">
+              <div class="pf-label">About</div>
+              <div class="pf-about" id="about-hs">A creative leader spearheading next generation retail. Working at the intersection of digital, brand and experience innovation globally. Partnering with clients from Amazon, Nike to Tiffany &amp; Co to reimagine experience, bringing brands closer to people. <span class="about-more" onclick="document.getElementById('about-hs').classList.toggle('expanded')">…more</span></div>
+            </div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn bg_ bsm" onclick="skipCard('card-hs')">✕ Skip</button>
+            <button class="btn bp bsm" onclick="approveCard('card-hs','Howard Sullivan')">✓ Approve</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 2 — collapsed -->
+      <div class="prospect-card" id="card-mj">
+        <div class="pc-header" onclick="toggleCard('card-mj')">
+          <div class="pc-av">MJ</div>
+          <div class="pc-info">
+            <div class="pc-name">Mark Jory</div>
+            <div class="pc-sub">CEO · Latitude Agency · London, England, United Kingdom</div>
+          </div>
+          <div class="pc-right">
+            <span class="catch-badge">● Catch-all</span>
+            <a class="li-btn" href="#" onclick="return false">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-mj')">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-mj','Mark Jory')">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="icon-btn expand" id="exp-mj">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="pc-body" id="body-mj">
+          <div class="pc-fields">
+            <div class="pc-field"><div class="pf-label">First name</div><input class="pf-input" value="Mark"></div>
+            <div class="pc-field"><div class="pf-label">Last name</div><input class="pf-input" value="Jory"></div>
+            <div class="pc-field pf-2col"><div class="pf-label">Organisation</div><input class="pf-input" value="Latitude Agency"></div>
+            <div class="pc-field pf-2col"><div class="pf-label">Email <span class="catch-badge" style="margin-left:6px;font-size:9px;">● Catch-all</span></div><input class="pf-input email-field" placeholder="Not yet verified"></div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn bg_ bsm" onclick="skipCard('card-mj')">✕ Skip</button>
+            <button class="btn bp bsm" onclick="approveCard('card-mj','Mark Jory')">✓ Approve</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- CARD 3 — collapsed -->
+      <div class="prospect-card" id="card-sc">
+        <div class="pc-header" onclick="toggleCard('card-sc')">
+          <div class="pc-av" style="background:var(--cd);border-color:rgba(0,212,255,0.2);color:var(--cyan)">SC</div>
+          <div class="pc-info">
+            <div class="pc-name">Sophie Clarke</div>
+            <div class="pc-sub">Managing Director · Fold Studio · London, England, United Kingdom</div>
+          </div>
+          <div class="pc-right">
+            <span class="bdg bdg-g" style="font-size:9px;padding:2px 7px;">Verified</span>
+            <a class="li-btn" href="#" onclick="return false">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+            </a>
+            <div class="icon-btn" onclick="event.stopPropagation();skipCard('card-sc')">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2l8 8M10 2l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+            <div class="icon-btn approve" onclick="event.stopPropagation();approveCard('card-sc','Sophie Clarke')">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </div>
+            <div class="icon-btn expand" id="exp-sc">
+              <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 4l4 4 4-4" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="pc-body" id="body-sc">
+          <div class="pc-fields">
+            <div class="pc-field"><div class="pf-label">First name</div><input class="pf-input" value="Sophie"></div>
+            <div class="pc-field"><div class="pf-label">Last name</div><input class="pf-input" value="Clarke"></div>
+            <div class="pc-field pf-2col"><div class="pf-label">Organisation</div><input class="pf-input" value="Fold Studio"></div>
+            <div class="pc-field pf-2col"><div class="pf-label">Email</div><input class="pf-input email-field" value="sophie@foldstudio.co.uk"></div>
+          </div>
+          <div class="pc-actions">
+            <button class="btn bg_ bsm" onclick="skipCard('card-sc')">✕ Skip</button>
+            <button class="btn bp bsm" onclick="approveCard('card-sc','Sophie Clarke')">✓ Approve</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DRAFTS TAB -->
+    <div id="tc-drafts" class="tc">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--tm);">15 drafts ready to send.</div>
+        <button class="btn bp bsm" onclick="openDrawer('bulk')">Send all drafts →</button>
+      </div>
+      <div class="search-bar" style="margin-bottom:16px;">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div class="draft-row" onclick="openDrawer('draft','James Mitchell','james@northagency.com','Quick thought on your pipeline — worth 10 minutes?')">
+          <div class="dr-av">JM</div>
+          <div class="dr-info">
+            <div class="dr-name">James Mitchell</div>
+            <div class="dr-subject">Quick thought on your pipeline — worth 10 minutes?</div>
+          </div>
+          <div class="dr-right">
+            <button class="btn bs bsm" onclick="event.stopPropagation();openDrawer('draft','James Mitchell','james@northagency.com','Quick thought on your pipeline — worth 10 minutes?')">Edit & send</button>
+          </div>
+        </div>
+        <div class="draft-row" onclick="openDrawer('draft','Sarah Thompson','sarah@consultco.co.uk','Scaling ConsultCo — a thought')">
+          <div class="dr-av">ST</div>
+          <div class="dr-info">
+            <div class="dr-name">Sarah Thompson</div>
+            <div class="dr-subject">Scaling ConsultCo — a thought</div>
+          </div>
+          <div class="dr-right">
+            <button class="btn bs bsm" onclick="event.stopPropagation()">Edit & send</button>
+          </div>
+        </div>
+        <div class="draft-row" onclick="openDrawer('draft','Marcus Peters','marcus@ventures.io','Worth 15 minutes?')">
+          <div class="dr-av">MP</div>
+          <div class="dr-info">
+            <div class="dr-name">Marcus Peters</div>
+            <div class="dr-subject">Worth 15 minutes?</div>
+          </div>
+          <div class="dr-right">
+            <button class="btn bs bsm" onclick="event.stopPropagation()">Edit & send</button>
+          </div>
+        </div>
+        <div class="draft-row" style="cursor:default;justify-content:center;">
+          <span style="font-size:12px;color:var(--td);">+ 12 more drafts</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- LINKEDIN TAB -->
+    <div id="tc-linkedin" class="tc">
+      <div style="display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;">
+        <div class="btn bs bsm on-filter" style="border-color:rgba(255,20,147,0.3);color:var(--pink);background:var(--pd);" onclick="filterLI(this,'none')">No connection <span style="opacity:0.6;margin-left:4px;">28</span></div>
+        <div class="btn bs bsm" onclick="filterLI(this,'sent')">Connection sent <span style="opacity:0.6;margin-left:4px;">12</span></div>
+        <div class="btn bs bsm" onclick="filterLI(this,'accepted')">Accepted <span style="opacity:0.6;margin-left:4px;">7</span></div>
+        <div class="btn bs bsm" onclick="filterLI(this,'unable')">Unable to connect <span style="opacity:0.6;margin-left:4px;">0</span></div>
+      </div>
+      <div class="search-bar" style="margin-bottom:16px;">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div class="trow"><div class="tr-av">JM</div><div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Head of Growth</div></div><div class="tr-right"><select class="status-sel"><option>No connection yet</option><option>Connection sent</option><option>Connection accepted</option><option>Unable to connect</option><option>Chose not to connect</option></select><a class="li-btn" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a></div></div>
+        <div class="trow"><div class="tr-av">ST</div><div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Managing Director</div></div><div class="tr-right"><select class="status-sel"><option>No connection yet</option><option>Connection sent</option><option selected>Connection accepted</option><option>Unable to connect</option></select><a class="li-btn" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a></div></div>
+        <div class="trow"><div class="tr-av">MP</div><div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">marcus@ventures.io · Founder</div></div><div class="tr-right"><select class="status-sel"><option selected>Connection sent</option><option>Connection accepted</option><option>Unable to connect</option></select><a class="li-btn" href="#" onclick="return false"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a></div></div>
+      </div>
+    </div>
+
+    <!-- SENT TAB -->
+    <div id="tc-sent" class="tc">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Master record of every emailed prospect. Update status as conversations develop.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div class="trow">
+          <div class="tr-av">JM</div>
+          <div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Sent 14 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel">
+              <option selected>First email sent → Follow-up</option>
+              <option>Follow-up drafted</option><option>2nd follow-up sent</option>
+              <option>Reply received → Conversations</option>
+              <option>Closed — meeting booked → Conversations</option>
+              <option>Closed — no response → Nurture</option>
+              <option>Closed — not a fit → Nurture</option>
+              <option>Email bounced → Bounced</option>
+              <option>DO NOT CONTACT</option>
+            </select>
+          </div>
+        </div>
+        <div class="trow">
+          <div class="tr-av">ST</div>
+          <div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Sent 13 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel">
+              <option>First email sent → Follow-up</option>
+              <option selected>Reply received → Conversations</option>
+              <option>Closed — meeting booked → Conversations</option>
+            </select>
+            <span class="bdg bdg-g">Reply</span>
+          </div>
+        </div>
+        <div class="trow">
+          <div class="tr-av">HC</div>
+          <div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Sent 12 Mar</div></div>
+          <div class="tr-right">
+            <select class="status-sel">
+              <option selected>Closed — meeting booked → Conversations</option>
+            </select>
+            <span class="bdg bdg-g">Meeting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOLLOW-UP TAB -->
+    <div id="tc-followup" class="tc">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">14 prospects due for follow-up. Sequences pause automatically when they reply.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div style="padding:9px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);">Due today · 3</div>
+        <div class="trow"><div class="tr-av">JM</div><div class="tr-info"><div class="tr-name">James Mitchell</div><div class="tr-sub">james@northagency.com · Follow-up #1 · 3 days no reply</div></div><div class="tr-right"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="openDrawer('followup','James Mitchell','james@northagency.com','Follow-up #1')">Compose</button></div></div>
+        <div class="trow"><div class="tr-av">MP</div><div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">marcus@ventures.io · Follow-up #1 · 3 days no reply</div></div><div class="tr-right"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm">Compose</button></div></div>
+        <div style="padding:9px 18px;background:rgba(255,255,255,0.025);border-top:1px solid var(--b);border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);">Upcoming · 11</div>
+        <div class="trow"><div class="tr-av">AL</div><div class="tr-info"><div class="tr-name">Alice Lowe</div><div class="tr-sub">alice@creativelab.com · Follow-up #1 in 2 days</div></div><div class="tr-right"><span class="bdg bdg-n">In 2 days</span></div></div>
+        <div class="trow" style="border-bottom:none;justify-content:center;cursor:default;"><span style="font-size:12px;color:var(--td)">+ 11 more upcoming</span></div>
+      </div>
+    </div>
+
+    <!-- NURTURE TAB -->
+    <div id="tc-nurture" class="tc">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Prospects parked for re-contact. We'll surface them when the time comes.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div class="trow"><div class="tr-av" style="background:var(--ad);border-color:rgba(255,157,66,0.2);color:var(--amber)">MP</div><div class="tr-info"><div class="tr-name">Marcus Peters</div><div class="tr-sub">marcus@ventures.io · "Come back in Q2" · Re-contact: 1 Apr</div></div><div class="tr-right"><span class="bdg bdg-a">Due soon</span><button class="btn bs bsm" onclick="toast('→','Opening follow-up composer','tc')">Re-contact</button></div></div>
+        <div class="trow"><div class="tr-av">DH</div><div class="tr-info"><div class="tr-name">Dan Hughes</div><div class="tr-sub">dan@agencyco.io · Closed — no need right now · Re-contact: May</div></div><div class="tr-right"><span class="bdg bdg-n">May 2026</span></div></div>
+        <div class="trow"><div class="tr-av">LW</div><div class="tr-info"><div class="tr-name">Laura Webb</div><div class="tr-sub">laura@design.co · Maternity until Aug · Re-contact: Sep</div></div><div class="tr-right"><span class="bdg bdg-n">Sep 2026</span></div></div>
+      </div>
+    </div>
+
+    <!-- CONVERSATIONS TAB -->
+    <div id="tc-conversations" class="tc">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Active replies and meetings. Move each one forward or close it out.</div>
+      <div class="search-bar">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">ST</div><div class="tr-info"><div class="tr-name">Sarah Thompson</div><div class="tr-sub">sarah@consultco.co.uk · Replied 2 hours ago</div></div><div class="tr-right"><span class="bdg bdg-g">New reply</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View thread</button></div></div>
+        <div class="trow"><div class="tr-av" style="background:var(--gd);border-color:rgba(100,220,120,0.25);color:var(--green)">HC</div><div class="tr-info"><div class="tr-name">Helen Clarke</div><div class="tr-sub">helen@theops.co · Meeting booked · 24 Mar, 10am</div></div><div class="tr-right"><span class="bdg bdg-g">Meeting</span><button class="btn bs bsm" onclick="toast('→','Opening thread','tc')">View</button></div></div>
+      </div>
+    </div>
+
+
+    <!-- BOUNCED TAB -->
+    <div id="tc-bounced" class="tc">
+      <div class="search-bar" style="margin-bottom:16px;">
+        <span class="search-icon">⌕</span>
+        <input type="text" placeholder="Search name, role, or agency…">
+      </div>
+
+      <div class="banner banner-a" style="margin-bottom:16px;">
+        <span style="font-size:18px;flex-shrink:0;">↩</span>
+        <div>
+          <div style="font-family:var(--of);font-size:13px;font-weight:700;color:var(--amber);margin-bottom:3px;">3 emails bounced in the last 24 hours</div>
+          <div style="font-size:12px;color:var(--amber);opacity:0.8;line-height:1.5;">We've found alternative addresses to try. Review and retry each one.</div>
+        </div>
+      </div>
+
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;">
+        <div style="padding:9px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);">Bounced — alternatives available</div>
+
+        <div class="trow">
+          <div class="tr-av" style="background:var(--ad);border-color:rgba(255,157,66,0.25);color:var(--amber);">AL</div>
+          <div class="tr-info">
+            <div class="tr-name">Alice Lowe</div>
+            <div class="tr-sub">alice@creativelab.com bounced · Try: alowe@creativelab.com</div>
+          </div>
+          <div class="tr-right">
+            <button class="btn bs bsm" style="color:var(--amber);border-color:rgba(255,157,66,0.3);" onclick="toast('✓','Draft queued for alowe@creativelab.com','tc')">Retry</button>
+            <button class="btn bs bsm" onclick="toast('✓','Marked undeliverable','tc')">Skip</button>
+          </div>
+        </div>
+
+        <div class="trow">
+          <div class="tr-av" style="background:var(--ad);border-color:rgba(255,157,66,0.25);color:var(--amber);">DH</div>
+          <div class="tr-info">
+            <div class="tr-name">Dan Hughes</div>
+            <div class="tr-sub">dan@agencyco.io bounced · Try: d.hughes@agencyco.io</div>
+          </div>
+          <div class="tr-right">
+            <button class="btn bs bsm" style="color:var(--amber);border-color:rgba(255,157,66,0.3);" onclick="toast('✓','Draft queued for d.hughes@agencyco.io','tc')">Retry</button>
+            <button class="btn bs bsm" onclick="toast('✓','Marked undeliverable','tc')">Skip</button>
+          </div>
+        </div>
+
+        <div class="trow">
+          <div class="tr-av" style="background:var(--rd);border-color:rgba(255,76,76,0.25);color:var(--red);">LW</div>
+          <div class="tr-info">
+            <div class="tr-name">Laura Webb</div>
+            <div class="tr-sub">laura@design.co bounced · No alternative found</div>
+          </div>
+          <div class="tr-right">
+            <button class="btn bs bsm" onclick="toast('✓','Marked undeliverable','tc')">Mark undeliverable</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div><!-- /tab-content -->
+</main>
+</div>
+
+<!-- ═══ SEND DRAWER ═══ -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer">
+    <div class="drawer-header">
+      <div>
+        <div class="drawer-title" id="d-title">James Mitchell</div>
+        <div class="drawer-sub" id="d-sub">james@northagency.com</div>
+      </div>
+      <div class="drawer-close" onclick="closeDrawer()">✕</div>
+    </div>
+    <div class="drawer-body">
+      <div id="d-confirm-wrap" class="d-confirm" style="display:none;">
+        This message will be sent to <strong id="d-confirm-email">james@northagency.com</strong>. Are you sure?
+      </div>
+      <div class="d-fld">
+        <div class="d-label">Subject</div>
+        <input class="d-input" id="d-subject" value="Quick thought on your pipeline — worth 10 minutes?">
+      </div>
+      <div class="d-fld">
+        <div class="d-label">Message</div>
+        <textarea class="d-input" id="d-body" rows="12">Hi James,
+
+Noticed North Agency has been growing fast — exciting momentum.
+
+I help agency leaders build consistent outreach systems so the pipeline keeps moving even when delivery gets busy.
+
+Worth a quick 10-minute conversation?
+
+Coris</textarea>
+      </div>
+    </div>
+    <div class="drawer-footer">
+      <button class="btn bg_ bsm" onclick="closeDrawer()">Cancel</button>
+      <button class="btn bs bsm" onclick="toast('✓','Draft saved','tc');closeDrawer()">Save draft</button>
+      <button class="btn bp bsm" onclick="confirmSend()">Send →</button>
+    </div>
+  </div>
+</div>
+
+<div class="tz" id="tz"></div>
+
+<!-- DEV CAMPAIGN SWITCHER -->
+<div class="pbar">
+  <span>Campaign:</span>
+  <button style="color:#ff1493" onclick="setCampaign('Agency founders — Q1',47,'3-step sequence')">Agency founders Q1</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="setCampaign('Fractional CFO — Q1',39,'2-step sequence')">Fractional CFO Q1</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="switchTab('review')">Review</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="switchTab('drafts')">Drafts</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="switchTab('sent')">Sent</button>
+</div>
+
+<script>
+// ── TAB SWITCHING ──
+function switchTab(name){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on', t.dataset.tab===name));
+  document.querySelectorAll('.tc').forEach(c=>c.classList.toggle('on', c.id==='tc-'+name));
+}
+
+// ── CARD EXPAND / COLLAPSE ──
+function toggleCard(id){
+  const card = document.getElementById(id);
+  const body = document.getElementById('body-'+id.replace('card-',''));
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  card.classList.toggle('expanded', !isOpen);
+}
+
+// ── APPROVE / SKIP ──
+function approveCard(id, name){
+  const card = document.getElementById(id);
+  card.style.transition = 'opacity 0.3s, transform 0.3s';
+  card.style.opacity = '0';
+  card.style.transform = 'translateX(12px)';
+  setTimeout(()=>card.remove(), 300);
+  toast('✓', name+' approved — draft created', 'tg');
+  // decrement count
+  const el = document.getElementById('tc-review');
+  const countEl = document.querySelector('[data-tab="review"] .tab-count');
+  if(countEl) countEl.textContent = Math.max(0, parseInt(countEl.textContent)-1);
+}
+function skipCard(id){
+  const card = document.getElementById(id);
+  card.style.transition = 'opacity 0.3s';
+  card.style.opacity = '0';
+  setTimeout(()=>card.remove(), 300);
+  toast('→', 'Prospect skipped', 'tc');
+}
+
+// ── DRAWER ──
+let sendConfirmed = false;
+function openDrawer(type, name, email, subject){
+  sendConfirmed = false;
+  if(type==='bulk'){
+    document.getElementById('d-title').textContent = 'Send all drafts';
+    document.getElementById('d-sub').textContent = '15 prospects — are you sure you want to send all?';
+    document.getElementById('d-subject').style.display='none';
+    document.getElementById('d-body').style.display='none';
+    document.getElementById('d-confirm-wrap').style.display='block';
+    document.getElementById('d-confirm-email').textContent = '15 prospects';
+    document.querySelector('.drawer-footer .btn.bp').textContent = 'Send all →';
+  } else {
+    document.getElementById('d-title').textContent = name || 'Draft';
+    document.getElementById('d-sub').textContent = email || '';
+    document.getElementById('d-subject').style.display='';
+    document.getElementById('d-body').style.display='';
+    document.getElementById('d-confirm-wrap').style.display='none';
+    if(subject) document.getElementById('d-subject').value = subject;
+    document.querySelector('.drawer-footer .btn.bp').textContent = 'Send →';
+  }
+  document.getElementById('drawer-overlay').classList.add('open');
+}
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+}
+function confirmSend(){
+  const email = document.getElementById('d-sub').textContent;
+  if(!sendConfirmed){
+    sendConfirmed = true;
+    document.getElementById('d-confirm-wrap').style.display='block';
+    document.getElementById('d-confirm-email').textContent = email;
+    document.querySelector('.drawer-footer .btn.bp').textContent = 'Confirm send →';
+  } else {
+    closeDrawer();
+    toast('✓','Email sent to '+email,'tg');
+  }
+}
+
+// ── CAMPAIGN SWITCHER ──
+function setCampaign(name, prospects, sequence){
+  document.getElementById('ch-name').textContent = name;
+  document.getElementById('bc-name').textContent = name;
+  document.querySelector('.ch-meta').innerHTML =
+    `<span>${prospects} prospects</span>
+     <span class="ch-meta-sep">·</span>
+     <span>Started 12 Mar 2026</span>
+     <span class="ch-meta-sep">·</span>
+     <span>${sequence}</span>
+     <span class="ch-meta-sep">·</span>
+     <a href="#" onclick="toast('→','Opening message editor','tc');return false;">Edit message</a>`;
+  switchTab('review');
+}
+
+// ── LINKEDIN FILTER ──
+function filterLI(el, filter){
+  document.querySelectorAll('.on-filter').forEach(b=>{
+    b.classList.remove('on-filter');
+    b.style.borderColor='';b.style.color='';b.style.background='';
+  });
+  el.classList.add('on-filter');
+  el.style.borderColor='rgba(255,20,147,0.3)';
+  el.style.color='var(--pink)';
+  el.style.background='var(--pd)';
+}
+
+// ── TOAST ──
+function toast(icon, text, cls='tc'){
+  const z=document.getElementById('tz'), e=document.createElement('div');
+  e.className='tst '+cls;
+  e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
+  z.appendChild(e);
+  setTimeout(()=>{ e.style.animation='none'; e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(),300); }, 3200);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>outreach. — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d0914; --surface: rgba(255,255,255,0.04); --surface-2: rgba(255,255,255,0.07);
+  --border: rgba(255,255,255,0.07); --border-2: rgba(255,255,255,0.13);
+  --pink: #ff1493; --cyan: #00d4ff;
+  --pink-dim: rgba(255,20,147,0.1); --pink-glow: rgba(255,20,147,0.2);
+  --cyan-dim: rgba(0,212,255,0.08); --cyan-glow: rgba(0,212,255,0.2);
+  --amber: #ff9d42; --amber-dim: rgba(255,157,66,0.1);
+  --green: #64dc78; --green-dim: rgba(100,220,120,0.1);
+  --text: #f0f0ee; --text-mid: #a8a8b8; --text-dim: #7a7a90;
+  --outfit: 'Outfit', sans-serif; --sans: 'DM Sans', sans-serif;
+  --grad: linear-gradient(135deg, var(--pink) 0%, var(--cyan) 100%);
+  --topbar-h: 56px; --sidebar-w: 56px;
+}
+html, body { background: var(--bg); color: var(--text); font-family: var(--sans); min-height: 100vh; overflow-x: hidden; }
+.orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+.orb-1 { width: 500px; height: 500px; background: rgba(255,20,147,0.05); top: -150px; right: -100px; }
+.orb-2 { width: 350px; height: 350px; background: rgba(0,212,255,0.04); bottom: -100px; left: 100px; }
+
+/* HOME ICON */
+.home-icon { position: fixed; top: 12px; left: 14px; z-index: 9999; width: 32px; height: 32px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; display: flex; align-items: center; justify-content: center; text-decoration: none; transition: all 0.15s; backdrop-filter: blur(8px); }
+.home-icon:hover { background: rgba(255,255,255,0.15); }
+
+/* TOPBAR */
+.topbar { position: fixed; top: 0; left: 0; right: 0; height: var(--topbar-h); background: rgba(13,9,20,0.9); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); z-index: 100; display: flex; align-items: center; padding: 0 24px 0 calc(56px + 20px); gap: 16px; }
+.logo { font-family: var(--outfit); font-size: 18px; font-weight: 800; letter-spacing: -0.5px; background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.topbar-mid { flex: 1; }
+.topbar-right { display: flex; align-items: center; gap: 12px; }
+.plan-badge { font-family: var(--outfit); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 9px; border-radius: 20px; background: var(--surface-2); border: 1px solid var(--border-2); color: var(--text-mid); }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-family: var(--outfit); font-size: 11px; font-weight: 700; color: white; flex-shrink: 0; }
+
+/* LAYOUT */
+.layout { display: flex; padding-top: var(--topbar-h); min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar { width: var(--sidebar-w); flex-shrink: 0; position: fixed; top: var(--topbar-h); left: 0; bottom: 0; background: rgba(13,9,20,0.7); border-right: 1px solid var(--border); padding: 14px 0; display: flex; flex-direction: column; align-items: center; z-index: 90; gap: 4px; }
+.nav-item { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; text-decoration: none; color: var(--text-mid); position: relative; background: transparent; opacity: 0.75; }
+.nav-item:hover { background: var(--surface-2); border-color: var(--border-2); color: var(--text); opacity: 1; }
+.nav-item.active { background: var(--pink-dim); border-color: rgba(255,20,147,0.25); color: var(--pink); opacity: 1; }
+.nav-item svg { display: block; opacity: 0.5; transition: opacity 0.15s; }
+.nav-item:hover svg, .nav-item.active svg { opacity: 1; }
+.nav-tip { position: absolute; left: calc(100% + 10px); background: rgba(20,10,35,0.97); color: var(--text); border: 1px solid var(--border-2); border-radius: 6px; padding: 5px 10px; font-family: var(--outfit); font-size: 11px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 300; }
+.nav-item:hover .nav-tip { opacity: 1; }
+.nav-badge { position: absolute; top: -3px; right: -3px; width: 16px; height: 16px; border-radius: 50%; font-family: var(--outfit); font-size: 9px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg); }
+.nb-pink { background: var(--pink); color: white; }
+.nb-cyan { background: var(--cyan); color: #0d0914; }
+.sidebar-bottom { margin-top: auto; width: 100%; padding: 12px 8px; border-top: 1px solid var(--border); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.usage-label { font-size: 11px; color: var(--text-dim); margin-bottom: 6px; display: flex; justify-content: space-between; }
+.usage-bar { height: 3px; background: var(--surface-2); border-radius: 2px; overflow: hidden; margin-bottom: 8px; }
+.usage-fill { height: 100%; border-radius: 2px; background: var(--grad); }
+.upgrade-btn { width: 100%; padding: 8px; border-radius: 6px; background: var(--pink-dim); border: 1px solid rgba(255,20,147,0.2); color: var(--pink); font-family: var(--outfit); font-size: 11px; font-weight: 700; cursor: pointer; text-align: center; transition: all 0.15s; }
+.upgrade-btn:hover { background: rgba(255,20,147,0.18); }
+
+/* MAIN */
+.main { margin-left: var(--sidebar-w); flex: 1; padding: 36px 40px; position: relative; z-index: 1; }
+
+/* SCREENS */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ── SCREEN 1: EMPTY STATE ── */
+.greeting { font-family: var(--outfit); font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); margin-bottom: 4px; }
+.greeting-sub { font-size: 14px; color: var(--text-mid); margin-bottom: 28px; }
+
+.empty-hero { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 40px 40px; min-height: 0; }
+.empty-glyph { width: 64px; height: 64px; border-radius: 16px; background: var(--pink-dim); border: 1px solid rgba(255,20,147,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 28px; }
+.empty-title { font-family: var(--outfit); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--text); margin-bottom: 10px; }
+.empty-body { font-size: 14px; color: var(--text-mid); line-height: 1.7; max-width: 380px; margin: 0 auto 32px; }
+.empty-steps { display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; justify-content: center; }
+.empty-step { display: flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; font-size: 12px; color: var(--text-mid); }
+.step-num { width: 18px; height: 18px; border-radius: 50%; background: var(--grad); display: flex; align-items: center; justify-content: center; font-family: var(--outfit); font-size: 9px; font-weight: 700; color: white; flex-shrink: 0; }
+
+/* ── SCREEN 2: CAMPAIGNS LIST ── */
+.page-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.page-title { font-family: var(--outfit); font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--text); margin-bottom: 3px; }
+.page-sub { font-size: 13px; color: var(--text-mid); }
+
+.stat-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+.stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; }
+.stat-card-label { font-size: 10px; font-family: var(--outfit); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 8px; }
+.stat-card-val { font-family: var(--outfit); font-size: 28px; font-weight: 800; color: var(--text); line-height: 1; }
+.stat-card-val.pink { background: var(--grad); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-card-sub { font-size: 11px; color: var(--text-dim); margin-top: 4px; }
+
+.campaigns-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.campaigns-label { font-family: var(--outfit); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+
+.campaign-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+.campaign-card:hover { background: var(--surface-2); border-color: var(--border-2); transform: translateY(-1px); }
+.campaign-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.campaign-name { font-family: var(--outfit); font-size: 16px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.campaign-meta { font-size: 12px; color: var(--text-dim); }
+.status-badge { font-family: var(--outfit); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 10px; border-radius: 20px; }
+.sb-active { background: var(--green-dim); color: var(--green); border: 1px solid rgba(100,220,120,0.25); }
+.sb-paused { background: var(--surface-2); color: var(--text-mid); border: 1px solid var(--border-2); }
+.campaign-stats { display: flex; gap: 24px; }
+.c-stat { }
+.c-stat-val { font-family: var(--outfit); font-size: 20px; font-weight: 700; color: var(--text); line-height: 1; }
+.c-stat-val.accent { color: var(--cyan); }
+.c-stat-val.pink  { color: var(--pink); }
+.c-stat-label { font-size: 11px; color: var(--text-dim); margin-top: 3px; }
+
+/* ── TOGGLE SWITCH ── */
+.tgl-wrap { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.tgl { width: 38px; height: 22px; border-radius: 11px; border: none; cursor: pointer;
+  position: relative; transition: background 0.2s; flex-shrink: 0; }
+.tgl.on  { background: var(--green); box-shadow: 0 0 8px rgba(100,220,120,0.35); }
+.tgl.off { background: var(--surface-2); }
+.tgl::after { content: ''; position: absolute; width: 16px; height: 16px;
+  background: white; border-radius: 50%; top: 3px; transition: left 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.tgl.on::after  { left: 19px; }
+.tgl.off::after { left: 3px; }
+.tgl-label { font-family: var(--outfit); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.07em; }
+.tgl.on  ~ .tgl-label { color: var(--green); }
+.tgl.off ~ .tgl-label { color: var(--text-mid); }
+
+/* ── KEBAB MENU ── */
+.kebab-wrap { position: relative; flex-shrink: 0; margin-left: 12px; display: flex; align-items: center; }
+.kebab-btn { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border-2);
+  background: transparent; cursor: pointer; display: flex; align-items: center;
+  justify-content: center; color: var(--text-mid); transition: all 0.15s; }
+.kebab-btn:hover { background: var(--surface-2); color: var(--text); border-color: var(--border-2); }
+.kebab-btn.open { background: var(--surface-2); color: var(--text); }
+.kebab-menu { position: absolute; top: calc(100% + 6px); right: 0; min-width: 140px;
+  background: #1a0f2e; border: 1px solid var(--border-2); border-radius: 8px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 200; overflow: hidden;
+  opacity: 0; pointer-events: none; transform: translateY(-4px);
+  transition: opacity 0.15s, transform 0.15s; }
+.kebab-menu.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+.kebab-item { padding: 10px 14px; font-size: 13px; color: var(--text-mid);
+  cursor: pointer; transition: all 0.1s; display: flex; align-items: center; gap: 8px; }
+.kebab-item:hover { background: var(--surface-2); color: var(--text); }
+.kebab-item.danger { color: #ff4c4c; }
+.kebab-item.danger:hover { background: rgba(255,76,76,0.08); color: #ff4c4c; }
+.kebab-divider { height: 1px; background: var(--border); margin: 2px 0; }
+
+.campaign-progress { height: 2px; background: var(--surface-2); border-radius: 1px; margin-top: 16px; overflow: hidden; }
+.campaign-progress-fill { height: 100%; background: var(--grad); border-radius: 1px; transition: width 0.4s ease; }
+
+.action-strip { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--border); }
+.action-pill { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--border-2); background: transparent; font-family: var(--outfit); font-size: 11px; font-weight: 600; color: var(--text-mid); cursor: pointer; transition: all 0.15s; }
+.action-pill:hover { color: var(--text); border-color: var(--text-dim); }
+.action-pill.has-items { color: var(--amber); border-color: rgba(255,157,66,0.25); background: var(--amber-dim); }
+.action-pill.has-replies { color: var(--cyan); border-color: rgba(0,212,255,0.25); background: var(--cyan-dim); }
+.ap-count { font-family: var(--outfit); font-size: 10px; font-weight: 800; }
+
+/* BUTTONS */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 8px; font-family: var(--outfit); font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; text-transform: uppercase; letter-spacing: 0.05em; white-space: nowrap; }
+.btn-primary { background: var(--grad); color: white; }
+.btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 24px var(--pink-glow); }
+.btn-secondary { background: var(--surface); border: 1px solid var(--border-2); color: var(--text-mid); }
+.btn-secondary:hover { color: var(--text); border-color: var(--text-dim); }
+.btn-sm { padding: 7px 14px; font-size: 12px; }
+
+/* MODAL */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box { background: #1a0f2e; border: 1px solid var(--border-2); border-radius: 14px; padding: 30px; width: 460px; max-width: calc(100vw - 48px); transform: translateY(12px); transition: transform 0.25s; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-title { font-family: var(--outfit); font-size: 20px; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+.modal-sub { font-size: 13px; color: var(--text-mid); line-height: 1.6; margin-bottom: 22px; }
+.modal-field { margin-bottom: 16px; }
+.modal-label { font-size: 11px; font-family: var(--outfit); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-dim); margin-bottom: 6px; display: block; }
+.modal-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--border-2); border-radius: 8px; padding: 11px 14px; font-family: var(--sans); font-size: 14px; color: var(--text); outline: none; transition: border-color 0.2s; }
+.modal-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.08); }
+.modal-input::placeholder { color: var(--text-dim); }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; }
+
+/* TOAST */
+.toast-zone { position: fixed; bottom: 24px; right: 24px; z-index: 900; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { background: rgba(20,10,35,0.95); border: 1px solid var(--border-2); border-radius: 10px; padding: 13px 16px; font-size: 13px; color: var(--text); display: flex; align-items: center; gap: 10px; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); animation: tIn 0.3s ease; pointer-events: all; backdrop-filter: blur(12px); }
+.toast.t-pink { border-left: 2px solid var(--pink); }
+.toast.t-cyan { border-left: 2px solid var(--cyan); }
+@keyframes tIn { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:translateX(0); } }
+@keyframes tOut { from { opacity:1; } to { opacity:0; transform:translateX(14px); } }
+
+::-webkit-scrollbar { width: 4px; } ::-webkit-scrollbar-thumb { background: var(--border-2); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- HOME ICON -->
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="home-icon" title="Dev hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">outreach.</div>
+  <div class="topbar-mid"></div>
+  <div class="topbar-right">
+    <span class="plan-badge" id="plan-label">Free</span>
+    <div class="avatar">CL</div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <!-- Campaigns — active -->
+    <div class="nav-item active">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+      <span class="nav-tip">Campaigns</span>
+    </div>
+    <!-- Summary -->
+    <a class="nav-item" href="summary-and-workflow.html">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+      <span class="nav-tip">Summary</span>
+    </a>
+    <!-- Settings — pinned to bottom -->
+    <a class="nav-item" href="settings-account.html" style="margin-top:auto;">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span class="nav-tip">Settings</span>
+    </a>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- ── SCREEN 1: EMPTY STATE ── -->
+    <div id="s-empty" class="screen active">
+      <div class="greeting">Good morning, Coris.</div>
+      <div class="greeting-sub">Let's get your first campaign set up.</div>
+
+      <div class="empty-hero">
+        <div class="empty-glyph">✦</div>
+        <div class="empty-title">Your campaigns will live here</div>
+        <p class="empty-body">Each campaign is a targeted outreach list with its own message, sequence, and follow-up schedule. Create your first one in under 5 minutes.</p>
+        <div class="empty-steps">
+          <div class="empty-step"><div class="step-num">1</div>Add prospects</div>
+          <div class="empty-step"><div class="step-num">2</div>Write your message</div>
+          <div class="empty-step"><div class="step-num">3</div>Add a follow-up</div>
+          <div class="empty-step"><div class="step-num">4</div>Send</div>
+        </div>
+        <button class="btn btn-primary" onclick="openModal()">+ Create your first campaign</button>
+      </div>
+    </div>
+
+    <!-- ── SCREEN 2: CAMPAIGNS LIST ── -->
+    <div id="s-campaigns" class="screen">
+      <div class="page-header">
+        <div>
+          <div class="page-title">Good morning, Coris.</div>
+          <div class="page-sub">Your outreach is running. Here's where things stand.</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="openModal()">+ New campaign</button>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-card">
+          <div class="stat-card-label">Active campaigns</div>
+          <div class="stat-card-val">2</div>
+          <div class="stat-card-sub">1 paused</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Prospects</div>
+          <div class="stat-card-val">47</div>
+          <div class="stat-card-sub">of 100 on free tier</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Sent this week</div>
+          <div class="stat-card-val pink">14</div>
+          <div class="stat-card-sub">↑ 3 from last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-label">Active replies</div>
+          <div class="stat-card-val">3</div>
+          <div class="stat-card-sub">2 meetings booked</div>
+        </div>
+      </div>
+
+      <div class="campaigns-header">
+        <div class="campaigns-label">Your campaigns</div>
+      </div>
+
+      <div class="campaign-card" id="cc-1" style="cursor:pointer;" onclick="window.location.href='campaign-view-v3.html'">
+        <div class="campaign-card-top">
+          <div style="flex:1;min-width:0;">
+            <div class="campaign-name">Agency founders — Q1</div>
+            <div class="campaign-meta">8 prospects · Started Mar 12 · 2-step sequence</div>
+          </div>
+          <div class="tgl-wrap" onclick="event.stopPropagation()">
+            <button class="tgl on" id="tgl-1" onclick="toggleCampaign('tgl-1','lbl-1')"></button>
+            <span class="tgl-label" id="lbl-1">Active</span>
+          </div>
+          <div class="kebab-wrap" onclick="event.stopPropagation()">
+            <button class="kebab-btn" id="kbtn-1" onclick="toggleKebab('kmenu-1','kbtn-1')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="2.5" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="11.5" r="1.2" fill="currentColor"/>
+              </svg>
+            </button>
+            <div class="kebab-menu" id="kmenu-1">
+              <div class="kebab-item" onclick="renameCard('Agency founders — Q1')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5l2 2L4 10H2v-2l6.5-6.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                Rename
+              </div>
+              <div class="kebab-item" onclick="toast('→','Campaign archived','t-neutral');closeKebabs()">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M2 3v7a1 1 0 001 1h6a1 1 0 001-1V3M4 3V2h4v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Archive
+              </div>
+              <div class="kebab-divider"></div>
+              <div class="kebab-item danger" onclick="confirmDelete('Agency founders — Q1')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M4 3V2h4v1M5 5v4M7 5v4M2 3l.7 7a1 1 0 001 .9h4.6a1 1 0 001-.9L10 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Delete
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="campaign-stats">
+          <div class="c-stat"><div class="c-stat-val">8</div><div class="c-stat-label">Prospects</div></div>
+          <div class="c-stat"><div class="c-stat-val accent">8</div><div class="c-stat-label">Sent</div></div>
+          <div class="c-stat"><div class="c-stat-val">1</div><div class="c-stat-label">Replies</div></div>
+          <div class="c-stat"><div class="c-stat-val pink">5</div><div class="c-stat-label">Follow-ups due</div></div>
+        </div>
+        <div class="campaign-progress"><div class="campaign-progress-fill" style="width:100%"></div></div>
+        <div class="action-strip">
+          <button class="action-pill" onclick="event.stopPropagation();window.location.href='prospect-import.html'" style="margin-right:auto;">+ Add prospects</button>
+          <button class="action-pill has-items" onclick="event.stopPropagation();toast('→','Opening follow-up queue','t-pink')"><span class="ap-count">5</span> Follow-ups due</button>
+          <button class="action-pill has-replies" onclick="event.stopPropagation();toast('→','Opening conversations','t-cyan')"><span class="ap-count">1</span> New reply</button>
+          <button class="action-pill" onclick="window.location.href='campaign-view-v3.html'">View campaign →</button>
+        </div>
+      </div>
+
+      <div class="campaign-card" style="cursor:pointer;" onclick="window.location.href='campaign-view-v3.html'">
+        <div class="campaign-card-top">
+          <div style="flex:1;min-width:0;">
+            <div class="campaign-name">Fractional CFO — Q1</div>
+            <div class="campaign-meta">39 prospects · Started Feb 28 · 3-step sequence</div>
+          </div>
+          <div class="tgl-wrap" onclick="event.stopPropagation()">
+            <button class="tgl off" id="tgl-2" onclick="toggleCampaign('tgl-2','lbl-2')"></button>
+            <span class="tgl-label" id="lbl-2">Paused</span>
+          </div>
+          <div class="kebab-wrap" onclick="event.stopPropagation()">
+            <button class="kebab-btn" id="kbtn-2" onclick="toggleKebab('kmenu-2','kbtn-2')">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="2.5" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="11.5" r="1.2" fill="currentColor"/>
+              </svg>
+            </button>
+            <div class="kebab-menu" id="kmenu-2">
+              <div class="kebab-item" onclick="renameCard('Fractional CFO — Q1')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5l2 2L4 10H2v-2l6.5-6.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+                Rename
+              </div>
+              <div class="kebab-item" onclick="toast('→','Campaign archived','t-neutral');closeKebabs()">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M2 3v7a1 1 0 001 1h6a1 1 0 001-1V3M4 3V2h4v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Archive
+              </div>
+              <div class="kebab-divider"></div>
+              <div class="kebab-item danger" onclick="confirmDelete('Fractional CFO — Q1')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M4 3V2h4v1M5 5v4M7 5v4M2 3l.7 7a1 1 0 001 .9h4.6a1 1 0 001-.9L10 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Delete
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="campaign-stats">
+          <div class="c-stat"><div class="c-stat-val">39</div><div class="c-stat-label">Prospects</div></div>
+          <div class="c-stat"><div class="c-stat-val">31</div><div class="c-stat-label">Sent</div></div>
+          <div class="c-stat"><div class="c-stat-val accent">4</div><div class="c-stat-label">Replies</div></div>
+          <div class="c-stat"><div class="c-stat-val pink">2</div><div class="c-stat-label">Meetings</div></div>
+        </div>
+        <div class="campaign-progress"><div class="campaign-progress-fill" style="width:79%"></div></div>
+        <div class="action-strip">
+          <button class="action-pill" onclick="event.stopPropagation();window.location.href='prospect-import.html'" style="margin-right:auto;">+ Add prospects</button>
+          <button class="action-pill" onclick="window.location.href='campaign-view-v3.html'">View campaign →</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- CREATE CAMPAIGN MODAL -->
+<div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-title">Name your campaign</div>
+    <p class="modal-sub">Give it a name that describes who you're reaching out to. You can always rename it later.</p>
+    <div class="modal-field">
+      <label class="modal-label">Campaign name</label>
+      <input class="modal-input" id="campaign-name" placeholder="e.g. Agency founders — Q2" autofocus>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="createCampaign()">Continue →</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script>
+// ── VIEW TOGGLE ──
+const EMPTY_VIEW = 'empty'; // change to 'campaigns' to see the populated state
+let currentView = EMPTY_VIEW;
+
+function showView(v) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(v === 'empty' ? 's-empty' : 's-campaigns').classList.add('active');
+  document.getElementById('plan-label').textContent = v === 'empty' ? 'Free' : 'Free';
+  
+  if (v !== 'empty') {
+    document.getElementById('nb-followup').style.display = 'flex';
+    document.getElementById('nb-conv').style.display = 'flex';
+  }
+  currentView = v;
+}
+
+// Start on empty state — click button to see campaigns list
+showView(EMPTY_VIEW);
+
+// ── MODAL ──
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('campaign-name').focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+  document.getElementById('campaign-name').value = '';
+}
+function createCampaign() {
+  const name = document.getElementById('campaign-name').value.trim();
+  closeModal();
+  // Navigate to wizard
+  window.location.href = 'https://corisleachman.github.io/outreach-dashboard/wireframes/outreach-wizard-v3.html';
+}
+
+// ── TOAST ──
+function toast(icon, text, cls = 't-cyan') {
+  const zone = document.getElementById('toast-zone');
+  const el = document.createElement('div');
+  el.className = `toast ${cls}`;
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.animation = 'tOut 0.3s ease forwards'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+
+// ── VIEW SWITCHER (demo) — click empty state button shows campaigns ──
+document.getElementById('s-empty').querySelector('.btn-primary').addEventListener('click', function(e) {
+  e.stopPropagation();
+  openModal();
+});
+
+// ── TOGGLE CAMPAIGN ──
+function toggleCampaign(tglId, lblId) {
+  const tgl = document.getElementById(tglId);
+  const lbl = document.getElementById(lblId);
+  const isOn = tgl.classList.contains('on');
+  tgl.classList.toggle('on', !isOn);
+  tgl.classList.toggle('off', isOn);
+  lbl.textContent = isOn ? 'Paused' : 'Active';
+  toast(isOn ? '⏸' : '▶', isOn ? 'Campaign paused' : 'Campaign resumed', isOn ? 't-neutral' : 't-cyan');
+}
+
+// ── KEBAB MENU ──
+function toggleKebab(menuId, btnId) {
+  const isOpen = document.getElementById(menuId).classList.contains('open');
+  closeKebabs();
+  if (!isOpen) {
+    document.getElementById(menuId).classList.add('open');
+    document.getElementById(btnId).classList.add('open');
+  }
+}
+function closeKebabs() {
+  document.querySelectorAll('.kebab-menu').forEach(m => m.classList.remove('open'));
+  document.querySelectorAll('.kebab-btn').forEach(b => b.classList.remove('open'));
+}
+// Close kebab on outside click
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('.kebab-wrap')) closeKebabs();
+});
+
+// ── RENAME ──
+function renameCard(currentName) {
+  closeKebabs();
+  const newName = prompt('Rename campaign:', currentName);
+  if (newName && newName.trim() && newName.trim() !== currentName) {
+    // Find and update the campaign name in the card
+    document.querySelectorAll('.campaign-name').forEach(el => {
+      if (el.textContent === currentName) el.textContent = newName.trim();
+    });
+    toast('✓', 'Campaign renamed', 't-cyan');
+  }
+}
+
+// ── DELETE CONFIRM ──
+function confirmDelete(name) {
+  closeKebabs();
+  if (confirm('Delete "' + name + '"? This cannot be undone.')) {
+    toast('✓', '"' + name + '" deleted', 't-neutral');
+  }
+}
+
+</script>
+
+<!-- VIEW TOGGLE HELPER (remove in production) -->
+<div style="position:fixed;bottom:20px;left:calc(220px + 20px);z-index:999;display:flex;gap:8px;background:rgba(13,9,20,0.9);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 10px;font-family:'Outfit',sans-serif;font-size:11px;font-weight:600;color:rgba(255,255,255,0.4);">
+  <span>Preview:</span>
+  <button onclick="showView('empty')" style="background:none;border:none;font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:#ff1493;padding:0;">Empty state</button>
+  <span style="opacity:0.3;">·</span>
+  <button onclick="showView('campaigns')" style="background:none;border:none;font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:#00d4ff;padding:0;">With campaigns</button>
+</div>
+
+</body>
+</html>

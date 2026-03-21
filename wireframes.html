@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outreach CRM — Wireframes</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@400;500;600;700;800&display=swap');
+
+  :root {
+    --bg: #0d0d0f;
+    --surface: #141416;
+    --surface2: #1c1c1f;
+    --border: rgba(255,255,255,0.08);
+    --border-active: rgba(255,255,255,0.2);
+    --text: #f0f0f0;
+    --text-dim: #666;
+    --text-mid: #999;
+    --accent: #7fff6e;
+    --accent-dim: rgba(127,255,110,0.12);
+    --red: #ff4f4f;
+    --amber: #fbbf24;
+    --mono: 'DM Mono', monospace;
+    --display: 'Syne', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #080808;
+    font-family: var(--mono);
+    color: var(--text);
+    padding: 48px 32px;
+    min-height: 100vh;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 64px;
+  }
+
+  .page-header h1 {
+    font-family: var(--display);
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    color: var(--text);
+    margin-bottom: 8px;
+  }
+
+  .page-header p {
+    font-size: 12px;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+  }
+
+  /* Screen container */
+  .screens {
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .screen-block {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .screen-label {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .screen-num {
+    font-family: var(--display);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+
+  .screen-title {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .screen-desc {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* The wireframe frame */
+  .frame {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .frame-bar {
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    padding: 10px 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot.r { background: #ff5f57; }
+  .dot.y { background: #ffbd2e; }
+  .dot.g { background: #28c840; }
+
+  .frame-url {
+    margin-left: 12px;
+    font-size: 10px;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.04);
+    padding: 3px 10px;
+    border-radius: 4px;
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .frame-content {
+    padding: 32px;
+  }
+
+  /* Nav */
+  .mock-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .mock-logo {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--accent);
+    letter-spacing: -0.5px;
+  }
+
+  .mock-nav-links {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+  }
+
+  .mock-nav-link {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .mock-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: var(--text-mid);
+  }
+
+  /* Buttons */
+  .btn-primary {
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: var(--text-mid);
+    border: 1px solid var(--border);
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--text-dim);
+    border: 1px dashed var(--border);
+    padding: 9px 18px;
+    border-radius: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  /* Input */
+  .mock-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    width: 100%;
+  }
+
+  .mock-input.placeholder-style {
+    color: var(--text-dim);
+    border-style: dashed;
+  }
+
+  .mock-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  /* --- SCREEN 1: Sign Up --- */
+  .auth-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 320px;
+  }
+
+  .auth-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 40px;
+    width: 380px;
+    text-align: center;
+  }
+
+  .auth-logo {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .auth-tagline {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+    line-height: 1.5;
+  }
+
+  .gmail-btn {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border-active);
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    cursor: pointer;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+
+  .gmail-icon {
+    width: 18px;
+    height: 18px;
+    background: linear-gradient(135deg, #ea4335, #fbbc05, #34a853, #4285f4);
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .auth-divider {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin: 16px 0;
+  }
+
+  .auth-terms {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 20px;
+    line-height: 1.5;
+  }
+
+  /* --- SCREEN 2: Empty Dashboard --- */
+  .empty-dashboard {
+    min-height: 360px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .dashboard-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 40px;
+  }
+
+  .dashboard-greeting {
+    font-family: var(--display);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 4px;
+  }
+
+  .dashboard-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+  }
+
+  .empty-state-center {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+    border: 1px dashed var(--border);
+    border-radius: 12px;
+    gap: 16px;
+  }
+
+  .empty-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    background: var(--accent-dim);
+    border: 1px solid rgba(127,255,110,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+  }
+
+  .empty-title {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .empty-body {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.6;
+    max-width: 280px;
+  }
+
+  /* --- SCREEN 3: Name Campaign modal --- */
+  .modal-overlay {
+    background: rgba(0,0,0,0.7);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 360px;
+  }
+
+  .modal {
+    background: var(--surface2);
+    border: 1px solid var(--border-active);
+    border-radius: 16px;
+    padding: 36px;
+    width: 440px;
+  }
+
+  .modal-title {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+
+  .modal-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 28px;
+  }
+
+  /* --- SCREEN 4: Upload CSV --- */
+  .upload-area {
+    border: 2px dashed var(--border-active);
+    border-radius: 12px;
+    padding: 48px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+
+  .upload-icon {
+    font-size: 28px;
+    color: var(--text-dim);
+  }
+
+  .upload-title {
+    font-family: var(--display);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .upload-sub {
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .upload-formats {
+    font-size: 10px;
+    color: var(--text-dim);
+    background: var(--surface2);
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* --- SCREEN 5: Prospects loaded --- */
+  .prospects-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+
+  .prospects-title {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .prospects-count {
+    font-size: 11px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .prospect-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  .prospect-table th {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prospect-table td {
+    font-size: 11px;
+    color: var(--text-mid);
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prospect-table tr:last-child td { border-bottom: none; }
+
+  .status-pill {
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(127,255,110,0.1);
+    color: var(--accent);
+    border: 1px solid rgba(127,255,110,0.2);
+  }
+
+  .next-step-banner {
+    background: var(--accent-dim);
+    border: 1px solid rgba(127,255,110,0.25);
+    border-radius: 10px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-top: 20px;
+  }
+
+  .next-step-text {
+    font-size: 12px;
+    color: var(--accent);
+    font-family: var(--display);
+    font-weight: 600;
+  }
+
+  .next-step-sub {
+    font-size: 10px;
+    color: rgba(127,255,110,0.6);
+    margin-top: 2px;
+  }
+
+  /* --- SCREEN 6: Craft message --- */
+  .message-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .editor-title {
+    font-family: var(--display);
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .editor-meta {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 2px;
+  }
+
+  .subject-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+
+  .subject-row .form-group {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .mock-textarea {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    width: 100%;
+    min-height: 160px;
+    resize: none;
+    line-height: 1.7;
+  }
+
+  .attach-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 14px;
+    background: var(--surface2);
+    border: 1px dashed var(--border);
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .attach-icon { font-size: 14px; color: var(--text-dim); }
+
+  .attach-label { font-size: 11px; color: var(--text-dim); }
+
+  .attach-hint { font-size: 10px; color: var(--text-dim); opacity: 0.6; margin-left: auto; }
+
+  .editor-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  /* --- SCREEN 7: Active campaign dashboard --- */
+  .campaign-dash {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .campaign-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .campaign-name {
+    font-family: var(--display);
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  .campaign-actions {
+    display: flex;
+    gap: 8px;
+  }
+
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+  }
+
+  .stat-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px;
+  }
+
+  .stat-label {
+    font-size: 10px;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  .stat-value {
+    font-family: var(--display);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .stat-sub {
+    font-size: 10px;
+    color: var(--text-dim);
+    margin-top: 4px;
+  }
+
+  .tab-row {
+    display: flex;
+    gap: 2px;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0;
+  }
+
+  .mock-tab {
+    font-size: 11px;
+    padding: 8px 16px;
+    color: var(--text-dim);
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+  }
+
+  .mock-tab.active {
+    color: var(--text);
+    border-bottom-color: var(--accent);
+  }
+
+  .prospect-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .prospect-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .prospect-name { font-size: 12px; color: var(--text); flex: 1; }
+  .prospect-co { font-size: 10px; color: var(--text-dim); }
+
+  .prospect-status {
+    font-size: 10px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+
+  .prospect-action {
+    font-size: 11px;
+    color: var(--accent);
+    cursor: pointer;
+    padding: 4px 10px;
+    border: 1px solid rgba(127,255,110,0.3);
+    border-radius: 6px;
+    background: var(--accent-dim);
+    white-space: nowrap;
+  }
+
+  /* Annotation callouts */
+  .annotations {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+  }
+
+  .annotation {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 11px;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .annotation-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex-shrink: 0;
+    margin-top: 5px;
+  }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+  }
+
+  .back-link {
+    font-size: 11px;
+    color: var(--text-dim);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 20px;
+    cursor: pointer;
+  }
+
+  .edit-message-link {
+    font-size: 11px;
+    color: var(--text-dim);
+    text-decoration: underline;
+    cursor: pointer;
+    text-underline-offset: 3px;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Outreach CRM — User Flow Wireframes</h1>
+  <p>DRAFT · March 2026 · For review and annotation</p>
+</div>
+
+<div class="screens">
+
+  <!-- SCREEN 1: Sign up -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 01</span>
+      <span class="screen-title">Sign up / Log in</span>
+    </div>
+    <p class="screen-desc">First touch. Single action — connect Gmail. No forms, no passwords. Email routing is established at this point.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/login</div>
+      </div>
+      <div class="frame-content">
+        <div class="auth-wrap">
+          <div class="auth-card">
+            <div class="auth-logo">outreach.</div>
+            <p class="auth-tagline">Outreach that doesn't feel like outreach.<br>Connect your Gmail to get started.</p>
+            <button class="gmail-btn">
+              <div class="gmail-icon"></div>
+              Continue with Google
+            </button>
+            <p class="auth-terms">By continuing, you agree to our Terms of Service.<br>Your email stays yours — we never store credentials.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Single CTA — no username/password friction</div>
+      <div class="annotation"><div class="annotation-dot"></div>Gmail OAuth handles auth + email routing in one step</div>
+      <div class="annotation"><div class="annotation-dot"></div>Trust copy underneath addresses the "will you read my emails?" concern upfront</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: Empty dashboard -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 02</span>
+      <span class="screen-title">First login — empty dashboard</span>
+    </div>
+    <p class="screen-desc">User lands here after connecting Gmail. Nothing exists yet. One obvious next action.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/dashboard</div>
+      </div>
+      <div class="frame-content">
+        <div class="mock-nav">
+          <div class="mock-logo">outreach.</div>
+          <div class="mock-nav-links">
+            <span class="mock-nav-link">Campaigns</span>
+            <span class="mock-nav-link">Settings</span>
+            <div class="mock-avatar">CL</div>
+          </div>
+        </div>
+        <div class="empty-dashboard">
+          <div class="dashboard-header">
+            <div>
+              <div class="dashboard-greeting">Good morning, Coris.</div>
+              <div class="dashboard-sub">You have no campaigns yet.</div>
+            </div>
+            <button class="btn-primary">+ Create campaign</button>
+          </div>
+          <div class="empty-state-center">
+            <div class="empty-icon">✦</div>
+            <div class="empty-title">Your campaigns will live here</div>
+            <p class="empty-body">Each campaign is a targeted outreach list with its own message, attachment, and sequence. Start by creating your first one.</p>
+            <button class="btn-primary">+ Create your first campaign</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Two entry points to the same action — header button + empty state CTA</div>
+      <div class="annotation"><div class="annotation-dot"></div>Greeting uses first name from Gmail OAuth — personalised from first second</div>
+      <div class="annotation"><div class="annotation-dot"></div>No clutter — nothing else to click until they've created something</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: Name campaign -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 03</span>
+      <span class="screen-title">Name your campaign</span>
+    </div>
+    <p class="screen-desc">Lightweight modal. Just a name to anchor the campaign. No decisions yet.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/dashboard</div>
+      </div>
+      <div class="frame-content">
+        <div class="modal-overlay">
+          <div class="modal">
+            <div class="modal-title">Name your campaign</div>
+            <p class="modal-sub">Give it a name that describes who you're reaching out to. You can always rename it later.</p>
+            <div class="form-group">
+              <div class="mock-label">Campaign name</div>
+              <input class="mock-input" placeholder="e.g. Outreach to agency owners" style="background:#141416;">
+            </div>
+            <div class="modal-actions">
+              <button class="btn-secondary">Cancel</button>
+              <button class="btn-primary">Continue →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Modal keeps context — dashboard is still visible behind it</div>
+      <div class="annotation"><div class="annotation-dot"></div>Placeholder text is an example, not instructions — shows don't tell</div>
+      <div class="annotation"><div class="annotation-dot"></div>One field. No other decisions at this step.</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: Upload CSV -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 04</span>
+      <span class="screen-title">Upload prospect list</span>
+    </div>
+    <p class="screen-desc">CSV upload. Drag and drop or file picker. Show expected column format so they know what to prepare.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/campaigns/new/prospects</div>
+      </div>
+      <div class="frame-content">
+        <div class="back-link">← Outreach to agency owners</div>
+        <div style="margin-bottom:24px;">
+          <div style="font-family:var(--display);font-size:16px;font-weight:700;margin-bottom:4px;">Upload your prospect list</div>
+          <div style="font-size:11px;color:var(--text-dim);">Step 1 of 2 — you'll craft your message next</div>
+        </div>
+        <div class="upload-area">
+          <div class="upload-icon">↑</div>
+          <div class="upload-title">Drop your CSV here</div>
+          <p class="upload-sub">or click to browse your files</p>
+          <div class="upload-formats">CSV · .csv only · max 10,000 rows</div>
+        </div>
+        <div style="margin-top:20px;padding:16px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+          <div style="font-size:10px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px;">Expected columns</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">first_name *</span>
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">last_name *</span>
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">email</span>
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">company</span>
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">linkedin_url</span>
+            <span style="font-size:10px;padding:3px 8px;background:var(--surface);border:1px solid var(--border);border-radius:4px;color:var(--text-mid);">website</span>
+          </div>
+          <div style="font-size:10px;color:var(--text-dim);margin-top:10px;">* required · all other columns optional · extra columns ignored</div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Step indicator ("Step 1 of 2") sets expectations — only one more step after this</div>
+      <div class="annotation"><div class="annotation-dot"></div>Expected columns shown upfront so they don't upload and get an error</div>
+      <div class="annotation"><div class="annotation-dot"></div>Extra columns ignored — forgiving, not brittle</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: Prospects loaded + next step banner -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 05</span>
+      <span class="screen-title">Prospects loaded — craft your message</span>
+    </div>
+    <p class="screen-desc">CSV parsed and displayed. Clear next step banner pushes them toward message creation. List is visible but secondary.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/campaigns/new/prospects</div>
+      </div>
+      <div class="frame-content">
+        <div class="back-link">← Outreach to agency owners</div>
+        <div class="prospects-header">
+          <div>
+            <div class="prospects-title">Prospects</div>
+            <div class="prospects-count">47 imported · 0 reviewed</div>
+          </div>
+          <button class="btn-ghost">↑ Replace list</button>
+        </div>
+        <table class="prospect-table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Company</th>
+              <th>Email</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Sarah Mitchell</td><td>Fold Studio</td><td>sarah@foldstudio.co</td><td><span class="status-pill">Ready</span></td>
+            </tr>
+            <tr>
+              <td>James Okafor</td><td>Parallel Agency</td><td>—</td><td><span style="font-size:10px;padding:2px 8px;border-radius:4px;background:rgba(251,191,36,0.1);color:var(--amber);border:1px solid rgba(251,191,36,0.2);">No email</span></td>
+            </tr>
+            <tr>
+              <td>Priya Nair</td><td>Common Ground</td><td>priya@commonground.io</td><td><span class="status-pill">Ready</span></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="next-step-banner">
+          <div>
+            <div class="next-step-text">✦ Now craft your message →</div>
+            <div class="next-step-sub">Write the email these 47 prospects will receive</div>
+          </div>
+          <button class="btn-primary">Craft message</button>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Prospects with missing emails flagged immediately — fixable before sending</div>
+      <div class="annotation"><div class="annotation-dot"></div>Next step banner is persistent and prominent — always visible, not hidden in a nav</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Replace list" available but quiet — escape hatch without distraction</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: Craft message -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 06</span>
+      <span class="screen-title">Craft your message</span>
+    </div>
+    <p class="screen-desc">Message editor with guidance placeholder text in grey. Subject line, body, optional attachment. Save creates the campaign.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/campaigns/new/message</div>
+      </div>
+      <div class="frame-content">
+        <div class="back-link">← Prospects (47)</div>
+        <div class="message-editor">
+          <div class="editor-header">
+            <div>
+              <div class="editor-title">Craft your message</div>
+              <div class="editor-meta">Step 2 of 2 · Outreach to agency owners</div>
+            </div>
+          </div>
+          <div class="subject-row">
+            <div class="form-group">
+              <div class="mock-label">Subject line</div>
+              <input class="mock-input placeholder-style" placeholder="Keep it short and specific — avoid sounding like marketing">
+            </div>
+          </div>
+          <div>
+            <div class="mock-label">Message body</div>
+            <textarea class="mock-textarea">Hi [first_name],
+
+[One line on why you're reaching out to them specifically — reference something real about their work or company.]
+
+[What you do in one sentence. No jargon.]
+
+[The specific value you're offering — what's in it for them?]
+
+[Soft CTA — a question or an offer, not a demand.]
+
+[Your name]</textarea>
+          </div>
+          <div class="attach-row">
+            <span class="attach-icon">📎</span>
+            <span class="attach-label">Attach a file <span style="color:var(--text-dim);font-size:10px;">(optional)</span></span>
+            <span class="attach-hint">PDF, max 10MB</span>
+          </div>
+          <div class="editor-actions">
+            <span style="font-size:10px;color:var(--text-dim);">[first_name] and [company] will be replaced automatically</span>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-secondary">Save draft</button>
+              <button class="btn-primary">Launch campaign →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>Placeholder text is the structure of a good cold email — guidance without being prescriptive</div>
+      <div class="annotation"><div class="annotation-dot"></div>[first_name] merge tags shown in placeholder so they know what's available</div>
+      <div class="annotation"><div class="annotation-dot"></div>Attachment is optional and quiet — below the fold, not a required step</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Save draft" vs "Launch" — they can save without committing</div>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: Active campaign dashboard -->
+  <div class="screen-block">
+    <div class="screen-label">
+      <span class="screen-num">Screen 07</span>
+      <span class="screen-title">Active campaign view</span>
+    </div>
+    <p class="screen-desc">The familiar tab-based interface, scoped to this campaign. Stats at top. Edit message accessible but not prominent.</p>
+    <div class="frame">
+      <div class="frame-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="frame-url">app.yourproduct.com/campaigns/outreach-agency-owners</div>
+      </div>
+      <div class="frame-content">
+        <div class="mock-nav">
+          <div class="mock-logo">outreach.</div>
+          <div class="mock-nav-links">
+            <span class="mock-nav-link" style="color:var(--text);">Campaigns</span>
+            <span class="mock-nav-link">Settings</span>
+            <div class="mock-avatar">CL</div>
+          </div>
+        </div>
+        <div class="campaign-dash">
+          <div class="campaign-title-row">
+            <div>
+              <div class="campaign-name">Outreach to agency owners</div>
+              <div style="font-size:11px;color:var(--text-dim);margin-top:3px;">47 prospects · launched 4 Mar 2026 · <span class="edit-message-link">Edit message</span></div>
+            </div>
+            <div class="campaign-actions">
+              <button class="btn-secondary">↑ Add prospects</button>
+              <button class="btn-primary">✦ Review queue</button>
+            </div>
+          </div>
+          <div class="stats-row">
+            <div class="stat-card">
+              <div class="stat-label">To review</div>
+              <div class="stat-value">12</div>
+              <div class="stat-sub">awaiting approval</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Drafts ready</div>
+              <div class="stat-value">8</div>
+              <div class="stat-sub">ready to send</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Sent</div>
+              <div class="stat-value">24</div>
+              <div class="stat-sub">emails sent</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Conversations</div>
+              <div class="stat-value" style="color:var(--accent);">3</div>
+              <div class="stat-sub">replies received</div>
+            </div>
+          </div>
+          <div class="tab-row">
+            <div class="mock-tab active">Review</div>
+            <div class="mock-tab">Drafts</div>
+            <div class="mock-tab">LinkedIn</div>
+            <div class="mock-tab">Follow-up</div>
+            <div class="mock-tab">Nurture</div>
+            <div class="mock-tab">Conversations</div>
+          </div>
+          <div>
+            <div class="prospect-row">
+              <div class="prospect-avatar">SM</div>
+              <div style="flex:1;">
+                <div class="prospect-name">Sarah Mitchell</div>
+                <div class="prospect-co">Fold Studio</div>
+              </div>
+              <div class="prospect-status">Pending review</div>
+              <div class="prospect-action">✓ Approve</div>
+            </div>
+            <div class="prospect-row">
+              <div class="prospect-avatar">PN</div>
+              <div style="flex:1;">
+                <div class="prospect-name">Priya Nair</div>
+                <div class="prospect-co">Common Ground</div>
+              </div>
+              <div class="prospect-status">Pending review</div>
+              <div class="prospect-action">✓ Approve</div>
+            </div>
+            <div class="prospect-row">
+              <div class="prospect-avatar">DK</div>
+              <div style="flex:1;">
+                <div class="prospect-name">Dan Kim</div>
+                <div class="prospect-co">Studio North</div>
+              </div>
+              <div class="prospect-status">Pending review</div>
+              <div class="prospect-action">✓ Approve</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="annotations">
+      <div class="annotation"><div class="annotation-dot"></div>"Edit message" is inline in the subtitle — accessible but not a distraction</div>
+      <div class="annotation"><div class="annotation-dot"></div>Stats at the top give instant pipeline visibility before looking at individual prospects</div>
+      <div class="annotation"><div class="annotation-dot"></div>Same tab structure as current dashboard — familiar, just scoped to one campaign now</div>
+      <div class="annotation"><div class="annotation-dot"></div>Conversations highlighted in green — the metric that actually matters</div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

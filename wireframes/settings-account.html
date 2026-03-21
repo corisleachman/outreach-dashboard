@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.1);--rd:rgba(255,76,76,0.1);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:56px;}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+.tb{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.92);border-bottom:1px solid var(--b);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;padding:0 24px 0 56px;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
+.lay{display:flex;padding-top:var(--th);min-height:100vh;}
+
+
+
+
+.mn{margin-left:var(--sw);flex:1;padding:36px 40px;position:relative;z-index:1;max-width:680px;}
+.sc{display:none;}.sc.on{display:block;}
+.page-title{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:24px;}
+/* settings nav */
+.s-tabs{display:flex;border-bottom:1px solid var(--b);margin-bottom:28px;}
+.s-tab{padding:11px 16px;font-size:13px;color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;font-family:var(--of);font-weight:600;transition:all 0.15s;}
+.s-tab:hover{color:var(--t);}
+.s-tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+/* section */
+.sect{margin-bottom:30px;}
+.sect-title{font-family:var(--of);font-size:13px;font-weight:700;color:var(--t);margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+/* row */
+.row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.row:last-child{border-bottom:none;}
+.row-info{flex:1;margin-right:16px;}
+.row-label{font-size:13px;color:var(--t);}
+.row-sub{font-size:12px;color:var(--td);margin-top:2px;line-height:1.5;}
+/* toggle */
+.tgl{width:38px;height:21px;background:var(--s2);border:1px solid var(--b2);border-radius:11px;position:relative;cursor:pointer;transition:all 0.25s;flex-shrink:0;}
+.tgl.on{background:var(--pink);border-color:var(--pink);box-shadow:0 0 8px rgba(255,20,147,0.3);}
+.tgl::after{content:"";position:absolute;width:15px;height:15px;background:white;border-radius:50%;top:2px;left:2px;transition:all 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.tgl.on::after{left:calc(100% - 17px);}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
+.br{background:var(--rd);border:1px solid rgba(255,76,76,0.2);color:var(--red);}
+.bg_{background:transparent;color:var(--tm);}.bg_:hover{color:var(--t);}
+.bsm{padding:7px 14px;font-size:12px;}
+/* inputs */
+.inp{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);border-radius:8px;padding:11px 14px;font-family:var(--sf);font-size:14px;color:var(--t);outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--cyan);}
+.lbl{font-size:11px;font-family:var(--of);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:6px;display:block;}
+.fld{margin-bottom:14px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* gmail status */
+.gmail-row{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:10px;margin-bottom:14px;}
+.g-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;}
+/* personality packs */
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.pack-card{background:var(--s);border:1px solid var(--b);border-radius:10px;padding:16px;cursor:pointer;transition:all 0.15s;position:relative;}
+.pack-card:hover{border-color:var(--b2);}
+.pack-card.sel{border-color:var(--pink);background:var(--pd);}
+.pack-card.sel::after{content:"Default";position:absolute;top:10px;right:10px;background:var(--gr);color:white;font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:2px 7px;border-radius:10px;}
+.pack-name{font-family:var(--of);font-size:14px;font-weight:700;margin-bottom:4px;}
+.pack-tags{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
+.pack-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.07em;
+  padding:2px 7px;border-radius:3px;background:var(--s2);border:1px solid var(--b2);color:var(--td);}
+.pack-card.sel .pack-tag{background:var(--pd);border-color:rgba(255,20,147,0.2);color:var(--pink);}
+.pack-preview{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:6px;
+  padding:10px 12px;font-size:12px;color:var(--tm);line-height:1.7;font-style:italic;margin-bottom:8px;}
+.pack-attrs{display:flex;flex-wrap:wrap;gap:10px;}
+.pack-attr{font-size:10px;color:var(--td);}
+.pack-attr span{color:var(--tm);font-weight:500;}
+/* billing */
+.bill-card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px;margin-bottom:12px;}
+.bill-plan-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.bill-plan-name{font-family:var(--of);font-size:18px;font-weight:800;}
+.bill-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:3px 10px;border-radius:20px;background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.bill-detail{font-size:12px;color:var(--td);margin-bottom:12px;}
+.inv-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:12px;}
+.inv-row:last-child{border-bottom:none;}
+/* pbar */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 20px);z-index:999;background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+.tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;}
+.tst{background:rgba(20,10,35,0.96);border:1px solid var(--b2);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:2px solid var(--cyan);}
+.tst.tp{border-left:2px solid var(--pink);}
+@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);} .si:hover svg{opacity:1;}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;color:var(--tm);opacity:0.7;transition:opacity 0.15s;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+<header class="tb"><div class="logo">outreach.</div><div class="av">CL</div></header>
+<div class="lay">
+<aside class="sidebar">
+  <a class="si" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+<main class="mn">
+  <div class="page-title">Settings</div>
+  <div class="s-tabs">
+    <div class="s-tab on" id="tab-acc" onclick="setTab('acc')">Account</div>
+    <div class="s-tab" id="tab-packs" onclick="setTab('packs')">Personality packs</div>
+    <div class="s-tab" id="tab-bill" onclick="setTab('bill')">Billing</div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div id="s-acc" class="sc on">
+    <div class="sect">
+      <div class="sect-title">Profile</div>
+      <div class="two-col" style="margin-bottom:12px;">
+        <div class="fld" style="margin:0"><label class="lbl">First name</label><input class="inp" value="Coris"></div>
+        <div class="fld" style="margin:0"><label class="lbl">Last name</label><input class="inp" value="Leachman"></div>
+      </div>
+      <div class="fld"><label class="lbl">Email</label><input class="inp" value="coris@example.com" readonly style="opacity:0.6;cursor:default"></div>
+      <div style="display:flex;justify-content:flex-end;margin-top:4px;">
+        <button class="btn bp bsm" onclick="toast('✓','Profile saved','tc')">Save changes</button>
+      </div>
+    </div>
+    <div class="sect">
+      <div class="sect-title">Connected account</div>
+      <div class="gmail-row">
+        <div class="g-dot"></div>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:500">Gmail connected</div>
+          <div style="font-size:12px;color:var(--td);margin-top:1px">coris@example.com · Connected 12 Mar 2026</div>
+        </div>
+        <button class="btn bs bsm" onclick="toast('→','Reconnecting to Gmail…','tc')">Reconnect</button>
+      </div>
+    </div>
+    <div class="sect">
+      <div class="sect-title">Preferences</div>
+      <div class="row">
+        <div class="row-info"><div class="row-label">Pause sequences on reply</div><div class="row-sub">Stop follow-ups automatically when a prospect replies</div></div>
+        <div class="tgl on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label">Milestone notifications</div><div class="row-sub">Show celebration moments and progress prompts in the app</div></div>
+        <div class="tgl on" onclick="this.classList.toggle('on')"></div>
+      </div>
+      <div class="row">
+        <div class="row-info"><div class="row-label">Send guard (dev mode)</div><div class="row-sub">Block real sends in development — always on in production</div></div>
+        <div class="tgl" onclick="this.classList.toggle('on')"></div>
+      </div>
+    </div>
+    <div class="sect">
+      <div class="sect-title">Danger zone</div>
+      <div class="row">
+        <div class="row-info"><div class="row-label">Delete account</div><div class="row-sub">Permanently delete your account and all data. Cannot be undone.</div></div>
+        <button class="btn br bsm" onclick="toast('⚠ This would open a confirmation flow','tp')">Delete account</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PERSONALITY PACKS -->
+  <div id="s-packs" class="sc">
+    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:6px;">Choose how your AI-generated outreach messages are written. This sets your global default — you can override it per message or per sequence step.</p>
+    <p style="font-size:12px;color:var(--td);margin-bottom:20px;">This controls the <strong style="color:var(--tm)">writing style of messages sent to your prospects</strong>, not the product interface itself.</p>
+    <div class="pack-grid">
+
+      <!-- CALM PROFESSIONAL -->
+      <div class="pack-card sel" onclick="selectPack(this)">
+        <div class="pack-name">Calm Professional</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Measured</span>
+          <span class="pack-tag">Low pressure</span>
+          <span class="pack-tag">Soft CTA</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>I thought it might be useful to share something we've been seeing with teams in your space.<br><br>Happy to explain if helpful."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>High</span></div>
+          <div class="pack-attr">Directness: <span>Moderate</span></div>
+          <div class="pack-attr">Close: <span>Supportive</span></div>
+        </div>
+      </div>
+
+      <!-- DIRECT OPERATOR -->
+      <div class="pack-card" onclick="selectPack(this)">
+        <div class="pack-name">Direct Operator</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Concise</span>
+          <span class="pack-tag">Confident</span>
+          <span class="pack-tag">Clear ask</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>Quick thought.<br><br>We've been helping teams solve [problem].<br><br>Worth a quick chat?"</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Low</span></div>
+          <div class="pack-attr">Directness: <span>High</span></div>
+          <div class="pack-attr">Close: <span>Clear ask</span></div>
+        </div>
+      </div>
+
+      <!-- FRIENDLY NETWORKER -->
+      <div class="pack-card" onclick="selectPack(this)">
+        <div class="pack-name">Friendly Networker</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Warm</span>
+          <span class="pack-tag">Relational</span>
+          <span class="pack-tag">Soft CTA</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>Hope you're having a good week.<br><br>Something crossed my desk that reminded me of what you're working on — just thought I'd share in case it's useful."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Casual</span></div>
+          <div class="pack-attr">Directness: <span>Low</span></div>
+          <div class="pack-attr">Close: <span>Relational</span></div>
+        </div>
+      </div>
+
+      <!-- CURIOUS RESEARCHER -->
+      <div class="pack-card" onclick="selectPack(this)">
+        <div class="pack-name">Curious Researcher</div>
+        <div class="pack-tags">
+          <span class="pack-tag">Thoughtful</span>
+          <span class="pack-tag">Observational</span>
+          <span class="pack-tag">Question close</span>
+        </div>
+        <div class="pack-preview">"Hi Sarah,<br><br>I noticed your team recently launched [X].<br><br>Curious how you're thinking about [challenge]."</div>
+        <div class="pack-attrs">
+          <div class="pack-attr">Formality: <span>Thoughtful</span></div>
+          <div class="pack-attr">Directness: <span>Moderate</span></div>
+          <div class="pack-attr">Close: <span>Question</span></div>
+        </div>
+      </div>
+
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:18px;">
+      <button class="btn bp bsm" onclick="toast('✓','Default personality pack saved','tc')">Save default</button>
+    </div>
+  </div>
+
+  <!-- BILLING -->
+  <div id="s-bill" class="sc">
+    <div class="bill-card">
+      <div class="bill-plan-row">
+        <div>
+          <div class="bill-plan-name">Pro plan</div>
+          <div class="bill-detail">£64.80/year · renews 17 Mar 2027</div>
+        </div>
+        <span class="bill-badge">Active</span>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn bs bsm" onclick="toast('→','Opening plan comparison','tc')">Change plan</button>
+        <button class="btn bs bsm" onclick="toast('→','Opening Stripe portal','tc')">Manage billing</button>
+      </div>
+    </div>
+    <div class="bill-card">
+      <div style="font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:12px;">Payment method</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="background:var(--s2);border:1px solid var(--b2);border-radius:6px;padding:6px 10px;font-size:12px;color:var(--tm);">Visa ···· 4242</div>
+        <span style="font-size:12px;color:var(--td);">Expires 12/27</span>
+        <button class="btn bs bsm" style="margin-left:auto;padding:5px 12px;font-size:11px;" onclick="toast('→','Updating payment method','tc')">Update</button>
+      </div>
+    </div>
+    <div class="bill-card">
+      <div style="font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:12px;">Invoice history</div>
+      <div class="inv-row">
+        <span style="color:var(--tm)">17 Mar 2026</span>
+        <span>£64.80 Pro Annual</span>
+        <button class="btn bg_ bsm" style="padding:3px 10px;font-size:11px;" onclick="toast('↓','Downloading invoice','tc')">PDF</button>
+      </div>
+      <div class="inv-row">
+        <span style="color:var(--tm)">17 Mar 2025</span>
+        <span>£64.80 Pro Annual</span>
+        <button class="btn bg_ bsm" style="padding:3px 10px;font-size:11px;" onclick="toast('↓','Downloading invoice','tc')">PDF</button>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<div class="pbar">
+  <span>Tab:</span>
+  <button style="color:#ff1493" onclick="setTab('acc')">Account</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="setTab('packs')">Packs</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="setTab('bill')">Billing</button>
+</div>
+<div class="tz" id="tz"></div>
+<script>
+function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function setTab(name){
+  document.querySelectorAll('.s-tab').forEach(t=>t.classList.remove('on'));
+  document.getElementById('tab-'+name).classList.add('on');
+  show('s-'+name);
+}
+function selectPack(el){
+  document.querySelectorAll('.pack-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function toast(icon,text,cls){
+  const z=document.getElementById('tz'),e=document.createElement('div');
+  e.className='tst '+cls;e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
+  z.appendChild(e);setTimeout(()=>e.remove(),3200);
+}
+</script>
+</body></html>

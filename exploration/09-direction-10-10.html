@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Dashboard - The 10/10 Surprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
+  color: #fff;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 40px;
+}
+
+.page-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #00d4ff;
+  margin-bottom: 40px;
+  text-align: center;
+  font-style: italic;
+}
+
+.direction-note {
+  text-align: center;
+  margin-bottom: 60px;
+  font-size: 13px;
+  color: #a0a0b0;
+}
+
+/* DASHBOARD LAYOUT */
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  margin-bottom: 80px;
+}
+
+/* STATE CARDS */
+.state-card {
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.05) 0%, rgba(0, 212, 255, 0.05) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 16px;
+  padding: 48px;
+  position: relative;
+}
+
+.state-card.active {
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.08) 0%, rgba(255, 20, 147, 0.05) 100%);
+  border-color: rgba(0, 212, 255, 0.3);
+}
+
+.state-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 24px;
+}
+
+.state-greeting {
+  font-family: 'Playfair Display', serif;
+  font-size: 52px;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 20px;
+  color: #fff;
+  font-style: italic;
+}
+
+.state-greeting.gradient {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.state-subtext {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 400;
+  color: #b0b0d0;
+  line-height: 1.7;
+  margin-bottom: 32px;
+}
+
+.cta-button {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  padding: 12px 24px;
+  border: 2px solid #ff1493;
+  background: transparent;
+  color: #ff1493;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-style: italic;
+}
+
+.cta-button:hover {
+  background: #ff1493;
+  color: #1a0f2e;
+}
+
+/* METRIC MINI */
+.metric-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.metric-mini {
+  background: transparent;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.2);
+  border-radius: 0;
+  padding: 16px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.metric-mini-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #888;
+  font-weight: 600;
+}
+
+.metric-mini-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 28px;
+  font-weight: 800;
+  color: #ff1493;
+  font-style: italic;
+}
+
+/* CELEBRATION STATE - THE SHOWSTOPPER */
+.celebration-state {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.08) 0%, rgba(0, 212, 255, 0.08) 100%);
+  border: 2px solid rgba(0, 212, 255, 0.3);
+  border-radius: 16px;
+  padding: 80px 60px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.celebration-state::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+  animation: glow-pulse 6s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes glow-pulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+.celebration-emoji {
+  font-size: 72px;
+  margin-bottom: 32px;
+  display: block;
+  animation: bounce 1.5s ease-in-out infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-20px); }
+}
+
+.celebration-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: 140px;
+  font-weight: 900;
+  line-height: 0.9;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 16px;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  position: relative;
+  z-index: 1;
+}
+
+.celebration-statement {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px;
+  font-weight: 800;
+  color: #00d4ff;
+  margin-bottom: 32px;
+  line-height: 1.2;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  position: relative;
+  z-index: 1;
+}
+
+.celebration-body {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 400;
+  color: #b0b0d0;
+  margin-bottom: 40px;
+  line-height: 1.8;
+  max-width: 700px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  z-index: 1;
+}
+
+.badge {
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  display: inline-block;
+  padding: 10px 28px;
+  border: 2px solid #ff1493;
+  background: transparent;
+  color: #ff1493;
+  margin-bottom: 48px;
+  font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+.celebration-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+  position: relative;
+  z-index: 1;
+}
+
+.celebration-metric {
+  background: transparent;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 0;
+  padding: 32px;
+  position: relative;
+  border-left: 4px solid #ff1493;
+}
+
+.celebration-metric-label {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.celebration-metric-value {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 900;
+  color: #ff1493;
+  line-height: 1;
+  margin-bottom: 12px;
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+
+.celebration-metric-secondary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #a0a0b0;
+  line-height: 1.5;
+}
+
+/* SCENE BREAK */
+.scene-break {
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, #00d4ff 50%, transparent 100%);
+  margin: 80px 0;
+  opacity: 0.5;
+}
+
+.scene-break-label {
+  text-align: center;
+  font-family: 'Playfair Display', serif;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: #888;
+  margin: 40px 0;
+  font-style: italic;
+}
+
+/* CAMPAIGNS SECTION */
+.campaigns-section {
+  margin-top: 80px;
+}
+
+.section-header {
+  margin-bottom: 40px;
+}
+
+.section-header h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.section-header .see-all {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  color: #00d4ff;
+  text-decoration: none;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: all 0.2s ease;
+}
+
+.section-header .see-all:hover {
+  color: #ff1493;
+}
+
+.campaigns-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+
+.campaign-card {
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.04) 0%, rgba(0, 212, 255, 0.04) 100%);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 12px;
+  padding: 28px;
+  transition: all 0.3s ease;
+}
+
+.campaign-card:hover {
+  border-color: rgba(0, 212, 255, 0.3);
+  background: linear-gradient(135deg, rgba(255, 20, 147, 0.08) 0%, rgba(0, 212, 255, 0.08) 100%);
+}
+
+.campaign-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 20px;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 8px;
+  font-style: italic;
+  letter-spacing: -0.01em;
+}
+
+.campaign-meta {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.campaign-progress {
+  background: rgba(0, 212, 255, 0.1);
+  height: 3px;
+  border-radius: 0;
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.campaign-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #ff1493 0%, #00d4ff 100%);
+  width: 65%;
+}
+
+.campaign-stat {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #00d4ff;
+  font-weight: 600;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="page-title">DIRECTION 4: THE 10/10 SURPRISE</div>
+<div class="direction-note">Playfair Display (cinematic, art deco, dramatic) + DM Sans (clean, supporting). Sight and Sound magazine vibes. Type as hero. Neon as stage lighting.</div>
+
+<!-- STATE CARDS -->
+<div class="dashboard-grid">
+  
+  <!-- MORNING STATE -->
+  <div class="state-card">
+    <div class="state-label">Morning</div>
+    <div class="state-greeting">Good morning</div>
+    <div class="state-subtext">You have 3 follow-ups due today. Your rhythm is steady. Ready to keep the momentum?</div>
+    <button class="cta-button">See your plan</button>
+  </div>
+
+  <!-- ACTIVE STATE -->
+  <div class="state-card active">
+    <div class="state-label">Active</div>
+    <div class="state-greeting gradient">Momentum</div>
+    <div class="state-subtext">You've sent 8 emails today. Your sequences are converting well. Keep this pace.</div>
+    
+    <div class="metric-grid">
+      <div class="metric-mini">
+        <div class="metric-mini-label">Sent today</div>
+        <div class="metric-mini-value">8</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Expected replies</div>
+        <div class="metric-mini-value">~2-3</div>
+      </div>
+      <div class="metric-mini">
+        <div class="metric-mini-label">Current streak</div>
+        <div class="metric-mini-value">5 days</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CELEBRATION STATE - THE CLIMAX -->
+<div class="celebration-state">
+  <span class="celebration-emoji">🎉</span>
+  <div class="celebration-headline">50 sent</div>
+  <div class="celebration-statement">Highest day yet</div>
+  <div class="celebration-body">
+    You've crushed your personal record. Your outreach rhythm is accelerating. This is momentum. This is what consistency looks like.
+  </div>
+  <div class="badge">Personal Record</div>
+  
+  <div class="celebration-metrics">
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Sequences</div>
+      <div class="celebration-metric-value">14</div>
+      <div class="celebration-metric-secondary">active campaigns</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Expected Replies</div>
+      <div class="celebration-metric-value">~8-10</div>
+      <div class="celebration-metric-secondary">coming in</div>
+    </div>
+    <div class="celebration-metric">
+      <div class="celebration-metric-label">Your Streak</div>
+      <div class="celebration-metric-value">7 days</div>
+      <div class="celebration-metric-secondary">unbroken</div>
+    </div>
+  </div>
+</div>
+
+<!-- SCENE BREAK (Sight and Sound aesthetic) -->
+<div class="scene-break"></div>
+<div class="scene-break-label">Active campaigns</div>
+<div class="scene-break"></div>
+
+<!-- CAMPAIGNS SECTION -->
+<div class="campaigns-section">
+  <div class="section-header">
+    <h2>Your campaigns</h2>
+    <a href="#" class="see-all">View all →</a>
+  </div>
+
+  <div class="campaigns-grid">
+    <div class="campaign-card">
+      <div class="campaign-name">Q1 Outreach</div>
+      <div class="campaign-meta">12 sequences • 142 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar"></div>
+      </div>
+      <div class="campaign-stat">65% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">Agency founders</div>
+      <div class="campaign-meta">8 sequences • 87 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 42%;"></div>
+      </div>
+      <div class="campaign-stat">42% complete</div>
+    </div>
+
+    <div class="campaign-card">
+      <div class="campaign-name">BD Directors</div>
+      <div class="campaign-meta">6 sequences • 54 contacts</div>
+      <div class="campaign-progress">
+        <div class="campaign-progress-bar" style="width: 88%;"></div>
+      </div>
+      <div class="campaign-stat">88% complete</div>
+    </div>
+  </div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,1050 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Micro-Interaction System — outreach. Brand Guidelines</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
+  color: #fff;
+  min-height: 100vh;
+}
+.container { max-width: 1100px; margin: 0 auto; padding: 60px 40px; }
+
+header {
+  margin-bottom: 60px;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.2);
+  padding-bottom: 40px;
+}
+.back-link {
+  display: inline-block;
+  font-size: 13px;
+  color: #a0a0b0;
+  text-decoration: none;
+  margin-bottom: 24px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #00d4ff; }
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 52px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.subtitle { font-size: 16px; color: #a0a0b0; margin-bottom: 20px; max-width: 680px; line-height: 1.7; }
+.doc-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+nav {
+  position: sticky;
+  top: 0;
+  background: rgba(26, 15, 46, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 14px 40px;
+  margin-bottom: 60px;
+  z-index: 100;
+}
+nav h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #00d4ff;
+  margin-bottom: 0;
+  display: inline-block;
+  margin-right: 24px;
+}
+nav ul { list-style: none; display: inline-flex; gap: 24px; flex-wrap: wrap; }
+nav a { font-size: 13px; color: #b0b0d0; text-decoration: none; transition: color 0.2s; }
+nav a:hover { color: #ff1493; }
+
+.section { margin-bottom: 80px; scroll-margin-top: 100px; }
+.section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #fff;
+}
+.section-intro { font-size: 15px; color: #a0a0b0; line-height: 1.8; margin-bottom: 32px; max-width: 780px; }
+
+.status-locked {
+  display: inline-block; padding: 6px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(0, 212, 255, 0.15); color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3); margin-bottom: 20px;
+}
+.status-pending {
+  display: inline-block; padding: 6px 12px; border-radius: 20px;
+  font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+  background: rgba(255, 165, 0, 0.15); color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.3); margin-bottom: 20px;
+}
+
+.content-block {
+  background: rgba(255, 20, 147, 0.05);
+  border: 1px solid rgba(255, 20, 147, 0.15);
+  border-radius: 12px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+}
+.content-block h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 18px; font-weight: 700; margin-bottom: 16px; color: #fff;
+}
+.content-block p { font-size: 14px; line-height: 1.8; color: #b0b0d0; margin-bottom: 10px; }
+.content-block p:last-child { margin-bottom: 0; }
+.content-block strong { color: #00d4ff; }
+
+.grid2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 20px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+.grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+
+/* Timing token cards */
+.token-card {
+  background: rgba(0, 212, 255, 0.04);
+  border: 1px solid rgba(0, 212, 255, 0.15);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.token-name {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: #00d4ff;
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+.token-value {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.token-desc { font-size: 12px; color: #888; line-height: 1.5; }
+
+/* Easing card */
+.easing-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.easing-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #888; margin-bottom: 6px; }
+.easing-value { font-family: 'DM Mono', monospace; font-size: 12px; color: #ffa500; line-height: 1.6; }
+
+/* Decision table */
+.decision-table { width: 100%; border-collapse: collapse; margin-bottom: 0; }
+.decision-table thead { background: rgba(0, 212, 255, 0.08); }
+.decision-table th, .decision-table td {
+  padding: 14px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+.decision-table th {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700; color: #00d4ff;
+  text-transform: uppercase; letter-spacing: 0.06em;
+}
+.decision-table td { color: #b0b0d0; }
+.decision-table td:first-child { color: #fff; font-weight: 500; }
+.td-code { font-family: 'DM Mono', monospace; font-size: 12px; color: #ffa500; }
+
+/* Interaction pattern blocks */
+.pattern {
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 12px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.pattern-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.pattern-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: rgba(0, 212, 255, 0.15);
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 600; color: #00d4ff;
+  flex-shrink: 0;
+}
+.pattern-title { font-family: 'Space Grotesk', sans-serif; font-size: 16px; font-weight: 600; color: #fff; }
+.pattern-where { font-size: 11px; color: #888; margin-left: auto; }
+.pattern-desc { font-size: 13px; color: #b0b0d0; line-height: 1.7; margin-bottom: 12px; }
+.pattern-spec {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px;
+}
+.spec-pill {
+  padding: 4px 10px; border-radius: 20px; font-size: 11px;
+  font-family: 'DM Mono', monospace;
+  background: rgba(255, 165, 0, 0.1);
+  border: 1px solid rgba(255, 165, 0, 0.2);
+  color: #ffa500;
+}
+
+/* Demo zone */
+.demo-zone {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 20px;
+  margin-top: 12px;
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; flex-wrap: wrap; min-height: 72px;
+}
+.demo-label {
+  font-size: 11px; color: #555; text-align: center; margin-top: 8px;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Interactive demo elements */
+.prospect-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: opacity 0.45s ease, transform 0.45s ease, max-height 0.5s ease, padding 0.4s, margin 0.4s, border-color 0.4s;
+  overflow: hidden; max-height: 60px;
+  width: 100%;
+}
+.prospect-row.sending { opacity: 0.4; transform: translateX(5px); }
+.prospect-row.sent { opacity: 0; max-height: 0; padding-top: 0; padding-bottom: 0; margin: 0; border-width: 0; transform: translateX(10px); }
+.avatar {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: rgba(0, 212, 255, 0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 600; color: #00d4ff; flex-shrink: 0;
+}
+.row-name { font-size: 13px; font-weight: 500; color: #fff; }
+.row-sub { font-size: 11px; color: #888; }
+.row-actions { margin-left: auto; }
+.send-btn {
+  padding: 5px 14px; border-radius: 20px; font-size: 11px;
+  cursor: pointer; border: 1px solid rgba(255, 20, 147, 0.4);
+  background: rgba(255, 20, 147, 0.08); color: #ff1493;
+  font-family: 'DM Mono', monospace;
+  transition: background 0.15s, border-color 0.15s;
+}
+.send-btn:hover { background: rgba(255, 20, 147, 0.18); }
+
+.toast-wrap { position: relative; height: 52px; margin-top: 10px; width: 100%; }
+.toast {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: #0d0d14;
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 8px; padding: 12px 16px;
+  font-size: 13px; color: #00d4ff;
+  display: flex; align-items: center; justify-content: space-between;
+  transform: translateY(10px); opacity: 0;
+  transition: transform 0.28s cubic-bezier(0.22, 0.68, 0, 1.2), opacity 0.2s;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-check {
+  width: 16px; height: 16px; border-radius: 50%;
+  background: #00d4ff;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-right: 8px;
+}
+.toast-dismiss { font-size: 11px; color: #888; cursor: pointer; pointer-events: all; }
+
+/* Button demos */
+.btn {
+  padding: 9px 18px; border-radius: 8px;
+  font-size: 13px; font-family: 'DM Mono', monospace;
+  cursor: pointer;
+  transition: background 0.12s, transform 0.1s, border-color 0.12s;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+}
+.btn:hover { background: rgba(255, 255, 255, 0.09); }
+.btn:active { transform: scale(0.97); }
+.btn-primary { background: #00d4ff; border-color: #00d4ff; color: #0d0d14; font-weight: 600; }
+.btn-primary:hover { background: #00bde8; }
+.btn-locked { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+/* Momentum prompts */
+.momentum-prompt {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px;
+  border-left: 2px solid #00d4ff;
+  border-radius: 0 8px 8px 0;
+  background: rgba(0, 212, 255, 0.04);
+  width: 100%;
+}
+.momentum-label { font-size: 11px; color: #888; font-family: 'DM Mono', monospace; }
+.momentum-action { font-size: 14px; color: #fff; font-weight: 500; }
+.momentum-arrow { margin-left: auto; font-size: 12px; color: #00d4ff; }
+
+/* Step progress */
+.step-row { display: flex; align-items: center; gap: 0; }
+.step-dot {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; flex-shrink: 0;
+  transition: background 0.35s, color 0.35s;
+}
+.step-done { background: #00d4ff; color: #0d0d14; }
+.step-active { background: transparent; color: #00d4ff; border: 2px solid #00d4ff; }
+.step-todo { background: rgba(255,255,255,0.06); color: #555; border: 1px solid rgba(255,255,255,0.1); }
+.step-line { flex: 1; height: 1px; background: rgba(255,255,255,0.08); overflow: hidden; position: relative; }
+.step-line-fill { height: 100%; background: #00d4ff; transition: width 0.5s ease; }
+
+/* State cards */
+.state-card {
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 10px;
+  padding: 16px 20px;
+}
+.state-tag {
+  display: inline-block; font-size: 10px; font-weight: 600;
+  padding: 3px 8px; border-radius: 20px; margin-bottom: 8px;
+  text-transform: uppercase; letter-spacing: 0.05em;
+  font-family: 'DM Mono', monospace;
+}
+.tag-empty { background: rgba(255,255,255,0.06); color: #888; }
+.tag-active { background: rgba(0,212,255,0.1); color: #00d4ff; border: 1px solid rgba(0,212,255,0.2); }
+.tag-error { background: rgba(255,60,60,0.1); color: #ff6060; border: 1px solid rgba(255,60,60,0.2); }
+.tag-success { background: rgba(0,255,128,0.08); color: #00e080; border: 1px solid rgba(0,255,128,0.15); }
+.state-headline { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+.state-sub { font-size: 12px; color: #888; line-height: 1.6; }
+.state-cta { margin-top: 10px; font-size: 12px; color: #ff1493; cursor: pointer; display: inline-block; }
+
+/* Milestone */
+.milestone {
+  display: flex; align-items: flex-start; gap: 14px;
+  padding: 16px 20px;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  opacity: 0; transform: scale(0.96);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  margin-bottom: 8px;
+}
+.milestone.show { opacity: 1; transform: scale(1); }
+.ms-icon {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: rgba(0, 212, 255, 0.08);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.ms-title { font-size: 14px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+.ms-sub { font-size: 12px; color: #888; }
+
+/* Copy items */
+.copy-item {
+  padding: 14px 16px;
+  border-radius: 8px;
+  background: rgba(0,0,0,0.2);
+  border: 1px solid rgba(255,255,255,0.06);
+  margin-bottom: 8px;
+}
+.copy-cat {
+  font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase;
+  color: #00d4ff; margin-bottom: 5px; font-family: 'DM Mono', monospace;
+}
+.copy-text { font-size: 13px; color: #fff; }
+.copy-sub { font-size: 11px; color: #888; margin-top: 3px; }
+
+/* Voice avoid/prefer */
+.voice-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.voice-col { padding: 16px 20px; border-radius: 10px; }
+.voice-col.avoid { background: rgba(255,60,60,0.06); border: 1px solid rgba(255,60,60,0.15); }
+.voice-col.prefer { background: rgba(0,255,128,0.04); border: 1px solid rgba(0,255,128,0.12); }
+.voice-col-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px; font-weight: 600; }
+.voice-col.avoid .voice-col-title { color: #ff6060; }
+.voice-col.prefer .voice-col-title { color: #00e080; }
+.voice-col ul { list-style: none; }
+.voice-col li { font-size: 13px; line-height: 1.9; font-family: 'DM Mono', monospace; }
+.voice-col.avoid li { color: #ff6060; }
+.voice-col.prefer li { color: #00e080; }
+
+/* Field error demo */
+.field-label { font-size: 11px; color: #888; margin-bottom: 4px; font-family: 'DM Mono', monospace; }
+.field-input {
+  width: 100%; padding: 9px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(0,0,0,0.25);
+  color: #fff; font-size: 13px;
+  font-family: 'DM Mono', monospace;
+}
+.field-input.error { border-color: #ff6060; }
+.field-error { font-size: 11px; color: #ff6060; margin-top: 5px; }
+
+/* File structure */
+.file-tree {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 2;
+  color: #888;
+  padding: 16px 20px;
+  background: rgba(0,0,0,0.2);
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+.file-tree .root { color: #fff; }
+.file-tree .file { color: #ffa500; }
+
+/* Note callout */
+.note {
+  padding: 14px 18px;
+  border-radius: 8px;
+  background: rgba(255, 165, 0, 0.06);
+  border: 1px solid rgba(255, 165, 0, 0.2);
+  font-size: 13px;
+  color: #b0a080;
+  line-height: 1.7;
+  margin-top: 16px;
+}
+.note strong { color: #ffa500; }
+
+/* Trigger demo button */
+.trigger-btn {
+  width: 100%; padding: 10px; border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04); color: #888;
+  font-size: 12px; font-family: 'DM Mono', monospace;
+  cursor: pointer; transition: background 0.15s, color 0.15s;
+  margin-top: 8px;
+}
+.trigger-btn:hover { background: rgba(255,255,255,0.08); color: #fff; }
+
+footer {
+  margin-top: 100px;
+  padding-top: 40px;
+  border-top: 2px solid rgba(0, 212, 255, 0.2);
+  font-size: 12px; color: #555; text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<header>
+  <a href="00-brand-guidelines.html" class="back-link">← Back to Brand Guidelines</a>
+  <h1>Micro-Interaction System</h1>
+  <p class="subtitle">The motion, state, microcopy, and momentum layer for the outreach. dashboard. Design-direction agnostic — colours and typography adapt when a direction is locked.</p>
+  <span class="doc-status">Spec locked — March 2026</span>
+</header>
+
+<nav>
+  <h3>Jump to</h3>
+  <ul>
+    <li><a href="#motion">Motion tokens</a></li>
+    <li><a href="#patterns">Interaction patterns</a></li>
+    <li><a href="#states">Dashboard states</a></li>
+    <li><a href="#microcopy">Microcopy system</a></li>
+    <li><a href="#momentum">Momentum engine</a></li>
+    <li><a href="#milestones">Milestones</a></li>
+  </ul>
+</nav>
+
+<!-- SECTION 1: MOTION TOKENS -->
+<section class="section" id="motion">
+  <h2>Motion tokens</h2>
+  <span class="status-locked">Design-direction agnostic</span>
+  <p class="section-intro">All animation durations and easing functions are defined as tokens. These do not change when the visual design direction is swapped — motion is structural, not cosmetic.</p>
+
+  <div class="grid4">
+    <div class="token-card">
+      <div class="token-name">instant</div>
+      <div class="token-value">0ms</div>
+      <div class="token-desc">State flags, boolean toggles. No visual delay.</div>
+    </div>
+    <div class="token-card">
+      <div class="token-name">quick</div>
+      <div class="token-value">120ms</div>
+      <div class="token-desc">Hover bg, border colour changes, pill state shifts.</div>
+    </div>
+    <div class="token-card">
+      <div class="token-name">standard</div>
+      <div class="token-value">200ms</div>
+      <div class="token-desc">Default for most UI transitions. Drawers, dropdowns, focus rings.</div>
+    </div>
+    <div class="token-card">
+      <div class="token-name">deliberate</div>
+      <div class="token-value">350ms</div>
+      <div class="token-desc">Progress indicators, step advancement, confirmation banners.</div>
+    </div>
+  </div>
+
+  <div class="grid2">
+    <div class="token-card">
+      <div class="token-name">exit / collapse</div>
+      <div class="token-value">400–500ms</div>
+      <div class="token-desc">Row fade-and-collapse after send. Gives user time to register completion before the row disappears.</div>
+    </div>
+    <div class="token-card" style="background:rgba(255,165,0,0.04); border-color:rgba(255,165,0,0.2);">
+      <div class="token-name" style="color:#ffa500">colour token note</div>
+      <div class="token-value" style="font-size:14px;margin-bottom:4px;color:#ffa500">Pending direction lock</div>
+      <div class="token-desc">The accent colour used in toasts, momentum prompts, and milestone icons is currently <span style="color:#00d4ff">Electric Dreams cyan</span>. It will update to the primary accent of the chosen direction when locked.</div>
+    </div>
+  </div>
+
+  <div class="content-block" style="margin-top:20px">
+    <h3>Easing functions</h3>
+    <div class="grid3" style="margin-top:12px;margin-bottom:0">
+      <div class="easing-card">
+        <div class="easing-label">Enter (spring)</div>
+        <div class="easing-value">cubic-bezier(0.22, 0.68, 0, 1.2)</div>
+      </div>
+      <div class="easing-card">
+        <div class="easing-label">Exit</div>
+        <div class="easing-value">ease-in</div>
+      </div>
+      <div class="easing-card">
+        <div class="easing-label">Default</div>
+        <div class="easing-value">ease</div>
+      </div>
+    </div>
+    <p style="margin-top:14px">The spring easing (enter) gives toasts and momentum prompts a slight overshoot — just enough to feel alive, not playful enough to feel gamified.</p>
+  </div>
+</section>
+
+<!-- SECTION 2: INTERACTION PATTERNS -->
+<section class="section" id="patterns">
+  <h2>Interaction patterns</h2>
+  <p class="section-intro">Seven named interaction patterns cover every meaningful action in the dashboard. Each pattern has a fixed motion spec that is independent of visual design direction.</p>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">1</div>
+      <div class="pattern-title">Send row — fade and collapse</div>
+      <div class="pattern-where">Drafts tab</div>
+    </div>
+    <div class="pattern-desc">On send: row transitions to 40% opacity and nudges 5px right (sending state). After 500ms, max-height collapses to 0 and row disappears. Toast fires simultaneously. Creates a satisfying "dispatched" feel without abrupt removal.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">opacity: 1 → 0.4 → 0</span>
+      <span class="spec-pill">translateX(0 → 5px → 10px)</span>
+      <span class="spec-pill">max-height: 60px → 0</span>
+      <span class="spec-pill">duration: 450ms</span>
+      <span class="spec-pill">easing: ease</span>
+    </div>
+
+    <div style="margin-top:16px">
+      <div id="sendRow1" class="prospect-row" style="margin-bottom:6px">
+        <div class="avatar">SR</div>
+        <div><div class="row-name">Sarah Reynolds</div><div class="row-sub">Head of Growth · Acme</div></div>
+        <div class="row-actions"><button class="send-btn" onclick="doSend('sendRow1','pt1toast','pt1mom')">Send</button></div>
+      </div>
+      <div id="sendRow2" class="prospect-row">
+        <div class="avatar">MK</div>
+        <div><div class="row-name">Marcus Kline</div><div class="row-sub">VP Ops · Northbridge</div></div>
+        <div class="row-actions"><button class="send-btn" onclick="doSend('sendRow2','pt1toast','pt1mom')">Send</button></div>
+      </div>
+      <div class="toast-wrap">
+        <div class="toast" id="pt1toast">
+          <div style="display:flex;align-items:center">
+            <div class="toast-check"><svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#0d0d14" stroke-width="1.5" fill="none"/></svg></div>
+            <span id="pt1toast-text">Sent to —</span>
+          </div>
+          <span class="toast-dismiss" onclick="this.closest('.toast').classList.remove('show')">dismiss</span>
+        </div>
+      </div>
+      <div class="momentum-prompt" id="pt1mom" style="opacity:0;transform:translateY(6px);transition:opacity .3s,transform .3s;margin-top:8px">
+        <div><div class="momentum-label">message sent ✓</div><div class="momentum-action">Check replies when they come in</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+    </div>
+    <div class="demo-label">Live demo — click Send to trigger the full sequence</div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">2</div>
+      <div class="pattern-title">Toast confirmation</div>
+      <div class="pattern-where">All send actions</div>
+    </div>
+    <div class="pattern-desc">Appears after every email send. Shows the recipient's email address (not campaign name). Uses spring easing on enter. Auto-dismisses after 4 seconds. Email address shown, not a generic "success" message — keeps the user grounded in who they just contacted.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">translateY(10px → 0)</span>
+      <span class="spec-pill">opacity: 0 → 1</span>
+      <span class="spec-pill">enter: 280ms spring</span>
+      <span class="spec-pill">auto-dismiss: 4000ms</span>
+    </div>
+    <div class="demo-zone">
+      <button class="btn" onclick="triggerToast()">Trigger toast</button>
+    </div>
+    <div class="toast-wrap">
+      <div class="toast" id="demoToast">
+        <div style="display:flex;align-items:center">
+          <div class="toast-check"><svg width="8" height="8" viewBox="0 0 8 8"><path d="M1.5 4L3.5 6L6.5 2" stroke="#0d0d14" stroke-width="1.5" fill="none"/></svg></div>
+          <span>Sent to sarah@acmecorp.com</span>
+        </div>
+        <span class="toast-dismiss" onclick="this.closest('.toast').classList.remove('show')">dismiss</span>
+      </div>
+    </div>
+    <div class="demo-label">Toast shown; subject line shown beneath if space allows</div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">3</div>
+      <div class="pattern-title">Button states</div>
+      <div class="pattern-where">All interactive buttons</div>
+    </div>
+    <div class="pattern-desc">Three button states with consistent behaviour across the product. Hover: 120ms background change. Active: 97% scale transform (tactile press feel). Locked/disabled: 35% opacity + non-interactive cursor. No state uses colour alone — always paired with opacity or transform.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">hover bg: 120ms ease</span>
+      <span class="spec-pill">active: scale(0.97) 100ms</span>
+      <span class="spec-pill">disabled: opacity 0.35</span>
+    </div>
+    <div class="demo-zone">
+      <button class="btn btn-primary">Send campaign</button>
+      <button class="btn">Save draft</button>
+      <button class="btn btn-locked">Add follow-up (Pro)</button>
+    </div>
+    <div class="demo-label">Hover all buttons · Click to see active scale · Third button is locked state</div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">4</div>
+      <div class="pattern-title">Progress step advancement</div>
+      <div class="pattern-where">Activation loop</div>
+    </div>
+    <div class="pattern-desc">When a step completes, the connecting line fills (500ms ease), the dot transitions from active (ring) to done (filled), and the next dot becomes active. Each visual change is slightly staggered to feel sequential, not simultaneous.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">line fill: 500ms ease</span>
+      <span class="spec-pill">dot transition: 350ms</span>
+      <span class="spec-pill">stagger: 100ms offset</span>
+    </div>
+    <div style="padding:20px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.06);border-radius:10px;margin-top:12px">
+      <div class="step-row" style="margin-bottom:12px">
+        <div class="step-dot step-done" id="ds1">✓</div>
+        <div class="step-line"><div class="step-line-fill" id="dl1" style="width:100%"></div></div>
+        <div class="step-dot step-done" id="ds2">✓</div>
+        <div class="step-line"><div class="step-line-fill" id="dl2" style="width:100%"></div></div>
+        <div class="step-dot step-active" id="ds3">3</div>
+        <div class="step-line"><div class="step-line-fill" id="dl3" style="width:0%"></div></div>
+        <div class="step-dot step-todo" id="ds4">4</div>
+      </div>
+      <div style="font-size:12px;color:#888;margin-bottom:12px">Step 3 of 4 — Add a follow-up message</div>
+      <button class="trigger-btn" onclick="advanceDemo()">Advance to step 4 →</button>
+    </div>
+    <div class="demo-label">Live demo</div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">5</div>
+      <div class="pattern-title">Momentum prompt reveal</div>
+      <div class="pattern-where">After any meaningful action</div>
+    </div>
+    <div class="pattern-desc">Appears beneath a completion confirmation. Slides up 6px and fades in over 300ms. Left border accent (colour from active design direction). Auto-expires after 10 seconds or dismisses on next action. Never a modal — always inline and non-blocking.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">translateY(6px → 0)</span>
+      <span class="spec-pill">opacity: 0 → 1</span>
+      <span class="spec-pill">enter: 300ms ease</span>
+      <span class="spec-pill">auto-expire: 10s</span>
+    </div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">6</div>
+      <div class="pattern-title">Milestone reveal</div>
+      <div class="pattern-where">First send, first reply, reply milestones</div>
+    </div>
+    <div class="pattern-desc">Scale from 96% to 100% with opacity fade over 400ms. Cards stagger by 300ms when multiple milestones appear. Subtle and professional — no confetti, no sound, no blocking overlay. The restraint is intentional.</div>
+    <div class="pattern-spec">
+      <span class="spec-pill">scale(0.96 → 1)</span>
+      <span class="spec-pill">opacity: 0 → 1</span>
+      <span class="spec-pill">enter: 400ms ease</span>
+      <span class="spec-pill">stagger: 300ms</span>
+    </div>
+  </div>
+
+  <div class="pattern">
+    <div class="pattern-header">
+      <div class="pattern-num">7</div>
+      <div class="pattern-title">Inline field error</div>
+      <div class="pattern-where">Forms, message editor, send confirmation</div>
+    </div>
+    <div class="pattern-desc">Errors appear inline beneath the field — never as a toast, never as a modal. Border turns error-red on the affected input. Error message appears in error-red below with a human explanation (no error codes). Clears when the issue is resolved.</div>
+    <div style="padding:16px 20px;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.06);border-radius:10px;margin-top:12px;max-width:420px">
+      <div class="field-label">Subject line</div>
+      <input class="field-input error" value="" placeholder="e.g. Quick question re: your growth plans" readonly>
+      <div class="field-error">Add a subject line before sending.</div>
+    </div>
+    <div class="demo-label">Inline error — no toast. Border + message only.</div>
+  </div>
+</section>
+
+<!-- SECTION 3: DASHBOARD STATES -->
+<section class="section" id="states">
+  <h2>Dashboard states</h2>
+  <p class="section-intro">Every tab in the dashboard has a defined set of states. Each state has a tag, headline, supporting copy, and (where applicable) a primary action.</p>
+
+  <div class="content-block">
+    <h3>Empty states</h3>
+    <div class="grid2" style="margin-top:16px">
+      <div class="state-card">
+        <div class="state-tag tag-empty">empty</div>
+        <div class="state-headline">No campaigns yet</div>
+        <div class="state-sub">Start your first outreach campaign to begin connecting with prospects.</div>
+        <div class="state-cta">+ Create campaign →</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-empty">empty</div>
+        <div class="state-headline">No replies yet</div>
+        <div class="state-sub">Replies will appear here when prospects respond.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-empty">empty</div>
+        <div class="state-headline">Nothing in follow-up</div>
+        <div class="state-sub">Prospects move here automatically after 5 days with no reply.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-empty">empty</div>
+        <div class="state-headline">Drafts tab is clear</div>
+        <div class="state-sub">Once prospects are reviewed, their drafts appear here ready to send.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Active & in-progress states</h3>
+    <div class="grid2" style="margin-top:16px">
+      <div class="state-card">
+        <div class="state-tag tag-active">live</div>
+        <div class="state-headline">Campaign live</div>
+        <div class="state-sub">Your messages are on their way. Follow-ups stop automatically if someone replies.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-active">importing</div>
+        <div class="state-headline">Importing prospects</div>
+        <div class="state-sub">Adding 24 contacts to this campaign. This only takes a moment.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Error states</h3>
+    <p>Errors are always inline. Never display raw system codes. Always offer a path forward.</p>
+    <div class="grid2" style="margin-top:16px">
+      <div class="state-card">
+        <div class="state-tag tag-error">blocked</div>
+        <div class="state-headline">Campaign can't send yet</div>
+        <div class="state-sub">Add at least one prospect before sending.</div>
+        <div class="state-cta">Add prospects</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-error">send failed</div>
+        <div class="state-headline">This message didn't send</div>
+        <div class="state-sub">There was a problem with Gmail. Try again — nothing was lost.</div>
+        <div class="state-cta">Retry</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Success states</h3>
+    <div class="grid2" style="margin-top:16px">
+      <div class="state-card">
+        <div class="state-tag tag-success">sent</div>
+        <div class="state-headline">Message sent</div>
+        <div class="state-sub">Your outreach to sarah@acmecorp.com is on its way.</div>
+      </div>
+      <div class="state-card">
+        <div class="state-tag tag-success">imported</div>
+        <div class="state-headline">24 prospects added</div>
+        <div class="state-sub">They're ready to review in the Review tab.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECTION 4: MICROCOPY SYSTEM -->
+<section class="section" id="microcopy">
+  <h2>Microcopy system</h2>
+  <span class="status-locked">Locked — Phase 2.12</span>
+  <p class="section-intro">All short-form UI text — buttons, confirmations, empty states, errors, guidance — lives in version-controlled JSON files. No CMS. No database. Copy is product behaviour.</p>
+
+  <div class="content-block">
+    <h3>Voice rules</h3>
+    <div class="voice-grid" style="margin-top:16px">
+      <div class="voice-col avoid">
+        <div class="voice-col-title">Avoid</div>
+        <ul>
+          <li>configure</li>
+          <li>execute</li>
+          <li>initiate</li>
+          <li>parameter</li>
+          <li>Error 400</li>
+          <li>Template successfully generated</li>
+          <li>You are required to…</li>
+        </ul>
+      </div>
+      <div class="voice-col prefer">
+        <div class="voice-col-title">Prefer</div>
+        <ul>
+          <li>write</li>
+          <li>send</li>
+          <li>add</li>
+          <li>follow up</li>
+          <li>Here's what happened</li>
+          <li>We've prepared a message</li>
+          <li>Add at least one contact</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Copy by category</h3>
+    <div style="margin-top:16px">
+      <div class="copy-item">
+        <div class="copy-cat">guidance — message editor</div>
+        <div class="copy-text">Shorter messages often get more replies.</div>
+        <div class="copy-sub">Focus on one clear idea. End with a simple question.</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-cat">reassurance — before sending</div>
+        <div class="copy-text">Nothing will be sent until you press Send.</div>
+        <div class="copy-sub">Follow-ups automatically stop if someone replies.</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-cat">confirmation — campaign send</div>
+        <div class="copy-text">Your campaign is live. Your first messages are on their way.</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-cat">send confirmation — individual email</div>
+        <div class="copy-text">This message will be sent to sarah@acmecorp.com.</div>
+        <div class="copy-sub">Reassurance shown beneath confirm button, never in modal title.</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-cat">encouragement — message editor</div>
+        <div class="copy-text">Your message looks good. You're ready to launch.</div>
+      </div>
+      <div class="copy-item">
+        <div class="copy-cat">error — field validation</div>
+        <div class="copy-text">Add a subject line before sending.</div>
+        <div class="copy-sub">Never: "Subject field validation failed."</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>File structure</h3>
+    <div class="file-tree">
+      <span class="root">src/config/microcopy/</span><br>
+      ├── <span class="file">activation-loop.json</span><br>
+      ├── <span class="file">message-editor.json</span><br>
+      ├── <span class="file">empty-states.json</span><br>
+      ├── <span class="file">success-states.json</span><br>
+      ├── <span class="file">error-messages.json</span><br>
+      ├── <span class="file">reassurance.json</span><br>
+      ├── <span class="file">common.json</span><br>
+      └── <span class="file">index.ts</span>
+    </div>
+    <p style="font-size:13px;color:#888;margin-top:12px;line-height:1.7">One key = one string. Separate keys for singular/plural variants (<code style="color:#ffa500;font-size:11px">cta_add_prospect</code> / <code style="color:#ffa500;font-size:11px">cta_add_prospects</code>). Updated via Git PR, not database. Error events tracked in analytics on show.</p>
+  </div>
+
+  <div class="note">
+    <strong>Copy update policy:</strong> Microcopy is treated as product behaviour, not marketing content. Any change requires Git commit → PR → review → deploy. This ensures staging verification and version history.
+  </div>
+</section>
+
+<!-- SECTION 5: MOMENTUM ENGINE -->
+<section class="section" id="momentum">
+  <h2>Momentum engine</h2>
+  <span class="status-locked">Locked — Phase 2.13</span>
+  <p class="section-intro">After every meaningful action, the product answers the question: "What should I do next?" Momentum prompts are short, contextual, and optional. They never pressure. They never block.</p>
+
+  <div class="content-block">
+    <h3>Canonical momentum prompts</h3>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-top:16px">
+      <div class="momentum-prompt">
+        <div><div class="momentum-label">prospects added ✓</div><div class="momentum-action">Write your outreach message</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+      <div class="momentum-prompt">
+        <div><div class="momentum-label">message ready ✓</div><div class="momentum-action">Add a follow-up</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+      <div class="momentum-prompt">
+        <div><div class="momentum-label">follow-up scheduled ✓</div><div class="momentum-action">Review campaign settings</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+      <div class="momentum-prompt">
+        <div><div class="momentum-label">campaign sent ✓</div><div class="momentum-action">Import more prospects</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+      <div class="momentum-prompt">
+        <div><div class="momentum-label">reply received ✓</div><div class="momentum-action">Respond while it's warm</div></div>
+        <div class="momentum-arrow">→</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Placement rules</h3>
+    <p>Prompts appear beneath completion confirmations, within onboarding steps, in empty states, and after key product actions.</p>
+    <p>They never appear in modals. They never block the current workflow. They auto-expire after 10 seconds or dismiss on the user's next action.</p>
+    <p>The prompt uses a left-border accent (the primary colour of the active design direction). <code style="color:#ffa500;font-size:11px">border-radius: 0</code> on left side — no rounded corner on a single border.</p>
+  </div>
+</section>
+
+<!-- SECTION 6: MILESTONES -->
+<section class="section" id="milestones">
+  <h2>Milestone recognition</h2>
+  <p class="section-intro">Important product moments feel rewarding. Subtle but not invisible. Professional but not cold. No confetti. No sound. The restraint is the design.</p>
+
+  <div class="content-block">
+    <h3>Milestone triggers</h3>
+    <table class="decision-table">
+      <thead><tr><th>Milestone</th><th>Message</th><th>Sub-copy</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>First campaign sent</td>
+          <td><span class="td-code">Nice work — your outreach is now live.</span></td>
+          <td style="color:#666">—</td>
+        </tr>
+        <tr>
+          <td>First reply received</td>
+          <td><span class="td-code">You got a reply.</span></td>
+          <td>Time to respond.</td>
+        </tr>
+        <tr>
+          <td>10 replies</td>
+          <td><span class="td-code">You're building momentum.</span></td>
+          <td style="color:#666">—</td>
+        </tr>
+        <tr>
+          <td>100 prospects contacted</td>
+          <td><span class="td-code">100 people have heard from you.</span></td>
+          <td>That's real volume.</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="font-size:12px;color:#666;margin-top:12px">Milestones stored in <code style="color:#ffa500;font-size:11px">users.user_milestones</code> array. Not repeated once triggered.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Live demo — milestone entrance</h3>
+    <div id="ms1" class="milestone">
+      <div class="ms-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2L9.5 6.5H14L10.5 9L11.5 13.5L8 11L4.5 13.5L5.5 9L2 6.5H6.5L8 2Z" fill="#00d4ff"/></svg></div>
+      <div><div class="ms-title">First campaign sent</div><div class="ms-sub">Nice work — your outreach is now live.</div></div>
+    </div>
+    <div id="ms2" class="milestone">
+      <div class="ms-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 5h12v8a1 1 0 01-1 1H3a1 1 0 01-1-1V5zm0 0l1.5-3h9L14 5" stroke="#00d4ff" stroke-width="1.5" fill="none"/></svg></div>
+      <div><div class="ms-title">First reply received</div><div class="ms-sub">You got a reply. Time to respond.</div></div>
+    </div>
+    <div id="ms3" class="milestone">
+      <div class="ms-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="5.5" stroke="#00d4ff" stroke-width="1.5"/><path d="M5.5 8l2 2 3-3" stroke="#00d4ff" stroke-width="1.5" fill="none"/></svg></div>
+      <div><div class="ms-title">10 replies received</div><div class="ms-sub">You're building momentum.</div></div>
+    </div>
+    <button class="trigger-btn" onclick="replayMilestones()">Replay entrance animation</button>
+  </div>
+
+  <div class="content-block">
+    <h3>What milestones deliberately avoid</h3>
+    <p>Confetti animations · Streak pressure · Gamification points · Leaderboards · Forced engagement loops · Blocking overlays · Sound effects</p>
+    <p style="margin-top:10px">The product should feel like a professional tool that celebrates real work, not a game that celebrates engagement.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>outreach. Micro-Interaction System — Part of Brand Guidelines</p>
+  <p style="margin-top:8px">Spec locked March 2026 · Colour tokens pending design direction lock</p>
+</footer>
+
+<script>
+var sendEmails = {'sendRow1':'sarah@acmecorp.com','sendRow2':'marcus@northbridge.io'};
+
+function doSend(rowId, toastId, momId) {
+  var row = document.getElementById(rowId);
+  var toast = document.getElementById(toastId);
+  var mom = document.getElementById(momId);
+  if(!row || row.classList.contains('sent')) return;
+  row.classList.add('sending');
+  setTimeout(function() {
+    row.classList.add('sent');
+    var ttext = document.getElementById(toastId + '-text');
+    if(ttext) ttext.textContent = 'Sent to ' + (sendEmails[rowId] || 'contact@email.com');
+    toast.classList.add('show');
+    if(mom) { mom.style.opacity='1'; mom.style.transform='translateY(0)'; }
+    setTimeout(function() { toast.classList.remove('show'); }, 4000);
+  }, 500);
+}
+
+function triggerToast() {
+  var t = document.getElementById('demoToast');
+  t.classList.remove('show');
+  setTimeout(function() {
+    t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 4000);
+  }, 80);
+}
+
+var stepDone = false;
+function advanceDemo() {
+  if(stepDone) {
+    document.getElementById('ds3').className='step-dot step-active'; document.getElementById('ds3').textContent='3';
+    document.getElementById('dl3').style.width='0%';
+    document.getElementById('ds4').className='step-dot step-todo'; document.getElementById('ds4').textContent='4';
+    document.querySelector('[onclick="advanceDemo()"]').textContent='Advance to step 4 →';
+    stepDone=false; return;
+  }
+  var dl3=document.getElementById('dl3');
+  dl3.style.width='100%';
+  setTimeout(function(){
+    var ds3=document.getElementById('ds3');
+    ds3.className='step-dot step-done'; ds3.textContent='✓';
+    var ds4=document.getElementById('ds4');
+    ds4.className='step-dot step-active'; ds4.textContent='4';
+    document.querySelector('[onclick="advanceDemo()"]').textContent='Reset ↺';
+    stepDone=true;
+  },400);
+}
+
+function replayMilestones() {
+  ['ms1','ms2','ms3'].forEach(function(id) {
+    document.getElementById(id).classList.remove('show');
+  });
+  setTimeout(function(){document.getElementById('ms1').classList.add('show');},100);
+  setTimeout(function(){document.getElementById('ms2').classList.add('show');},400);
+  setTimeout(function(){document.getElementById('ms3').classList.add('show');},700);
+}
+
+// Auto-play milestones on load
+window.addEventListener('load', function() {
+  setTimeout(replayMilestones, 600);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Brand Guidelines (Living Document)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { 
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
+  color: #fff;
+  padding: 0;
+  min-height: 100vh;
+}
+
+.container { 
+  max-width: 1200px; 
+  margin: 0 auto;
+  padding: 60px 40px;
+}
+
+header {
+  margin-bottom: 80px;
+  border-bottom: 2px solid rgba(0, 212, 255, 0.2);
+  padding-bottom: 40px;
+}
+
+h1 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 64px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.subtitle {
+  font-size: 18px;
+  color: #a0a0b0;
+  margin-bottom: 20px;
+}
+
+.doc-status {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+}
+
+/* NAVIGATION */
+nav {
+  position: sticky;
+  top: 0;
+  background: rgba(26, 15, 46, 0.98);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+  padding: 16px 40px;
+  margin-bottom: 60px;
+  z-index: 100;
+}
+
+nav h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #00d4ff;
+  margin-bottom: 0;
+  display: inline-block;
+  margin-right: 32px;
+}
+
+nav ul {
+  list-style: none;
+  display: inline-flex;
+  gap: 32px;
+  flex-wrap: wrap;
+}
+
+nav li {
+  margin-bottom: 0;
+}
+
+nav a {
+  font-size: 13px;
+  color: #b0b0d0;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: inline;
+  padding: 0;
+  white-space: nowrap;
+}
+
+nav a:hover {
+  color: #ff1493;
+  padding-left: 0;
+}
+
+/* SECTIONS */
+.section {
+  margin-bottom: 80px;
+  scroll-margin-top: 100px;
+}
+
+.section h2 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 42px;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.section-intro {
+  font-size: 16px;
+  color: #a0a0b0;
+  line-height: 1.8;
+  margin-bottom: 32px;
+  max-width: 800px;
+}
+
+/* STATUS BADGES */
+.status-locked {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(0, 212, 255, 0.15);
+  color: #00d4ff;
+  border: 1px solid rgba(0, 212, 255, 0.3);
+  margin-bottom: 20px;
+}
+
+.status-exploring {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: rgba(255, 165, 0, 0.15);
+  color: #ffa500;
+  border: 1px solid rgba(255, 165, 0, 0.3);
+  margin-bottom: 20px;
+}
+
+/* CONTENT BLOCKS */
+.content-block {
+  background: rgba(255, 20, 147, 0.05);
+  border: 1px solid rgba(255, 20, 147, 0.15);
+  border-radius: 12px;
+  padding: 32px;
+  margin-bottom: 24px;
+}
+
+.content-block h3 {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #fff;
+}
+
+.content-block p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: #b0b0d0;
+  margin-bottom: 12px;
+}
+
+.content-block strong {
+  color: #00d4ff;
+}
+
+/* KEY-VALUE PAIRS */
+.key-value {
+  display: grid;
+  grid-template-columns: 150px 1fr;
+  gap: 20px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.key-value:last-child {
+  border-bottom: none;
+}
+
+.key-value-key {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #00d4ff;
+}
+
+.key-value-value {
+  font-size: 14px;
+  color: #b0b0d0;
+}
+
+/* COLOR SWATCHES */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.color-swatch {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.swatch-color {
+  height: 80px;
+  width: 100%;
+}
+
+.swatch-label {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.swatch-value {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #888;
+  font-family: 'Space Mono', monospace;
+}
+
+/* LINKS */
+.link-box {
+  background: rgba(0, 212, 255, 0.05);
+  border: 1px solid rgba(0, 212, 255, 0.2);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.link-box strong {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: #00d4ff;
+}
+
+.link-box a {
+  font-size: 14px;
+  color: #ff1493;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.link-box a:hover {
+  color: #00d4ff;
+}
+
+/* DECISION TABLE */
+.decision-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 24px;
+}
+
+.decision-table thead {
+  background: rgba(0, 212, 255, 0.1);
+}
+
+.decision-table th,
+.decision-table td {
+  padding: 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 13px;
+}
+
+.decision-table th {
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 700;
+  color: #00d4ff;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.decision-table td {
+  color: #b0b0d0;
+}
+
+.decision-pending {
+  color: #ffa500;
+  font-weight: 600;
+}
+
+.decision-locked {
+  color: #00d4ff;
+  font-weight: 600;
+}
+
+/* FOOTER */
+footer {
+  margin-top: 100px;
+  padding-top: 40px;
+  border-top: 2px solid rgba(0, 212, 255, 0.2);
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<!-- HEADER -->
+<header>
+  <h1>Pulse Brand Guidelines</h1>
+  <p class="subtitle">Living document. Updated as we explore and lock decisions.</p>
+  <span class="doc-status">Actively Developing</span>
+</header>
+
+<!-- NAVIGATION -->
+<nav>
+  <h3>Quick Navigation</h3>
+  <ul>
+    <li><a href="#philosophy">Design Philosophy</a></li>
+    <li><a href="#palette">Colour Palette</a></li>
+    <li><a href="#typography">Typography</a></li>
+    <li><a href="#micro-interactions">Micro-Interactions</a></li>
+    <li><a href="#voice-tone">Voice & Tone</a></li>
+    <li><a href="#exploration-archive">Exploration Archive</a></li>
+    <li><a href="#decision-matrix">Decision Matrix</a></li>
+  </ul>
+</nav>
+
+<!-- SECTION 1: DESIGN PHILOSOPHY -->
+<section class="section" id="philosophy">
+  <h2>Design Philosophy</h2>
+  <p class="section-intro">Pulse is built for operators, consultants, and creative business founders who win work through conversations. The design should feel like a system that celebrates momentum while keeping users grounded in practical execution.</p>
+  
+  <div class="content-block">
+    <h3>Core Principles</h3>
+    <p><strong>Rhythm & Momentum:</strong> Visual language mirrors the heartbeat of consistent outreach. Every interaction feels intentional, not decorative.</p>
+    <p><strong>70% Creative, 30% Minimalist:</strong> The audience is designers, agency founders, and business developers who value aesthetics but prize clarity. We lean creative but don't sacrifice usability.</p>
+    <p><strong>Typography as Hero:</strong> Bold, editorial type carries emotional weight. Space Grotesk (70s energy) or Outfit (modern editorial) — decision pending.</p>
+    <p><strong>Celebration Moments Matter:</strong> When users hit milestones, the design should feel like they won something. Gradient text, glowing badges, metric cards that pop.</p>
+  </div>
+</section>
+
+<!-- SECTION 2: DESIGN DIRECTIONS -->
+<section class="section" id="palette">
+  <h2>Design Directions</h2>
+  <p class="section-intro">Four distinct design directions, each with different colour palettes and typography. Exploring all routes before locking the final direction.</p>
+  
+  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px;">
+    <!-- IN RUNNING -->
+    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
+      <div class="status-exploring" style="margin-bottom: 12px;">Direction 1: Electric Dreams</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="05-dashboard-typography.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Space Grotesk ↗</a>
+        <a href="06-dashboard-modern-editorial.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Outfit ↗</a>
+      </div>
+    </div>
+
+    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
+      <div class="status-exploring" style="margin-bottom: 12px;">Direction 2: Quiet Luxury</div>
+      <div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px;">Fonts: Domaine Display + Circular Std (paid)</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="18-quiet-luxury-paid.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Paid Version ↗</a>
+      </div>
+    </div>
+
+    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
+      <div class="status-exploring" style="margin-bottom: 12px;">Direction 3: Neo-Naturalism (Refined)</div>
+      <div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px;">Fonts: Saol Text + Maax (paid)</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="17-neo-naturalism-refined.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Refined ↗</a>
+      </div>
+    </div>
+
+    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
+      <div class="status-exploring" style="margin-bottom: 12px;">Direction 4: Cinematic (70s)</div>
+      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+        <a href="09-direction-10-10.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Playfair ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Dismissed Directions</h3>
+    <p>The following were explored but dismissed as too derivative of Electric Dreams or thematically overcooked:</p>
+    <p style="font-size: 13px; color: #888; margin-top: 12px;">Kinetic Futurism (Syne) • Jewel Tones • Neon Punk • Brutalist (IBM Plex)</p>
+  </div>
+  
+  <div class="content-block">
+    <h3>Exploration in Progress</h3>
+    <p>Currently testing <strong>typography pairings</strong> across each palette. Each design direction will have 2-3 typography variations explored before final lock-in.</p>
+  </div>
+</section>
+
+<!-- SECTION 3: TYPOGRAPHY -->
+<section class="section" id="typography">
+  <h2>Typography</h2>
+  <span class="status-exploring">DECISION PENDING</span>
+  <p class="section-intro">Two directions being tested. Both bold, editorial, contemporary. One leans 70s (Space Grotesk), one leans modern (Outfit). Both paired with DM Sans for supporting type.</p>
+  
+  <div class="content-block">
+    <h3>Decision Matrix: Space Grotesk vs. Outfit</h3>
+    <table class="decision-table">
+      <thead>
+        <tr>
+          <th>Attribute</th>
+          <th>Space Grotesk (A)</th>
+          <th>Outfit (B)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Weight</strong></td>
+          <td>Chunky, condensed, high contrast</td>
+          <td>Clean, geometric, tight letterspacing</td>
+        </tr>
+        <tr>
+          <td><strong>Energy</strong></td>
+          <td>70s Swiss editorial (Sight and Sound vibes)</td>
+          <td>Contemporary editorial (future-facing, no nostalgia)</td>
+        </tr>
+        <tr>
+          <td><strong>Legibility</strong></td>
+          <td>Slightly lighter weight, sharper, more unique</td>
+          <td>Tighter spacing, bolder appearance, slightly more generic</td>
+        </tr>
+        <tr>
+          <td><strong>Feedback</strong></td>
+          <td>Preferred by Gareth Evans (more unique, system-like)</td>
+          <td>Preferred by second reviewer (bolder, cleaner look)</td>
+        </tr>
+        <tr>
+          <td><strong>Use Case</strong></td>
+          <td>Landing page, marketing, celebration moments</td>
+          <td>Dashboard, UI, consistency-focused contexts</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="content-block">
+    <h3>Supporting Font (LOCKED)</h3>
+    <div class="key-value">
+      <div class="key-value-key">Font</div>
+      <div class="key-value-value">DM Sans (Google Fonts, open-source)</div>
+    </div>
+    <div class="key-value">
+      <div class="key-value-key">Usage</div>
+      <div class="key-value-value">Body copy, labels, secondary information, supporting text</div>
+    </div>
+    <div class="key-value">
+      <div class="key-value-key">Weights</div>
+      <div class="key-value-value">400 (regular), 500 (medium), 700 (bold for highlights)</div>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <strong>View Space Grotesk version (70s energy):</strong>
+    <a href="05-dashboard-typography.html">View Mockup ↗</a>
+  </div>
+
+  <div class="link-box">
+    <strong>View Outfit version (modern editorial):</strong>
+    <a href="06-dashboard-modern-editorial.html">View Mockup ↗</a>
+  </div>
+
+  <div class="link-box">
+    <strong>View typography specimen page:</strong>
+    <a href="04-typography-specimen.html">Type System ↗</a>
+  </div>
+</section>
+
+<!-- SECTION 4: MICRO-INTERACTIONS -->
+<section class="section" id="micro-interactions">
+  <h2>Micro-Interactions</h2>
+  <span class="status-locked" style="background:rgba(0,255,128,0.1);color:#00e080;border-color:rgba(0,255,128,0.3);">SYSTEM DEFINED</span>
+  <p class="section-intro">Motion carries emotional weight. Every interaction is intentional, not decorative. The micro-interaction system — covering motion tokens, interaction patterns, dashboard states, microcopy, and the momentum engine — is now fully defined and design-direction agnostic. Colour tokens will update when the final direction is locked.</p>
+
+  <div class="link-box">
+    <strong>Full Micro-Interaction System →</strong>
+    <a href="01-micro-interaction-system.html">View detailed spec ↗</a>
+  </div>
+
+  <div class="content-block">
+    <h3>Motion token summary</h3>
+    <p><strong>instant (0ms)</strong> — State flags, boolean toggles.</p>
+    <p><strong>quick (120ms)</strong> — Hover bg, border colour changes, pill state shifts.</p>
+    <p><strong>standard (200ms)</strong> — Default for most UI transitions. Drawers, dropdowns.</p>
+    <p><strong>deliberate (350ms)</strong> — Progress indicators, step advancement, confirmation banners.</p>
+    <p><strong>exit / collapse (400–500ms)</strong> — Row fade-and-collapse after send. Gives user time to register completion.</p>
+    <p style="margin-top:8px">Enter easing: <code style="color:#ffa500;font-size:12px">cubic-bezier(0.22, 0.68, 0, 1.2)</code> (spring) · Exit: <code style="color:#ffa500;font-size:12px">ease-in</code></p>
+  </div>
+
+  <div class="content-block">
+    <h3>Seven named interaction patterns (all defined)</h3>
+    <p><strong>1. Send row — fade and collapse</strong> Row transitions through "sending" state (40% opacity, +5px X) then collapses out. Toast fires in parallel.</p>
+    <p><strong>2. Toast confirmation</strong> Spring-eased entrance. Shows recipient email address, not generic success copy. Auto-dismisses after 4s.</p>
+    <p><strong>3. Button states</strong> Hover: 120ms bg. Active: scale(0.97). Locked: 35% opacity.</p>
+    <p><strong>4. Progress step advancement</strong> Line fills over 500ms, dot transitions stagger 100ms offset.</p>
+    <p><strong>5. Momentum prompt reveal</strong> Slides up 6px, fades in over 300ms. Left-border accent. Auto-expires 10s.</p>
+    <p><strong>6. Milestone reveal</strong> scale(0.96→1) + opacity, 400ms. Stagger 300ms per card. No confetti.</p>
+    <p><strong>7. Inline field error</strong> Error border + message beneath field. Never a toast. No system codes.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Celebration moments — what to avoid</h3>
+    <p>The product celebrates real work, not engagement. The following are explicitly out of scope and will not be added in any future direction:</p>
+    <p style="margin-top:8px;color:#888;">Confetti animations · Streak pressure · Gamification points · Leaderboards · Forced engagement loops · Blocking overlay celebrations · Sound effects</p>
+  </div>
+
+  <div class="content-block">
+    <h3>References (marketing / brand moments only)</h3>
+    <p><strong>Scanning Line Effect:</strong> WebGPU scanning effect — candidate for metric card hover on marketing pages only, not dashboard. <a href="https://tympanus.net/codrops/2025/03/31/webgpu-scanning-effect-with-depth-maps/" style="color: #ff1493; text-decoration: none;">See reference →</a></p>
+    <p><strong>Gradient Text Animation:</strong> Hero headline animation candidate for landing page. Not for dashboard UI.</p>
+  </div>
+</section>
+
+<!-- SECTION 5: VOICE & TONE -->
+<section class="section" id="voice-tone">
+  <h2>Voice & Tone</h2>
+  <span class="status-exploring">DEVELOPING</span>
+  <p class="section-intro">Opinionated, playful, character-driven. Not false-American SaaS. Inspired by Oatly, Monzo, Mailchimp, Innocent. The UX Microcopy System (Phase 2.12) is locked — the full copy library and storage structure are defined. Brand voice and personality pack variations are still being developed.</p>
+
+  <div class="content-block">
+    <h3>Core voice qualities</h3>
+    <p>The product voice should feel: <strong>helpful · calm · confident · conversational</strong></p>
+    <p>It should not feel: robotic · overly casual · corporate · technical</p>
+    <p style="margin-top:8px;font-style:italic;color:#888;">"We've prepared a message to get you started." — not "Template successfully generated."</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Language rules (locked)</h3>
+    <p style="margin-bottom:8px">Avoid system language: <span style="color:#ff6060;">configure · execute · initiate · parameter · Error 400</span></p>
+    <p>Prefer plain language: <span style="color:#00e080;">write · send · add · follow up · here's what happened</span></p>
+    <p style="margin-top:10px;color:#888">Errors must explain the issue and offer a fix. Never blame the user. Never show raw codes.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Microcopy system (Phase 2.12 — locked)</h3>
+    <p>All UI copy lives in <code style="color:#ffa500;font-size:12px">src/config/microcopy/</code> as version-controlled JSON files. Categories: guidance, reassurance, empty states, success messages, error messages. Updated via Git PR, not database. Error frequency tracked via analytics.</p>
+    <p style="margin-top:8px">See the <a href="01-micro-interaction-system.html#microcopy" style="color:#ff1493;text-decoration:none">Micro-Interaction System →</a> for the full copy library, voice rules, and file structure.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Personality Packs (Phase 2.11 — defined, deferred)</h3>
+    <p>Default personality: <strong>Calm & Commercial</strong>. Additional packs: <strong>Direct & Confident</strong>, <strong>Light Touch Relational</strong>. A fourth pack is planned. Global default set in user preferences, with per-message override available.</p>
+    <p><strong>Note:</strong> Personality pack visual variations (typography emphasis, colour shifts) are a future exploration. Currently locked on one default aesthetic.</p>
+  </div>
+
+  <div class="content-block">
+    <h3>Confirmed microcopy examples</h3>
+    <p>"Shorter messages often get more replies." — Guidance, message editor</p>
+    <p>"Nothing will be sent until you press Send." — Reassurance, pre-send</p>
+    <p>"Your campaign is live. Your first messages are on their way." — Confirmation</p>
+    <p>"Add a subject line before sending." — Inline error</p>
+    <p>"You're building momentum." — Milestone, 10 replies</p>
+  </div>
+</section>
+
+<!-- SECTION 6: EXPLORATION ARCHIVE -->
+<section class="section" id="exploration-archive">
+  <h2>Exploration Archive</h2>
+  <p class="section-intro">What we've tested, what we've rejected, and why. Documenting the design journey.</p>
+  
+  <div class="content-block">
+    <h3>Palettes Explored</h3>
+    <div class="key-value">
+      <div class="key-value-key">Electric Dreams</div>
+      <div class="key-value-value"><strong>LOCKED.</strong> Deep purple + neon cyan, hot pink, orange. Unapologetic and vibrant.</div>
+    </div>
+    <div class="key-value">
+      <div class="key-value-key">Quiet Luxury</div>
+      <div class="key-value-value">Explored but rejected. Too understated for the brand energy we're going for. Sophisticated but felt muted.</div>
+    </div>
+    <div class="key-value">
+      <div class="key-value-key">Neo-Naturalism</div>
+      <div class="key-value-value">Explored but rejected. Warm terracottas felt too organic for a SaaS dashboard. Right palette, wrong product.</div>
+    </div>
+  </div>
+
+  <div class="content-block">
+    <h3>Typography Tested</h3>
+    <div class="key-value">
+      <div class="key-value-key">Space Grotesk + DM Sans</div>
+      <div class="key-value-value">70s editorial energy. Chunky, condensed, playful. Feedback: More unique, system-like, sharper.</div>
+    </div>
+    <div class="key-value">
+      <div class="key-value-key">Outfit + DM Sans</div>
+      <div class="key-value-value">Modern editorial. Clean, geometric, tight. Feedback: Bolder, tighter, slightly more generic but very polished.</div>
+    </div>
+  </div>
+
+  <div class="link-box">
+    <strong>View all exploration pages:</strong>
+    <a href="index.html">Exploration Hub ↗</a>
+  </div>
+</section>
+
+<!-- SECTION 7: DECISION MATRIX -->
+<section class="section" id="decision-matrix">
+  <h2>Decision Matrix</h2>
+  <p class="section-intro">What's locked, what's still being explored, and what's pending decisions.</p>
+  
+  <table class="decision-table">
+    <thead>
+      <tr>
+        <th>Element</th>
+        <th>Status</th>
+        <th>Notes</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Design Direction</strong></td>
+        <td><span class="decision-pending">EXPLORING</span></td>
+        <td>4 directions (Electric Dreams, Quiet Luxury, Neo-Naturalism, Brand New). Each with multiple typography variations.</td>
+      </tr>
+      <tr>
+        <td><strong>Colour Palette</strong></td>
+        <td><span class="decision-pending">PENDING</span></td>
+        <td>Will lock with chosen design direction</td>
+      </tr>
+      <tr>
+        <td><strong>Display Font</strong></td>
+        <td><span class="decision-pending">EXPLORING</span></td>
+        <td>Multiple pairings tested per direction. Decision after design exploration complete.</td>
+      </tr>
+      <tr>
+        <td><strong>Supporting Font</strong></td>
+        <td><span class="decision-pending">EXPLORING</span></td>
+        <td>Varying per direction (DM Sans, Space Mono, IBM Plex Mono, etc.)</td>
+      </tr>
+      <tr>
+        <td><strong>Dashboard States</strong></td>
+        <td><span class="decision-locked">LOCKED</span></td>
+        <td>Morning (calm), Active (momentum), Celebration (peak). Framework solid.</td>
+      </tr>
+      <tr>
+        <td><strong>Micro-Interactions</strong></td>
+        <td><span class="decision-locked">DEFINED</span></td>
+        <td>7 patterns, motion tokens, all states, microcopy, momentum engine — all locked. Colour tokens pending direction lock. <a href="01-micro-interaction-system.html" style="color:#ff1493;text-decoration:none;">Full spec ↗</a></td>
+      </tr>
+      <tr>
+        <td><strong>Microcopy System</strong></td>
+        <td><span class="decision-locked">LOCKED</span></td>
+        <td>Phase 2.12. JSON config files, voice rules, 5 copy categories, error analytics. Git-based updates.</td>
+      </tr>
+      <tr>
+        <td><strong>Momentum Engine</strong></td>
+        <td><span class="decision-locked">LOCKED</span></td>
+        <td>Phase 2.13. Post-action next-step prompts, activation loop integration, milestone recognition.</td>
+      </tr>
+      <tr>
+        <td><strong>Voice & Tone</strong></td>
+        <td><span class="decision-pending">DEVELOPING</span></td>
+        <td>Default pack locked. Personality pack variations deferred to later phase.</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+</div>
+
+<footer>
+  <p>Pulse Brand Guidelines — Living Document</p>
+  <p>Last updated: March 14, 2026</p>
+</footer>
+
+</body>
+</html>
+

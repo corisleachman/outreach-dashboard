@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse Brand Exploration</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+  background: #f8f5ff;
+  color: #1a1a1a;
+  padding: 40px;
+}
+
+.container { 
+  max-width: 1000px; 
+  margin: 0 auto; 
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.tagline {
+  font-size: 18px;
+  color: #666;
+  margin-bottom: 40px;
+  line-height: 1.6;
+}
+
+.palette-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 60px;
+}
+
+.palette-card {
+  border-radius: 12px;
+  padding: 32px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.palette-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+}
+
+.palette-card h2 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.palette-card p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 16px;
+}
+
+.palette-card .cta {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  display: inline-block;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+/* ELECTRIC DREAMS CARD */
+.card-electric {
+  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
+  color: white;
+  border: 1px solid #ff1493;
+}
+
+.card-electric h2 {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.card-electric p {
+  color: #b0b0d0;
+}
+
+.card-electric .cta {
+  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 100%);
+  color: white;
+}
+
+.card-electric .cta:hover {
+  box-shadow: 0 8px 16px rgba(0, 212, 255, 0.3);
+}
+
+/* QUIET LUXURY CARD */
+.card-quiet {
+  background: linear-gradient(135deg, #f9f7fa 0%, #f5f2f8 100%);
+  color: #1a1a1a;
+  border: 1px solid #d4cad6;
+}
+
+.card-quiet h2 {
+  color: #4a3f55;
+}
+
+.card-quiet p {
+  color: #7a6b8f;
+}
+
+.card-quiet .cta {
+  background: linear-gradient(135deg, #9b8fa3 0%, #b8a8c8 100%);
+  color: white;
+}
+
+.card-quiet .cta:hover {
+  box-shadow: 0 8px 16px rgba(123, 107, 143, 0.2);
+}
+
+/* NEO-NATURALISM CARD */
+.card-neo {
+  background: linear-gradient(135deg, #faf7f3 0%, #f5f0e8 100%);
+  color: #1a1a1a;
+  border: 1px solid #d4b896;
+}
+
+.card-neo h2 {
+  color: #5c4820;
+}
+
+.card-neo p {
+  color: #8b6f47;
+}
+
+.card-neo .cta {
+  background: linear-gradient(135deg, #a0714d 0%, #c99968 100%);
+  color: white;
+}
+
+.card-neo .cta:hover {
+  box-shadow: 0 8px 16px rgba(160, 113, 77, 0.25);
+}
+
+.info-section {
+  margin-top: 80px;
+  padding-top: 40px;
+  border-top: 1px solid #ddd;
+}
+
+.info-section h3 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.info-section ul {
+  list-style: none;
+  font-size: 14px;
+  color: #666;
+  line-height: 2;
+}
+
+.info-section li::before {
+  content: '→ ';
+  color: #999;
+  margin-right: 8px;
+}
+
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<h1>Pulse Brand Exploration</h1>
+<div class="tagline">
+  Exploring three distinct colour palettes for an outreach app designed for consultants, agency founders, and operators. Each palette shown in dark and light mode. Celebration state (50 emails sent) used as the test case.
+</div>
+
+<div style="background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 12px; padding: 20px; margin-bottom: 40px; text-align: center;">
+  <strong style="color: #00d4ff;">📋 Start here:</strong> 
+  <a href="00-brand-guidelines.html" style="color: #ff1493; text-decoration: none; margin-left: 8px;">View Living Brand Guidelines →</a>
+</div>
+
+<div class="palette-grid">
+  <a href="01-electric-dreams.html" class="palette-card card-electric">
+    <h2>Electric Dreams</h2>
+    <p>Unapologetic, vibrant, celebratory. Neon cyan, hot pink, orange bursting through deep purples.</p>
+    <span class="cta">Explore →</span>
+  </a>
+
+  <a href="02-quiet-luxury.html" class="palette-card card-quiet">
+    <h2>Quiet Luxury</h2>
+    <p>Sophisticated, mysterious, earned confidence. Future dusk with delicate mauves and transcendent pinks.</p>
+    <span class="cta">Explore →</span>
+  </a>
+
+  <a href="03-neo-naturalism.html" class="palette-card card-neo">
+    <h2>Neo-Naturalism</h2>
+    <p>Warm, grounded, organic. Earthy terracottas with subtle digital undertones.</p>
+    <span class="cta">Explore →</span>
+  </a>
+</div>
+
+<div class="info-section">
+  <h3>What you're looking at</h3>
+  <ul>
+    <li>Celebration moment: "50 sent — Highest day yet"</li>
+    <li>Personal record badge with gradient + glow</li>
+    <li>Three metric cards: Sequences, Expected replies, Your streak</li>
+    <li>Both dark and light modes for each palette</li>
+    <li>Tested for readability and visual hierarchy</li>
+  </ul>
+</div>
+
+<div class="info-section">
+  <h3>Typography System</h3>
+  <ul>
+    <li><strong>Locked:</strong> Space Grotesk (Display) + DM Sans (Supporting)</li>
+    <li><strong>Concept:</strong> 70s editorial energy, sparse deployment, statement sentences</li>
+    <li><a href="04-typography-specimen.html">View type specimen →</a> (scales, weights, context examples)</li>
+    <li><a href="05-dashboard-typography.html">View in dashboard context →</a> (real UI states)</li>
+  </ul>
+</div>
+
+<div class="info-section">
+  <h3>Next steps</h3>
+  <ul>
+    <li>Micro-interactions — card animations, badge pulse, gradient text movement</li>
+    <li>Full dashboard layouts — expanding to all everyday states (morning calm, active momentum, etc.)</li>
+    <li>Tone of voice guidelines — microcopy examples across all states</li>
+    <li>Personality pack aesthetic variations — when ready</li>
+  </ul>
+</div>
+
+</div>
+
+</body>
+</html>

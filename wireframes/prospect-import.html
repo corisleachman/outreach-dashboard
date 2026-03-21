@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Prospect import</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;
+  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--ad:rgba(255,157,66,0.1);--gd:rgba(100,220,120,0.1);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:56px;}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+.tb{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.92);border-bottom:1px solid var(--b);backdrop-filter:blur(12px);z-index:100;display:flex;align-items:center;padding:0 24px 0 56px;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
+.lay{display:flex;padding-top:var(--th);min-height:100vh;}
+
+
+
+
+.nbadge{margin-left:auto;font-family:var(--of);font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;}
+.nbp{background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.nbc{background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.mn{margin-left:var(--sw);flex:1;padding:36px 40px;position:relative;z-index:1;max-width:860px;}
+.sc{display:none;}.sc.on{display:block;}
+/* header */
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;}
+.pt{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;}
+.psub{font-size:13px;color:var(--tm);}
+/* tabs */
+.tabs{display:flex;border-bottom:1px solid var(--b);margin-bottom:22px;}
+.tab{padding:11px 16px;font-size:12px;color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;font-family:var(--of);font-weight:600;white-space:nowrap;transition:all 0.15s;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
+.bg_{background:transparent;color:var(--tm);}.bg_:hover{color:var(--t);}
+.bsm{padding:7px 14px;font-size:12px;}
+/* inputs */
+.inp{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);border-radius:8px;padding:11px 14px;font-family:var(--sf);font-size:14px;color:var(--t);outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--cyan);}
+.inp::placeholder{color:var(--td);}
+.lbl{font-size:11px;font-family:var(--of);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:6px;display:block;}
+.fld{margin-bottom:14px;}
+/* cards */
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px 22px;margin-bottom:12px;}
+/* hint */
+.hint{border-radius:8px;padding:12px 14px;font-size:12px;line-height:1.6;margin-bottom:16px;}
+.hint-c{background:var(--cd);border:1px solid rgba(0,212,255,0.15);color:var(--cyan);}
+.hint-a{background:var(--ad);border:1px solid rgba(255,157,66,0.2);color:var(--amber);}
+/* upload zone */
+.upload-zone{border:2px dashed var(--b2);border-radius:12px;padding:60px 40px;text-align:center;cursor:pointer;transition:all 0.2s;margin-bottom:16px;}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--pink);background:var(--pd);}
+.uz-icon{font-size:40px;margin-bottom:12px;opacity:0.7;}
+.uz-title{font-family:var(--of);font-size:16px;font-weight:700;margin-bottom:6px;}
+.uz-sub{font-size:13px;color:var(--tm);}
+.uz-formats{font-size:11px;color:var(--td);margin-top:10px;}
+/* mapping table */
+.map-tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.map-tbl th{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);padding:0 10px 10px;text-align:left;border-bottom:1px solid var(--b);}
+.map-tbl td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,0.035);}
+.map-tbl tr:last-child td{border-bottom:none;}
+.col-src{color:var(--tm);font-family:"DM Mono",monospace;font-size:11px;}
+.col-arrow{color:var(--td);text-align:center;}
+.col-dest{color:var(--cyan);}
+.col-skip{color:var(--td);font-style:italic;}
+/* prospect rows */
+.pr{display:flex;align-items:center;gap:12px;padding:11px 18px;border-bottom:1px solid var(--b);cursor:pointer;transition:background 0.15s;}
+.pr:last-child{border-bottom:none;}
+.pr:hover{background:var(--s2);}
+.pav{width:32px;height:32px;border-radius:50%;background:var(--pd);border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;color:var(--pink);flex-shrink:0;}
+.pn{font-size:13px;font-weight:500;}
+.pm{font-size:11px;color:var(--td);margin-top:2px;}
+/* detail grid */
+.det-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.det-field{background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:8px;padding:12px 14px;}
+.det-lbl{font-size:10px;font-family:var(--of);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:4px;}
+.det-val{font-size:13px;color:var(--t);}
+.det-val a{color:var(--cyan);text-decoration:none;}
+/* two-col manual form */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* mo */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,0.72);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.mo.open{opacity:1;pointer-events:all;}
+.mb{background:#150d26;border:1px solid var(--b2);border-radius:14px;padding:28px;width:540px;max-width:calc(100vw - 40px);transform:translateY(10px);transition:transform 0.25s;box-shadow:0 24px 80px rgba(0,0,0,0.6);}
+.mo.open .mb{transform:translateY(0);}
+.mt{font-family:var(--of);font-size:19px;font-weight:700;margin-bottom:4px;}
+.msub{font-size:12px;color:var(--cyan);margin-bottom:18px;}
+.ma{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;}
+/* pbar */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 20px);z-index:999;background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+/* toast */
+.tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.96);border:1px solid var(--b2);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;pointer-events:all;}
+.tst.tc{border-left:2px solid var(--cyan);}
+.tst.tp{border-left:2px solid var(--pink);}
+@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);} .si:hover svg{opacity:1;}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;color:var(--tm);opacity:0.7;transition:opacity 0.15s;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+<header class="tb"><div class="logo">outreach.</div><div class="av">CL</div></header>
+<div class="lay">
+<aside class="sidebar">
+  <a class="si on" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+<main class="mn">
+
+<!-- S0: PASTE EMAILS -->
+<div id="s0" class="sc">
+  <div class="ph">
+    <div><div class="pt">Add prospects</div><div class="psub">Agency founders — Q2</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab on" onclick="show('s0')">Paste emails</div>
+    <div class="tab" onclick="show('s1')">Upload CSV</div>
+    <div class="tab" onclick="show('s3')">Add manually</div>
+  </div>
+  <div class="hint hint-c">💡 Paste one email per line, or comma-separated. We'll extract valid addresses automatically.</div>
+  <div class="card">
+    <div class="fld">
+      <label class="lbl">Email addresses</label>
+      <textarea class="inp" rows="8" placeholder="james@northagency.com&#10;sarah@consultco.co.uk&#10;mike@scalehouse.io&#10;&#10;Or comma-separated: james@northagency.com, sarah@consultco.co.uk"></textarea>
+    </div>
+    <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--tm);margin-bottom:16px;line-height:1.6;">
+      Paste-only imports will have <strong style="color:var(--t)">email addresses only</strong> — no names or companies. You can fill those in later in the Review tab, or add them now by switching to Add manually.
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn bg_ bsm" onclick="show('s1')">Upload CSV instead</button>
+      <button class="btn bp bsm" onclick="show('s4');toast('✓','6 emails detected and imported','tc')">Import emails →</button>
+    </div>
+  </div>
+</div>
+
+<!-- S1: UPLOAD ZONE -->
+<div id="s1" class="sc on">
+  <div class="ph">
+    <div><div class="pt">Add prospects</div><div class="psub">Agency founders — Q2</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab" onclick="show('s0')">Paste emails</div>
+    <div class="tab on" onclick="show('s1')">Upload CSV</div>
+    <div class="tab" onclick="show('s3')">Add manually</div>
+  </div>
+  <div class="hint hint-c">💡 Expected columns: <strong>name, email, company</strong> — linkedin_url and website are optional. Extra columns are ignored and won't cause errors.</div>
+  <div class="upload-zone" id="uz" onclick="startUpload()"
+    ondragover="this.classList.add('drag');event.preventDefault()"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="this.classList.remove('drag');startUpload()">
+    <div class="uz-icon">📄</div>
+    <div class="uz-title">Drop your CSV here, or click to choose a file</div>
+    <div class="uz-sub">From LinkedIn Sales Navigator, Apollo, or any spreadsheet</div>
+    <div class="uz-formats">Accepted: .csv — up to 5,000 rows</div>
+  </div>
+</div>
+
+<!-- S2: COLUMN MAPPING -->
+<div id="s2" class="sc">
+  <div class="ph">
+    <div><div class="pt">Map your columns</div><div class="psub">47 prospects detected — confirm the field mapping below.</div></div>
+  </div>
+  <div class="hint hint-a">⚠ We've auto-detected your columns. Check the mapping is correct before importing.</div>
+  <div class="card">
+    <table class="map-tbl">
+      <thead><tr><th style="width:45%">Your column</th><th style="width:10%"></th><th>Maps to</th></tr></thead>
+      <tbody>
+        <tr><td class="col-src">LinkedIn Name</td><td class="col-arrow">→</td><td class="col-dest">name</td></tr>
+        <tr><td class="col-src">Email Discovered</td><td class="col-arrow">→</td><td class="col-dest">email</td></tr>
+        <tr><td class="col-src">Organisation</td><td class="col-arrow">→</td><td class="col-dest">company</td></tr>
+        <tr><td class="col-src">Profile Link</td><td class="col-arrow">→</td><td class="col-dest">linkedin_url</td></tr>
+        <tr><td class="col-src">Organisation Website</td><td class="col-arrow">→</td><td class="col-dest">website</td></tr>
+        <tr><td class="col-src">Job Title</td><td class="col-arrow">→</td><td class="col-dest">position</td></tr>
+        <tr><td class="col-src">Connection Degree</td><td class="col-arrow">→</td><td class="col-skip">skip</td></tr>
+        <tr><td class="col-src">Premium</td><td class="col-arrow">→</td><td class="col-skip">skip</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn bg_ bsm" onclick="show('s1')">← Re-upload</button>
+      <button class="btn bp bsm" onclick="show('s4');toast('✓','47 prospects imported','tc')">Import 47 prospects →</button>
+    </div>
+  </div>
+</div>
+
+<!-- S3: MANUAL ADD -->
+<div id="s3" class="sc">
+  <div class="ph">
+    <div><div class="pt">Add prospect manually</div><div class="psub">Agency founders — Q2</div></div>
+  </div>
+  <div class="tabs">
+    <div class="tab" onclick="show('s0')">Paste emails</div>
+    <div class="tab" onclick="show('s1')">Upload CSV</div>
+    <div class="tab on">Add manually</div>
+  </div>
+  <div class="card">
+    <div class="two-col">
+      <div class="fld"><label class="lbl">First name</label><input class="inp" placeholder="James"></div>
+      <div class="fld"><label class="lbl">Last name</label><input class="inp" placeholder="Mitchell"></div>
+      <div class="fld"><label class="lbl">Email</label><input class="inp" type="email" placeholder="james@northagency.com"></div>
+      <div class="fld"><label class="lbl">Company</label><input class="inp" placeholder="North Agency"></div>
+      <div class="fld"><label class="lbl">Position</label><input class="inp" placeholder="Head of Growth"></div>
+      <div class="fld"><label class="lbl">LinkedIn URL</label><input class="inp" placeholder="linkedin.com/in/jamesmitchell"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+      <button class="btn bg_ bsm" onclick="toast('✓','Prospect added — form cleared','tc')">+ Add another</button>
+      <button class="btn bp bsm" onclick="show('s4');toast('✓','1 prospect added','tc')">Save & continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- S4: POST-IMPORT LIST -->
+<div id="s4" class="sc">
+  <div class="ph">
+    <div>
+      <div class="pt">Prospects added</div>
+      <div class="psub">47 imported — review who you actually want to contact before anything is sent.</div>
+    </div>
+    <button class="btn bp bsm" onclick="window.location.href='campaign-view-v3.html'">Go to Review →</button>
+  </div>
+  <div class="hint hint-a">💡 Every outreach list contains people you shouldn't contact. Take 30 seconds to look through before anything goes out.</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div style="padding:11px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;color:var(--tm);">47 prospects · Agency founders — Q2</span>
+      <input class="inp" style="width:180px;padding:5px 10px;font-size:12px;" placeholder="Search…">
+    </div>
+    <div class="pr" onclick="openDetail('JM','James Mitchell','james@northagency.com','North Agency','Head of Growth')">
+      <div class="pav">JM</div>
+      <div style="flex:1"><div class="pn">James Mitchell</div><div class="pm">james@northagency.com · North Agency</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('ST','Sarah Thompson','sarah@consultco.co.uk','ConsultCo','Managing Director')">
+      <div class="pav">ST</div>
+      <div style="flex:1"><div class="pn">Sarah Thompson</div><div class="pm">sarah@consultco.co.uk · ConsultCo</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('MP','Marcus Peters','marcus@ventures.io','Ventures Group','Founder')">
+      <div class="pav">MP</div>
+      <div style="flex:1"><div class="pn">Marcus Peters</div><div class="pm">marcus@ventures.io · Ventures Group</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('HL','Helen Lau','helen@agency.co','The Agency Co','Partner')">
+      <div class="pav">HL</div>
+      <div style="flex:1"><div class="pn">Helen Lau</div><div class="pm">helen@agency.co · The Agency Co</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" style="cursor:default">
+      <div class="pav" style="background:var(--s2);border-color:var(--b2);color:var(--tm)">+43</div>
+      <div style="flex:1"><div class="pn" style="color:var(--tm)">43 more prospects</div></div>
+    </div>
+  </div>
+</div>
+
+</main>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="mo" id="mo-detail" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mb">
+    <div class="mt" id="d-name">James Mitchell</div>
+    <div class="msub" id="d-company">North Agency · Head of Growth</div>
+    <div class="det-grid">
+      <div class="det-field"><div class="det-lbl">Email</div><div class="det-val" id="d-email">james@northagency.com</div></div>
+      <div class="det-field"><div class="det-lbl">Company</div><div class="det-val" id="d-co">North Agency</div></div>
+      <div class="det-field"><div class="det-lbl">LinkedIn</div><div class="det-val"><a href="#">View profile →</a></div></div>
+      <div class="det-field"><div class="det-lbl">Status</div><div class="det-val" style="color:var(--amber)">Pending review</div></div>
+    </div>
+    <div class="fld"><label class="lbl">Notes</label><textarea class="inp" rows="3" style="min-height:0;" placeholder="Add any context about this prospect…"></textarea></div>
+    <div class="ma">
+      <button class="btn bg_ bsm" onclick="document.getElementById('mo-detail').classList.remove('open')">Close</button>
+      <button class="btn bp bsm" onclick="document.getElementById('mo-detail').classList.remove('open');toast('✓','Prospect updated','tc')">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="pbar">
+  <span>State:</span>
+  <button style="color:#ff9d42" onclick="show('s0')">Paste</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff1493" onclick="show('s1')">Upload</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s2')">Mapping</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="show('s3')">Manual</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s4')">Imported</button>
+</div>
+<div class="tz" id="tz"></div>
+<script>
+function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function startUpload(){
+  const uz=document.getElementById('uz');
+  uz.innerHTML='<div style="color:var(--cyan);font-size:22px;margin-bottom:10px;">✓</div><div style="color:var(--cyan);font-size:13px;">47 rows detected — checking columns…</div>';
+  setTimeout(()=>show('s2'),900);
+}
+function openDetail(initials,name,email,company,position){
+  document.getElementById('d-name').textContent=name;
+  document.getElementById('d-company').textContent=company+' · '+position;
+  document.getElementById('d-email').textContent=email;
+  document.getElementById('d-co').textContent=company;
+  document.getElementById('mo-detail').classList.add('open');
+}
+function toast(icon,text,cls){
+  const z=document.getElementById('tz'),e=document.createElement('div');
+  e.className='tst '+cls;e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
+  z.appendChild(e);setTimeout(()=>e.remove(),3200);
+}
+</script>
+</body></html>

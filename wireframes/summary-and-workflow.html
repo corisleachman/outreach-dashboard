@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>outreach. — Summary & Guided Workflow</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;overflow-x:hidden;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:50px;}
+
+/* ── HOME ICON ── */
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-right:20px;flex-shrink:0;}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;
+  align-items:center;justify-content:center;font-family:var(--of);font-size:11px;
+  font-weight:700;color:white;flex-shrink:0;}
+
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;padding:36px 40px;position:relative;z-index:1;}
+
+/* ── SCREENS ── */
+.sc{display:none;}.sc.on{display:block;}
+
+/* ── TABS ── */
+.page-tabs{display:flex;border-bottom:1px solid var(--b);margin-bottom:28px;}
+.ptab{padding:11px 18px;font-family:var(--of);font-size:13px;font-weight:600;
+  color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all 0.15s;white-space:nowrap;}
+.ptab:hover{color:var(--t);}
+.ptab.on{color:var(--pink);border-bottom-color:var(--pink);}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;
+  font-weight:700;cursor:pointer;border:none;transition:all 0.2s;
+  text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
+.bg_{background:transparent;color:var(--tm);border:1px solid transparent;}.bg_:hover{color:var(--t);}
+.bsm{padding:7px 14px;font-size:12px;}
+
+/* ── STAT CARDS ── */
+.stat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:28px;}
+.stat-card{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:18px 20px;}
+.stat-val{font-family:var(--of);font-size:30px;font-weight:800;letter-spacing:-0.03em;
+  line-height:1;margin-bottom:4px;}
+.stat-val.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.stat-val.green{color:var(--green);}
+.stat-val.cyan{color:var(--cyan);}
+.stat-lbl{font-size:11px;color:var(--td);font-family:var(--of);font-weight:600;
+  text-transform:uppercase;letter-spacing:0.09em;margin-bottom:4px;}
+.stat-delta{font-size:11px;}
+.delta-up{color:var(--green);}
+.delta-same{color:var(--td);}
+
+/* ── STREAK ── */
+.streak-card{background:linear-gradient(135deg,rgba(255,20,147,0.07),rgba(0,212,255,0.05));
+  border:1px solid rgba(255,20,147,0.15);border-radius:12px;
+  padding:20px 24px;margin-bottom:24px;
+  display:flex;align-items:center;gap:16px;}
+.streak-icon{font-size:32px;flex-shrink:0;}
+.streak-title{font-family:var(--of);font-size:16px;font-weight:700;
+  color:var(--t);margin-bottom:3px;}
+.streak-sub{font-size:13px;color:var(--tm);}
+
+/* ── TODAY DONE STATE ── */
+.done-hero{text-align:center;padding:56px 20px;}
+.done-check{font-size:56px;margin-bottom:18px;animation:pop 0.5s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes pop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+.done-title{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-0.03em;
+  color:var(--t);margin-bottom:10px;}
+.done-sub{font-size:14px;color:var(--tm);line-height:1.7;max-width:380px;
+  margin:0 auto 32px;}
+.done-stats{display:flex;gap:0;background:var(--s);border:1px solid var(--b);
+  border-radius:12px;overflow:hidden;margin:0 auto 32px;max-width:480px;}
+.done-stat{flex:1;padding:20px 16px;text-align:center;border-right:1px solid var(--b);}
+.done-stat:last-child{border-right:none;}
+.done-stat-num{font-family:var(--of);font-size:28px;font-weight:800;line-height:1;margin-bottom:5px;}
+.done-stat-lbl{font-size:10px;color:var(--td);font-family:var(--of);font-weight:600;
+  text-transform:uppercase;letter-spacing:0.09em;}
+.done-streak{display:inline-flex;align-items:center;gap:8px;
+  background:var(--pd);border:1px solid rgba(255,20,147,0.2);
+  border-radius:20px;padding:6px 16px;font-family:var(--of);font-size:12px;
+  font-weight:700;color:var(--pink);margin-bottom:32px;}
+.done-quote{font-size:13px;color:var(--td);font-style:italic;
+  max-width:300px;margin:0 auto 28px;}
+
+/* ── WEEK CHART ── */
+.chart-section{background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px 22px;margin-bottom:20px;}
+.chart-title{font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:16px;}
+.chart-bars{display:flex;align-items:flex-end;gap:8px;height:72px;margin-bottom:8px;}
+.chart-bar{flex:1;border-radius:4px 4px 0 0;background:var(--gr);opacity:0.65;
+  transition:opacity 0.15s;cursor:pointer;}
+.chart-bar:hover{opacity:1;}
+.chart-bar.today{opacity:1;}
+.chart-labels{display:flex;gap:8px;}
+.chart-label{flex:1;font-size:10px;color:var(--td);text-align:center;font-family:var(--of);}
+.chart-label.today{color:var(--pink);font-weight:700;}
+
+/* ── ACTIVITY LOG ── */
+.activity-row{display:flex;align-items:center;gap:12px;padding:10px 0;
+  border-bottom:1px solid var(--b);}
+.activity-row:last-child{border-bottom:none;}
+.act-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.act-dot.green{background:var(--green);}
+.act-dot.pink{background:var(--pink);}
+.act-dot.cyan{background:var(--cyan);}
+.act-dot.amber{background:var(--amber);}
+.act-text{font-size:13px;color:var(--t);flex:1;}
+.act-time{font-size:11px;color:var(--td);}
+
+/* ── GUIDED WORKFLOW — OPTION A (full task runner) ── */
+.gw-shell{max-width:600px;margin:0 auto;}
+.gw-progress{display:flex;align-items:center;gap:0;margin-bottom:36px;}
+.gw-step{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;position:relative;}
+.gw-step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:var(--td);
+  background:var(--bg);z-index:1;transition:all 0.2s;}
+.gw-step.done .gw-step-dot{background:var(--gd);border-color:rgba(100,220,120,0.4);color:var(--green);}
+.gw-step.active .gw-step-dot{background:var(--gr);border-color:transparent;color:white;
+  box-shadow:0 0 16px rgba(255,20,147,0.4);}
+.gw-step-label{font-size:10px;font-family:var(--of);font-weight:600;text-transform:uppercase;
+  letter-spacing:0.07em;color:var(--td);text-align:center;}
+.gw-step.done .gw-step-label{color:var(--green);}
+.gw-step.active .gw-step-label{color:var(--t);}
+.gw-connector{flex:1;height:2px;background:var(--b2);margin-top:-20px;z-index:0;}
+.gw-connector.done{background:var(--green);}
+
+.gw-card{background:var(--s);border:1px solid var(--b2);border-radius:14px;
+  padding:28px;margin-bottom:16px;}
+.gw-eyebrow{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.12em;color:var(--pink);margin-bottom:8px;}
+.gw-title{font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.02em;
+  margin-bottom:6px;}
+.gw-sub{font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:20px;}
+
+/* prospect mini-card inside gw */
+.gw-prospect{display:flex;align-items:center;gap:12px;padding:12px 14px;
+  background:rgba(255,255,255,0.03);border:1px solid var(--b);
+  border-radius:8px;margin-bottom:8px;transition:background 0.15s;}
+.gw-prospect:hover{background:rgba(255,255,255,0.06);}
+.gw-pav{width:32px;height:32px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;
+  font-weight:700;color:var(--pink);flex-shrink:0;}
+.gw-pname{font-size:13px;font-weight:500;color:var(--t);}
+.gw-pmeta{font-size:11px;color:var(--td);}
+.gw-pactions{display:flex;gap:6px;margin-left:auto;flex-shrink:0;}
+
+.gw-actions{display:flex;gap:8px;justify-content:space-between;align-items:center;
+  margin-top:20px;padding-top:20px;border-top:1px solid var(--b);}
+.gw-skip{font-size:12px;color:var(--td);cursor:pointer;transition:color 0.15s;}
+.gw-skip:hover{color:var(--tm);}
+
+.gw-count{font-size:12px;color:var(--td);text-align:center;margin-bottom:16px;}
+
+/* ── GUIDED WORKFLOW — OPTION B (overlay panel) ── */
+.gw-panel-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.3);
+  backdrop-filter:blur(4px);z-index:400;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.gw-panel-overlay.open{opacity:1;pointer-events:all;}
+.gw-panel{position:fixed;top:var(--th);right:0;bottom:0;width:360px;
+  background:#130a20;border-left:1px solid var(--b2);z-index:401;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1);}
+.gw-panel-overlay.open .gw-panel{transform:translateX(0);}
+.gw-panel-header{padding:18px 20px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;}
+.gw-panel-title{font-family:var(--of);font-size:15px;font-weight:700;}
+.gw-panel-close{width:26px;height:26px;border-radius:6px;background:transparent;
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--tm);font-size:14px;transition:all 0.15s;}
+.gw-panel-close:hover{color:var(--t);}
+.gw-panel-body{flex:1;overflow-y:auto;padding:16px 20px;}
+.gw-panel-body::-webkit-scrollbar{width:3px;}
+.gw-panel-body::-webkit-scrollbar-thumb{background:var(--b2);}
+
+/* task items in panel */
+.task-section-label{font-family:var(--of);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--td);
+  margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--b);}
+.task-item{display:flex;align-items:center;gap:10px;padding:10px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);cursor:pointer;
+  transition:background 0.1s;}
+.task-item:last-child{border-bottom:none;}
+.task-item:hover .task-label{color:var(--t);}
+.task-tick{width:18px;height:18px;border-radius:4px;border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  transition:all 0.15s;}
+.task-tick.done{background:var(--gd);border-color:rgba(100,220,120,0.3);}
+.task-label{font-size:13px;color:var(--tm);flex:1;line-height:1.4;}
+.task-label.done{color:var(--td);text-decoration:line-through;}
+.task-badge{font-family:var(--of);font-size:10px;font-weight:700;
+  padding:2px 7px;border-radius:10px;flex-shrink:0;}
+.task-badge.pink{background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.task-badge.amber{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.task-badge.green{background:var(--gd);color:var(--green);border:1px solid rgba(100,220,120,0.2);}
+
+.task-progress{margin:16px 0;}
+.task-prog-label{display:flex;justify-content:space-between;font-size:11px;
+  color:var(--tm);margin-bottom:6px;}
+.task-prog-bar{height:4px;background:var(--s2);border-radius:2px;overflow:hidden;}
+.task-prog-fill{height:100%;background:var(--gr);border-radius:2px;
+  transition:width 0.4s ease;}
+.gw-panel-footer{padding:14px 20px;border-top:1px solid var(--b);}
+
+/* ── TOAST ── */
+.tz{position:fixed;bottom:90px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:2px solid var(--cyan);}
+.tst.tp{border-left:2px solid var(--pink);}
+.tst.tg{border-left:2px solid var(--green);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+
+/* ── FLOATING ACTION BUTTON ── */
+.fab-wrap{position:fixed;bottom:24px;right:24px;z-index:800;display:flex;flex-direction:column;align-items:flex-end;gap:10px;}
+.fab{width:52px;height:52px;border-radius:50%;background:var(--s2);border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  transition:all 0.2s cubic-bezier(0.34,1.3,0.64,1);position:relative;
+  box-shadow:0 4px 20px rgba(0,0,0,0.4);}
+.fab:hover{background:var(--s);border-color:var(--b2);transform:scale(1.08);}
+.fab.has-tasks{background:var(--gr);border-color:transparent;
+  box-shadow:0 4px 24px rgba(255,20,147,0.35);}
+.fab.has-tasks:hover{transform:scale(1.08);box-shadow:0 6px 28px rgba(255,20,147,0.45);}
+.fab svg{display:block;transition:transform 0.2s;}
+.fab-count{position:absolute;top:-4px;right:-4px;width:20px;height:20px;
+  border-radius:50%;background:var(--pink);border:2px solid var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:10px;font-weight:800;color:white;
+  animation:pulse-ring 2s ease-in-out infinite;}
+@keyframes pulse-ring{
+  0%,100%{box-shadow:0 0 0 0 rgba(255,20,147,0.4);}
+  50%{box-shadow:0 0 0 5px rgba(255,20,147,0);}
+}
+/* tooltip label that appears on hover */
+.fab-label{background:rgba(20,10,35,0.97);border:1px solid var(--b2);
+  border-radius:8px;padding:7px 12px;font-family:var(--of);font-size:12px;
+  font-weight:600;color:var(--t);white-space:nowrap;pointer-events:none;
+  opacity:0;transform:translateX(8px);transition:all 0.15s;
+  display:flex;align-items:center;gap:8px;}
+.fab-wrap:hover .fab-label{opacity:1;transform:translateX(0);}
+.fab-label-count{background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);
+  border-radius:10px;padding:1px 6px;font-size:10px;font-weight:800;}
+
+/* ── PBAR ── */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 16px);z-index:999;
+  background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;
+  font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);
+  backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;
+  font-weight:700;cursor:pointer;padding:0;}
+
+/* section label */
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:12px;
+  padding-bottom:8px;border-bottom:1px solid var(--b);}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <div class="logo">outreach.</div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="si" href="dashboard-home.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+      <rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/>
+    </svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+
+  <!-- SUMMARY — active on this page -->
+  <a class="si on" id="si-summary" onclick="showScreen('summary');setNav('si-summary')" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/>
+      <rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/>
+      <rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/>
+    </svg>
+    <span class="si-tip">Summary</span>
+  </a>
+
+  <!-- GUIDED WORKFLOW -->
+  <a class="si" id="si-gw-a" onclick="showScreen('gw-a');setNav('si-gw-a')" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <circle cx="3" cy="7.5" r="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="7.5" cy="7.5" r="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <circle cx="12" cy="7.5" r="1.5" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M4.5 7.5h1.5M9 7.5h1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <span class="si-tip">Guided workflow (A)</span>
+  </a>
+
+  <a class="si si-bottom" href="settings-account.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none">
+      <circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/>
+      <path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/>
+    </svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<!-- LAYOUT -->
+<div class="layout">
+<main class="main">
+
+  <!-- ═══ SUMMARY SCREEN ═══ -->
+  <div id="sc-summary" class="sc on">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+      <h1 style="font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;">Summary</h1>
+    </div>
+
+    <div class="page-tabs">
+      <div class="ptab on" id="ptab-today" onclick="setSummaryTab('today')">Today</div>
+      <div class="ptab" id="ptab-week" onclick="setSummaryTab('week')">This week</div>
+    </div>
+
+    <!-- TODAY TAB -->
+    <div id="st-today" class="sc on">
+      <div class="done-hero">
+        <div class="done-check">✓</div>
+        <h2 class="done-title">You're done for today.</h2>
+        <p class="done-sub">Your outreach is moving. That's what matters.<br>Come back tomorrow to keep the rhythm going.</p>
+        <div class="done-streak">🔥 4-week streak — keep it up</div>
+        <div class="done-stats">
+          <div class="done-stat">
+            <div class="done-stat-num" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">4</div>
+            <div class="done-stat-lbl">Emails sent</div>
+          </div>
+          <div class="done-stat">
+            <div class="done-stat-num">3</div>
+            <div class="done-stat-lbl">Follow-ups done</div>
+          </div>
+          <div class="done-stat">
+            <div class="done-stat-num" style="color:var(--green)">2</div>
+            <div class="done-stat-lbl">Replies handled</div>
+          </div>
+          <div class="done-stat">
+            <div class="done-stat-num" style="color:var(--cyan)">1</div>
+            <div class="done-stat-lbl">Meeting booked</div>
+          </div>
+        </div>
+        <p class="done-quote">"Consistency compounds. A few emails a day is how pipelines get built."</p>
+        <button class="btn bs bsm" onclick="window.location.href='dashboard-home.html'">Back to dashboard</button>
+      </div>
+    </div>
+
+    <!-- THIS WEEK TAB -->
+    <div id="st-week" class="sc">
+      <div style="margin-bottom:6px;">
+        <h2 style="font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;">This week</h2>
+        <p style="font-size:13px;color:var(--tm);">Monday 11 Mar — Sunday 17 Mar · 2026</p>
+      </div>
+
+      <div class="streak-card" style="margin-top:20px;">
+        <div class="streak-icon">🔥</div>
+        <div>
+          <div class="streak-title">4-week streak</div>
+          <div class="streak-sub">You've been consistent for a month. That's where results come from.</div>
+        </div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-lbl">Emails sent</div>
+          <div class="stat-val pink">14</div>
+          <div class="stat-delta delta-up">↑ 3 from last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Follow-ups done</div>
+          <div class="stat-val">9</div>
+          <div class="stat-delta delta-up">↑ 2 from last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Replies received</div>
+          <div class="stat-val green">3</div>
+          <div class="stat-delta delta-up">↑ 1 from last week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-lbl">Meetings booked</div>
+          <div class="stat-val cyan">1</div>
+          <div class="stat-delta delta-same">Same as last week</div>
+        </div>
+      </div>
+
+      <div class="chart-section">
+        <div class="chart-title">Sends per day</div>
+        <div class="chart-bars" id="week-chart"></div>
+        <div class="chart-labels">
+          <div class="chart-label">Mon</div>
+          <div class="chart-label">Tue</div>
+          <div class="chart-label">Wed</div>
+          <div class="chart-label today">Thu</div>
+          <div class="chart-label">Fri</div>
+          <div class="chart-label">Sat</div>
+          <div class="chart-label">Sun</div>
+        </div>
+      </div>
+
+      <div class="sl">Activity today</div>
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;padding:4px 16px;">
+        <div class="activity-row"><div class="act-dot green"></div><div class="act-text">Meeting booked with Helen Clarke</div><div class="act-time">2h ago</div></div>
+        <div class="activity-row"><div class="act-dot pink"></div><div class="act-text">4 drafts sent — Agency founders Q1</div><div class="act-time">3h ago</div></div>
+        <div class="activity-row"><div class="act-dot cyan"></div><div class="act-text">Sarah Thompson replied</div><div class="act-time">4h ago</div></div>
+        <div class="activity-row"><div class="act-dot amber"></div><div class="act-text">3 follow-ups sent — Fractional CFO Q1</div><div class="act-time">5h ago</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GUIDED WORKFLOW — OPTION A (full task runner) ═══ -->
+  <div id="sc-gw-a" class="sc">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <h1 style="font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;">Guided workflow</h1>
+      <button class="btn bg_ bsm" onclick="showScreen('summary');setNav('si-summary')">✕ Exit</button>
+    </div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:32px;">Work through today's actions one at a time. The main area replaces your normal view — exit any time to go back.</p>
+
+    <div class="gw-shell">
+      <!-- PROGRESS BAR -->
+      <div class="gw-progress">
+        <div class="gw-step done">
+          <div class="gw-step-dot">✓</div>
+          <div class="gw-step-label">Review</div>
+        </div>
+        <div class="gw-connector done"></div>
+        <div class="gw-step active">
+          <div class="gw-step-dot">2</div>
+          <div class="gw-step-label">Drafts</div>
+        </div>
+        <div class="gw-connector"></div>
+        <div class="gw-step">
+          <div class="gw-step-dot">3</div>
+          <div class="gw-step-label">Follow-ups</div>
+        </div>
+        <div class="gw-connector"></div>
+        <div class="gw-step">
+          <div class="gw-step-dot">4</div>
+          <div class="gw-step-label">Replies</div>
+        </div>
+        <div class="gw-connector"></div>
+        <div class="gw-step">
+          <div class="gw-step-dot">5</div>
+          <div class="gw-step-label">Done</div>
+        </div>
+      </div>
+
+      <div class="gw-count">Step 2 of 4 · 3 drafts ready to send</div>
+
+      <div class="gw-card">
+        <div class="gw-eyebrow">Step 2 — Drafts</div>
+        <div class="gw-title">3 drafts ready to send</div>
+        <div class="gw-sub">These are approved prospects with drafted messages. Review each one and send, or save for later.</div>
+
+        <div class="gw-prospect">
+          <div class="gw-pav">JM</div>
+          <div style="flex:1;min-width:0;">
+            <div class="gw-pname">James Mitchell</div>
+            <div class="gw-pmeta">Quick thought on your pipeline — worth 10 minutes?</div>
+          </div>
+          <div class="gw-pactions">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="toast('✓','Sent to james@northagency.com','tg')">Send →</button>
+          </div>
+        </div>
+
+        <div class="gw-prospect">
+          <div class="gw-pav">ST</div>
+          <div style="flex:1;min-width:0;">
+            <div class="gw-pname">Sarah Thompson</div>
+            <div class="gw-pmeta">Scaling ConsultCo — a thought</div>
+          </div>
+          <div class="gw-pactions">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="toast('✓','Sent to sarah@consultco.co.uk','tg')">Send →</button>
+          </div>
+        </div>
+
+        <div class="gw-prospect">
+          <div class="gw-pav">MP</div>
+          <div style="flex:1;min-width:0;">
+            <div class="gw-pname">Marcus Peters</div>
+            <div class="gw-pmeta">Worth 15 minutes?</div>
+          </div>
+          <div class="gw-pactions">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="toast('✓','Sent to marcus@ventures.io','tg')">Send →</button>
+          </div>
+        </div>
+
+        <div class="gw-actions">
+          <span class="gw-skip" onclick="toast('→','Skipping to follow-ups','tc')">Skip this step →</span>
+          <button class="btn bp" onclick="toast('✓','All 3 drafts sent — moving to follow-ups','tg')">Send all 3 and continue →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ GUIDED WORKFLOW — OPTION B demo page ═══ -->
+  <div id="sc-gw-b" class="sc">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;">
+      <div>
+        <h1 style="font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;">Guided workflow — Option B</h1>
+        <p style="font-size:13px;color:var(--tm);">The panel slides in from the right over the existing view. Your campaigns and content stay visible behind it.</p>
+      </div>
+    </div>
+
+    <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;padding:28px;margin-top:24px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:16px;opacity:0.4;">⟶</div>
+      <div style="font-family:var(--of);font-size:16px;font-weight:700;margin-bottom:8px;">Task panel slides in from the right</div>
+      <p style="font-size:13px;color:var(--tm);line-height:1.6;max-width:400px;margin:0 auto 20px;">Your campaign view stays visible and usable behind it. The panel shows your task queue — click any item to jump directly to it. Unlike Option A, you're never taken out of your normal view.</p>
+      <button class="btn bp" onclick="openGWPanel()">Open panel →</button>
+    </div>
+
+    <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;padding:20px;margin-top:12px;">
+      <div style="font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:12px;">Key difference from Option A</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:4px;">Option A — Task runner</div>
+          <div style="font-size:12px;color:var(--tm);line-height:1.6;">Replaces the main area. You're in a focused mode, one step at a time. Good for people who want to be guided through everything without distraction.</div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--t);margin-bottom:4px;">Option B — Task panel</div>
+          <div style="font-size:12px;color:var(--tm);line-height:1.6;">Sits alongside your normal view. You can still see everything, just with a checklist visible on the right. Good for people who prefer to stay in control of navigation.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- ═══ GUIDED WORKFLOW PANEL (Option B) ═══ -->
+<div class="gw-panel-overlay" id="gw-overlay" onclick="if(event.target===this)closeGWPanel()">
+  <div class="gw-panel">
+    <div class="gw-panel-header">
+      <div>
+        <div class="gw-panel-title">Today's tasks</div>
+        <div style="font-size:11px;color:var(--tm);margin-top:2px;">3 of 8 done</div>
+      </div>
+      <div class="gw-panel-close" onclick="closeGWPanel()">✕</div>
+    </div>
+    <div class="gw-panel-body">
+
+      <div class="task-progress">
+        <div class="task-prog-label"><span>Progress</span><span style="color:var(--pink);">3 / 8</span></div>
+        <div class="task-prog-bar"><div class="task-prog-fill" style="width:37.5%"></div></div>
+      </div>
+
+      <div class="task-section-label" style="margin-top:8px;">Done</div>
+      <div class="task-item">
+        <div class="task-tick done"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="task-label done">Review 12 new prospects</span>
+        <span class="task-badge green">Done</span>
+      </div>
+      <div class="task-item">
+        <div class="task-tick done"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="task-label done">Send follow-up to Marcus Peters</span>
+        <span class="task-badge green">Done</span>
+      </div>
+      <div class="task-item">
+        <div class="task-tick done"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5l2.5 2.5 4.5-4.5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <span class="task-label done">Reply to Sarah Thompson</span>
+        <span class="task-badge green">Done</span>
+      </div>
+
+      <div class="task-section-label" style="margin-top:16px;">To do</div>
+      <div class="task-item" onclick="toast('→','Going to Drafts tab','tc');closeGWPanel();completeTask(1)">
+        <div class="task-tick"></div>
+        <span class="task-label">Send 3 drafts — Agency founders Q1</span>
+        <span class="task-badge pink">3</span>
+      </div>
+      <div class="task-item" onclick="toast('→','Going to Follow-up tab','tc');closeGWPanel();completeTask(1)">
+        <div class="task-tick"></div>
+        <span class="task-label">2 follow-ups due today</span>
+        <span class="task-badge amber">2</span>
+      </div>
+      <div class="task-item" onclick="toast('→','Going to LinkedIn tab','tc');closeGWPanel();completeTask(1)">
+        <div class="task-tick"></div>
+        <span class="task-label">Check LinkedIn connections</span>
+        <span class="task-badge pink">5</span>
+      </div>
+      <div class="task-item" onclick="toast('→','Going to Conversations tab','tc');closeGWPanel();completeTask(1)">
+        <div class="task-tick"></div>
+        <span class="task-label">Handle conversation with Helen Clarke</span>
+        <span class="task-badge green">New</span>
+      </div>
+      <div class="task-item">
+        <div class="task-tick"></div>
+        <span class="task-label">Review 8 new prospects — Fractional CFO Q1</span>
+        <span class="task-badge pink">8</span>
+      </div>
+
+    </div>
+    <div class="gw-panel-footer">
+      <button class="btn bp" style="width:100%" onclick="completeTask(5);closeGWPanel();setTimeout(()=>{showScreen('summary');setSummaryTab('today');setNav('si-summary');},300);toast('✓','All done for today!','tg')">Mark all done →</button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══ FLOATING ACTION BUTTON ═══ -->
+<div class="fab-wrap" id="fab-wrap">
+  <div style="display:flex;align-items:center;gap:10px;justify-content:flex-end;">
+    <div class="fab-label">
+      Today's tasks <span class="fab-label-count" id="fab-label-count">5 left</span>
+    </div>
+    <div class="fab has-tasks" id="fab-btn" onclick="toggleGWPanel()" title="Today's tasks">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
+        <path d="M3 5h14M3 10h9M3 15h6" stroke="white" stroke-width="1.8" stroke-linecap="round"/>
+        <circle cx="15.5" cy="13.5" r="3.5" fill="rgba(255,255,255,0.15)" stroke="white" stroke-width="1.4"/>
+        <path d="M13.5 13.5l1.5 1.5 2.5-2.5" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div class="fab-count" id="fab-count">5</div>
+    </div>
+  </div>
+</div>
+
+<div class="tz" id="tz"></div>
+
+<div class="pbar">
+  <span>Screen:</span>
+  <button style="color:#ff1493" onclick="showScreen('summary');setNav('si-summary')">Summary</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="showScreen('gw-a');setNav('si-gw-a')">Workflow A</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="showScreen('gw-b');setNav('si-gw-a')">Workflow B</button>
+  <span style="opacity:.3">·</span>
+  <span style="opacity:.5">Summary tabs:</span>
+  <button style="color:#64dc78" onclick="showScreen('summary');setSummaryTab('today')">Today</button>
+  <button style="color:#64dc78" onclick="showScreen('summary');setSummaryTab('week')">This week</button>
+</div>
+
+<script>
+// ── SCREEN SWITCHING ──
+function showScreen(name) {
+  document.querySelectorAll('.sc').forEach(s => {
+    if (s.id.startsWith('sc-') || s.id === 'sc-summary') s.classList.remove('on');
+  });
+  document.getElementById('sc-' + name).classList.add('on');
+}
+
+function setNav(id) {
+  document.querySelectorAll('.si').forEach(s => s.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+}
+
+// ── SUMMARY TABS ──
+function setSummaryTab(tab) {
+  ['today','week'].forEach(t => {
+    document.getElementById('ptab-' + t).classList.toggle('on', t === tab);
+    document.getElementById('st-' + t).classList.toggle('on', t === tab);
+  });
+}
+
+// ── GUIDED WORKFLOW PANEL (B) ──
+let gwOpen = false;
+let taskCount = 5;
+
+function openGWPanel() {
+  gwOpen = true;
+  document.getElementById('gw-overlay').classList.add('open');
+  // Hide FAB while panel is open to avoid overlap
+  const fw = document.getElementById('fab-wrap');
+  fw.style.transition = 'opacity 0.15s, transform 0.15s';
+  fw.style.opacity = '0';
+  fw.style.transform = 'translateY(8px)';
+  fw.style.pointerEvents = 'none';
+}
+function closeGWPanel() {
+  gwOpen = false;
+  document.getElementById('gw-overlay').classList.remove('open');
+  // Restore FAB
+  const fw = document.getElementById('fab-wrap');
+  fw.style.opacity = '1';
+  fw.style.transform = '';
+  fw.style.pointerEvents = '';
+}
+function toggleGWPanel() {
+  if (gwOpen) closeGWPanel(); else openGWPanel();
+}
+function completeTask(delta) {
+  taskCount = Math.max(0, taskCount - delta);
+  const countEl = document.getElementById('fab-count');
+  const labelEl = document.getElementById('fab-label-count');
+  const fabEl   = document.getElementById('fab-btn');
+  countEl.textContent = taskCount;
+  labelEl.textContent = taskCount > 0 ? taskCount + ' left' : 'All done!';
+  if (taskCount === 0) {
+    countEl.style.display = 'none';
+    fabEl.classList.remove('has-tasks');
+    fabEl.style.background = 'var(--gd)';
+    fabEl.style.borderColor = 'rgba(100,220,120,0.3)';
+    fabEl.style.boxShadow = '0 4px 24px rgba(100,220,120,0.25)';
+  }
+}
+
+// ── TOAST ──
+function toast(icon, text, cls = 'tc') {
+  const z = document.getElementById('tz'), e = document.createElement('div');
+  e.className = 'tst ' + cls;
+  e.innerHTML = '<span>' + icon + '</span><span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity = '0'; e.style.transition = 'opacity 0.2s'; setTimeout(() => e.remove(), 200); }, 3200);
+}
+
+// ── WEEK CHART ──
+(function() {
+  const vals = [3, 2, 4, 2, 3, 0, 0], max = 4;
+  const c = document.getElementById('week-chart');
+  vals.forEach((v, i) => {
+    const b = document.createElement('div');
+    b.className = 'chart-bar' + (i === 3 ? ' today' : '');
+    b.style.height = Math.max(4, (v / max) * 100) + '%';
+    if (v === 0) { b.style.opacity = '0.12'; b.style.background = 'var(--s2)'; }
+    c.appendChild(b);
+  });
+})();
+
+// Show summary screen with today tab on load
+showScreen('summary');
+setSummaryTab('today');
+</script>
+</body>
+</html>
