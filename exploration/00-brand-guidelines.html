@@ -3,701 +3,1166 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pulse Brand Guidelines (Living Document)</title>
+<title>Pulse. — Brand Guidelines</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:    #0d0914;
+  --s:     rgba(255,255,255,0.04);
+  --s2:    rgba(255,255,255,0.07);
+  --b:     rgba(255,255,255,0.07);
+  --b2:    rgba(255,255,255,0.13);
+  --t:     #f4f4f2;
+  --tm:    #a8a8b8;
+  --td:    #6b6b80;
+  --pink:  #ff1493;
+  --cyan:  #00d4ff;
+  --green: #64dc78;
+  --amber: #ff9d42;
+  --grad:  linear-gradient(135deg, #ff1493, #00d4ff);
+  --grad-text: linear-gradient(135deg, #ff1493 0%, #00d4ff 100%);
+  --glow-pink: rgba(255,20,147,0.25);
+  --glow-cyan: rgba(0,212,255,0.2);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-body { 
+
+body {
+  background: var(--bg);
+  color: var(--t);
   font-family: 'DM Sans', sans-serif;
-  background: linear-gradient(135deg, #1a0f2e 0%, #2d1b47 100%);
-  color: #fff;
-  padding: 0;
-  min-height: 100vh;
-}
-
-.container { 
-  max-width: 1200px; 
-  margin: 0 auto;
-  padding: 60px 40px;
-}
-
-header {
-  margin-bottom: 80px;
-  border-bottom: 2px solid rgba(0, 212, 255, 0.2);
-  padding-bottom: 40px;
-}
-
-h1 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 64px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  background: linear-gradient(135deg, #00d4ff 0%, #ff1493 50%, #ffa500 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.subtitle {
-  font-size: 18px;
-  color: #a0a0b0;
-  margin-bottom: 20px;
-}
-
-.doc-status {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: rgba(0, 212, 255, 0.15);
-  color: #00d4ff;
-  border: 1px solid rgba(0, 212, 255, 0.3);
-}
-
-/* NAVIGATION */
-nav {
-  position: sticky;
-  top: 0;
-  background: rgba(26, 15, 46, 0.98);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid rgba(0, 212, 255, 0.2);
-  padding: 16px 40px;
-  margin-bottom: 60px;
-  z-index: 100;
-}
-
-nav h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #00d4ff;
-  margin-bottom: 0;
-  display: inline-block;
-  margin-right: 32px;
-}
-
-nav ul {
-  list-style: none;
-  display: inline-flex;
-  gap: 32px;
-  flex-wrap: wrap;
-}
-
-nav li {
-  margin-bottom: 0;
-}
-
-nav a {
-  font-size: 13px;
-  color: #b0b0d0;
-  text-decoration: none;
-  transition: all 0.2s ease;
-  display: inline;
-  padding: 0;
-  white-space: nowrap;
-}
-
-nav a:hover {
-  color: #ff1493;
-  padding-left: 0;
-}
-
-/* SECTIONS */
-.section {
-  margin-bottom: 80px;
-  scroll-margin-top: 100px;
-}
-
-.section h2 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 42px;
-  font-weight: 700;
-  margin-bottom: 20px;
-  color: #fff;
-}
-
-.section-intro {
   font-size: 16px;
-  color: #a0a0b0;
-  line-height: 1.8;
-  margin-bottom: 32px;
-  max-width: 800px;
+  line-height: 1.6;
+  overflow-x: hidden;
 }
 
-/* STATUS BADGES */
-.status-locked {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: rgba(0, 212, 255, 0.15);
-  color: #00d4ff;
-  border: 1px solid rgba(0, 212, 255, 0.3);
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none; z-index: 9999; opacity: 0.4;
+}
+
+.bg-orbs { position: fixed; inset: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+.orb { position: absolute; border-radius: 50%; filter: blur(140px); opacity: 0.07; }
+.orb-1 { width: 500px; height: 500px; background: var(--pink); top: -150px; right: -100px; animation: drift1 18s ease-in-out infinite; }
+.orb-2 { width: 400px; height: 400px; background: var(--cyan); bottom: 20%; left: -100px; animation: drift2 22s ease-in-out infinite; }
+.orb-3 { width: 300px; height: 300px; background: var(--amber); top: 50%; right: 20%; animation: drift3 26s ease-in-out infinite; opacity: 0.04; }
+
+@keyframes drift1 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(-50px,70px)} }
+@keyframes drift2 { 0%,100%{transform:translate(0,0)} 50%{transform:translate(70px,-50px)} }
+@keyframes drift3 { 0%,100%{transform:translate(0,0)} 33%{transform:translate(-30px,50px)} 66%{transform:translate(40px,-25px)} }
+
+/* ── LAYOUT ── */
+.wrap { position: relative; z-index: 1; display: flex; }
+.sidebar {
+  position: fixed; top: 0; left: 0; bottom: 0;
+  width: 220px;
+  background: rgba(13,9,20,0.85);
+  backdrop-filter: blur(20px);
+  border-right: 1px solid var(--b);
+  padding: 32px 0 24px;
+  z-index: 50;
+  overflow-y: auto;
+}
+.sidebar::-webkit-scrollbar { width: 0; }
+
+.sidebar-logo {
+  font-family: 'Outfit', sans-serif;
+  font-size: 18px; font-weight: 800;
+  letter-spacing: -0.03em;
+  padding: 0 24px 28px;
+  border-bottom: 1px solid var(--b);
   margin-bottom: 20px;
 }
-
-.status-exploring {
-  display: inline-block;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  background: rgba(255, 165, 0, 0.15);
-  color: #ffa500;
-  border: 1px solid rgba(255, 165, 0, 0.3);
-  margin-bottom: 20px;
+.sidebar-logo span {
+  background: var(--grad-text);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 
-/* CONTENT BLOCKS */
-.content-block {
-  background: rgba(255, 20, 147, 0.05);
-  border: 1px solid rgba(255, 20, 147, 0.15);
-  border-radius: 12px;
-  padding: 32px;
-  margin-bottom: 24px;
+.sidebar-section-label {
+  font-family: 'Outfit', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--td); padding: 0 24px 8px;
 }
+.sidebar-link {
+  display: block; padding: 7px 24px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 12px; font-weight: 500;
+  color: var(--td); text-decoration: none;
+  transition: color 0.15s, background 0.15s;
+  border-left: 2px solid transparent;
+}
+.sidebar-link:hover { color: var(--tm); background: var(--s); }
+.sidebar-link.active { color: var(--t); border-left-color: var(--pink); background: var(--s); }
 
-.content-block h3 {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 20px;
-  font-weight: 700;
+.sidebar-status {
+  margin: 6px 24px;
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Outfit', sans-serif;
+  font-size: 9px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 7px; border-radius: 20px;
+}
+.status-locked { background: rgba(255,20,147,0.12); color: var(--pink); border: 1px solid rgba(255,20,147,0.2); }
+.status-live   { background: rgba(100,220,120,0.1); color: var(--green); border: 1px solid rgba(100,220,120,0.2); }
+.status-pending { background: rgba(255,157,66,0.1); color: var(--amber); border: 1px solid rgba(255,157,66,0.2); }
+
+.main { margin-left: 220px; padding: 56px 64px 120px; max-width: 960px; }
+
+/* ── TYPOGRAPHY ── */
+h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 48px; font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1.0;
   margin-bottom: 16px;
-  color: #fff;
+}
+h1 .grad { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.page-sub { font-size: 16px; color: var(--tm); margin-bottom: 8px; }
+.updated { font-size: 12px; color: var(--td); font-family: 'DM Mono', monospace; }
+
+.section { padding-top: 72px; }
+.section + .section { border-top: 1px solid var(--b); margin-top: 0; }
+
+.section-eyebrow {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--pink); margin-bottom: 10px;
+}
+.section-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 28px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1.1;
+  margin-bottom: 8px;
+}
+.section-body {
+  font-size: 15px; color: var(--tm); line-height: 1.7;
+  max-width: 640px; margin-bottom: 32px;
 }
 
-.content-block p {
-  font-size: 14px;
-  line-height: 1.8;
-  color: #b0b0d0;
+/* ── CARDS & PANELS ── */
+.card {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 16px;
+  padding: 24px 28px;
+  margin-bottom: 16px;
+}
+.card-title {
+  font-family: 'Outfit', sans-serif;
+  font-size: 13px; font-weight: 700;
+  letter-spacing: 0.04em; text-transform: uppercase;
+  color: var(--td); margin-bottom: 14px;
+}
+
+/* ── COLOUR SWATCHES ── */
+.swatch-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-bottom: 24px; }
+.swatch {
+  border-radius: 10px; overflow: hidden;
+  border: 1px solid var(--b);
+}
+.swatch-colour { height: 64px; }
+.swatch-info { padding: 8px 10px; background: var(--s2); }
+.swatch-name { font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700; color: var(--t); }
+.swatch-hex  { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--td); margin-top: 2px; }
+.swatch-role { font-family: 'DM Sans', sans-serif; font-size: 10px; color: var(--td); margin-top: 1px; }
+
+.grad-swatch {
+  height: 80px; border-radius: 10px;
   margin-bottom: 12px;
+  border: 1px solid var(--b);
+  position: relative; overflow: hidden;
+}
+.grad-swatch-label {
+  position: absolute; bottom: 10px; left: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: rgba(255,255,255,0.7);
 }
 
-.content-block strong {
-  color: #00d4ff;
+/* ── TYPOGRAPHY SPECIMENS ── */
+.type-specimen {
+  background: var(--s); border: 1px solid var(--b);
+  border-radius: 12px; padding: 24px; margin-bottom: 12px;
+}
+.specimen-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px; color: var(--td);
+  margin-bottom: 12px; letter-spacing: 0.08em;
+}
+.specimen-outfit-900 { font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900; letter-spacing: -0.04em; line-height: 1.0; }
+.specimen-outfit-800 { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.03em; }
+.specimen-outfit-700 { font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; }
+.specimen-outfit-600 { font-family: 'Outfit', sans-serif; font-size: 16px; font-weight: 600; }
+.specimen-outfit-500 { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500; letter-spacing: 0.01em; }
+.specimen-dmsans     { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 400; line-height: 1.7; color: var(--tm); }
+.specimen-dmmono     { font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 400; color: var(--td); }
+.specimen-label-text { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pink); }
+
+.grad-text-specimen {
+  font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900;
+  letter-spacing: -0.04em;
+  background: var(--grad-text);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
 }
 
-/* KEY-VALUE PAIRS */
-.key-value {
-  display: grid;
-  grid-template-columns: 150px 1fr;
-  gap: 20px;
+/* ── TOKEN TABLE ── */
+table { width: 100%; border-collapse: collapse; margin-bottom: 24px; font-size: 13px; }
+th {
+  font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--td); padding: 8px 12px;
+  border-bottom: 1px solid var(--b); text-align: left;
+}
+td { padding: 10px 12px; border-bottom: 1px solid var(--b); color: var(--tm); vertical-align: top; }
+td:first-child { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cyan); }
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: var(--s); }
+
+/* ── CODE BLOCKS ── */
+pre {
+  background: rgba(0,0,0,0.35);
+  border: 1px solid var(--b);
+  border-radius: 10px;
+  padding: 18px 20px;
+  overflow-x: auto;
+  margin-bottom: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  line-height: 1.65;
+  color: var(--tm);
+}
+code { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--cyan); }
+pre code { color: var(--tm); }
+.token-pink  { color: #ff7eb3; }
+.token-cyan  { color: #7de8ff; }
+.token-green { color: #a8f0b0; }
+.token-amber { color: #ffd4a0; }
+.token-gray  { color: #6b6b80; }
+
+/* ── UI ELEMENTS ── */
+.ui-demo { background: var(--s); border: 1px solid var(--b); border-radius: 12px; padding: 28px; margin-bottom: 16px; }
+.ui-demo-label { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--td); margin-bottom: 16px; }
+
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 12px 28px; background: var(--grad); color: white;
+  font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700;
+  text-decoration: none; border-radius: 100px; border: none; cursor: pointer;
+  box-shadow: 0 0 32px var(--glow-pink); letter-spacing: 0.01em;
+  transition: opacity 0.2s;
+}
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 11px 24px; background: transparent; color: var(--tm);
+  font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+  border-radius: 100px; border: 1px solid var(--b2); cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+.pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px; border-radius: 20px;
+  font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.pill-pink  { background: rgba(255,20,147,0.12); color: var(--pink); border: 1px solid rgba(255,20,147,0.22); }
+.pill-cyan  { background: rgba(0,212,255,0.08);  color: var(--cyan); border: 1px solid rgba(0,212,255,0.18); }
+.pill-green { background: rgba(100,220,120,0.1); color: var(--green); border: 1px solid rgba(100,220,120,0.2); }
+.pill-amber { background: rgba(255,157,66,0.1);  color: var(--amber); border: 1px solid rgba(255,157,66,0.2); }
+
+.bento-demo {
+  display: grid; grid-template-columns: 7fr 5fr; gap: 10px; margin-bottom: 20px;
+}
+.bento-card {
+  background: rgba(13,9,20,0.35); backdrop-filter: blur(20px);
+  border: 1px solid var(--b); border-radius: 16px; padding: 22px;
+  position: relative; overflow: hidden;
+}
+.bento-card::after {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.07), transparent);
+}
+.bento-card.featured { border-color: rgba(255,20,147,0.2); background: rgba(255,20,147,0.05); }
+.bento-icon {
+  width: 36px; height: 36px; border-radius: 8px;
+  background: var(--s2); border: 1px solid var(--b2);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+}
+.bento-icon.pink { background: rgba(255,20,147,0.1); border-color: rgba(255,20,147,0.2); color: var(--pink); }
+.bento-icon.cyan { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.18); color: var(--cyan); }
+.bento-title { font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 6px; }
+.bento-body  { font-size: 12px; color: var(--tm); line-height: 1.55; }
+.bento-stat  {
+  font-family: 'Outfit', sans-serif; font-size: 40px; font-weight: 900;
+  letter-spacing: -0.04em; line-height: 1;
+  background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 6px;
+}
+.bento-stat-label { font-size: 12px; color: var(--td); }
+
+/* ── NAV DEMO ── */
+.nav-demo {
+  background: rgba(13,9,20,0.7); backdrop-filter: blur(20px);
+  border: 1px solid var(--b); border-radius: 12px;
+  padding: 14px 24px;
+  display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 16px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+.nav-logo-demo {
+  font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.nav-logo-demo span { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+/* ── MOTION TOKENS ── */
+.motion-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+.motion-card {
+  background: var(--s); border: 1px solid var(--b); border-radius: 10px; padding: 16px;
+}
+.motion-name { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.motion-value { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--cyan); margin-bottom: 6px; }
+.motion-desc { font-size: 12px; color: var(--td); }
+
+/* ── BLOB DEMO ── */
+.blob-demo {
+  position: relative; height: 120px; border-radius: 12px;
+  overflow: hidden; border: 1px solid var(--b);
+  background: var(--bg); margin-bottom: 16px;
+}
+.blob { position: absolute; border-radius: 50%; filter: blur(40px); }
+.blob-1 { width: 140px; height: 140px; background: var(--pink); top: -40px; left: 20%; opacity: 0.12; animation: drift1 8s ease-in-out infinite; }
+.blob-2 { width: 120px; height: 120px; background: var(--cyan); bottom: -30px; right: 20%; opacity: 0.10; animation: drift2 10s ease-in-out infinite; }
+.blob-3 { width: 100px; height: 100px; background: var(--amber); top: 20%; right: 5%; opacity: 0.06; animation: drift3 12s ease-in-out infinite; }
+
+/* ── SCAN DEMO ── */
+.scan-card {
+  background: var(--s); border: 1px solid var(--b);
+  border-radius: 10px; padding: 14px 18px;
+  transition: border-color 1.4s ease, box-shadow 1.4s ease;
+  margin-bottom: 8px;
+  font-size: 13px; color: var(--tm);
+}
+.scan-card.lit-pink {
+  border-color: rgba(255,20,147,0.35) !important;
+  box-shadow: 0 0 10px rgba(255,20,147,0.10), inset 0 0 8px rgba(255,20,147,0.03) !important;
+}
+.scan-card.lit-cyan {
+  border-color: rgba(0,212,255,0.35) !important;
+  box-shadow: 0 0 10px rgba(0,212,255,0.10), inset 0 0 8px rgba(0,212,255,0.03) !important;
 }
 
-.key-value:last-child {
-  border-bottom: none;
+/* ── DIVIDERS ── */
+.rule { height: 1px; background: var(--b); margin: 32px 0; }
+
+/* ── CALLOUT ── */
+.callout {
+  background: var(--s); border-left: 2px solid var(--pink);
+  border-radius: 0 10px 10px 0; padding: 14px 18px;
+  margin-bottom: 20px; font-size: 14px; color: var(--tm); line-height: 1.6;
+}
+.callout.cyan { border-left-color: var(--cyan); }
+.callout.amber { border-left-color: var(--amber); }
+.callout strong { color: var(--t); font-weight: 600; }
+
+/* ── DECISION BADGE ── */
+.decision-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.decision-badge {
+  font-family: 'Outfit', sans-serif; font-size: 9px; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 3px 8px; border-radius: 4px; flex-shrink: 0;
+}
+.badge-locked { background: rgba(255,20,147,0.12); color: var(--pink); border: 1px solid rgba(255,20,147,0.2); }
+.badge-approved { background: rgba(100,220,120,0.1); color: var(--green); border: 1px solid rgba(100,220,120,0.2); }
+.badge-pending { background: rgba(255,157,66,0.1); color: var(--amber); border: 1px solid rgba(255,157,66,0.2); }
+.badge-deferred { background: rgba(255,255,255,0.05); color: var(--td); border: 1px solid var(--b); }
+.decision-text { font-size: 14px; color: var(--tm); }
+.decision-text strong { color: var(--t); }
+
+/* ── LIGHT MODE PREVIEW ── */
+.light-mode-preview {
+  background: #faf8ff; border-radius: 16px; padding: 28px;
+  border: 1px solid rgba(90,60,120,0.18); margin-bottom: 20px;
+}
+.light-text-primary { color: #1a1525; font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; }
+.light-text-mid     { color: #5a5070; font-family: 'DM Sans', sans-serif; font-size: 14px; }
+.light-grad { background: linear-gradient(135deg, #c4006a, #007a99); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.light-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 9px 20px; background: linear-gradient(135deg, #c4006a, #007a99);
+  color: white; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700;
+  border-radius: 100px; border: none; margin-top: 12px; cursor: pointer;
+  box-shadow: 0 0 20px rgba(196,0,106,0.2);
 }
 
-.key-value-key {
-  font-family: 'DM Sans', sans-serif;
-  font-size: 12px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #00d4ff;
-}
-
-.key-value-value {
-  font-size: 14px;
-  color: #b0b0d0;
-}
-
-/* COLOR SWATCHES */
-.color-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 16px;
-  margin-bottom: 24px;
-}
-
-.color-swatch {
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.swatch-color {
-  height: 80px;
-  width: 100%;
-}
-
-.swatch-label {
-  background: rgba(0, 0, 0, 0.3);
-  padding: 12px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.swatch-value {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 8px 12px;
-  font-size: 11px;
-  color: #888;
-  font-family: 'Space Mono', monospace;
-}
-
-/* LINKS */
-.link-box {
-  background: rgba(0, 212, 255, 0.05);
-  border: 1px solid rgba(0, 212, 255, 0.2);
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.link-box strong {
-  font-family: 'Space Grotesk', sans-serif;
-  font-size: 14px;
-  color: #00d4ff;
-}
-
-.link-box a {
-  font-size: 14px;
-  color: #ff1493;
-  text-decoration: none;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.link-box a:hover {
-  color: #00d4ff;
-}
-
-/* DECISION TABLE */
-.decision-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 24px;
-}
-
-.decision-table thead {
-  background: rgba(0, 212, 255, 0.1);
-}
-
-.decision-table th,
-.decision-table td {
-  padding: 16px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-  font-size: 13px;
-}
-
-.decision-table th {
-  font-family: 'Space Grotesk', sans-serif;
-  font-weight: 700;
-  color: #00d4ff;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.decision-table td {
-  color: #b0b0d0;
-}
-
-.decision-pending {
-  color: #ffa500;
-  font-weight: 600;
-}
-
-.decision-locked {
-  color: #00d4ff;
-  font-weight: 600;
-}
-
-/* FOOTER */
-footer {
-  margin-top: 100px;
-  padding-top: 40px;
-  border-top: 2px solid rgba(0, 212, 255, 0.2);
-  font-size: 12px;
-  color: #666;
-  text-align: center;
-}
-
+/* ── SIDEBAR GROUP SPACING ── */
+.sidebar-group { margin-bottom: 20px; }
 </style>
 </head>
 <body>
 
-<div class="container">
-
-<!-- HEADER -->
-<header>
-  <h1>Pulse Brand Guidelines</h1>
-  <p class="subtitle">Living document. Updated as we explore and lock decisions.</p>
-  <span class="doc-status">Actively Developing</span>
-</header>
-
-<!-- NAVIGATION -->
-<nav>
-  <h3>Quick Navigation</h3>
-  <ul>
-    <li><a href="#philosophy">Design Philosophy</a></li>
-    <li><a href="#palette">Colour Palette</a></li>
-    <li><a href="#typography">Typography</a></li>
-    <li><a href="#micro-interactions">Micro-Interactions</a></li>
-    <li><a href="#voice-tone">Voice & Tone</a></li>
-    <li><a href="#exploration-archive">Exploration Archive</a></li>
-    <li><a href="#decision-matrix">Decision Matrix</a></li>
-  </ul>
-</nav>
-
-<!-- SECTION 1: DESIGN PHILOSOPHY -->
-<section class="section" id="philosophy">
-  <h2>Design Philosophy</h2>
-  <p class="section-intro">Pulse is built for operators, consultants, and creative business founders who win work through conversations. The design should feel like a system that celebrates momentum while keeping users grounded in practical execution.</p>
-  
-  <div class="content-block">
-    <h3>Core Principles</h3>
-    <p><strong>Rhythm & Momentum:</strong> Visual language mirrors the heartbeat of consistent outreach. Every interaction feels intentional, not decorative.</p>
-    <p><strong>70% Creative, 30% Minimalist:</strong> The audience is designers, agency founders, and business developers who value aesthetics but prize clarity. We lean creative but don't sacrifice usability.</p>
-    <p><strong>Typography as Hero:</strong> Bold, editorial type carries emotional weight. Space Grotesk (70s energy) or Outfit (modern editorial) — decision pending.</p>
-    <p><strong>Celebration Moments Matter:</strong> When users hit milestones, the design should feel like they won something. Gradient text, glowing badges, metric cards that pop.</p>
-  </div>
-</section>
-
-<!-- SECTION 2: DESIGN DIRECTIONS -->
-<section class="section" id="palette">
-  <h2>Design Directions</h2>
-  <p class="section-intro">Four distinct design directions, each with different colour palettes and typography. Exploring all routes before locking the final direction.</p>
-  
-  <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 40px;">
-    <!-- IN RUNNING -->
-    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
-      <div class="status-exploring" style="margin-bottom: 12px;">Direction 1: Electric Dreams</div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="05-dashboard-typography.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Space Grotesk ↗</a>
-        <a href="06-dashboard-modern-editorial.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Outfit ↗</a>
-      </div>
-    </div>
-
-    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
-      <div class="status-exploring" style="margin-bottom: 12px;">Direction 2: Quiet Luxury</div>
-      <div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px;">Fonts: Domaine Display + Circular Std (paid)</div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="18-quiet-luxury-paid.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Paid Version ↗</a>
-      </div>
-    </div>
-
-    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
-      <div class="status-exploring" style="margin-bottom: 12px;">Direction 3: Neo-Naturalism (Refined)</div>
-      <div style="font-size: 12px; color: #a0a0b0; margin-bottom: 8px;">Fonts: Saol Text + Maax (paid)</div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="17-neo-naturalism-refined.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Refined ↗</a>
-      </div>
-    </div>
-
-    <div style="background: rgba(0, 212, 255, 0.05); border: 1px solid rgba(0, 212, 255, 0.2); border-radius: 8px; padding: 16px;">
-      <div class="status-exploring" style="margin-bottom: 12px;">Direction 4: Cinematic (70s)</div>
-      <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-        <a href="09-direction-10-10.html" style="font-size: 12px; color: #ff1493; text-decoration: none;">Playfair ↗</a>
-      </div>
-    </div>
-  </div>
-
-  <div class="content-block">
-    <h3>Dismissed Directions</h3>
-    <p>The following were explored but dismissed as too derivative of Electric Dreams or thematically overcooked:</p>
-    <p style="font-size: 13px; color: #888; margin-top: 12px;">Kinetic Futurism (Syne) • Jewel Tones • Neon Punk • Brutalist (IBM Plex)</p>
-  </div>
-  
-  <div class="content-block">
-    <h3>Exploration in Progress</h3>
-    <p>Currently testing <strong>typography pairings</strong> across each palette. Each design direction will have 2-3 typography variations explored before final lock-in.</p>
-  </div>
-</section>
-
-<!-- SECTION 3: TYPOGRAPHY -->
-<section class="section" id="typography">
-  <h2>Typography</h2>
-  <span class="status-exploring">DECISION PENDING</span>
-  <p class="section-intro">Two directions being tested. Both bold, editorial, contemporary. One leans 70s (Space Grotesk), one leans modern (Outfit). Both paired with DM Sans for supporting type.</p>
-  
-  <div class="content-block">
-    <h3>Decision Matrix: Space Grotesk vs. Outfit</h3>
-    <table class="decision-table">
-      <thead>
-        <tr>
-          <th>Attribute</th>
-          <th>Space Grotesk (A)</th>
-          <th>Outfit (B)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td><strong>Weight</strong></td>
-          <td>Chunky, condensed, high contrast</td>
-          <td>Clean, geometric, tight letterspacing</td>
-        </tr>
-        <tr>
-          <td><strong>Energy</strong></td>
-          <td>70s Swiss editorial (Sight and Sound vibes)</td>
-          <td>Contemporary editorial (future-facing, no nostalgia)</td>
-        </tr>
-        <tr>
-          <td><strong>Legibility</strong></td>
-          <td>Slightly lighter weight, sharper, more unique</td>
-          <td>Tighter spacing, bolder appearance, slightly more generic</td>
-        </tr>
-        <tr>
-          <td><strong>Feedback</strong></td>
-          <td>Preferred by Gareth Evans (more unique, system-like)</td>
-          <td>Preferred by second reviewer (bolder, cleaner look)</td>
-        </tr>
-        <tr>
-          <td><strong>Use Case</strong></td>
-          <td>Landing page, marketing, celebration moments</td>
-          <td>Dashboard, UI, consistency-focused contexts</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="content-block">
-    <h3>Supporting Font (LOCKED)</h3>
-    <div class="key-value">
-      <div class="key-value-key">Font</div>
-      <div class="key-value-value">DM Sans (Google Fonts, open-source)</div>
-    </div>
-    <div class="key-value">
-      <div class="key-value-key">Usage</div>
-      <div class="key-value-value">Body copy, labels, secondary information, supporting text</div>
-    </div>
-    <div class="key-value">
-      <div class="key-value-key">Weights</div>
-      <div class="key-value-value">400 (regular), 500 (medium), 700 (bold for highlights)</div>
-    </div>
-  </div>
-
-  <div class="link-box">
-    <strong>View Space Grotesk version (70s energy):</strong>
-    <a href="05-dashboard-typography.html">View Mockup ↗</a>
-  </div>
-
-  <div class="link-box">
-    <strong>View Outfit version (modern editorial):</strong>
-    <a href="06-dashboard-modern-editorial.html">View Mockup ↗</a>
-  </div>
-
-  <div class="link-box">
-    <strong>View typography specimen page:</strong>
-    <a href="04-typography-specimen.html">Type System ↗</a>
-  </div>
-</section>
-
-<!-- SECTION 4: MICRO-INTERACTIONS -->
-<section class="section" id="micro-interactions">
-  <h2>Micro-Interactions</h2>
-  <span class="status-locked" style="background:rgba(0,255,128,0.1);color:#00e080;border-color:rgba(0,255,128,0.3);">SYSTEM DEFINED</span>
-  <p class="section-intro">Motion carries emotional weight. Every interaction is intentional, not decorative. The micro-interaction system — covering motion tokens, interaction patterns, dashboard states, microcopy, and the momentum engine — is now fully defined and design-direction agnostic. Colour tokens will update when the final direction is locked.</p>
-
-  <div class="link-box">
-    <strong>Full Micro-Interaction System →</strong>
-    <a href="01-micro-interaction-system.html">View detailed spec ↗</a>
-  </div>
-
-  <div class="content-block">
-    <h3>Motion token summary</h3>
-    <p><strong>instant (0ms)</strong> — State flags, boolean toggles.</p>
-    <p><strong>quick (120ms)</strong> — Hover bg, border colour changes, pill state shifts.</p>
-    <p><strong>standard (200ms)</strong> — Default for most UI transitions. Drawers, dropdowns.</p>
-    <p><strong>deliberate (350ms)</strong> — Progress indicators, step advancement, confirmation banners.</p>
-    <p><strong>exit / collapse (400–500ms)</strong> — Row fade-and-collapse after send. Gives user time to register completion.</p>
-    <p style="margin-top:8px">Enter easing: <code style="color:#ffa500;font-size:12px">cubic-bezier(0.22, 0.68, 0, 1.2)</code> (spring) · Exit: <code style="color:#ffa500;font-size:12px">ease-in</code></p>
-  </div>
-
-  <div class="content-block">
-    <h3>Seven named interaction patterns (all defined)</h3>
-    <p><strong>1. Send row — fade and collapse</strong> Row transitions through "sending" state (40% opacity, +5px X) then collapses out. Toast fires in parallel.</p>
-    <p><strong>2. Toast confirmation</strong> Spring-eased entrance. Shows recipient email address, not generic success copy. Auto-dismisses after 4s.</p>
-    <p><strong>3. Button states</strong> Hover: 120ms bg. Active: scale(0.97). Locked: 35% opacity.</p>
-    <p><strong>4. Progress step advancement</strong> Line fills over 500ms, dot transitions stagger 100ms offset.</p>
-    <p><strong>5. Momentum prompt reveal</strong> Slides up 6px, fades in over 300ms. Left-border accent. Auto-expires 10s.</p>
-    <p><strong>6. Milestone reveal</strong> scale(0.96→1) + opacity, 400ms. Stagger 300ms per card. No confetti.</p>
-    <p><strong>7. Inline field error</strong> Error border + message beneath field. Never a toast. No system codes.</p>
-  </div>
-
-  <div class="content-block">
-    <h3>Celebration moments — what to avoid</h3>
-    <p>The product celebrates real work, not engagement. The following are explicitly out of scope and will not be added in any future direction:</p>
-    <p style="margin-top:8px;color:#888;">Confetti animations · Streak pressure · Gamification points · Leaderboards · Forced engagement loops · Blocking overlay celebrations · Sound effects</p>
-  </div>
-
-  <div class="content-block">
-    <h3>References (marketing / brand moments only)</h3>
-    <p><strong>Scanning Line Effect:</strong> WebGPU scanning effect — candidate for metric card hover on marketing pages only, not dashboard. <a href="https://tympanus.net/codrops/2025/03/31/webgpu-scanning-effect-with-depth-maps/" style="color: #ff1493; text-decoration: none;">See reference →</a></p>
-    <p><strong>Gradient Text Animation:</strong> Hero headline animation candidate for landing page. Not for dashboard UI.</p>
-  </div>
-</section>
-
-<!-- SECTION 5: VOICE & TONE -->
-<section class="section" id="voice-tone">
-  <h2>Voice & Tone</h2>
-  <span class="status-exploring">DEVELOPING</span>
-  <p class="section-intro">Opinionated, playful, character-driven. Not false-American SaaS. Inspired by Oatly, Monzo, Mailchimp, Innocent. The UX Microcopy System (Phase 2.12) is locked — the full copy library and storage structure are defined. Brand voice and personality pack variations are still being developed.</p>
-
-  <div class="content-block">
-    <h3>Core voice qualities</h3>
-    <p>The product voice should feel: <strong>helpful · calm · confident · conversational</strong></p>
-    <p>It should not feel: robotic · overly casual · corporate · technical</p>
-    <p style="margin-top:8px;font-style:italic;color:#888;">"We've prepared a message to get you started." — not "Template successfully generated."</p>
-  </div>
-
-  <div class="content-block">
-    <h3>Language rules (locked)</h3>
-    <p style="margin-bottom:8px">Avoid system language: <span style="color:#ff6060;">configure · execute · initiate · parameter · Error 400</span></p>
-    <p>Prefer plain language: <span style="color:#00e080;">write · send · add · follow up · here's what happened</span></p>
-    <p style="margin-top:10px;color:#888">Errors must explain the issue and offer a fix. Never blame the user. Never show raw codes.</p>
-  </div>
-
-  <div class="content-block">
-    <h3>Microcopy system (Phase 2.12 — locked)</h3>
-    <p>All UI copy lives in <code style="color:#ffa500;font-size:12px">src/config/microcopy/</code> as version-controlled JSON files. Categories: guidance, reassurance, empty states, success messages, error messages. Updated via Git PR, not database. Error frequency tracked via analytics.</p>
-    <p style="margin-top:8px">See the <a href="01-micro-interaction-system.html#microcopy" style="color:#ff1493;text-decoration:none">Micro-Interaction System →</a> for the full copy library, voice rules, and file structure.</p>
-  </div>
-
-  <div class="content-block">
-    <h3>Personality Packs (Phase 2.11 — defined, deferred)</h3>
-    <p>Default personality: <strong>Calm & Commercial</strong>. Additional packs: <strong>Direct & Confident</strong>, <strong>Light Touch Relational</strong>. A fourth pack is planned. Global default set in user preferences, with per-message override available.</p>
-    <p><strong>Note:</strong> Personality pack visual variations (typography emphasis, colour shifts) are a future exploration. Currently locked on one default aesthetic.</p>
-  </div>
-
-  <div class="content-block">
-    <h3>Confirmed microcopy examples</h3>
-    <p>"Shorter messages often get more replies." — Guidance, message editor</p>
-    <p>"Nothing will be sent until you press Send." — Reassurance, pre-send</p>
-    <p>"Your campaign is live. Your first messages are on their way." — Confirmation</p>
-    <p>"Add a subject line before sending." — Inline error</p>
-    <p>"You're building momentum." — Milestone, 10 replies</p>
-  </div>
-</section>
-
-<!-- SECTION 6: EXPLORATION ARCHIVE -->
-<section class="section" id="exploration-archive">
-  <h2>Exploration Archive</h2>
-  <p class="section-intro">What we've tested, what we've rejected, and why. Documenting the design journey.</p>
-  
-  <div class="content-block">
-    <h3>Palettes Explored</h3>
-    <div class="key-value">
-      <div class="key-value-key">Electric Dreams</div>
-      <div class="key-value-value"><strong>LOCKED.</strong> Deep purple + neon cyan, hot pink, orange. Unapologetic and vibrant.</div>
-    </div>
-    <div class="key-value">
-      <div class="key-value-key">Quiet Luxury</div>
-      <div class="key-value-value">Explored but rejected. Too understated for the brand energy we're going for. Sophisticated but felt muted.</div>
-    </div>
-    <div class="key-value">
-      <div class="key-value-key">Neo-Naturalism</div>
-      <div class="key-value-value">Explored but rejected. Warm terracottas felt too organic for a SaaS dashboard. Right palette, wrong product.</div>
-    </div>
-  </div>
-
-  <div class="content-block">
-    <h3>Typography Tested</h3>
-    <div class="key-value">
-      <div class="key-value-key">Space Grotesk + DM Sans</div>
-      <div class="key-value-value">70s editorial energy. Chunky, condensed, playful. Feedback: More unique, system-like, sharper.</div>
-    </div>
-    <div class="key-value">
-      <div class="key-value-key">Outfit + DM Sans</div>
-      <div class="key-value-value">Modern editorial. Clean, geometric, tight. Feedback: Bolder, tighter, slightly more generic but very polished.</div>
-    </div>
-  </div>
-
-  <div class="link-box">
-    <strong>View all exploration pages:</strong>
-    <a href="index.html">Exploration Hub ↗</a>
-  </div>
-</section>
-
-<!-- SECTION 7: DECISION MATRIX -->
-<section class="section" id="decision-matrix">
-  <h2>Decision Matrix</h2>
-  <p class="section-intro">What's locked, what's still being explored, and what's pending decisions.</p>
-  
-  <table class="decision-table">
-    <thead>
-      <tr>
-        <th>Element</th>
-        <th>Status</th>
-        <th>Notes</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>Design Direction</strong></td>
-        <td><span class="decision-pending">EXPLORING</span></td>
-        <td>4 directions (Electric Dreams, Quiet Luxury, Neo-Naturalism, Brand New). Each with multiple typography variations.</td>
-      </tr>
-      <tr>
-        <td><strong>Colour Palette</strong></td>
-        <td><span class="decision-pending">PENDING</span></td>
-        <td>Will lock with chosen design direction</td>
-      </tr>
-      <tr>
-        <td><strong>Display Font</strong></td>
-        <td><span class="decision-pending">EXPLORING</span></td>
-        <td>Multiple pairings tested per direction. Decision after design exploration complete.</td>
-      </tr>
-      <tr>
-        <td><strong>Supporting Font</strong></td>
-        <td><span class="decision-pending">EXPLORING</span></td>
-        <td>Varying per direction (DM Sans, Space Mono, IBM Plex Mono, etc.)</td>
-      </tr>
-      <tr>
-        <td><strong>Dashboard States</strong></td>
-        <td><span class="decision-locked">LOCKED</span></td>
-        <td>Morning (calm), Active (momentum), Celebration (peak). Framework solid.</td>
-      </tr>
-      <tr>
-        <td><strong>Micro-Interactions</strong></td>
-        <td><span class="decision-locked">DEFINED</span></td>
-        <td>7 patterns, motion tokens, all states, microcopy, momentum engine — all locked. Colour tokens pending direction lock. <a href="01-micro-interaction-system.html" style="color:#ff1493;text-decoration:none;">Full spec ↗</a></td>
-      </tr>
-      <tr>
-        <td><strong>Microcopy System</strong></td>
-        <td><span class="decision-locked">LOCKED</span></td>
-        <td>Phase 2.12. JSON config files, voice rules, 5 copy categories, error analytics. Git-based updates.</td>
-      </tr>
-      <tr>
-        <td><strong>Momentum Engine</strong></td>
-        <td><span class="decision-locked">LOCKED</span></td>
-        <td>Phase 2.13. Post-action next-step prompts, activation loop integration, milestone recognition.</td>
-      </tr>
-      <tr>
-        <td><strong>Voice & Tone</strong></td>
-        <td><span class="decision-pending">DEVELOPING</span></td>
-        <td>Default pack locked. Personality pack variations deferred to later phase.</td>
-      </tr>
-    </tbody>
-  </table>
-</section>
-
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
 </div>
 
-<footer>
-  <p>Pulse Brand Guidelines — Living Document</p>
-  <p>Last updated: March 14, 2026</p>
-</footer>
+<div class="wrap">
+
+  <!-- SIDEBAR NAV -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">Pulse<span>.</span></div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Overview</div>
+      <a href="#philosophy" class="sidebar-link">Design Philosophy</a>
+      <a href="#brand-name" class="sidebar-link">Brand Name & Logo</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Visual System</div>
+      <a href="#colours" class="sidebar-link">Colour Palette</a>
+      <a href="#dark-tokens" class="sidebar-link">Dark Mode Tokens</a>
+      <a href="#light-tokens" class="sidebar-link">Light Mode Tokens</a>
+      <a href="#gradients" class="sidebar-link">Gradients</a>
+      <a href="#typography" class="sidebar-link">Typography</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Components</div>
+      <a href="#ui-elements" class="sidebar-link">Buttons & Tags</a>
+      <a href="#cards" class="sidebar-link">Cards & Bento</a>
+      <a href="#nav" class="sidebar-link">Navigation</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Motion</div>
+      <a href="#motion-principles" class="sidebar-link">Principles</a>
+      <a href="#motion-tokens" class="sidebar-link">Timing Tokens</a>
+      <a href="#heartbeat" class="sidebar-link">Heartbeat Canvas</a>
+      <a href="#scan" class="sidebar-link">Scan Effect</a>
+      <a href="#button-interaction" class="sidebar-link">Button Interactions</a>
+      <a href="#dashboard-motion" class="sidebar-link">Dashboard Motion</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Decisions</div>
+      <a href="#locked-decisions" class="sidebar-link">Locked Decisions</a>
+      <a href="#deferred" class="sidebar-link">Deferred</a>
+      <a href="#brand-personalisation" class="sidebar-link">Brand Personalisation</a>
+    </div>
+
+    <div class="sidebar-group">
+      <div class="sidebar-section-label">Reference</div>
+      <a href="#files" class="sidebar-link">File Index</a>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main">
+
+    <!-- HEADER -->
+    <div style="margin-bottom: 56px; padding-bottom: 40px; border-bottom: 1px solid var(--b);">
+      <div style="font-family:'Outfit',sans-serif; font-size:10px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--pink); margin-bottom:12px;">Living Document</div>
+      <h1>Pulse<span class="grad">.</span> Brand Guidelines</h1>
+      <p class="page-sub">The complete visual language, motion system, and design decisions for Pulse.</p>
+      <p class="updated">Last updated: 21 March 2026</p>
+    </div>
+
+    <!-- PHILOSOPHY -->
+    <section class="section" id="philosophy">
+      <div class="section-eyebrow">Foundation</div>
+      <div class="section-title">Design Philosophy</div>
+      <p class="section-body">Pulse. is built for consultants, agency owners, and fractional executives who win work through conversations. The design should feel like a system that celebrates momentum while keeping users grounded in practical execution. Calm, intentional, alive.</p>
+
+      <div class="card">
+        <div class="card-title">Core Principles</div>
+        <div class="decision-row" style="margin-bottom:14px;">
+          <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--t);">Rhythm & Momentum</span>
+        </div>
+        <p style="font-size:14px; color:var(--tm); margin-bottom:16px;">Visual language mirrors the heartbeat of consistent outreach. Every interaction feels intentional, not decorative. The 8-second heartbeat cycle is the master rhythm — everything breathes at this rate or a harmonic of it.</p>
+        <div class="decision-row" style="margin-bottom:14px;">
+          <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--t);">70% Creative, 30% Minimalist</span>
+        </div>
+        <p style="font-size:14px; color:var(--tm); margin-bottom:16px;">The audience are designers, agency founders, and business developers who value aesthetics but prize clarity. We lean creative but never sacrifice usability.</p>
+        <div class="decision-row" style="margin-bottom:14px;">
+          <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:700; color:var(--t);">Celebration Without Gamification</span>
+        </div>
+        <p style="font-size:14px; color:var(--tm);">The product celebrates real work, not engagement. Milestones matter. Streak pressure, gamification points, and forced engagement loops are explicitly out of scope — forever.</p>
+      </div>
+
+      <div class="callout amber">
+        <strong>Explicitly excluded:</strong> Confetti animations · Streak pressure · Gamification points · Leaderboards · Blocking overlay celebrations · Sound effects · Forced engagement loops
+      </div>
+    </section>
+
+    <!-- BRAND NAME -->
+    <section class="section" id="brand-name">
+      <div class="section-eyebrow">Identity</div>
+      <div class="section-title">Brand Name & Logo</div>
+      <p class="section-body">The product is called <strong style="color:var(--t);">Pulse.</strong> — the dot is intentional and part of the brand identity. It is always included. The tagline is: <em style="color:var(--t);">The heartbeat of outreach.</em></p>
+
+      <div class="nav-demo" style="max-width: 480px; margin-bottom: 24px;">
+        <div class="nav-logo-demo">Pulse<span>.</span></div>
+        <div style="font-family:'DM Sans',sans-serif; font-size:12px; color:var(--td);">The heartbeat of outreach.</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Logo Rules</div>
+        <table>
+          <tr><th>Element</th><th>Treatment</th></tr>
+          <tr><td>Pulse</td><td>White (#f4f4f2), Outfit 800</td></tr>
+          <tr><td>.</td><td>Pink→cyan gradient text (--grad-text)</td></tr>
+          <tr><td>Font</td><td>Outfit, weight 800, letter-spacing -0.03em</td></tr>
+          <tr><td>Tagline</td><td>DM Sans 300–400, colour var(--tm)</td></tr>
+          <tr><td>Codebase name</td><td>Still "outreach." internally — do not rename</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- COLOURS -->
+    <section class="section" id="colours">
+      <div class="section-eyebrow">Visual System</div>
+      <div class="section-title">Colour Palette</div>
+      <p class="section-body">The approved design direction is <strong style="color:var(--t);">Electric Dreams</strong>. Dark mode is canonical. Light mode is an approved optional preference. All other design directions (Quiet Luxury, Neo-Naturalism, Cinematic) are on hold — not dismissed.</p>
+
+      <div id="dark-tokens">
+        <div class="card-title" style="margin-bottom:16px;">Dark Mode — Canonical</div>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-colour" style="background:#0d0914;"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#0d0914</div><div class="swatch-role">--bg</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#f4f4f2;"></div><div class="swatch-info"><div class="swatch-name">Text</div><div class="swatch-hex">#f4f4f2</div><div class="swatch-role">--t</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#a8a8b8;"></div><div class="swatch-info"><div class="swatch-name">Text Mid</div><div class="swatch-hex">#a8a8b8</div><div class="swatch-role">--tm</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#6b6b80;"></div><div class="swatch-info"><div class="swatch-name">Text Dim</div><div class="swatch-hex">#6b6b80</div><div class="swatch-role">--td</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#ff1493;"></div><div class="swatch-info"><div class="swatch-name">Pink</div><div class="swatch-hex">#ff1493</div><div class="swatch-role">--pink</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#00d4ff;"></div><div class="swatch-info"><div class="swatch-name">Cyan</div><div class="swatch-hex">#00d4ff</div><div class="swatch-role">--cyan</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#64dc78;"></div><div class="swatch-info"><div class="swatch-name">Green</div><div class="swatch-hex">#64dc78</div><div class="swatch-role">--green</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#ff9d42;"></div><div class="swatch-info"><div class="swatch-name">Amber</div><div class="swatch-hex">#ff9d42</div><div class="swatch-role">--amber</div></div></div>
+        </div>
+
+        <pre><code><span class="token-gray">/* Dark mode tokens — :root */</span>
+<span class="token-pink">--bg</span>:         <span class="token-cyan">#0d0914</span>;   <span class="token-gray">/* Deep purple-black */</span>
+<span class="token-pink">--t</span>:          <span class="token-cyan">#f4f4f2</span>;   <span class="token-gray">/* Near-white */</span>
+<span class="token-pink">--tm</span>:         <span class="token-cyan">#a8a8b8</span>;   <span class="token-gray">/* Mid text */</span>
+<span class="token-pink">--td</span>:         <span class="token-cyan">#6b6b80</span>;   <span class="token-gray">/* Dim text */</span>
+<span class="token-pink">--pink</span>:       <span class="token-cyan">#ff1493</span>;   <span class="token-gray">/* Neon pink — gradient start */</span>
+<span class="token-pink">--cyan</span>:       <span class="token-cyan">#00d4ff</span>;   <span class="token-gray">/* Neon cyan — gradient end */</span>
+<span class="token-pink">--green</span>:      <span class="token-cyan">#64dc78</span>;   <span class="token-gray">/* Success / Free tier */</span>
+<span class="token-pink">--amber</span>:      <span class="token-cyan">#ff9d42</span>;   <span class="token-gray">/* Urgency / follow-ups due */</span>
+<span class="token-pink">--grad</span>:       <span class="token-amber">linear-gradient(135deg, #ff1493, #00d4ff)</span>;
+<span class="token-pink">--grad-text</span>:  <span class="token-amber">linear-gradient(135deg, #ff1493 0%, #00d4ff 100%)</span>;
+<span class="token-pink">--glow-pink</span>:  <span class="token-cyan">rgba(255,20,147,0.25)</span>;
+<span class="token-pink">--glow-cyan</span>:  <span class="token-cyan">rgba(0,212,255,0.2)</span>;
+<span class="token-pink">--s</span>:          <span class="token-cyan">rgba(255,255,255,0.04)</span>;  <span class="token-gray">/* Surface */</span>
+<span class="token-pink">--s2</span>:         <span class="token-cyan">rgba(255,255,255,0.07)</span>;  <span class="token-gray">/* Surface raised */</span>
+<span class="token-pink">--b</span>:          <span class="token-cyan">rgba(255,255,255,0.07)</span>;  <span class="token-gray">/* Border */</span>
+<span class="token-pink">--b2</span>:         <span class="token-cyan">rgba(255,255,255,0.13)</span>;  <span class="token-gray">/* Border strong */</span></code></pre>
+      </div>
+
+      <div class="rule"></div>
+
+      <div id="light-tokens">
+        <div class="card-title" style="margin-bottom:16px;">Light Mode — Approved</div>
+        <div class="light-mode-preview">
+          <div class="light-text-primary">The heartbeat of <span class="light-grad">outreach.</span></div>
+          <div class="light-text-mid" style="margin-top:6px;">Muted accents — ink-like, not washed out. Same energy, different light.</div>
+          <button class="light-btn">Request access</button>
+        </div>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="swatch-colour" style="background:#faf8ff;"></div><div class="swatch-info"><div class="swatch-name">Background</div><div class="swatch-hex">#faf8ff</div><div class="swatch-role">--bg</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#1a1525;"></div><div class="swatch-info"><div class="swatch-name">Text</div><div class="swatch-hex">#1a1525</div><div class="swatch-role">--t</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#c4006a;"></div><div class="swatch-info"><div class="swatch-name">Pink</div><div class="swatch-hex">#c4006a</div><div class="swatch-role">--pink</div></div></div>
+          <div class="swatch"><div class="swatch-colour" style="background:#007a99;"></div><div class="swatch-info"><div class="swatch-name">Cyan</div><div class="swatch-hex">#007a99</div><div class="swatch-role">--cyan</div></div></div>
+        </div>
+        <pre><code><span class="token-gray">/* Light mode tokens — [data-theme="light"] on html */</span>
+<span class="token-pink">--bg</span>:         <span class="token-cyan">#faf8ff</span>;   <span class="token-gray">/* Warm off-white, faint purple tint */</span>
+<span class="token-pink">--t</span>:          <span class="token-cyan">#1a1525</span>;   <span class="token-gray">/* Purple-tinted near-black */</span>
+<span class="token-pink">--tm</span>:         <span class="token-cyan">#5a5070</span>;
+<span class="token-pink">--td</span>:         <span class="token-cyan">#8a80a0</span>;
+<span class="token-pink">--pink</span>:       <span class="token-cyan">#c4006a</span>;   <span class="token-gray">/* Muted deep ink pink — not neon */</span>
+<span class="token-pink">--cyan</span>:       <span class="token-cyan">#007a99</span>;   <span class="token-gray">/* Calm teal — not neon */</span>
+<span class="token-pink">--grad</span>:       <span class="token-amber">linear-gradient(135deg, #c4006a, #007a99)</span>;
+<span class="token-pink">--glow-pink</span>:  <span class="token-cyan">rgba(196,0,106,0.15)</span>;   <span class="token-gray">/* Halved — glows spread on light bg */</span>
+<span class="token-pink">--glow-cyan</span>:  <span class="token-cyan">rgba(0,122,153,0.12)</span>;
+<span class="token-pink">--s</span>:          <span class="token-cyan">rgba(90,60,120,0.04)</span>;
+<span class="token-pink">--b</span>:          <span class="token-cyan">rgba(90,60,120,0.10)</span>;
+<span class="token-pink">--b2</span>:         <span class="token-cyan">rgba(90,60,120,0.18)</span>;</code></pre>
+        <div class="callout cyan">
+          <strong>Light mode principle:</strong> #faf8ff has a faint purple tint — the same purple family that dominates #0d0914. The two modes feel like the same product in different light, not two different products.
+        </div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div id="gradients">
+        <div class="card-title" style="margin-bottom:16px;">Gradients</div>
+        <div class="grad-swatch" style="background: linear-gradient(135deg, #ff1493, #00d4ff);">
+          <div class="grad-swatch-label">--grad · 135deg · #ff1493 → #00d4ff · Dark mode</div>
+        </div>
+        <div class="grad-swatch" style="background: linear-gradient(135deg, #c4006a, #007a99);">
+          <div class="grad-swatch-label">--grad · 135deg · #c4006a → #007a99 · Light mode</div>
+        </div>
+        <div class="callout">
+          <strong>Gradient usage:</strong> Primary buttons · Nav CTA · Logo dot · Hero headline text · Step numbers · Stat callouts · Card top-edge accents · Bento stat numbers · Heartbeat canvas influence · Scan effect borders · Section labels
+        </div>
+        <div class="callout cyan">
+          <strong>Brand Personalisation (planned, Free tier):</strong> Users will be able to customise their gradient start/end colour and background via Settings → Appearance. Stored as <code>theme_config</code> JSONB on users table. See <a href="#brand-personalisation" style="color:var(--cyan);">Brand Personalisation</a> section.
+        </div>
+      </div>
+    </section>
+
+    <!-- TYPOGRAPHY -->
+    <section class="section" id="typography">
+      <div class="section-eyebrow">Visual System</div>
+      <div class="section-title">Typography</div>
+      <p class="section-body">Two fonts. Outfit leads all headings, UI labels, navigation, and brand moments. DM Sans handles all body copy, supporting text, and inputs. DM Mono is used for code, hex values, and technical annotations.</p>
+
+      <div class="card" style="margin-bottom: 20px;">
+        <div class="card-title">Decisions</div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Outfit</strong> — headings, UI, navigation (weights 300–900). Google Fonts.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>DM Sans</strong> — body copy, inputs, supporting text (weights 300–500). Google Fonts.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>DM Mono</strong> — code, hex values, technical labels. Google Fonts.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">On hold</span><span class="decision-text"><strong>Space Grotesk</strong> — explored, strong 70s energy, preferred by some reviewers. Not dismissed.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">On hold</span><span class="decision-text"><strong>Saol Text + Maax</strong> — Neo-Naturalism direction. Paid fonts. On hold pending direction lock.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">On hold</span><span class="decision-text"><strong>Domaine Display + Circular Std</strong> — Quiet Luxury direction. Paid fonts. On hold.</span></div>
+      </div>
+
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 900 — Hero headline</div>
+        <div class="specimen-outfit-900">The heartbeat<br>of outreach.</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 900 — Gradient text</div>
+        <div class="grad-text-specimen">Stay consistent.</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 800 — Section headline</div>
+        <div class="specimen-outfit-800">Most outreach systems are built wrong.</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 700 — Card title / Sub-heading</div>
+        <div class="specimen-outfit-700">Import and review</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 700 — Section eyebrow label</div>
+        <div class="specimen-label-text">Design Philosophy</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">OUTFIT 500 — Navigation / UI labels</div>
+        <div class="specimen-outfit-500">How it works · Features · Pricing · Request access</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">DM SANS 400 — Body copy</div>
+        <div class="specimen-dmsans">For people who win work through conversations. A calmer system for staying consistent — so the right people hear from you, every time. Not a CRM. Not a cold-email blaster.</div>
+      </div>
+      <div class="type-specimen">
+        <div class="specimen-label">DM MONO 400 — Code / technical</div>
+        <div class="specimen-dmmono">--grad: linear-gradient(135deg, #ff1493, #00d4ff);</div>
+      </div>
+
+      <div class="rule"></div>
+
+      <div class="card">
+        <div class="card-title">Type Scale</div>
+        <table>
+          <tr><th>Role</th><th>Font</th><th>Weight</th><th>Size</th><th>Letter-spacing</th></tr>
+          <tr><td>Hero headline</td><td>Outfit</td><td>900</td><td>clamp(48px, 7vw, 88px)</td><td>-0.04em</td></tr>
+          <tr><td>Section headline</td><td>Outfit</td><td>800</td><td>clamp(32px, 4vw, 52px)</td><td>-0.03em</td></tr>
+          <tr><td>Card title</td><td>Outfit</td><td>700</td><td>16–20px</td><td>-0.02em</td></tr>
+          <tr><td>Section eyebrow</td><td>Outfit</td><td>700</td><td>10–11px</td><td>0.14em (uppercase)</td></tr>
+          <tr><td>Nav / UI labels</td><td>Outfit</td><td>500–600</td><td>13px</td><td>0.01–0.02em</td></tr>
+          <tr><td>Logo</td><td>Outfit</td><td>800</td><td>20–22px</td><td>-0.03em</td></tr>
+          <tr><td>Body copy</td><td>DM Sans</td><td>300–400</td><td>15–18px</td><td>0</td></tr>
+          <tr><td>Supporting text</td><td>DM Sans</td><td>400</td><td>13–14px</td><td>0</td></tr>
+          <tr><td>Code / hex values</td><td>DM Mono</td><td>400</td><td>11–13px</td><td>0</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- UI ELEMENTS -->
+    <section class="section" id="ui-elements">
+      <div class="section-eyebrow">Components</div>
+      <div class="section-title">Buttons & Tags</div>
+
+      <div class="ui-demo">
+        <div class="ui-demo-label">BUTTONS</div>
+        <div class="btn-row">
+          <button class="btn-primary">Request access →</button>
+          <button class="btn-ghost">See how it works</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Button Rules</div>
+        <table>
+          <tr><th>Property</th><th>Primary (.btn-primary)</th><th>Ghost (.btn-ghost)</th></tr>
+          <tr><td>Background</td><td>var(--grad)</td><td>transparent</td></tr>
+          <tr><td>Border</td><td>none</td><td>1px solid var(--b2)</td></tr>
+          <tr><td>Radius</td><td>100px (pill)</td><td>100px (pill)</td></tr>
+          <tr><td>Font</td><td>Outfit 700</td><td>Outfit 500</td></tr>
+          <tr><td>Box shadow</td><td>0 0 32–40px var(--glow-pink)</td><td>none</td></tr>
+          <tr><td>Hover lift</td><td colspan="2">None — translateY explicitly removed</td></tr>
+          <tr><td>Hover effect</td><td colspan="2">Ink drop bloom + pulse ring (see Motion)</td></tr>
+          <tr><td>Active</td><td colspan="2">scale(0.97)</td></tr>
+          <tr><td>Locked state</td><td colspan="2">35% opacity</td></tr>
+        </table>
+      </div>
+
+      <div class="ui-demo" style="margin-top:16px;">
+        <div class="ui-demo-label">PILLS & TAGS</div>
+        <div class="btn-row">
+          <span class="pill pill-pink">Pro</span>
+          <span class="pill pill-cyan">Beta</span>
+          <span class="pill pill-green">Free</span>
+          <span class="pill pill-amber">Follow-up due</span>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:16px;">
+        <div class="card-title">Colour Semantics</div>
+        <table>
+          <tr><th>Colour</th><th>Semantic meaning</th><th>Usage</th></tr>
+          <tr><td>--pink</td><td>Primary / Pro tier / urgency</td><td>Pro tags, scan flare, primary CTA glow</td></tr>
+          <tr><td>--cyan</td><td>Secondary / info / replies</td><td>Beta badge, hero badge, new reply flash, section eyebrow</td></tr>
+          <tr><td>--green</td><td>Success / Free tier</td><td>Free tags, success states</td></tr>
+          <tr><td>--amber</td><td>Urgency / follow-up due</td><td>Follow-up cards, amber pulse animation, alert states</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- CARDS -->
+    <section class="section" id="cards">
+      <div class="section-eyebrow">Components</div>
+      <div class="section-title">Cards & Bento Grid</div>
+      <p class="section-body">Cards use a frosted glass treatment — dark semi-transparent background, subtle border, backdrop blur. The bento grid is a 12-column layout used in the features section.</p>
+
+      <div class="bento-demo">
+        <div class="bento-card featured">
+          <div class="bento-icon pink">
+            <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 4h14M2 9h10M2 14h7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="bento-title">Always know who needs a reply</div>
+          <div class="bento-body">Follow-ups surface automatically when they're due. The queue is always prioritised — you just work through it.</div>
+        </div>
+        <div class="bento-card">
+          <div class="bento-stat">100%</div>
+          <div class="bento-stat-label">Your data, your account. We don't share it, sell it, or use it to train anything.</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Card Anatomy</div>
+        <table>
+          <tr><th>Property</th><th>Value</th></tr>
+          <tr><td>Background</td><td>rgba(13,9,20,0.35) + backdrop-filter: blur(20px)</td></tr>
+          <tr><td>Border</td><td>1px solid var(--b) · hover: var(--b2)</td></tr>
+          <tr><td>Border radius</td><td>16–18px</td></tr>
+          <tr><td>Top edge highlight</td><td>::after pseudo — 1px gradient, 8% white, transparent to centre</td></tr>
+          <tr><td>Featured card</td><td>border-color: rgba(255,20,147,0.2) · bg: rgba(255,20,147,0.06)</td></tr>
+          <tr><td>Hover</td><td>border strengthens · box-shadow: 0 8px 32px rgba(0,0,0,0.3)</td></tr>
+          <tr><td>Top gradient accent (on hover)</td><td>Step cards: ::after opacity 0→1, background: var(--grad), height 2px</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- NAV -->
+    <section class="section" id="nav">
+      <div class="section-eyebrow">Components</div>
+      <div class="section-title">Navigation</div>
+
+      <div class="nav-demo">
+        <div style="display:flex; align-items:center; gap:32px;">
+          <div class="nav-logo-demo">Pulse<span>.</span></div>
+          <div style="display:flex; gap:20px;">
+            <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:500; color:var(--tm);">How it works</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:500; color:var(--tm);">Features</span>
+            <span style="font-family:'Outfit',sans-serif; font-size:13px; font-weight:500; color:var(--tm);">Pricing</span>
+          </div>
+        </div>
+        <a class="btn-primary" style="padding:9px 20px; font-size:13px;">Start free →</a>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Nav Spec</div>
+        <table>
+          <tr><th>Property</th><th>Value</th></tr>
+          <tr><td>Position</td><td>fixed, top 0, full width</td></tr>
+          <tr><td>Background</td><td>rgba(13,9,20,0.7) + backdrop-filter: blur(20px)</td></tr>
+          <tr><td>Border</td><td>border-bottom: 1px solid var(--b)</td></tr>
+          <tr><td>Height</td><td>~60px (padding 20px 40px)</td></tr>
+          <tr><td>Links</td><td>Outfit 500, 13px, var(--tm) → var(--t) on hover</td></tr>
+          <tr><td>CTA</td><td>.nav-cta — gradient bg, pill shape, glow shadow</td></tr>
+          <tr><td>z-index</td><td>100</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- MOTION PRINCIPLES -->
+    <section class="section" id="motion-principles">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Motion Principles</div>
+      <p class="section-body">Motion carries emotional weight. Every animation is intentional, not decorative. The heartbeat is the master rhythm — everything breathes in sync with it or a harmonic.</p>
+
+      <div class="card">
+        <div class="decision-row"><span class="decision-badge badge-locked">Principle 1</span><span class="decision-text"><strong>The product breathes.</strong> The 8-second heartbeat cycle is the master rhythm. Nothing should feel static or frozen.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Principle 2</span><span class="decision-text"><strong>Invisible mechanics, visible life.</strong> The scan line is invisible. The effect is felt through cards responding to it — not through seeing the line.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Principle 3</span><span class="decision-text"><strong>Ambient not distracting.</strong> All motion is background. It should register as "something feels alive" not "something is moving". When in doubt, reduce opacity and slow the timing.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Principle 4</span><span class="decision-text"><strong>Functional motion.</strong> Amber pulse on follow-up cards. Cyan flash on new replies. Motion carries meaning — not just decoration.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Principle 5</span><span class="decision-text"><strong>Consistent timing.</strong> New animations reference CYCLE_MS or its harmonics (4s, 2.5s). No ad-hoc durations.</span></div>
+      </div>
+    </section>
+
+    <!-- MOTION TOKENS -->
+    <section class="section" id="motion-tokens">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Timing Tokens</div>
+
+      <div class="motion-grid">
+        <div class="motion-card"><div class="motion-name">instant</div><div class="motion-value">0ms</div><div class="motion-desc">State flags, boolean toggles</div></div>
+        <div class="motion-card"><div class="motion-name">quick</div><div class="motion-value">120ms</div><div class="motion-desc">Hover bg, border colour, pill state shifts</div></div>
+        <div class="motion-card"><div class="motion-name">standard</div><div class="motion-value">200ms</div><div class="motion-desc">Default UI transitions. Drawers, dropdowns</div></div>
+        <div class="motion-card"><div class="motion-name">deliberate</div><div class="motion-value">350ms</div><div class="motion-desc">Progress indicators, step advancement</div></div>
+        <div class="motion-card"><div class="motion-name">exit / collapse</div><div class="motion-value">400–500ms</div><div class="motion-desc">Row fade-and-collapse after send</div></div>
+        <div class="motion-card"><div class="motion-name">milestone reveal</div><div class="motion-value">400ms</div><div class="motion-desc">scale(0.96→1) + opacity. 300ms stagger</div></div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Easing</div>
+        <table>
+          <tr><th>Type</th><th>Value</th></tr>
+          <tr><td>Enter (spring)</td><td>cubic-bezier(0.22, 0.68, 0, 1.2)</td></tr>
+          <tr><td>Exit</td><td>ease-in</td></tr>
+          <tr><td>Ink drop bloom</td><td>cubic ease-out: 1 - (1-t)³</td></tr>
+          <tr><td>Pulse ring</td><td>cubic-bezier(0.2, 0.6, 0.3, 1)</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- HEARTBEAT CANVAS -->
+    <section class="section" id="heartbeat">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Heartbeat Canvas & Orb Blobs</div>
+      <p class="section-body">Two layered ambient systems. The CSS orbs are large, slow-moving blurred circles at fixed positions. The heartbeat canvas is a Canvas 2D layer with multiple smaller blobs that pulse in a cardiac curve rhythm.</p>
+
+      <div class="blob-demo">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+        <div style="position:absolute; bottom:12px; left:16px; font-family:'DM Mono',monospace; font-size:10px; color:var(--td);">CSS orb blobs — live demo</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Electric6 Canonical Values (Beta Page)</div>
+        <table>
+          <tr><th>Parameter</th><th>Value</th><th>Notes</th></tr>
+          <tr><td>BLOB_COUNT</td><td>9</td><td>Canvas blobs</td></tr>
+          <tr><td>RADIUS_MIN / MAX</td><td>110px / 240px</td><td></td></tr>
+          <tr><td>CYCLE_MS</td><td>8000ms</td><td>Calmer than original 5s</td></tr>
+          <tr><td>PULSE_SWELL</td><td>0.22</td><td>Noticeable but soft</td></tr>
+          <tr><td>OPACITY_BASE</td><td>0.10</td><td></td></tr>
+          <tr><td>OPACITY_FLARE</td><td>0.14</td><td></td></tr>
+          <tr><td>BLUR_PX</td><td>55px</td><td>Canvas blur</td></tr>
+          <tr><td>CSS orb opacity</td><td>0.07–0.08</td><td></td></tr>
+          <tr><td>CSS orb blur</td><td>140px</td><td></td></tr>
+        </table>
+      </div>
+
+      <div class="callout cyan">
+        <strong>Dashboard canvas values:</strong> Port at lower intensity — OPACITY_BASE ~0.08, OPACITY_FLARE ~0.12 — so the heartbeat doesn't compete with data. See Dashboard Motion section.
+      </div>
+
+      <div class="card">
+        <div class="card-title">Canvas Blob Palette — Dark Mode</div>
+        <table>
+          <tr><th>Colour</th><th>RGB</th><th>Role</th></tr>
+          <tr><td>Pink × 2</td><td>255, 20, 147</td><td>Primary pulse</td></tr>
+          <tr><td>Cyan × 2</td><td>0, 212, 255</td><td>Secondary pulse</td></tr>
+          <tr><td>Deep pink</td><td>180, 10, 120</td><td>Depth</td></tr>
+          <tr><td>Slate</td><td>80, 160, 220</td><td>Cool contrast</td></tr>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">Canvas Blob Palette — Light Mode</div>
+        <table>
+          <tr><th>Colour</th><th>RGB</th><th>Role</th></tr>
+          <tr><td>Plum × 2</td><td>160, 0, 90</td><td>Primary pulse</td></tr>
+          <tr><td>Teal × 2</td><td>0, 100, 130</td><td>Secondary pulse</td></tr>
+          <tr><td>Deep plum</td><td>120, 20, 100</td><td>Depth</td></tr>
+          <tr><td>Slate</td><td>80, 120, 160</td><td>Cool contrast</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- SCAN EFFECT -->
+    <section class="section" id="scan">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Scan Effect</div>
+      <p class="section-body">An invisible scan line travels bottom→top over exactly CYCLE_MS. When it passes within 60px of a scannable element's centre, that element's border briefly flares. The line itself is never visible — only the response is.</p>
+
+      <div style="margin-bottom: 20px;">
+        <div class="scan-card lit-pink" id="scan-demo-1">Scan-lit pink — border-color rgba(255,20,147,0.35) · box-shadow 10px glow</div>
+        <div class="scan-card lit-cyan" id="scan-demo-2">Scan-lit cyan — border-color rgba(0,212,255,0.35) · box-shadow 10px glow</div>
+        <div class="scan-card" id="scan-demo-3">Resting state — 1px solid var(--b)</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Scan Spec — Electric6 Canonical</div>
+        <table>
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>Scan direction</td><td>bottom → top</td></tr>
+          <tr><td>Period</td><td>CYCLE_MS (8000ms) — synced to heartbeat</td></tr>
+          <tr><td>Trigger distance</td><td>60px from element centre</td></tr>
+          <tr><td>Cooldown</td><td>4.5s — prevents re-firing in same cycle</td></tr>
+          <tr><td>LIT_MS</td><td>280ms — border at full brightness</td></tr>
+          <tr><td>FADE_MS</td><td>1400ms — long slow return to resting</td></tr>
+          <tr><td>Border opacity</td><td>0.35</td></tr>
+          <tr><td>Glow spread</td><td>10px</td></tr>
+          <tr><td>Pink scan</td><td>rgba(255,20,147,0.35) border · rgba(255,20,147,0.10) shadow</td></tr>
+          <tr><td>Cyan scan</td><td>rgba(0,212,255,0.35) border · rgba(0,212,255,0.10) shadow</td></tr>
+          <tr><td>CSS classes</td><td>.scan-lit-pink · .scan-lit-cyan · .scan-fade</td></tr>
+          <tr><td>Scannable elements</td><td>data-scan="pink|cyan" attribute</td></tr>
+        </table>
+      </div>
+
+      <div class="callout amber">
+        <strong>Rejected approach:</strong> Velocity-linked scan (electric3.html) compresses all motion into the beat spike, causing boxes at the same scroll depth to fire simultaneously. Linear sweep is canonical — do not revisit.
+      </div>
+    </section>
+
+    <!-- BUTTON INTERACTIONS -->
+    <section class="section" id="button-interaction">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Button Interaction System</div>
+      <p class="section-body">All primary CTA buttons share the same hover interaction. Two effects fire simultaneously on mouseenter — both are one-shot and don't repeat until the cursor leaves and re-enters.</p>
+
+      <div class="card">
+        <div class="card-title">Effect 1 — Ink Drop Bloom</div>
+        <p style="font-size:14px; color:var(--tm); margin-bottom:14px;">A radial light bloom from the exact cursor entry point, expanding and fading like ink dispersing in water. Canvas 2D overlay appended to each button.</p>
+        <table>
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>DURATION</td><td>1800ms</td></tr>
+          <tr><td>MAX_SCALE</td><td>2.8× button diagonal</td></tr>
+          <tr><td>PEAK_AT</td><td>0.08 (opacity peaks at 8% of duration)</td></tr>
+          <tr><td>Easing</td><td>cubic ease-out: 1 - (1-t)³</td></tr>
+          <tr><td>Peak opacity</td><td>0.22 — subtle internal bloom only</td></tr>
+          <tr><td>Origin</td><td>Exact cursor entry pixel — origin-aware</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Effect 2 — Pulse Ring</div>
+        <p style="font-size:14px; color:var(--tm); margin-bottom:14px;">A ring expands from the button border outward and dissolves. Lives on a wrapper div outside overflow:hidden so it scales beyond the button edge.</p>
+        <table>
+          <tr><th>Parameter</th><th>Value</th></tr>
+          <tr><td>Scale</td><td>1.0 → 1.48</td></tr>
+          <tr><td>Peak opacity</td><td>0.44</td></tr>
+          <tr><td>Duration</td><td>1.2s</td></tr>
+          <tr><td>Easing</td><td>cubic-bezier(0.2, 0.6, 0.3, 1)</td></tr>
+          <tr><td>Border</td><td>1.5px solid rgba(255,255,255,0.55)</td></tr>
+          <tr><td>HTML structure</td><td>&lt;div class="btn-ring-wrap"&gt; wrapping the button</td></tr>
+        </table>
+      </div>
+
+      <div class="callout">
+        <strong>Locked:</strong> No hover lift — translateY is explicitly removed from all button hover states. The button stays physically still. Effects respond, not the element. One-shot per hover.
+      </div>
+      <div class="callout amber">
+        <strong>Deferred:</strong> Pixel-displacement radial warp (distorting button shape/text as the ring travels) was explored. Not achievable at quality without WebGL/shader pipeline. Revisit when building the main app.
+      </div>
+    </section>
+
+    <!-- DASHBOARD MOTION -->
+    <section class="section" id="dashboard-motion">
+      <div class="section-eyebrow">Motion</div>
+      <div class="section-title">Dashboard Motion</div>
+      <p class="section-body">The dashboard inherits the full motion system but at reduced intensity — motion should never compete with data. The seven named interaction patterns cover all key UI moments.</p>
+
+      <div class="card">
+        <div class="card-title">Seven Named Interaction Patterns</div>
+        <table>
+          <tr><th>#</th><th>Pattern</th><th>Description</th></tr>
+          <tr><td>1</td><td>Send row</td><td>Fade to 40% opacity + 5px X offset → collapse to height 0. Toast fires in parallel.</td></tr>
+          <tr><td>2</td><td>Toast confirmation</td><td>Spring entrance. Shows recipient email address — not generic "sent!" copy. Auto-dismisses 4s.</td></tr>
+          <tr><td>3</td><td>Button states</td><td>Hover: 120ms bg. Active: scale(0.97). Locked: 35% opacity.</td></tr>
+          <tr><td>4</td><td>Progress step</td><td>Line fills 500ms. Dot transitions stagger 100ms offset.</td></tr>
+          <tr><td>5</td><td>Momentum prompt</td><td>Slides up 6px + fade in 300ms. Left-border accent. Auto-expires 10s.</td></tr>
+          <tr><td>6</td><td>Milestone reveal</td><td>scale(0.96→1) + opacity, 400ms. 300ms stagger per card. No confetti.</td></tr>
+          <tr><td>7</td><td>Inline field error</td><td>Error border + message beneath field. Never a toast. No system error codes.</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Dashboard-Specific Animations (Backlog)</div>
+        <table>
+          <tr><th>ID</th><th>Effect</th><th>Priority</th></tr>
+          <tr><td>M1</td><td>Heartbeat canvas (dashboard) — OPACITY_BASE ~0.08, OPACITY_FLARE ~0.12</td><td>High</td></tr>
+          <tr><td>M2</td><td>Motion token CSS vars — --anim-cycle, --anim-lit, --anim-fade</td><td>High</td></tr>
+          <tr><td>D1</td><td>Card border scan — pink for active campaigns, amber for follow-ups due</td><td>High</td></tr>
+          <tr><td>D2</td><td>Follow-up amber pulse — persistent 2.5s cycle on cards with pending follow-ups</td><td>Medium</td></tr>
+          <tr><td>D3</td><td>New reply cyan flash — one-shot on page load for unread replies</td><td>Medium</td></tr>
+          <tr><td>V1</td><td>Tab active flash — 150ms pink underline flare on tab switch</td><td>Medium</td></tr>
+          <tr><td>V2</td><td>Prospect drawer reveal — scan-style border flash on left edge as drawer opens</td><td>Medium</td></tr>
+          <tr><td>M3</td><td>Scan on sidebar icons — brief pink glow as scan passes</td><td>Low</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- LOCKED DECISIONS -->
+    <section class="section" id="locked-decisions">
+      <div class="section-eyebrow">Decisions</div>
+      <div class="section-title">Locked Decisions</div>
+
+      <div class="card">
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Design direction:</strong> Electric Dreams. All other directions on hold.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Fonts:</strong> Outfit (headings/UI) + DM Sans (body) + DM Mono (code).</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Dark mode default.</strong> Light mode available as user preference (Phase 2.19+).</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Button hover:</strong> Ink drop bloom + pulse ring. No translateY lift.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Scan mechanic:</strong> Linear sweep (electric6). Velocity-linked scan rejected and closed.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Logo:</strong> "Pulse" white + "." in gradient. Outfit 800. Dot is part of brand identity.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Tagline:</strong> "The heartbeat of outreach."</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>No celebration bloat:</strong> Confetti, streaks, gamification points — permanently excluded.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Light mode thread:</strong> #faf8ff background shares the purple family with #0d0914. Same product in different light.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-locked">Locked</span><span class="decision-text"><strong>Particle trail (electric4):</strong> Explored. Too busy alongside scan. Dropped from canonical. Closed.</span></div>
+      </div>
+    </section>
+
+    <!-- DEFERRED -->
+    <section class="section" id="deferred">
+      <div class="section-eyebrow">Decisions</div>
+      <div class="section-title">Deferred — Not Dismissed</div>
+
+      <div class="card">
+        <div class="decision-row"><span class="decision-badge badge-deferred">Deferred</span><span class="decision-text"><strong>Button warp effect:</strong> Pixel-displacement warp as pulse ring travels. Needs WebGL/shader pipeline. Revisit in main app.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">Deferred</span><span class="decision-text"><strong>Quiet Luxury direction:</strong> Domaine Display + Circular Std. Paid fonts. On hold.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">Deferred</span><span class="decision-text"><strong>Neo-Naturalism direction:</strong> Saol Text + Maax. Paid fonts. On hold.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">Deferred</span><span class="decision-text"><strong>Space Grotesk:</strong> Explored for headings. Strong 70s editorial energy. Not dismissed — worth revisiting if direction shifts.</span></div>
+        <div class="decision-row"><span class="decision-badge badge-deferred">Deferred</span><span class="decision-text"><strong>Form field scan (B2):</strong> Input fields in the access section getting individual border flares as scan passes.</span></div>
+      </div>
+    </section>
+
+    <!-- BRAND PERSONALISATION -->
+    <section class="section" id="brand-personalisation">
+      <div class="section-eyebrow">Planned Feature</div>
+      <div class="section-title">Brand Personalisation</div>
+      <p class="section-body">Users will be able to personalise the visual appearance of their Pulse. dashboard — gradient colours and background — so the tool feels like theirs. Free tier feature, deliberately. Personalised workspaces drive stickiness.</p>
+
+      <div class="callout cyan">
+        <strong>Prototype live:</strong> <a href="https://corisleachman.github.io/outreach-dashboard/branding/brand-explorer.html" style="color:var(--cyan);">brand-explorer.html</a> — full marketing site with live colour pickers, gradient generator, and background colour switcher. This is the design reference for the Settings UI.
+      </div>
+
+      <div class="card">
+        <div class="card-title">What's Configurable</div>
+        <table>
+          <tr><th>Token</th><th>Description</th><th>CSS Variable</th></tr>
+          <tr><td>Gradient start</td><td>First colour in primary gradient</td><td>--pink / --grad</td></tr>
+          <tr><td>Gradient end</td><td>Second colour in primary gradient</td><td>--cyan / --grad</td></tr>
+          <tr><td>Background</td><td>Page and surface background</td><td>--bg</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Implementation Notes</div>
+        <table>
+          <tr><th>Item</th><th>Detail</th></tr>
+          <tr><td>Storage</td><td>theme_config JSONB on users table</td></tr>
+          <tr><td>Schema</td><td>{ gradient_start, gradient_end, bg }</td></tr>
+          <tr><td>Application</td><td>CSS custom property overrides on :root at session load</td></tr>
+          <tr><td>Save method</td><td>PATCH on change, debounced 800ms, optimistic</td></tr>
+          <tr><td>Tier</td><td>Free — drives stickiness, low churn</td></tr>
+          <tr><td>Location</td><td>Settings → Appearance (alongside voice pack selector)</td></tr>
+          <tr><td>Presets</td><td>6–8 named themes + freeform pickers</td></tr>
+          <tr><td>Roadmap</td><td>Layer 5 / product personalisation phase</td></tr>
+        </table>
+      </div>
+    </section>
+
+    <!-- FILE INDEX -->
+    <section class="section" id="files">
+      <div class="section-eyebrow">Reference</div>
+      <div class="section-title">File Index</div>
+
+      <div class="card">
+        <div class="card-title">Beta Page Files (corisleachman/beta-invite)</div>
+        <table>
+          <tr><th>File</th><th>Description</th><th>Status</th></tr>
+          <tr><td>index.html</td><td>Live beta page — canonical production file</td><td><span class="pill pill-green" style="font-size:9px;">Live</span></td></tr>
+          <tr><td>electric6.html</td><td>Canonical approved version — basis for index.html</td><td><span class="pill pill-pink" style="font-size:9px;">Reference</span></td></tr>
+          <tr><td>electric-light.html</td><td>Light mode canonical version</td><td><span class="pill pill-pink" style="font-size:9px;">Reference</span></td></tr>
+          <tr><td>electric.html</td><td>Heartbeat only — no scan</td><td><span class="pill pill-amber" style="font-size:9px;">Archive</span></td></tr>
+          <tr><td>electric2.html</td><td>Heartbeat + scan — superseded by electric6</td><td><span class="pill pill-amber" style="font-size:9px;">Archive</span></td></tr>
+          <tr><td>electric3.html</td><td>Velocity-linked scan — rejected</td><td><span class="pill pill-amber" style="font-size:9px;">Closed</span></td></tr>
+          <tr><td>electric4.html</td><td>Particles — too intense, reference only</td><td><span class="pill pill-amber" style="font-size:9px;">Archive</span></td></tr>
+          <tr><td>pulse-variants.html</td><td>Headline variant A/B/C/D explorer</td><td><span class="pill pill-pink" style="font-size:9px;">Reference</span></td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Dashboard & Branding Files (corisleachman/outreach-dashboard)</div>
+        <table>
+          <tr><th>File</th><th>Description</th></tr>
+          <tr><td>MOTION-SYSTEM.md</td><td>Canonical motion system documentation</td></tr>
+          <tr><td>MARKETING-SITE-HANDOFF.md</td><td>Marketing site context and decisions</td></tr>
+          <tr><td>WIREFRAME-DECISIONS.md</td><td>UX and structural decisions (supplements locked specs)</td></tr>
+          <tr><td>exploration/00-brand-guidelines.html</td><td>This document</td></tr>
+          <tr><td>branding/brand-explorer.html</td><td>Interactive brand colour explorer / prototype</td></tr>
+          <tr><td>wireframes/campaign-view-v3.html</td><td>Canonical campaign view wireframe</td></tr>
+          <tr><td>wireframes/outreach-wizard-v3.html</td><td>Activation wizard wireframe</td></tr>
+          <tr><td>wireframes/dashboard-home.html</td><td>Dashboard home wireframe</td></tr>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Locked Spec Files (corisleachman/outreach-app /docs)</div>
+        <table>
+          <tr><th>File</th><th>Phase</th></tr>
+          <tr><td>sequence-builder-spec.md + engineering.md</td><td>Phase 2.9</td></tr>
+          <tr><td>activation-loop-spec.md + engineering.md</td><td>Phase 2.10</td></tr>
+          <tr><td>personality-packs-spec.md + engineering.md</td><td>Phase 2.11</td></tr>
+          <tr><td>ux-microcopy-system-spec.md + engineering.md</td><td>Phase 2.12</td></tr>
+          <tr><td>emotional-design-system-spec.md + engineering.md</td><td>Phase 2.13</td></tr>
+          <tr><td>FEATURE-BRAND-PERSONALISATION.md</td><td>Layer 5 (unspecced)</td></tr>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('section[id], div[id]');
+const links = document.querySelectorAll('.sidebar-link');
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      links.forEach(l => l.classList.remove('active'));
+      const active = document.querySelector(`.sidebar-link[href="#${entry.target.id}"]`);
+      if (active) active.classList.add('active');
+    }
+  });
+}, { rootMargin: '-20% 0px -70% 0px' });
+
+sections.forEach(s => observer.observe(s));
+
+// Animate scan demo cards
+function animateScanDemo() {
+  const cards = document.querySelectorAll('.scan-card');
+  let i = 0;
+  setInterval(() => {
+    cards.forEach(c => { c.classList.remove('lit-pink', 'lit-cyan'); });
+    if (i % 3 === 0) cards[0] && cards[0].classList.add('lit-pink');
+    else if (i % 3 === 1) cards[1] && cards[1].classList.add('lit-cyan');
+    i++;
+  }, 2000);
+}
+animateScanDemo();
+</script>
 
 </body>
 </html>
-
