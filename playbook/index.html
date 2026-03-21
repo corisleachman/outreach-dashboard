@@ -87,21 +87,29 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 20px 40px;
+  padding: 16px 40px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 30px;
   background: rgba(13,9,20,0.7);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--b);
+  flex-wrap: wrap;
+}
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 30px;
 }
 .nav-logo {
   font-family: 'Outfit', sans-serif;
-  font-size: 22px;
+  font-size: 20px;
   font-weight: 800;
   color: var(--t);
   text-decoration: none;
   letter-spacing: -0.03em;
+  white-space: nowrap;
 }
 .nav-logo span {
   background: var(--grad-text);
@@ -109,18 +117,51 @@ nav {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.nav-tabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.nav-tab-button {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid var(--b);
+  color: var(--tm);
+  font-size: 12px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+.nav-tab-button:hover {
+  border-color: var(--pink);
+  color: var(--t);
+}
+.nav-tab-button.active {
+  background: var(--grad);
+  border-color: var(--pink);
+  color: white;
+}
 
 /* ── MAIN CONTENT ── */
 main {
-  padding-top: 120px;
+  padding-top: 80px;
   padding-bottom: 80px;
 }
 
-/* ── HERO ── */
+/* ── HERO (vertically centered between nav and content) ── */
 .hero {
   text-align: center;
-  padding: 60px 0;
-  margin-bottom: 80px;
+  padding: 80px 0;
+  margin-bottom: 60px;
+  min-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 .hero h1 {
   font-family: 'Outfit', sans-serif;
@@ -144,39 +185,9 @@ main {
   line-height: 1.6;
 }
 
-/* ── TABS ── */
+/* ── TABS CONTAINER ── */
 .tabs-container {
-  margin-bottom: 60px;
-}
-.tab-buttons {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 40px;
-  flex-wrap: wrap;
-  border-bottom: 1px solid var(--b);
-  padding-bottom: 24px;
-}
-.tab-button {
-  padding: 12px 24px;
-  background: transparent;
-  border: 1px solid var(--b);
-  color: var(--tm);
-  font-size: 14px;
-  font-weight: 500;
-  font-family: 'DM Sans', sans-serif;
-  cursor: pointer;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-}
-.tab-button:hover {
-  border-color: var(--pink);
-  color: var(--t);
-}
-.tab-button.active {
-  background: var(--grad);
-  border-color: var(--pink);
-  color: white;
+  margin-bottom: 0;
 }
 
 .tab-content {
@@ -372,9 +383,29 @@ footer {
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .container, .container-sm { padding: 0 20px; }
+  nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .nav-left {
+    width: 100%;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .nav-tabs {
+    width: 100%;
+    gap: 6px;
+  }
+  .nav-tab-button {
+    padding: 6px 10px;
+    font-size: 11px;
+  }
   .hero h1 { font-size: 36px; }
-  .tab-buttons { flex-direction: column; }
-  .tab-button { width: 100%; }
+  .hero {
+    padding: 40px 0;
+    min-height: auto;
+  }
   .card { padding: 20px; }
 }
 </style>
@@ -388,8 +419,20 @@ footer {
 </div>
 
 <nav>
-  <a href="#" class="nav-logo">Pulse<span>.</span></a>
-  <div style="font-size: 12px; color: var(--tm);">Channel Activation Playbook</div>
+  <div class="nav-left">
+    <a href="#" class="nav-logo">Pulse<span>.</span></a>
+    <div class="nav-tabs">
+      <button class="nav-tab-button active" onclick="switchTab('checklist')">✓ List</button>
+      <button class="nav-tab-button" onclick="switchTab('overview')">Overview</button>
+      <button class="nav-tab-button" onclick="switchTab('linkedin')">LinkedIn</button>
+      <button class="nav-tab-button" onclick="switchTab('email')">Email</button>
+      <button class="nav-tab-button" onclick="switchTab('tiktok')">TikTok</button>
+      <button class="nav-tab-button" onclick="switchTab('content')">Content</button>
+      <button class="nav-tab-button" onclick="switchTab('referral')">Referral</button>
+      <button class="nav-tab-button" onclick="switchTab('tools')">Tools</button>
+      <button class="nav-tab-button" onclick="switchTab('claude')">Claude</button>
+    </div>
+  </div>
 </nav>
 
 <div class="wrap">
@@ -401,19 +444,6 @@ footer {
     </div>
 
     <div class="tabs-container">
-      
-      <!-- TAB BUTTONS -->
-      <div class="tab-buttons">
-        <button class="tab-button active" onclick="switchTab('checklist')">✓ Checklist</button>
-        <button class="tab-button" onclick="switchTab('overview')">Overview</button>
-        <button class="tab-button" onclick="switchTab('linkedin')">LinkedIn</button>
-        <button class="tab-button" onclick="switchTab('email')">Cold Email</button>
-        <button class="tab-button" onclick="switchTab('tiktok')">TikTok</button>
-        <button class="tab-button" onclick="switchTab('content')">Content</button>
-        <button class="tab-button" onclick="switchTab('referral')">Referral</button>
-        <button class="tab-button" onclick="switchTab('tools')">Tool Stack</button>
-        <button class="tab-button" onclick="switchTab('claude')">Claude Automation</button>
-      </div>
 
       <!-- TAB CONTENT -->
 
