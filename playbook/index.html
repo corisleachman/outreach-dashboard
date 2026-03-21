@@ -3,10 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta property="og:title" content="outreach. — Channel Activation Playbook">
+<meta property="og:title" content="Pulse. — Channel Activation Playbook">
 <meta property="og:description" content="Detailed playbook for GTM activation: LinkedIn, Cold Email, TikTok, Content, and Referrals. With tool stack and Claude automation.">
 <meta property="og:type" content="website">
-<title>outreach. — Channel Activation Playbook</title>
+<title>Pulse. — Channel Activation Playbook</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
@@ -313,6 +313,62 @@ footer {
   font-size: 14px;
 }
 
+/* ── CHECKLIST STYLES ── */
+.checklist-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 16px;
+  background: var(--s2);
+  border: 1px solid var(--b);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.checklist-item:hover {
+  border-color: rgba(255,20,147,0.3);
+  background: rgba(255,20,147,0.02);
+}
+.checklist-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  min-width: 20px;
+  cursor: pointer;
+  margin-top: 2px;
+  accent-color: var(--pink);
+}
+.checklist-label {
+  flex: 1;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--t);
+  line-height: 1.5;
+}
+.checklist-item input[type="checkbox"]:checked ~ .checklist-label {
+  text-decoration: line-through;
+  color: var(--td);
+}
+.checklist-date {
+  font-size: 12px;
+  color: var(--tm);
+  min-width: 80px;
+  text-align: right;
+}
+.checklist-section {
+  margin-bottom: 40px;
+}
+.checklist-section h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 16px;
+  color: var(--t);
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--b);
+}
+
 /* ── RESPONSIVE ── */
 @media (max-width: 768px) {
   .container, .container-sm { padding: 0 20px; }
@@ -332,7 +388,7 @@ footer {
 </div>
 
 <nav>
-  <a href="#" class="nav-logo">outreach<span>.</span></a>
+  <a href="#" class="nav-logo">Pulse<span>.</span></a>
   <div style="font-size: 12px; color: var(--tm);">Channel Activation Playbook</div>
 </nav>
 
@@ -341,14 +397,15 @@ footer {
     
     <div class="hero">
       <h1>Channel Activation <span>Playbook</span></h1>
-      <p>Detailed execution plans for LinkedIn, Cold Email, TikTok, Content, and Referrals. With tool stack and Claude automation strategies.</p>
+      <p>Detailed execution plans for LinkedIn, Cold Email, TikTok, Content, and Referrals. With tool stack and Claude automation strategies. For Pulse.—your system for consistent cold outreach.</p>
     </div>
 
     <div class="tabs-container">
       
       <!-- TAB BUTTONS -->
       <div class="tab-buttons">
-        <button class="tab-button active" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-button active" onclick="switchTab('checklist')">✓ Checklist</button>
+        <button class="tab-button" onclick="switchTab('overview')">Overview</button>
         <button class="tab-button" onclick="switchTab('linkedin')">LinkedIn</button>
         <button class="tab-button" onclick="switchTab('email')">Cold Email</button>
         <button class="tab-button" onclick="switchTab('tiktok')">TikTok</button>
@@ -360,8 +417,258 @@ footer {
 
       <!-- TAB CONTENT -->
 
-      <!-- OVERVIEW TAB -->
-      <div id="overview" class="tab-content active">
+      <!-- CHECKLIST TAB -->
+      <div id="checklist" class="tab-content active">
+        <div class="section-header">
+          <h2>Execution Checklist</h2>
+          <p>Track your progress through each phase. Click to mark complete.</p>
+        </div>
+
+        <div class="checklist-section">
+          <h3>Phase 1: Soft Launch & Network Seeding (April–May 2026)</h3>
+          
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 1 (Apr): Finalize beta page & draft network email</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2 (Apr): Send network emails (20–50 people)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2 (Apr): Post on LinkedIn & join Slack communities</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2 (Apr): Create TikTok account & post intro video</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 3 (Apr): Review signups & activation rate (target ≥50%)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 3–4 (Apr): 1:1 calls with 3–5 early users for feedback</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 4 (Apr): Collect 2–3 testimonials; analyze cohort channel source</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">May: Send follow-up email to network; set up referral mechanism</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">End of May: Review Phase 1 results (20–30 signups, ≥50% activation)</span>
+          </label>
+        </div>
+
+        <div class="checklist-section">
+          <h3>Phase 2: LinkedIn Sales Nav + Dripify (June–August 2026)</h3>
+          
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 1 (Jun): Set up LinkedIn Sales Nav + create 3 saved searches</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 1–2 (Jun): Install & configure Dripify + create 3 campaigns</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2–4 (Jun): Start LinkedIn outreach (10–15 connection requests/day)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 3 (Jun): Enrich email list with Hunter.io; create cold email templates</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 4 (Jun): Send first cold email batch to warm Dripify connections</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">July–Aug: Scale LinkedIn + cold email (maintain 40–60 weekly outreach)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Weekly: Monitor Dripify metrics (acceptance rate, DM response, email conversion)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Monthly (Jul, Aug): A/B test email templates & subject lines</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">End of Aug: Review Phase 2 results (50–80 cumulative signups, 8–12/month from LinkedIn)</span>
+          </label>
+        </div>
+
+        <div class="checklist-section">
+          <h3>Phase 3: Content & Community (September–November 2026)</h3>
+          
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Sep: Plan blog content (8–12 article topics for Year 1)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Early Sep: Batch-record 20–30 TikTok videos (4–6 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Early Sep: Prepare ProductHunt launch (tagline, media assets)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Mid Sep: Post first TikTok videos (2–3/week, target 500 followers by end of month)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Late Sep: Launch ProductHunt (one-day push; expect 50–100 signups)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Late Sep: Create Indie Hackers launch thread; join community</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Oct: Publish 1st blog article; promote on LinkedIn + HackerNews</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Oct: Conduct 2–3 user interviews (30 min each) for feedback</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Nov: Publish 2nd blog article; ramp LinkedIn posts (1–2/week)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Nov: Plan paid ads strategy (calculate LTV, set CAC limits)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">End of Nov: Review Phase 3 results (40–60 new signups, TikTok at 1K+ followers)</span>
+          </label>
+        </div>
+
+        <div class="checklist-section">
+          <h3>Phase 4: Paid Ads & Acceleration (December 2026–March 2027)</h3>
+          
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Nov: Prepare paid ads (calculate CAC limits, create ad creative, write copy)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Dec Week 1: Launch LinkedIn Ads (£150/month)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Dec Week 2: Launch Google Search Ads (£100/month)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Dec Week 3–4: Monitor ad performance daily; pause underperformers; scale winners</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Jan–Mar: Continue organic channels (TikTok, LinkedIn posts, blog, Indie Hackers)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Monthly (Jan, Feb, Mar): Product releases (Phases 2.10, 2.11, 2.12)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Monthly (Jan, Feb, Mar): Send product update email to all users</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Quarterly (Jan, Apr): Cohort retention & conversion analysis</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">End of Mar: Review Year 1 results (250–350 signups, 20–35 paying customers)</span>
+          </label>
+        </div>
+
+        <div class="checklist-section">
+          <h3>Claude Automation Setup (April)</h3>
+          
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 1: Session 1 with Claude Code — List enrichment automations (2.5 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2: Session 2 — TikTok content generation (1.5 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 2: Session 3 — LinkedIn content automation (1.5 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 3: Session 4 — Campaign analytics + funnel tracking (3 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 4: Session 5 — Monthly reporting dashboard (2 hrs)</span>
+          </label>
+
+          <label class="checklist-item">
+            <input type="checkbox" onchange="localStorage.setItem(this.id, this.checked)">
+            <span class="checklist-label">Week 4: Test & document all automations (2.5 hrs)</span>
+          </label>
+        </div>
+
+        <p style="margin-top: 40px; text-align: center; color: var(--td); font-size: 14px;">
+          ✓ Your progress is saved locally in your browser. Check items off as you complete them.
+        </p>
+      </div>
+      <div id="overview" class="tab-content">
         <div class="section-header">
           <h2>Playbook Overview</h2>
           <p>Your go-to-market playbook: What to do each month, how long it takes, and what Claude automates.</p>
@@ -1504,6 +1811,19 @@ footer {
 </footer>
 
 <script>
+// Load checklist state from localStorage on page load
+window.addEventListener('load', function() {
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+  checkboxes.forEach((checkbox, index) => {
+    const id = 'checkbox-' + index;
+    checkbox.id = id;
+    const saved = localStorage.getItem(id);
+    if (saved === 'true') {
+      checkbox.checked = true;
+    }
+  });
+});
+
 function switchTab(tabName) {
   // Hide all tabs
   const tabs = document.querySelectorAll('.tab-content');
