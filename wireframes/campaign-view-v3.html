@@ -821,12 +821,13 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
 
     <!-- ═══ FOLLOW-UP ═══ -->
     <div id="tc-followup" class="tc">
-      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">14 prospects due for follow-up. Sequences pause automatically when they reply.</div>
+      <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">14 prospects due for follow-up. You can edit or send any one manually. Sequences pause automatically when they reply.</div>
       <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
       <div style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:8px;">Due today</div>
       <div class="card">
-        <div class="trow"><div class="tav a">JM</div><div class="tinfo"><div class="tname">James Mitchell</div><div class="tsub">Sent 5 days ago · No reply</div></div><div class="tright"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="toast('→','Opening follow-up composer','tc')">Follow up</button></div></div>
-        <div class="trow"><div class="tav a">MP</div><div class="tinfo"><div class="tname">Marcus Peters</div><div class="tsub">Sent 5 days ago · No reply</div></div><div class="tright"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="toast('→','Opening follow-up composer','tc')">Follow up</button></div></div>
+        <div class="trow"><div class="tav a">JM</div><div class="tinfo"><div class="tname">James Mitchell</div><div class="tsub">Sent 5 days ago · No reply</div></div><div class="tright"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="openFollowUpComposer('James Mitchell','james@northagency.com')">Follow up</button></div></div>
+        <div class="trow" style="cursor:pointer;" onclick="openFollowUpComposer('James Mitchell','james@northagency.com')"><div class="tav a">JM</div><div class="tinfo"><div class="tname">James Mitchell</div><div class="tsub">Sent 5 days ago · No reply</div></div><div class="tright"><span class="bdg bdg-a">Due today</span></div></div>
+        <div class="trow" style="cursor:pointer;" onclick="openFollowUpComposer('Marcus Peters','marcus@studio.com')"><div class="tav a">MP</div><div class="tinfo"><div class="tname">Marcus Peters</div><div class="tsub">Sent 5 days ago · No reply</div></div><div class="tright"><span class="bdg bdg-a">Due today</span><button class="btn bs bsm" onclick="event.stopPropagation();openFollowUpComposer('Marcus Peters','marcus@studio.com')">Follow up</button></div></div>
       </div>
       <div style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin:16px 0 8px;">Upcoming</div>
       <div class="card">
@@ -1268,5 +1269,47 @@ Coris</textarea>
 </div>
 
 <script src="campaign-view-v3.js"></script>
+
+<!-- ═══ FOLLOW-UP COMPOSER MODAL ═══ -->
+<div id="fu-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="if(event.target===this)closeFUModal()">
+  <div style="background:#0d0914;border:1px solid rgba(255,255,255,0.13);border-radius:20px;padding:28px 32px;width:520px;max-width:90vw;position:relative;">
+    <button onclick="closeFUModal()" style="position:absolute;top:16px;right:18px;background:none;border:none;color:var(--td);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    <div style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:4px;">Follow-up</div>
+    <div id="fu-name" style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.01em;margin-bottom:4px;"></div>
+    <div id="fu-email" style="font-size:12px;color:var(--td);margin-bottom:20px;"></div>
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Subject</div>
+    <input id="fu-subject" type="text" value="Re: Quick thought on your pipeline" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:14px;outline:none;">
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Message</div>
+    <textarea style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;height:140px;resize:vertical;outline:none;line-height:1.6;">Hi James,
+
+Just following up on my previous message. Would love to find 15 minutes to chat — happy to work around your schedule.
+
+Best,
+Coris</textarea>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;align-items:center;">
+      <button onclick="closeFUModal()" style="padding:9px 20px;background:transparent;border:1px solid rgba(255,255,255,0.13);border-radius:100px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="closeFUModal();showToast('✓','Follow-up sent to '+document.getElementById('fu-name').textContent)" style="padding:9px 24px;background:linear-gradient(135deg,#ff1493,#00d4ff);border:none;border-radius:100px;color:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 0 20px rgba(255,20,147,0.25);">Send follow-up →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openFollowUpComposer(name, email) {
+  const modal = document.getElementById('fu-modal');
+  document.getElementById('fu-name').textContent = name;
+  document.getElementById('fu-email').textContent = email;
+  modal.style.display = 'flex';
+}
+function closeFUModal() {
+  document.getElementById('fu-modal').style.display = 'none';
+}
+function showToast(icon, msg) {
+  // reuse existing toast if available, otherwise simple alert
+  if (typeof toast === 'function') {
+    toast(icon, msg, 'tc');
+  }
+}
+</script>
+
 </body>
 </html>
