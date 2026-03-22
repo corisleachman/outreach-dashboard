@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;overflow-x:hidden;}
+.orb{position:fixed;border-radius:50%;filter:blur(130px);pointer-events:none;z-index:0;}
+.o1{width:700px;height:700px;background:rgba(255,20,147,0.04);top:-200px;right:-100px;}
+.o2{width:500px;height:500px;background:rgba(0,212,255,0.03);bottom:-100px;left:0;}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-right:16px;flex-shrink:0;text-decoration:none;}
+.breadcrumb-current{color:var(--t);font-weight:500;font-size:13px;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;
+  padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;
+  color:rgba(255,255,255,0.45);position:relative;background:transparent;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.1);color:rgba(255,255,255,0.75);}
+.si.active{background:rgba(255,20,147,0.12);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{width:18px;height:18px;}
+
+/* MAIN */
+.main{margin-top:var(--th);margin-left:var(--sw);padding:32px 40px 80px;
+  position:relative;z-index:1;max-width:860px;}
+.page-title{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:4px;}
+.page-date{font-size:13px;color:var(--td);margin-bottom:28px;}
+
+/* TABS */
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--b);margin-bottom:32px;}
+.tab{padding:10px 20px;font-family:var(--of);font-size:13px;font-weight:600;
+  color:var(--td);cursor:pointer;border-bottom:2px solid transparent;
+  transition:all 0.2s;white-space:nowrap;background:none;
+  border-top:none;border-left:none;border-right:none;}
+.tab.active{color:var(--t);border-bottom-color:var(--pink);}
+.tab:hover:not(.active){color:var(--tm);}
+
+/* SECTION LABEL */
+.slabel{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:12px;}
+
+/* QUEUE */
+.queue{display:flex;flex-direction:column;gap:8px;margin-bottom:32px;}
+.qi{display:flex;align-items:center;gap:14px;padding:14px 18px;
+  background:var(--s);border:1px solid var(--b);border-radius:12px;
+  cursor:pointer;transition:all 0.15s;text-decoration:none;color:var(--t);}
+.qi:hover{background:var(--s2);border-color:var(--b2);transform:translateX(2px);}
+.qi.c{border-left:3px solid var(--cyan);padding-left:16px;}
+.qi.p{border-left:3px solid var(--pink);padding-left:16px;}
+.qi.a{border-left:3px solid var(--amber);padding-left:16px;}
+.qi.g{border-left:3px solid var(--green);padding-left:16px;}
+.qi-ico{width:36px;height:36px;border-radius:8px;display:flex;
+  align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.qi-ico.c{background:var(--cd);}
+.qi-ico.p{background:var(--pd);}
+.qi-ico.a{background:var(--ad);}
+.qi-ico.g{background:var(--gd);}
+.qi-body{flex:1;min-width:0;}
+.qi-title{font-size:14px;font-weight:500;margin-bottom:2px;}
+.qi-sub{font-size:12px;color:var(--td);}
+.qi-badge{font-family:var(--of);font-size:12px;font-weight:700;
+  padding:3px 10px;border-radius:100px;flex-shrink:0;}
+.qi-badge.c{background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.qi-badge.p{background:var(--pd);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.qi-badge.a{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.qi-badge.g{background:var(--gd);color:var(--green);border:1px solid rgba(100,220,120,0.2);}
+.qi-arrow{color:var(--td);font-size:14px;flex-shrink:0;}
+
+/* STATS */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:32px;}
+.stat{padding:16px 18px;background:var(--s);border:1px solid var(--b);border-radius:12px;}
+.stat-lbl{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:6px;}
+.stat-val{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;}
+.stat-sub{font-size:12px;color:var(--td);margin-top:3px;}
+
+/* ACTIVITY FEED */
+.feed{display:flex;flex-direction:column;gap:0;
+  background:var(--s);border:1px solid var(--b);border-radius:12px;
+  padding:4px 18px;margin-bottom:32px;}
+.feed-item{display:flex;align-items:flex-start;gap:12px;
+  padding:12px 0;border-bottom:1px solid var(--b);}
+.feed-item:last-child{border-bottom:none;}
+.feed-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.feed-dot.c{background:var(--cyan);}
+.feed-dot.p{background:var(--pink);}
+.feed-dot.g{background:var(--green);}
+.feed-dot.a{background:var(--amber);}
+.feed-text{font-size:14px;color:var(--t);line-height:1.4;}
+.feed-time{font-size:12px;color:var(--td);margin-top:2px;}
+
+/* WEEK STATS */
+.week-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+.wstat{padding:20px;background:var(--s);border:1px solid var(--b);border-radius:12px;}
+.wstat-lbl{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:8px;}
+.wstat-val{font-family:var(--of);font-size:32px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:4px;}
+.wstat-delta{font-size:12px;color:var(--td);}
+.wstat-delta.up{color:var(--green);}
+
+/* BAR CHART */
+.barchart{background:var(--s);border:1px solid var(--b);border-radius:12px;
+  padding:20px;margin-bottom:28px;}
+.barchart-title{font-family:var(--of);font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:16px;}
+.bars{display:flex;align-items:flex-end;gap:8px;height:80px;}
+.barcol{display:flex;flex-direction:column;align-items:center;gap:6px;flex:1;}
+.bar{width:100%;background:var(--pd);border-radius:4px 4px 0 0;min-height:4px;}
+.bar.today{background:var(--gr);}
+.bar-day{font-size:11px;color:var(--td);font-family:var(--of);font-weight:600;}
+.bar-day.today{color:var(--pink);}
+
+/* DONE STATE */
+.done{text-align:center;padding:48px 32px;
+  background:var(--s);border:1px solid var(--b);border-radius:16px;margin-bottom:32px;}
+.done-icon{font-size:40px;margin-bottom:16px;}
+.done-title{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:8px;}
+.done-sub{font-size:15px;color:var(--tm);line-height:1.6;max-width:360px;margin:0 auto;}
+
+/* ANNOTATIONS */
+.ann{margin-top:36px;padding:18px;background:rgba(0,212,255,0.04);
+  border:1px solid rgba(0,212,255,0.1);border-radius:12px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+.ann-item{display:flex;gap:10px;align-items:flex-start;
+  font-size:13px;color:var(--td);margin-bottom:7px;line-height:1.5;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  margin-top:6px;flex-shrink:0;}
+
+/* WF CONTROLS */
+.wfc{position:fixed;bottom:24px;right:24px;z-index:999;
+  display:flex;flex-direction:column;gap:6px;align-items:flex-end;}
+.wfc-label{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--td);
+  text-align:right;margin-bottom:2px;}
+.wfb{font-family:var(--of);font-size:12px;font-weight:600;
+  padding:7px 16px;border-radius:100px;border:1px solid var(--b2);
+  background:rgba(13,9,20,0.92);backdrop-filter:blur(12px);
+  color:var(--tm);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.wfb:hover{color:var(--t);border-color:rgba(255,255,255,0.2);}
+.wfb.active{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+</style>
+</head>
+<body>
+
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- Topbar -->
+<div class="topbar">
+  <a href="#" class="logo">Pulse.</a>
+  <span class="breadcrumb-current">Summary</span>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro trial · 18 days left</span>
+    <div class="av">CL</div>
+  </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <a href="dashboard-home.html" class="si" title="Campaigns">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <path d="M3 7h18M3 12h18M3 17h12"/>
+    </svg>
+  </a>
+  <a href="#" class="si active" title="Summary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <rect x="3" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="14" y="3" width="7" height="7" rx="1.5"/>
+      <rect x="3" y="14" width="7" height="7" rx="1.5"/>
+      <rect x="14" y="14" width="7" height="7" rx="1.5"/>
+    </svg>
+  </a>
+  <a href="settings-account.html" class="si" title="Settings" style="margin-top:auto;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+      <circle cx="12" cy="12" r="3"/>
+      <path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+    </svg>
+  </a>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="page-title">Good morning, Coris.</div>
+  <div class="page-date">Monday, 17 March 2026</div>
+
+  <div class="tab-row">
+    <button class="tab active" onclick="showTab('today',this)">Today</button>
+    <button class="tab" onclick="showTab('week',this)">This week</button>
+  </div>
+
+  <!-- ═══════════════════════════════
+       TODAY — ACTIVE (work waiting)
+  ═══════════════════════════════ -->
+  <div id="pane-today">
+
+    <div class="slabel">Needs your attention</div>
+    <div class="queue">
+      <a href="#" class="qi c">
+        <div class="qi-ico c">💬</div>
+        <div class="qi-body">
+          <div class="qi-title">2 replies received</div>
+          <div class="qi-sub">Sarah Mitchell · Dan Kim — replied overnight</div>
+        </div>
+        <span class="qi-badge c">New</span>
+        <span class="qi-arrow">→</span>
+      </a>
+      <a href="#" class="qi p">
+        <div class="qi-ico p">📋</div>
+        <div class="qi-body">
+          <div class="qi-title">4 follow-ups due today</div>
+          <div class="qi-sub">Agency founders Q1 · Fractional CFO Q1</div>
+        </div>
+        <span class="qi-badge p">4</span>
+        <span class="qi-arrow">→</span>
+      </a>
+      <a href="#" class="qi p">
+        <div class="qi-ico p">✉️</div>
+        <div class="qi-body">
+          <div class="qi-title">3 new drafts ready to send</div>
+          <div class="qi-sub">Sequence step 2 fired overnight — review before sending</div>
+        </div>
+        <span class="qi-badge p">3</span>
+        <span class="qi-arrow">→</span>
+      </a>
+      <a href="#" class="qi a">
+        <div class="qi-ico a">🌱</div>
+        <div class="qi-body">
+          <div class="qi-title">1 prospect to re-contact today</div>
+          <div class="qi-sub">Marcus Peters — re-contact date set for today</div>
+        </div>
+        <span class="qi-badge a">Due</span>
+        <span class="qi-arrow">→</span>
+      </a>
+      <a href="#" class="qi g">
+        <div class="qi-ico g">👤</div>
+        <div class="qi-body">
+          <div class="qi-title">8 new prospects to review</div>
+          <div class="qi-sub">Fractional CFO Q1 — imported yesterday</div>
+        </div>
+        <span class="qi-badge g">8</span>
+        <span class="qi-arrow">→</span>
+      </a>
+    </div>
+
+    <div class="slabel">Activity today</div>
+    <div class="feed">
+      <div class="feed-item">
+        <div class="feed-dot c"></div>
+        <div><div class="feed-text">Sarah Mitchell replied — Agency founders Q1</div><div class="feed-time">2 hours ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">Sequence step 2 fired — 3 drafts created for Agency founders Q1</div><div class="feed-time">3 hours ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot c"></div>
+        <div><div class="feed-text">Dan Kim replied — Fractional CFO Q1</div><div class="feed-time">5 hours ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot g"></div>
+        <div><div class="feed-text">8 prospects imported — Fractional CFO Q1</div><div class="feed-time">Yesterday, 6:42pm</div></div>
+      </div>
+    </div>
+
+    <div class="slabel">Today so far</div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-lbl">Emails sent</div><div class="stat-val">4</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Follow-ups done</div><div class="stat-val" style="color:var(--cyan);">3</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Replies handled</div><div class="stat-val" style="color:var(--pink);">2</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Meetings booked</div><div class="stat-val" style="color:var(--green);">1</div><div class="stat-sub">this week</div></div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Wireframe notes — Today (work waiting)</div>
+      <div class="ann-item"><div class="ann-dot"></div>This is the default landing page on login. Queue leads — stats are secondary below.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Each queue item links directly to the relevant tab in the campaign view. No extra navigation.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Order of priority: replies → follow-ups → new drafts → nurture re-contacts → prospects to review.</div>
+      <div class="ann-item"><div class="ann-dot"></div>No streak counter anywhere. Consistency is shown through data and the bar chart on This week — not pressure.</div>
+      <div class="ann-item"><div class="ann-dot"></div>When queue is empty, the done state replaces the queue section. Use wireframe control below to preview.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       TODAY — DONE (queue empty)
+  ═══════════════════════════════ -->
+  <div id="pane-done" style="display:none;">
+
+    <div class="done">
+      <div class="done-icon">✓</div>
+      <div class="done-title">You're done for today.</div>
+      <div class="done-sub">Your outreach is moving. Come back tomorrow to keep the rhythm going.</div>
+    </div>
+
+    <div class="slabel">Today so far</div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-lbl">Emails sent</div><div class="stat-val">7</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Follow-ups done</div><div class="stat-val" style="color:var(--cyan);">4</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Replies handled</div><div class="stat-val" style="color:var(--pink);">3</div><div class="stat-sub">today</div></div>
+      <div class="stat"><div class="stat-lbl">Meetings booked</div><div class="stat-val" style="color:var(--green);">1</div><div class="stat-sub">this week</div></div>
+    </div>
+
+    <div class="slabel" style="margin-top:8px;">Activity today</div>
+    <div class="feed">
+      <div class="feed-item">
+        <div class="feed-dot g"></div>
+        <div><div class="feed-text">Meeting booked with Helen Clarke — Agency founders Q1</div><div class="feed-time">1 hour ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">4 drafts sent — Agency founders Q1</div><div class="feed-time">2 hours ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot c"></div>
+        <div><div class="feed-text">Sarah Thompson replied — Fractional CFO Q1</div><div class="feed-time">3 hours ago</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">3 follow-ups sent — Fractional CFO Q1</div><div class="feed-time">4 hours ago</div></div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Wireframe notes — Today (done state)</div>
+      <div class="ann-item"><div class="ann-dot"></div>Only shown when the queue is genuinely empty — no items waiting.</div>
+      <div class="ann-item"><div class="ann-dot"></div>No motivational quotes. No streak pressure. Calm and factual.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Stats and activity feed still shown — confirms real work was done today.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════
+       THIS WEEK
+  ═══════════════════════════════ -->
+  <div id="pane-week" style="display:none;">
+
+    <div class="slabel">Monday 11 Mar — Sunday 17 Mar · 2026</div>
+
+    <div class="week-grid">
+      <div class="wstat">
+        <div class="wstat-lbl">Emails sent</div>
+        <div class="wstat-val">14</div>
+        <div class="wstat-delta up">↑ 3 from last week</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-lbl">Follow-ups done</div>
+        <div class="wstat-val">9</div>
+        <div class="wstat-delta up">↑ 2 from last week</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-lbl">Replies received</div>
+        <div class="wstat-val" style="color:var(--cyan);">5</div>
+        <div class="wstat-delta up">↑ 2 from last week</div>
+      </div>
+      <div class="wstat">
+        <div class="wstat-lbl">Meetings booked</div>
+        <div class="wstat-val" style="color:var(--green);">1</div>
+        <div class="wstat-delta">Same as last week</div>
+      </div>
+    </div>
+
+    <div class="barchart">
+      <div class="barchart-title">Sends per day this week</div>
+      <div class="bars">
+        <div class="barcol"><div class="bar" style="height:55px;"></div><div class="bar-day">Mon</div></div>
+        <div class="barcol"><div class="bar" style="height:30px;"></div><div class="bar-day">Tue</div></div>
+        <div class="barcol"><div class="bar" style="height:65px;"></div><div class="bar-day">Wed</div></div>
+        <div class="barcol"><div class="bar" style="height:20px;"></div><div class="bar-day">Thu</div></div>
+        <div class="barcol"><div class="bar today" style="height:40px;"></div><div class="bar-day today">Today</div></div>
+        <div class="barcol"><div class="bar" style="height:4px;opacity:0.3;"></div><div class="bar-day">Sat</div></div>
+        <div class="barcol"><div class="bar" style="height:4px;opacity:0.3;"></div><div class="bar-day">Sun</div></div>
+      </div>
+    </div>
+
+    <div class="slabel">This week's activity</div>
+    <div class="feed">
+      <div class="feed-item">
+        <div class="feed-dot g"></div>
+        <div><div class="feed-text">Meeting booked with Helen Clarke — Agency founders Q1</div><div class="feed-time">Today, 11:30am</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot c"></div>
+        <div><div class="feed-text">2 replies received — Sarah Mitchell, Dan Kim</div><div class="feed-time">Today, 8:00am</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">4 drafts sent — Agency founders Q1</div><div class="feed-time">Yesterday, 2:15pm</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot c"></div>
+        <div><div class="feed-text">Sarah Thompson replied — Fractional CFO Q1</div><div class="feed-time">Wednesday, 4:00pm</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">3 follow-ups sent — Fractional CFO Q1</div><div class="feed-time">Wednesday, 10:00am</div></div>
+      </div>
+      <div class="feed-item">
+        <div class="feed-dot p"></div>
+        <div><div class="feed-text">6 emails sent — Agency founders Q1</div><div class="feed-time">Monday, 9:30am</div></div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Wireframe notes — This week</div>
+      <div class="ann-item"><div class="ann-dot"></div>Deltas (↑ 3 from last week) show trend without applying pressure — factual, not motivational.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Bar chart shows send cadence. Today's bar uses the gradient to anchor the current position in the week.</div>
+      <div class="ann-item"><div class="ann-dot"></div>No streak counter — consistency visible through the bar chart and activity feed, not gamification.</div>
+      <div class="ann-item"><div class="ann-dot"></div>This week is informational only. All action items live in Today.</div>
+    </div>
+  </div>
+
+</div><!-- end main -->
+
+<!-- Wireframe state controls -->
+<div class="wfc">
+  <div class="wfc-label">Wireframe states</div>
+  <button class="wfb active" onclick="showState('today',this)">Today — work waiting</button>
+  <button class="wfb" onclick="showState('done',this)">Today — all done</button>
+  <button class="wfb" onclick="showState('week',this)">This week</button>
+</div>
+
+<script>
+function showTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  if (name === 'today') showState('today', document.querySelector('.wfb'));
+  else showState('week', document.querySelectorAll('.wfb')[2]);
+}
+
+function showState(name, el) {
+  ['today','done','week'].forEach(p => {
+    document.getElementById('pane-' + p).style.display = 'none';
+  });
+  document.getElementById('pane-' + name).style.display = 'block';
+  document.querySelectorAll('.wfb').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+
+  // Sync tab row
+  var tabs = document.querySelectorAll('.tab');
+  tabs[0].classList.toggle('active', name !== 'week');
+  tabs[1].classList.toggle('active', name === 'week');
+
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
