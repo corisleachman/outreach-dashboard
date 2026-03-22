@@ -40,6 +40,8 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
 .ql-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
 .ql-pink   { background: var(--pink-dim); border: 1px solid rgba(255,20,147,0.2); }
 .ql-purple { background: rgba(130,100,220,0.1); border: 1px solid rgba(130,100,220,0.2); }
+.ql-cyan   { background: rgba(0,212,255,0.08); border: 1px solid rgba(0,212,255,0.15); }
+.ql-green  { background: rgba(100,220,120,0.08); border: 1px solid rgba(100,220,120,0.2); }
 .ql-info { flex: 1; }
 .ql-title { font-family: var(--outfit); font-size: 13px; font-weight: 600; color: var(--text); }
 .ql-desc  { font-size: 11px; color: var(--text-dim); margin-top: 1px; }
@@ -135,6 +137,11 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
     <a href="exploration/00-brand-guidelines.html" target="_blank" class="quick-link">
       <div class="ql-icon ql-purple">📐</div>
       <div class="ql-info"><div class="ql-title">Brand guidelines</div><div class="ql-desc">Design system + tier matrix</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="product-backlog.html" class="quick-link">
+      <div class="ql-icon ql-green">📋</div>
+      <div class="ql-info"><div class="ql-title">Product backlog</div><div class="ql-desc">Features, fixes & ideas queue</div></div>
       <span class="ql-arrow">→</span>
     </a>
   </div>
@@ -334,3 +341,4 @@ document.getElementById('footer-txt').textContent =
 </script>
 </body>
 </html>
+
