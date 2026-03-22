@@ -343,6 +343,8 @@
   <button class="flow-btn" onclick="jumpTo('prompt-trial-expiry')">7 · Trial expiry banner</button>
   <button class="flow-btn" onclick="jumpTo('prompt-post-upgrade')">8 · Post-upgrade screen</button>
   <button class="flow-btn" onclick="jumpTo('reward-notification')">9 · Reward notification</button>
+  <button class="flow-btn" onclick="jumpTo('share-modal')">10 · Share modal</button>
+  <button class="flow-btn" onclick="jumpTo('dashboard-stat-card')">11 · Dashboard stat card</button>
 </div>
 
 <div class="screens">
@@ -799,6 +801,168 @@
       <div class="annotation"><div class="annotation-dot"></div>Notification fires server-side when activation trigger is detected</div>
       <div class="annotation"><div class="annotation-dot"></div>For Free users: copy changes to "You've earned a free month of Pro access" instead of "Applied to next bill"</div>
       <div class="annotation"><div class="annotation-dot"></div>Reward banner in Settings → Referrals updates simultaneously</div>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════
+       10. SHARE MODAL
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="share-modal">
+    <div class="screen-label">View 10</div>
+    <div class="screen-title">Share modal — "Share →" CTA clicked</div>
+    <div class="screen-desc">Appears whenever the user clicks "Share →" from any referral prompt — the post-campaign momentum prompt, the post-reply prompt, or the Settings panel. Three options: copy link, send by email, native share (mobile). No social sharing — off-brand for this audience.</div>
+
+    <div style="display:flex;justify-content:center;">
+      <div style="width:100%;max-width:460px;">
+
+        <!-- Modal backdrop hint -->
+        <div style="background:rgba(13,9,20,0.85);border-radius:20px;padding:32px;border:1px solid var(--b2);backdrop-filter:blur(20px);position:relative;">
+
+          <!-- Close -->
+          <div style="position:absolute;top:16px;right:18px;font-size:18px;color:var(--td);cursor:pointer;line-height:1;">✕</div>
+
+          <!-- Header -->
+          <div style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.01em;margin-bottom:6px;">Give a friend 60 days free.</div>
+          <div style="font-size:13px;color:var(--tm);margin-bottom:24px;line-height:1.5;">Share your link and they'll get double the standard trial — no card required.</div>
+
+          <!-- Gifted card (compact) -->
+          <div style="background:linear-gradient(145deg,#1a0d2e,#0d1a2e);border-radius:12px;padding:16px 20px;margin-bottom:24px;position:relative;overflow:hidden;">
+            <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#ff1493 30%,#00d4ff 70%,transparent);"></div>
+            <div style="display:flex;align-items:center;justify-content:space-between;">
+              <div style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span> <span style="display:inline-flex;padding:2px 8px;background:var(--gr);border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.06em;color:white;">PRO</span></div>
+              <div style="font-family:'Outfit',sans-serif;font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:0.06em;text-transform:uppercase;">60 days free</div>
+            </div>
+            <div style="margin-top:10px;display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.3);font-size:12px;font-weight:600;color:var(--pink);">🎁 Gifted by You</div>
+          </div>
+
+          <!-- Option 1: Copy link -->
+          <div style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:8px;">Your invite link</div>
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <div style="flex:1;padding:10px 14px;background:var(--s);border:1px solid var(--b2);border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--tm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">pulse-outreach.co.uk/?ref=ax7k2m9p</div>
+            <button style="padding:10px 18px;background:var(--s2);border:1px solid var(--b2);border-radius:10px;color:var(--t);font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap;" onclick="this.textContent='Copied!';this.style.color='var(--green)';setTimeout(()=>{this.textContent='Copy';this.style.color=''},2000)">Copy</button>
+          </div>
+
+          <!-- Divider -->
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+            <div style="flex:1;height:1px;background:var(--b);"></div>
+            <span style="font-size:11px;color:var(--td);">or send directly</span>
+            <div style="flex:1;height:1px;background:var(--b);"></div>
+          </div>
+
+          <!-- Option 2: Email invite -->
+          <div style="display:flex;gap:8px;margin-bottom:16px;">
+            <input style="flex:1;padding:10px 14px;background:var(--s);border:1px solid var(--b2);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;outline:none;" placeholder="email@example.com">
+            <button style="padding:10px 20px;background:var(--gr);border:none;border-radius:10px;color:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;flex-shrink:0;box-shadow:0 0 20px rgba(255,20,147,0.2);">Send</button>
+          </div>
+
+          <!-- Option 3: Native share (mobile) -->
+          <button style="width:100%;padding:11px;background:var(--s);border:1px solid var(--b2);border-radius:10px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+            <span style="font-size:14px;">↗</span> Share via...
+          </button>
+          <div style="text-align:center;font-size:11px;color:var(--td);margin-top:10px;">Rewards auto-applied to your next subscription payment.</div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>This modal opens whenever "Share →" is clicked — from momentum prompts, trial banner, or Settings panel.</div>
+      <div class="annotation"><div class="annotation-dot"></div>Three paths: copy link (primary), email invite (secondary), native share via Web Share API (tertiary — shows on mobile, hidden on desktop if API unavailable).</div>
+      <div class="annotation"><div class="annotation-dot"></div>No social sharing buttons — LinkedIn/Twitter sharing is off-brand for this audience. Professional tool, not a consumer app.</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Copy" button interaction — click to copy and temporarily shows "Copied!" confirmation.</div>
+      <div class="annotation"><div class="annotation-dot"></div>Email sent via Pulse. transactional email (Resend) — not via the user's Gmail. Uses exact copy from FEATURE-REFERRAL-MICROCOPY.md.</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       11. DASHBOARD STAT CARD
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="dashboard-stat-card">
+    <div class="screen-label">View 11</div>
+    <div class="screen-title">Dashboard stat card — referral summary</div>
+    <div class="screen-desc">A compact stat card shown on the Summary / Today view once a user has made at least one referral. Shows funnel progress at a glance. No leaderboard, no comparative data — just your own numbers.</div>
+
+    <div style="max-width:760px;">
+
+      <!-- Context: shown within the Summary / Today view -->
+      <div style="background:var(--bg);border:1px solid var(--b);border-radius:16px;overflow:hidden;">
+        <div style="padding:14px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-family:'Outfit',sans-serif;font-size:16px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+          <span style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--tm);">Pro</span>
+        </div>
+        <div style="padding:24px;">
+
+          <!-- Summary page section label -->
+          <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:12px;">Referrals</div>
+
+          <!-- Stat card -->
+          <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;padding:18px 20px;display:flex;align-items:center;gap:0;justify-content:space-between;flex-wrap:wrap;gap:8px;">
+
+            <!-- Stat: Sent -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:80px;">
+              <div style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.02em;">3</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Invited</div>
+            </div>
+
+            <!-- Arrow -->
+            <div style="color:var(--b2);font-size:16px;flex-shrink:0;">→</div>
+
+            <!-- Stat: Signed up -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:80px;">
+              <div style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.02em;color:var(--tm);">2</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Signed up</div>
+            </div>
+
+            <!-- Arrow -->
+            <div style="color:var(--b2);font-size:16px;flex-shrink:0;">→</div>
+
+            <!-- Stat: Activated -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:80px;">
+              <div style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.02em;color:var(--cyan);">1</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Activated</div>
+            </div>
+
+            <!-- Arrow -->
+            <div style="color:var(--b2);font-size:16px;flex-shrink:0;">→</div>
+
+            <!-- Stat: Rewards -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:80px;">
+              <div style="font-family:'Outfit',sans-serif;font-size:28px;font-weight:800;letter-spacing:-0.02em;color:var(--green);">1</div>
+              <div style="font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Reward earned</div>
+            </div>
+
+            <!-- Divider -->
+            <div style="width:1px;height:40px;background:var(--b);flex-shrink:0;"></div>
+
+            <!-- CTA -->
+            <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex-shrink:0;">
+              <button style="padding:8px 16px;background:var(--gr);border:none;border-radius:100px;color:white;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 0 16px rgba(255,20,147,0.2);white-space:nowrap;">Invite more →</button>
+            </div>
+
+          </div>
+
+          <!-- Empty state (no referrals yet) -->
+          <div style="margin-top:16px;padding:16px 20px;background:rgba(255,20,147,0.04);border:1px dashed rgba(255,20,147,0.2);border-radius:12px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:14px;font-weight:500;margin-bottom:3px;">Give a friend 60 days of Pro free.</div>
+              <div style="font-size:12px;color:var(--td);">You earn a free month when they send their first campaign.</div>
+            </div>
+            <button style="padding:8px 16px;background:var(--gr);border:none;border-radius:100px;color:white;font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;cursor:pointer;white-space:nowrap;">Share →</button>
+          </div>
+          <div style="font-size:11px;color:var(--td);margin-top:6px;text-align:center;">Top: active state (referrals made) · Bottom: empty state (no referrals yet)</div>
+
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Funnel stat card (top) shown once user has made at least 1 referral. Empty state (bottom) shown before any referrals.</div>
+      <div class="annotation"><div class="annotation-dot"></div>Four stages shown as a funnel: Invited → Signed up → Activated → Reward earned. Matches the Past Invites tab status progression exactly.</div>
+      <div class="annotation"><div class="annotation-dot"></div>No leaderboard, no comparative data ("you're in the top X%"), no streak pressure. Own numbers only.</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Invite more →" opens the share modal (View 10). "Share →" in empty state does the same.</div>
+      <div class="annotation"><div class="annotation-dot"></div>Card lives on the Summary / Today view beneath the activity feed — visible but not prominent. Section label is "Referrals".</div>
+      <div class="annotation"><div class="annotation-dot"></div>Hidden entirely if user has never visited Settings → Referrals and has 0 referrals — not shown by default to avoid cluttering the Today view for users who haven't engaged with referrals.</div>
     </div>
   </div>
 
