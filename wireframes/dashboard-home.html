@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>outreach. — Dashboard</title>
+<title>Pulse. — Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -200,7 +200,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
 
 <!-- TOPBAR -->
 <header class="topbar">
-  <div class="logo">outreach.</div>
+  <div class="logo" href="dashboard-home.html" style="text-decoration:none;">Pulse.</div>
   <div class="topbar-mid"></div>
   <div class="topbar-right">
     <span class="plan-badge" id="plan-label">Free</span>
@@ -490,26 +490,121 @@ document.addEventListener('click', function(e) {
 });
 
 // ── RENAME ──
+// renameCard and confirmDelete replaced by styled modals below
+
+</script>
+
+
+<!-- RENAME MODAL -->
+<div class="modal-overlay" id="rename-modal" onclick="if(event.target===this)closeRenameModal()">
+  <div class="modal-box">
+    <div class="modal-title">Rename campaign</div>
+    <p class="modal-sub">Give it a name that describes who you're reaching out to.</p>
+    <div class="modal-field">
+      <label class="modal-label">Campaign name</label>
+      <input class="modal-input" id="rename-input" placeholder="e.g. Agency founders — Q2" autofocus>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="closeRenameModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="saveRename()">Save →</button>
+    </div>
+  </div>
+</div>
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="delete-modal" onclick="if(event.target===this)closeDeleteModal()">
+  <div class="modal-box">
+    <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l.9 9a1 1 0 001 .9h6.2a1 1 0 001-.9L13 4" stroke="#ff4c4c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="modal-title" style="color:#ff4c4c;">Delete campaign</div>
+    <p class="modal-sub" id="delete-modal-sub">This will permanently delete <strong id="delete-campaign-name"></strong> and all its data. This cannot be undone.</p>
+    <div class="modal-field" style="margin-top:16px;">
+      <label class="modal-label">Type <strong style="color:var(--text);letter-spacing:0.05em;">DELETE</strong> to confirm</label>
+      <input class="modal-input" id="delete-confirm-input" placeholder="DELETE" oninput="checkDeleteConfirm()" autocomplete="off">
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-sm" id="delete-confirm-btn" disabled
+        style="padding:7px 14px;font-size:12px;background:rgba(255,76,76,0.15);border:1px solid rgba(255,76,76,0.3);border-radius:8px;color:#ff4c4c;font-family:var(--outfit);font-weight:700;cursor:not-allowed;opacity:0.5;transition:all 0.2s;"
+        onclick="executeDelete()">Delete campaign</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── RENAME MODAL ──
+let _renameTarget = '';
 function renameCard(currentName) {
   closeKebabs();
-  const newName = prompt('Rename campaign:', currentName);
-  if (newName && newName.trim() && newName.trim() !== currentName) {
-    // Find and update the campaign name in the card
+  _renameTarget = currentName;
+  const input = document.getElementById('rename-input');
+  input.value = currentName;
+  document.getElementById('rename-modal').classList.add('open');
+  setTimeout(() => input.select(), 100);
+}
+function closeRenameModal() {
+  document.getElementById('rename-modal').classList.remove('open');
+}
+function saveRename() {
+  const newName = document.getElementById('rename-input').value.trim();
+  if (newName && newName !== _renameTarget) {
     document.querySelectorAll('.campaign-name').forEach(el => {
-      if (el.textContent === currentName) el.textContent = newName.trim();
+      if (el.textContent === _renameTarget) el.textContent = newName;
     });
     toast('✓', 'Campaign renamed', 't-cyan');
   }
+  closeRenameModal();
 }
 
-// ── DELETE CONFIRM ──
+// ── DELETE MODAL ──
+let _deleteTarget = '';
 function confirmDelete(name) {
   closeKebabs();
-  if (confirm('Delete "' + name + '"? This cannot be undone.')) {
-    toast('✓', '"' + name + '" deleted', 't-neutral');
-  }
+  _deleteTarget = name;
+  document.getElementById('delete-campaign-name').textContent = '"' + name + '"';
+  const input = document.getElementById('delete-confirm-input');
+  input.value = '';
+  document.getElementById('delete-confirm-btn').disabled = true;
+  document.getElementById('delete-confirm-btn').style.cursor = 'not-allowed';
+  document.getElementById('delete-confirm-btn').style.opacity = '0.5';
+  document.getElementById('delete-modal').classList.add('open');
+  setTimeout(() => input.focus(), 100);
+}
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+}
+function checkDeleteConfirm() {
+  const val = document.getElementById('delete-confirm-input').value;
+  const btn = document.getElementById('delete-confirm-btn');
+  const valid = val === 'DELETE';
+  btn.disabled = !valid;
+  btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+  btn.style.opacity = valid ? '1' : '0.5';
+  btn.style.background = valid ? 'rgba(255,76,76,0.25)' : 'rgba(255,76,76,0.15)';
+}
+function executeDelete() {
+  if (document.getElementById('delete-confirm-input').value !== 'DELETE') return;
+  // Remove the campaign card
+  document.querySelectorAll('.campaign-name').forEach(el => {
+    if (el.textContent === _deleteTarget) {
+      const card = el.closest('[class*="campaign"]') || el.closest('.card') || el.parentElement.parentElement;
+      if (card) card.style.display = 'none';
+    }
+  });
+  toast('✓', '"' + _deleteTarget + '" deleted', 't-neutral');
+  closeDeleteModal();
 }
 
+// Rename input — save on Enter
+document.getElementById('rename-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') saveRename();
+  if (e.key === 'Escape') closeRenameModal();
+});
+document.getElementById('delete-confirm-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('delete-confirm-btn').disabled) executeDelete();
+  if (e.key === 'Escape') closeDeleteModal();
+});
 </script>
 
 <!-- VIEW TOGGLE HELPER (remove in production) -->
