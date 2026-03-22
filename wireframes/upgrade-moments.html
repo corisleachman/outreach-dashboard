@@ -19,50 +19,43 @@
 }
 html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
 
-/* ── STICKY NAV ── */
-.sticky-nav{
-  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
-  background:rgba(13,9,20,0.96);border-bottom:1px solid var(--b);
+/* ── LEFT NAV ── */
+.left-nav{
+  position:fixed;top:0;left:0;bottom:0;width:200px;
+  background:rgba(13,9,20,0.97);border-right:1px solid var(--b);
   backdrop-filter:blur(16px);z-index:999;
-  display:flex;align-items:center;
-  padding:0 40px;gap:24px;
+  display:flex;flex-direction:column;
+  overflow-y:auto;scrollbar-width:none;
 }
-.nav-identity{flex-shrink:0;}
-.nav-product{font-family:var(--of);font-size:16px;font-weight:800;
+.left-nav::-webkit-scrollbar{display:none;}
+.nav-identity{padding:20px 16px 16px;border-bottom:1px solid var(--b);flex-shrink:0;}
+.nav-product{font-family:var(--of);font-size:15px;font-weight:800;
   background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
   background-clip:text;line-height:1.1;}
-.nav-doc{font-size:11px;color:var(--td);margin-top:1px;
+.nav-doc{font-size:10px;color:var(--td);margin-top:3px;
   font-family:var(--of);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
-.nav-divider{width:1px;height:32px;background:var(--b);flex-shrink:0;}
-.nav-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;
-  flex:1;justify-content:flex-end;
-  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
-.nav-pills::-webkit-scrollbar{display:none;}
+.nav-pills{display:flex;flex-direction:column;gap:2px;padding:12px 10px 24px;}
 .nav-group-label{
-  font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.1em;
-  text-transform:uppercase;color:var(--td);white-space:nowrap;
-  display:flex;align-items:center;padding:0 4px;flex-shrink:0;
+  font-family:var(--of);font-size:9px;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--td);padding:10px 8px 4px;
 }
 .pill{
-  font-family:var(--of);font-size:11px;font-weight:600;
-  padding:5px 12px;border-radius:100px;border:1px solid var(--b2);
+  font-family:var(--of);font-size:12px;font-weight:600;
+  padding:7px 12px;border-radius:8px;border:1px solid transparent;
   background:transparent;color:var(--tm);cursor:pointer;
-  transition:all 0.15s;white-space:nowrap;flex-shrink:0;
+  transition:all 0.15s;text-align:left;width:100%;
 }
-.pill:hover{background:var(--s2);color:var(--t);border-color:rgba(255,255,255,0.2);}
-.pill.active{border-color:rgba(255,20,147,0.4);color:var(--pink);background:rgba(255,20,147,0.08);}
-.pill.type1{--pc:rgba(255,157,66,0.3);--tc:var(--amber);}
-.pill.type2{--pc:rgba(255,20,147,0.3);--tc:var(--pink);}
-.pill.type3{--pc:rgba(0,212,255,0.3);--tc:var(--cyan);}
-.pill.type4{--pc:rgba(100,220,120,0.3);--tc:var(--green);}
-.pill.type1.active{border-color:var(--pc);color:var(--tc);background:rgba(255,157,66,0.08);}
-.pill.type2.active{border-color:var(--pc);color:var(--tc);background:rgba(255,20,147,0.08);}
-.pill.type3.active{border-color:var(--pc);color:var(--tc);background:rgba(0,212,255,0.08);}
-.pill.type4.active{border-color:var(--pc);color:var(--tc);background:rgba(100,220,120,0.08);}
+.pill:hover{background:var(--s2);color:var(--t);}
+.pill.active{color:var(--pink);background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.2);}
+.pill.type1.active{color:var(--amber);background:rgba(255,157,66,0.08);border-color:rgba(255,157,66,0.2);}
+.pill.type2.active{color:var(--pink);background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.2);}
+.pill.type3.active{color:var(--cyan);background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2);}
+.pill.type4.active{color:var(--green);background:rgba(100,220,120,0.08);border-color:rgba(100,220,120,0.2);}
+.pill-group-sep{height:1px;background:var(--b);margin:6px 8px;}
 
 /* ── MAIN ── */
-.main{padding-top:calc(var(--nav-h) + 48px);padding-bottom:80px;}
-.screen{display:none;max-width:800px;margin:0 auto;padding:0 40px;}
+.main{margin-left:200px;padding:40px 48px 80px;}
+.screen{display:none;max-width:760px;}
 .screen.active{display:block;}
 
 /* ── SCREEN HEADER ── */
@@ -265,24 +258,23 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 <body>
 
 <!-- ═══════════════════════════════════════
-     STICKY NAV
+     LEFT NAV
 ═══════════════════════════════════════ -->
-<nav class="sticky-nav">
+<nav class="left-nav">
   <div class="nav-identity">
     <div class="nav-product">Pulse.</div>
     <div class="nav-doc">Upgrade Moments</div>
   </div>
-  <div class="nav-divider"></div>
   <div class="nav-pills">
 
-    <span class="nav-group-label">T1 · Limit</span>
+    <span class="nav-group-label">T1 · Limit wall</span>
     <button class="pill type1 active" onclick="show('t1-soft',this)">Soft nudge</button>
     <button class="pill type1" onclick="show('t1-hard',this)">Hard wall</button>
     <button class="pill type1" onclick="show('t1-greyed',this)">Greyed prospect</button>
     <button class="pill type1" onclick="show('t1-campaign',this)">2nd campaign</button>
 
     <div class="pill-group-sep"></div>
-    <span class="nav-group-label">T2 · Desire</span>
+    <span class="nav-group-label">T2 · Desire trigger</span>
     <button class="pill type2" onclick="show('t2-ai',this)">AI drafts</button>
     <button class="pill type2" onclick="show('t2-schedule',this)">Auto-schedule</button>
     <button class="pill type2" onclick="show('t2-sequence',this)">Sequences</button>
@@ -294,7 +286,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     <button class="pill type3" onclick="show('t3-followup',this)">Follow-up tab</button>
 
     <div class="pill-group-sep"></div>
-    <span class="nav-group-label">T4 · Trial</span>
+    <span class="nav-group-label">T4 · Trial lifecycle</span>
     <button class="pill type4" onclick="show('t4-warning',this)">Day 28 warning</button>
     <button class="pill type4" onclick="show('t4-expiry',this)">Day 30 expiry</button>
     <button class="pill type4" onclick="show('t4-expired',this)">Post-expiry</button>
