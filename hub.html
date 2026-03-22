@@ -187,13 +187,13 @@ const JOURNEYS = [
   { group: 'Activation & onboarding' },
   { name: 'Sign-up → Gmail OAuth',                      status: 'built',  url: B + 'signup-oauth.html' },
   { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: 'Phase 2.10 spec locked — needs update to match' },
-  { name: 'Empty state — first login',                  status: 'built',  url: DH },
+  { name: 'Empty state — first login',                  status: 'built',  url: DH, note: 'Empty state shown in dashboard-home.html' },
   { name: 'Referee onboarding — referral gifted card',  status: 'done',   url: B + 'referral-system.html' },
 
   // ── CAMPAIGN MANAGEMENT ──────────────────────────────────────────────────
   { group: 'Campaign management' },
-  { name: 'Campaigns list / home dashboard',            status: 'built',  url: DH },
-  { name: 'Create new campaign',                        status: 'built',  url: DH },
+  { name: 'Campaigns list / home dashboard',            status: 'built',  url: DH, note: 'dashboard-home.html' },
+  { name: 'Create new campaign',                        status: 'built',  url: DH, note: 'dashboard-home.html — create campaign modal' },
   { name: 'Campaign view (persistent shell)',           status: 'done',   url: B + 'campaign-view-v3.html' },
   { name: 'Campaign settings tab',                      status: 'none',   note: 'Content not yet decided — open question' },
 
@@ -201,31 +201,31 @@ const JOURNEYS = [
   { group: 'Prospect import & review' },
   { name: 'CSV import with column mapping',             status: 'built',  url: B + 'prospect-import.html' },
   { name: 'Manual prospect add',                        status: 'built',  url: B + 'prospect-import.html' },
-  { name: 'Review tab — Contact / Later / Skip',        status: 'built',  url: P1 },
+  { name: 'Review tab — Contact / Later / Skip',        status: 'built',  url: B + 'campaign-view-v3.html' },
   { name: 'Prospect detail view',                       status: 'built',  url: B + 'prospect-import.html' },
 
   // ── MESSAGE CREATION ─────────────────────────────────────────────────────
   { group: 'Message creation' },
-  { name: 'Message editor',                             status: 'built',  url: W2 },
+  { name: 'Message editor',                             status: 'built',  url: B + 'campaign-view-v3.html' },
   { name: 'Sequence builder',                           status: 'done',   url: B + 'campaign-view-v3.html' },
   { name: 'AI draft generation (Pro)',                  status: 'built',  url: B + 'ai-drafts.html',           note: 'AI draft UX not yet fully specced — treat as placeholder' },
   { name: 'Personality pack selection',                 status: 'built',  url: B + 'settings-account.html' },
 
   // ── SENDING ──────────────────────────────────────────────────────────────
   { group: 'Sending' },
-  { name: 'Drafts tab — review & send',                 status: 'built',  url: P1 },
-  { name: 'Review & send — sequence check',             status: 'review', url: W2 },
-  { name: 'Post-send confirmation + momentum prompt',   status: 'built',  url: W2 },
+  { name: 'Drafts tab — review & send',                 status: 'built',  url: B + 'campaign-view-v3.html' },
+  { name: 'Review & send — sequence check',             status: 'review', url: B + 'campaign-view-v3.html' },
+  { name: 'Post-send confirmation + momentum prompt',   status: 'built',  url: B + 'emotional-design.html' },
   { name: 'Send failure state',                         status: 'built',  url: B + 'error-edge-cases.html' },
 
   // ── TRACKING & FOLLOW-UP ─────────────────────────────────────────────────
   { group: 'Tracking & follow-up' },
-  { name: 'Sent tab — 14 status options',               status: 'built',  url: P1 },
+  { name: 'Sent tab — 14 status options',               status: 'built',  url: B + 'campaign-view-v3.html' },
   { name: 'Follow-up tab (Free: visible, locked)',      status: 'built',  url: B + 'followup-nurture-conversations.html', note: 'Needs locked state for Free tier' },
   { name: 'Follow-up composer',                         status: 'built',  url: B + 'followup-nurture-conversations.html' },
   { name: 'Nurture tab',                                status: 'built',  url: B + 'followup-nurture-conversations.html' },
   { name: 'Conversations tab',                          status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'LinkedIn tab',                               status: 'built',  url: P1 },
+  { name: 'LinkedIn tab',                               status: 'built',  url: B + 'campaign-view-v3.html' },
 
   // ── REPLIES & CONVERSATIONS ──────────────────────────────────────────────
   { group: 'Replies & conversations' },
@@ -249,14 +249,14 @@ const JOURNEYS = [
 
   // ── PRICING & UPGRADE ────────────────────────────────────────────────────
   { group: 'Pricing & upgrade moments' },
-  { name: 'Prospect limit wall (Free — 100 prospects)', status: 'built',  url: B + 'pricing-upgrade.html',     note: 'Needs update: Pro Light trial (500) vs Free (100) distinction' },
+  { name: 'Prospect limit wall (Free — 100 prospects)', status: 'review', url: B + 'pricing-upgrade.html',     note: 'Predates tier model decisions — needs update or replace with upgrade-moments.html T1' },
   { name: 'Desire trigger — inline Pro feature prompt', url: B + 'upgrade-moments.html', status: 'review',   note: 'Upgrade moment package needed — part of stickiness/conversion work' },
   { name: 'Ambient prompt — Follow-up tab locked', url: B + 'upgrade-moments.html',      status: 'none',   note: 'Upgrade moment package needed' },
   { name: 'Trial expiry warning banner (day 28)', url: B + 'upgrade-moments.html',        status: 'none',   note: 'Upgrade moment package needed' },
   { name: 'Trial expiry — see what changed', url: B + 'upgrade-moments.html',             status: 'none',   note: 'Upgrade moment package needed' },
   { name: 'Pricing / plan comparison',                  status: 'built',  url: B + 'pricing-upgrade.html' },
   { name: 'Stripe checkout flow',                       status: 'built',  url: B + 'pricing-upgrade.html' },
-  { name: 'Post-upgrade confirmation + referral note',  status: 'built',  url: B + 'pricing-upgrade.html',     note: 'Needs referral note added to success screen' },
+  { name: 'Post-upgrade confirmation + referral note',  status: 'review', url: B + 'upgrade-moments.html',     note: 'Shown in upgrade-moments.html T4-6 with referral note. pricing-upgrade.html version outdated.' },
 
   // ── REFERRAL SYSTEM ──────────────────────────────────────────────────────
   { group: 'Referral system' },
@@ -276,7 +276,7 @@ const JOURNEYS = [
   { group: 'Settings & account' },
   { name: 'Account settings',                           status: 'built',  url: B + 'settings-account.html' },
   { name: 'Personality packs — global default',         status: 'built',  url: B + 'settings-account.html' },
-  { name: 'Appearance — brand personalisation',         status: 'none',   note: 'FEATURE-BRAND-PERSONALISATION.md captured — Layer 5' },
+  { name: 'Appearance — brand personalisation',         status: 'built',  url: 'https://corisleachman.github.io/outreach-dashboard/branding/brand-explorer.html', note: 'Prototype live — Layer 5, not yet in product' },
   { name: 'Billing & plan management',                  status: 'built',  url: B + 'settings-account.html' },
   { name: 'Referrals panel',                            status: 'done',   url: B + 'referral-system.html' },
 
