@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Product Backlog</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg: #0d0914;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.07);
+  --surface-raised: rgba(255,255,255,0.06);
+  --border: rgba(255,255,255,0.07);
+  --border-hover: rgba(255,255,255,0.15);
+  --border-strong: rgba(255,255,255,0.13);
+  --pink: #ff1493;
+  --cyan: #00d4ff;
+  --green: #64dc78;
+  --amber: #ff9d42;
+  --pink-dim: rgba(255,20,147,0.1);
+  --cyan-dim: rgba(0,212,255,0.08);
+  --green-dim: rgba(100,220,120,0.1);
+  --text: #f4f4f2;
+  --text-mid: #a8a8b8;
+  --text-dim: #6b6b80;
+  --outfit: 'Outfit', sans-serif;
+  --sans: 'DM Sans', sans-serif;
+  --grad: linear-gradient(135deg, #ff1493, #00d4ff);
+}
+
+html, body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--sans);
+  min-height: 100vh;
+}
+
+/* Orbs */
+.orb { position: fixed; border-radius: 50%; filter: blur(100px); pointer-events: none; z-index: 0; }
+.orb-1 { width: 600px; height: 600px; background: rgba(255,20,147,0.04); top: -200px; right: -100px; }
+.orb-2 { width: 400px; height: 400px; background: rgba(0,212,255,0.04); bottom: -100px; left: -100px; }
+
+.page { position: relative; z-index: 1; max-width: 860px; margin: 0 auto; padding: 72px 32px 120px; }
+
+/* ── HEADER ── */
+.header { margin-bottom: 48px; }
+.back-link {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--outfit); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text-dim); text-decoration: none;
+  margin-bottom: 24px; transition: color 0.15s;
+}
+.back-link:hover { color: var(--cyan); }
+.back-link svg { transition: transform 0.15s; }
+.back-link:hover svg { transform: translateX(-2px); }
+
+.header-eyebrow {
+  font-family: var(--outfit); font-size: 11px; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 0.12em; color: var(--cyan); margin-bottom: 12px;
+}
+.header-title {
+  font-family: var(--outfit); font-size: 42px; font-weight: 800;
+  letter-spacing: -0.03em; line-height: 1; margin-bottom: 12px;
+  background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.6) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-title span {
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.header-sub { font-size: 14px; color: var(--text-mid); line-height: 1.6; }
+
+/* ── ADD BAR ── */
+.add-bar {
+  display: flex; gap: 10px; margin-bottom: 36px;
+}
+.add-input {
+  flex: 1; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 16px; color: var(--text);
+  font-family: var(--sans); font-size: 14px; outline: none;
+  transition: border-color 0.2s, background 0.2s;
+}
+.add-input::placeholder { color: var(--text-dim); }
+.add-input:focus { border-color: rgba(255,20,147,0.4); background: var(--surface-hover); }
+.add-btn {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--grad); border: none; border-radius: 10px;
+  padding: 12px 20px; color: #fff; font-family: var(--outfit);
+  font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: opacity 0.15s, transform 0.15s; white-space: nowrap;
+}
+.add-btn:hover { opacity: 0.9; transform: translateY(-1px); }
+.add-btn:active { transform: translateY(0); }
+
+/* ── SECTION HEADERS ── */
+.section { margin-bottom: 48px; }
+.section-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px; padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+.section-label {
+  font-family: var(--outfit); font-size: 10px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--text-dim);
+  display: flex; align-items: center; gap: 8px;
+}
+.count-badge {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 20px; height: 20px; border-radius: 6px;
+  background: var(--surface-raised); border: 1px solid var(--border-strong);
+  font-family: var(--outfit); font-size: 10px; font-weight: 700;
+  color: var(--text-mid);
+}
+.section-hint { font-size: 11px; color: var(--text-dim); }
+
+/* ── BACKLOG LIST ── */
+.backlog-list { display: flex; flex-direction: column; gap: 4px; min-height: 48px; }
+
+/* Empty state */
+.empty-state {
+  display: flex; align-items: center; justify-content: center;
+  padding: 32px 16px; border: 1px dashed rgba(255,255,255,0.07);
+  border-radius: 12px; color: var(--text-dim); font-size: 13px;
+  opacity: 0.7;
+}
+
+/* ── BACKLOG ITEM ── */
+.backlog-item {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 10px; padding: 12px 14px;
+  transition: border-color 0.2s, background 0.2s, opacity 0.4s, transform 0.2s;
+  cursor: default; position: relative;
+  animation: itemIn 0.25s ease both;
+}
+@keyframes itemIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.backlog-item:hover { border-color: var(--border-hover); background: var(--surface-hover); }
+.backlog-item.dragging {
+  opacity: 0.5; border-color: rgba(255,20,147,0.3);
+  background: rgba(255,20,147,0.06);
+}
+.backlog-item.drag-over {
+  border-color: rgba(0,212,255,0.4);
+  background: rgba(0,212,255,0.04);
+}
+.backlog-item.shipping {
+  opacity: 0;
+  transform: translateX(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+/* Drag handle */
+.drag-handle {
+  display: flex; align-items: center; color: var(--text-dim);
+  cursor: grab; padding: 2px 4px; border-radius: 4px;
+  transition: color 0.15s; flex-shrink: 0;
+  opacity: 0.4;
+}
+.backlog-item:hover .drag-handle { opacity: 0.8; }
+.drag-handle:hover { color: var(--text-mid); }
+.drag-handle:active { cursor: grabbing; }
+
+/* Checkbox */
+.item-check {
+  width: 18px; height: 18px; border-radius: 5px;
+  border: 1.5px solid var(--border-strong); background: transparent;
+  cursor: pointer; flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; transition: all 0.2s; position: relative;
+  -webkit-appearance: none; appearance: none;
+}
+.item-check:hover { border-color: var(--green); background: var(--green-dim); }
+.item-check:checked {
+  background: var(--green); border-color: var(--green);
+}
+.item-check:checked::after {
+  content: '';
+  display: block; width: 10px; height: 7px;
+  border-left: 2px solid #0d0914;
+  border-bottom: 2px solid #0d0914;
+  transform: rotate(-45deg) translateY(-1px);
+}
+
+/* Item text */
+.item-text {
+  flex: 1; font-size: 14px; color: var(--text);
+  line-height: 1.4; word-break: break-word;
+}
+.item-text.editing {
+  display: none;
+}
+.item-edit-input {
+  flex: 1; background: transparent; border: none; outline: none;
+  font-family: var(--sans); font-size: 14px; color: var(--text);
+  line-height: 1.4; padding: 0; width: 100%; display: none;
+}
+.item-edit-input.active { display: block; }
+.backlog-item.is-editing .item-text { display: none; }
+.backlog-item.is-editing .item-edit-input { display: block; }
+
+/* Item actions */
+.item-actions {
+  display: flex; gap: 4px; opacity: 0; transition: opacity 0.15s;
+  flex-shrink: 0;
+}
+.backlog-item:hover .item-actions { opacity: 1; }
+.backlog-item.is-editing .item-actions { opacity: 1; }
+.action-btn {
+  width: 28px; height: 28px; border-radius: 7px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-dim); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; font-size: 12px;
+}
+.action-btn:hover { background: var(--surface-hover); border-color: var(--border-hover); color: var(--text); }
+.action-btn.save-btn { color: var(--cyan); border-color: rgba(0,212,255,0.2); }
+.action-btn.save-btn:hover { background: rgba(0,212,255,0.08); }
+.action-btn.delete-btn:hover { color: var(--pink); border-color: rgba(255,20,147,0.3); background: var(--pink-dim); }
+
+/* ── SHIPPED LIST ── */
+.shipped-list { display: flex; flex-direction: column; gap: 4px; }
+
+.shipped-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 14px; border-radius: 10px;
+  border: 1px solid rgba(100,220,120,0.08);
+  background: rgba(100,220,120,0.03);
+  animation: itemIn 0.3s 0.1s ease both;
+  transition: opacity 0.2s;
+}
+.shipped-item:hover { opacity: 0.85; }
+.shipped-check {
+  width: 18px; height: 18px; border-radius: 5px;
+  background: var(--green); border: 1.5px solid var(--green);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+}
+.shipped-check::after {
+  content: '';
+  display: block; width: 10px; height: 7px;
+  border-left: 2px solid #0d0914;
+  border-bottom: 2px solid #0d0914;
+  transform: rotate(-45deg) translateY(-1px);
+}
+.shipped-text {
+  flex: 1; font-size: 13px; color: var(--text-dim);
+  text-decoration: line-through; text-decoration-color: rgba(100,220,120,0.3);
+  line-height: 1.4;
+}
+.shipped-date {
+  font-size: 11px; color: var(--text-dim); flex-shrink: 0;
+  font-family: var(--outfit); opacity: 0.6;
+}
+.unship-btn {
+  width: 24px; height: 24px; border-radius: 6px; border: 1px solid var(--border);
+  background: transparent; color: var(--text-dim); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s; opacity: 0; font-size: 11px;
+}
+.shipped-item:hover .unship-btn { opacity: 1; }
+.unship-btn:hover { background: var(--surface-hover); color: var(--text-mid); }
+
+/* ── FOOTER ── */
+.footer {
+  margin-top: 72px; padding-top: 24px; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text-dim);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.footer-logo {
+  font-family: var(--outfit); font-size: 13px; font-weight: 800;
+  background: var(--grad);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.header      { animation: fadeUp 0.5s ease both; }
+.add-bar     { animation: fadeUp 0.5s 0.06s ease both; }
+.section:nth-child(1) { animation: fadeUp 0.5s 0.12s ease both; }
+.section:nth-child(2) { animation: fadeUp 0.5s 0.18s ease both; }
+.footer      { animation: fadeUp 0.5s 0.24s ease both; }
+
+/* ── DRAG PLACEHOLDER ── */
+.drag-placeholder {
+  height: 52px; border-radius: 10px;
+  border: 1px dashed rgba(0,212,255,0.3);
+  background: rgba(0,212,255,0.03);
+  pointer-events: none;
+}
+</style>
+</head>
+<body>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<div class="page">
+
+  <!-- Header -->
+  <div class="header">
+    <a href="hub.html" class="back-link">
+      <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+        <path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      Back to dev hub
+    </a>
+    <div class="header-eyebrow">Product backlog</div>
+    <h1 class="header-title">What ships<span> next.</span></h1>
+    <p class="header-sub">Live list of features, fixes, and ideas queued for development. Drag to reprioritise. Tick to ship.</p>
+  </div>
+
+  <!-- Add bar -->
+  <div class="add-bar">
+    <input
+      class="add-input"
+      id="add-input"
+      type="text"
+      placeholder="Add a backlog item — feature, fix, or idea…"
+      autocomplete="off"
+    />
+    <button class="add-btn" id="add-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M7 2V12M2 7H12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      Add item
+    </button>
+  </div>
+
+  <!-- Active backlog -->
+  <div class="section" id="backlog-section">
+    <div class="section-header">
+      <div class="section-label">
+        Active backlog
+        <span class="count-badge" id="backlog-count">0</span>
+      </div>
+      <span class="section-hint">Drag to reorder</span>
+    </div>
+    <div class="backlog-list" id="backlog-list">
+      <div class="empty-state" id="backlog-empty">No items yet — add your first above ↑</div>
+    </div>
+  </div>
+
+  <!-- Shipped -->
+  <div class="section" id="shipped-section">
+    <div class="section-header">
+      <div class="section-label">
+        Shipped
+        <span class="count-badge" id="shipped-count">0</span>
+      </div>
+    </div>
+    <div class="shipped-list" id="shipped-list">
+      <div class="empty-state" id="shipped-empty">Nothing shipped yet — tick items above when done ✓</div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span class="footer-logo">Pulse.</span>
+    <span id="footer-txt">product backlog</span>
+  </div>
+
+</div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────────
+let backlog = [];
+let shipped = [];
+let dragSrcId = null;
+let placeholder = null;
+
+const STORAGE_KEY_BACKLOG  = 'pulse_backlog';
+const STORAGE_KEY_SHIPPED  = 'pulse_shipped';
+
+function load() {
+  try {
+    backlog = JSON.parse(localStorage.getItem(STORAGE_KEY_BACKLOG))  || [];
+    shipped = JSON.parse(localStorage.getItem(STORAGE_KEY_SHIPPED)) || [];
+  } catch(e) {
+    backlog = []; shipped = [];
+  }
+}
+function save() {
+  localStorage.setItem(STORAGE_KEY_BACKLOG,  JSON.stringify(backlog));
+  localStorage.setItem(STORAGE_KEY_SHIPPED, JSON.stringify(shipped));
+}
+
+// ── RENDER ─────────────────────────────────────────────────────────────────
+function render() {
+  renderBacklog();
+  renderShipped();
+  save();
+}
+
+function renderBacklog() {
+  const list  = document.getElementById('backlog-list');
+  const empty = document.getElementById('backlog-empty');
+  const count = document.getElementById('backlog-count');
+
+  count.textContent = backlog.length;
+
+  // Remove existing items (keep empty state node)
+  [...list.querySelectorAll('.backlog-item')].forEach(el => el.remove());
+
+  if (backlog.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  backlog.forEach((item, idx) => {
+    const el = document.createElement('div');
+    el.className = 'backlog-item';
+    el.dataset.id = item.id;
+    el.draggable = true;
+    el.innerHTML = `
+      <div class="drag-handle" title="Drag to reorder">
+        <svg width="10" height="14" viewBox="0 0 10 14" fill="none">
+          <circle cx="3" cy="3"  r="1.2" fill="currentColor"/>
+          <circle cx="7" cy="3"  r="1.2" fill="currentColor"/>
+          <circle cx="3" cy="7"  r="1.2" fill="currentColor"/>
+          <circle cx="7" cy="7"  r="1.2" fill="currentColor"/>
+          <circle cx="3" cy="11" r="1.2" fill="currentColor"/>
+          <circle cx="7" cy="11" r="1.2" fill="currentColor"/>
+        </svg>
+      </div>
+      <input type="checkbox" class="item-check" title="Mark as shipped"/>
+      <span class="item-text">${escHtml(item.text)}</span>
+      <input type="text" class="item-edit-input" value="${escHtml(item.text)}" maxlength="300"/>
+      <div class="item-actions">
+        <button class="action-btn edit-btn" title="Edit">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M8.5 1.5L10.5 3.5L4 10H2V8L8.5 1.5Z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="action-btn save-btn" title="Save" style="display:none">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 6.5L4.5 9L10 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <button class="action-btn delete-btn" title="Delete">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M2 3H10M4.5 3V2H7.5V3M4 5V9M8 5V9M3 3L3.5 10H8.5L9 3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+    `;
+
+    // Checkbox — ship it
+    el.querySelector('.item-check').addEventListener('change', () => shipItem(item.id, el));
+
+    // Edit
+    el.querySelector('.edit-btn').addEventListener('click', () => startEdit(el));
+
+    // Save
+    el.querySelector('.save-btn').addEventListener('click', () => saveEdit(el, item.id));
+
+    // Delete
+    el.querySelector('.delete-btn').addEventListener('click', () => deleteItem(item.id));
+
+    // Edit input — enter to save, escape to cancel
+    const input = el.querySelector('.item-edit-input');
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter')  { e.preventDefault(); saveEdit(el, item.id); }
+      if (e.key === 'Escape') { cancelEdit(el, item.text); }
+    });
+
+    // Drag events
+    el.addEventListener('dragstart', onDragStart);
+    el.addEventListener('dragend',   onDragEnd);
+    el.addEventListener('dragover',  onDragOver);
+    el.addEventListener('dragleave', onDragLeave);
+    el.addEventListener('drop',      onDrop);
+
+    list.appendChild(el);
+  });
+}
+
+function renderShipped() {
+  const list  = document.getElementById('shipped-list');
+  const empty = document.getElementById('shipped-empty');
+  const count = document.getElementById('shipped-count');
+
+  count.textContent = shipped.length;
+
+  [...list.querySelectorAll('.shipped-item')].forEach(el => el.remove());
+
+  if (shipped.length === 0) {
+    empty.style.display = 'flex';
+    return;
+  }
+  empty.style.display = 'none';
+
+  // Show newest first
+  [...shipped].reverse().forEach(item => {
+    const el = document.createElement('div');
+    el.className = 'shipped-item';
+    el.dataset.id = item.id;
+    const d = new Date(item.shippedAt);
+    const dateStr = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+    el.innerHTML = `
+      <div class="shipped-check"></div>
+      <span class="shipped-text">${escHtml(item.text)}</span>
+      <span class="shipped-date">${dateStr}</span>
+      <button class="unship-btn" title="Move back to backlog">↩</button>
+    `;
+    el.querySelector('.unship-btn').addEventListener('click', () => unshipItem(item.id));
+    list.appendChild(el);
+  });
+}
+
+// ── ACTIONS ────────────────────────────────────────────────────────────────
+function addItem(text) {
+  if (!text.trim()) return;
+  backlog.push({ id: uid(), text: text.trim(), createdAt: Date.now() });
+  render();
+}
+
+function shipItem(id, el) {
+  el.classList.add('shipping');
+  setTimeout(() => {
+    const idx = backlog.findIndex(i => i.id === id);
+    if (idx === -1) return;
+    const item = backlog.splice(idx, 1)[0];
+    item.shippedAt = Date.now();
+    shipped.push(item);
+    render();
+  }, 420);
+}
+
+function unshipItem(id) {
+  const idx = shipped.findIndex(i => i.id === id);
+  if (idx === -1) return;
+  const item = shipped.splice(idx, 1)[0];
+  delete item.shippedAt;
+  backlog.push(item);
+  render();
+}
+
+function deleteItem(id) {
+  const el = document.querySelector(`.backlog-item[data-id="${id}"]`);
+  if (el) {
+    el.style.transition = 'opacity 0.2s, transform 0.2s';
+    el.style.opacity = '0';
+    el.style.transform = 'translateX(-10px)';
+    setTimeout(() => {
+      backlog = backlog.filter(i => i.id !== id);
+      render();
+    }, 220);
+  }
+}
+
+function startEdit(el) {
+  el.classList.add('is-editing');
+  const input = el.querySelector('.item-edit-input');
+  el.querySelector('.edit-btn').style.display = 'none';
+  el.querySelector('.save-btn').style.display = 'flex';
+  input.focus();
+  input.select();
+}
+
+function saveEdit(el, id) {
+  const input = el.querySelector('.item-edit-input');
+  const newText = input.value.trim();
+  if (!newText) return;
+  const item = backlog.find(i => i.id === id);
+  if (item) {
+    item.text = newText;
+    el.querySelector('.item-text').textContent = newText;
+  }
+  el.classList.remove('is-editing');
+  el.querySelector('.edit-btn').style.display = 'flex';
+  el.querySelector('.save-btn').style.display = 'none';
+  save();
+}
+
+function cancelEdit(el, originalText) {
+  const input = el.querySelector('.item-edit-input');
+  input.value = originalText;
+  el.classList.remove('is-editing');
+  el.querySelector('.edit-btn').style.display = 'flex';
+  el.querySelector('.save-btn').style.display = 'none';
+}
+
+// ── DRAG & DROP ────────────────────────────────────────────────────────────
+function onDragStart(e) {
+  dragSrcId = e.currentTarget.dataset.id;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+
+  placeholder = document.createElement('div');
+  placeholder.className = 'drag-placeholder';
+}
+
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  if (placeholder && placeholder.parentNode) placeholder.parentNode.removeChild(placeholder);
+  placeholder = null;
+  dragSrcId = null;
+  document.querySelectorAll('.backlog-item').forEach(el => el.classList.remove('drag-over'));
+}
+
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  const target = e.currentTarget;
+  if (target.dataset.id === dragSrcId) return;
+  target.classList.add('drag-over');
+}
+
+function onDragLeave(e) {
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function onDrop(e) {
+  e.preventDefault();
+  const targetId = e.currentTarget.dataset.id;
+  e.currentTarget.classList.remove('drag-over');
+  if (!dragSrcId || targetId === dragSrcId) return;
+
+  const srcIdx = backlog.findIndex(i => i.id === dragSrcId);
+  const tgtIdx = backlog.findIndex(i => i.id === targetId);
+  if (srcIdx === -1 || tgtIdx === -1) return;
+
+  const [moved] = backlog.splice(srcIdx, 1);
+  backlog.splice(tgtIdx, 0, moved);
+  render();
+}
+
+// ── UTILITIES ──────────────────────────────────────────────────────────────
+function uid() {
+  return Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
+}
+function escHtml(str) {
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+// ── BOOT ───────────────────────────────────────────────────────────────────
+load();
+render();
+
+// Add item on button click
+document.getElementById('add-btn').addEventListener('click', () => {
+  const inp = document.getElementById('add-input');
+  addItem(inp.value);
+  inp.value = '';
+  inp.focus();
+});
+
+// Add item on Enter
+document.getElementById('add-input').addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    const inp = e.target;
+    addItem(inp.value);
+    inp.value = '';
+  }
+});
+
+// Footer date
+document.getElementById('footer-txt').textContent =
+  `product backlog · last updated ${new Date().toLocaleDateString('en-GB', {day:'numeric', month:'long', year:'numeric'})}`;
+</script>
+</body>
+</html>
