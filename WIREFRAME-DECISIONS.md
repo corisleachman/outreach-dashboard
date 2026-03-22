@@ -704,3 +704,23 @@ This is now the standard pattern for any wireframe file that grows beyond ~80KB.
 ---
 
 *End of WIREFRAME-DECISIONS.md*
+
+
+---
+
+## SECTION 11 — Sidebar Navigation Order (Locked March 2026)
+
+**Decision:** Summary is the first item in the sidebar, Campaigns is second.
+
+**Rationale:** Summary / Today is the default landing page on login. It is the primary daily entry point — the place users come to see what needs doing. Campaigns is the workspace users navigate to from the queue. The sidebar order should reflect the natural usage flow: orientation first, then work.
+
+**Implementation:** Apply this order consistently across all wireframes and in the built product.
+
+| Position | Icon | Destination |
+|---|---|---|
+| 1 (top) | Summary (grid icon) | `/summary` — default landing page |
+| 2 | Campaigns (lines icon) | `/dashboard` — campaigns list |
+| 3 (bottom, margin-top:auto) | Settings (cog icon) | `/settings` |
+
+**Updated in:** `wireframes/summary-v2.html`, `wireframes/campaign-view-v3.html`
+**Apply to all future wireframes** before sign-off.
