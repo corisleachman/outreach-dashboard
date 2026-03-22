@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Referral System Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0d0914;
+    --t: #f4f4f2;
+    --tm: #a8a8b8;
+    --td: #6b6b80;
+    --pink: #ff1493;
+    --cyan: #00d4ff;
+    --green: #64dc78;
+    --amber: #ff9d42;
+    --grad: linear-gradient(135deg, #ff1493, #00d4ff);
+    --grad-text: linear-gradient(135deg, #ff1493 0%, #00d4ff 100%);
+    --glow-pink: rgba(255,20,147,0.25);
+    --glow-cyan: rgba(0,212,255,0.2);
+    --s: rgba(255,255,255,0.04);
+    --s2: rgba(255,255,255,0.07);
+    --b: rgba(255,255,255,0.07);
+    --b2: rgba(255,255,255,0.13);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #080610; color: var(--t); font-family: 'DM Sans', sans-serif; }
+
+  /* ── PAGE LAYOUT ── */
+  .page-header {
+    padding: 48px 60px 32px;
+    border-bottom: 1px solid var(--b);
+  }
+  .page-title { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--td); margin-bottom: 8px; }
+  .page-name { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+  .page-name span { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .page-desc { color: var(--tm); font-size: 14px; margin-top: 8px; }
+
+  /* Flow nav */
+  .flow-nav { display: flex; gap: 8px; padding: 24px 60px; border-bottom: 1px solid var(--b); flex-wrap: wrap; }
+  .flow-btn { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 100px; border: 1px solid var(--b2); background: transparent; color: var(--tm); cursor: pointer; transition: all 0.2s; letter-spacing: 0.01em; }
+  .flow-btn:hover, .flow-btn.active { background: var(--s2); color: var(--t); border-color: rgba(255,255,255,0.2); }
+  .flow-btn.active { border-color: rgba(255,20,147,0.4); color: var(--pink); background: rgba(255,20,147,0.06); }
+
+  /* Screens container */
+  .screens { padding: 48px 60px; display: flex; flex-direction: column; gap: 64px; }
+  .screen-section { display: flex; flex-direction: column; gap: 16px; }
+  .screen-label { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--td); }
+  .screen-title { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--t); margin-bottom: 4px; }
+  .screen-desc { font-size: 13px; color: var(--tm); margin-bottom: 16px; }
+
+  /* ── SHARED COMPONENTS ── */
+  .card {
+    background: rgba(13,9,20,0.6);
+    border: 1px solid var(--b);
+    border-radius: 16px;
+    backdrop-filter: blur(20px);
+  }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; border-radius: 100px;
+    font-family: 'Outfit', sans-serif; font-size: 11px; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .pill-pro { background: rgba(255,20,147,0.15); color: var(--pink); border: 1px solid rgba(255,20,147,0.3); }
+  .pill-green { background: rgba(100,220,120,0.15); color: var(--green); border: 1px solid rgba(100,220,120,0.3); }
+  .pill-cyan { background: rgba(0,212,255,0.12); color: var(--cyan); border: 1px solid rgba(0,212,255,0.25); }
+  .pill-amber { background: rgba(255,157,66,0.15); color: var(--amber); border: 1px solid rgba(255,157,66,0.3); }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 24px; border-radius: 100px;
+    background: var(--grad); color: white; border: none; cursor: pointer;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 700;
+    box-shadow: 0 0 32px var(--glow-pink); text-decoration: none; transition: all 0.2s;
+  }
+  .btn-ghost {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 24px; border-radius: 100px;
+    background: transparent; color: var(--tm); border: 1px solid var(--b2); cursor: pointer;
+    font-family: 'Outfit', sans-serif; font-size: 14px; font-weight: 500;
+    text-decoration: none; transition: all 0.2s;
+  }
+  .btn-ghost:hover { color: var(--t); border-color: rgba(255,255,255,0.2); }
+  .input-field {
+    width: 100%; padding: 11px 16px; background: var(--s); border: 1px solid var(--b2);
+    border-radius: 10px; color: var(--t); font-family: 'DM Sans', sans-serif; font-size: 14px;
+    outline: none; transition: border-color 0.2s;
+  }
+  .input-field::placeholder { color: var(--td); }
+  .input-field:focus { border-color: rgba(255,20,147,0.4); }
+  .tab-row { display: flex; gap: 0; border-bottom: 1px solid var(--b); margin-bottom: 24px; }
+  .tab {
+    padding: 10px 20px; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600;
+    color: var(--td); cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .tab.active { color: var(--t); border-bottom-color: var(--pink); }
+  .tab:hover:not(.active) { color: var(--tm); }
+
+  /* ── REFERRAL CARD VISUAL ── */
+  .referral-card-visual {
+    background: linear-gradient(145deg, #1a0d2e 0%, #0d1a2e 100%);
+    border-radius: 16px;
+    padding: 32px 28px;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    max-width: 380px;
+  }
+  .referral-card-visual::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, #ff1493 30%, #00d4ff 70%, transparent);
+  }
+  .referral-card-visual::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(255,20,147,0.15) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .card-product-name {
+    font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800;
+    letter-spacing: -0.02em; margin-bottom: 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .card-product-name .dot { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .card-pro-badge {
+    display: inline-flex; padding: 3px 10px; background: var(--grad);
+    border-radius: 6px; font-family: 'Outfit', sans-serif; font-size: 11px;
+    font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase;
+  }
+  .card-offer { font-size: 13px; color: var(--tm); margin: 12px 0 16px; letter-spacing: 0.04em; text-transform: uppercase; font-family: 'Outfit', sans-serif; font-weight: 600; font-size: 11px; }
+  .card-gifted {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 6px 16px; border-radius: 100px;
+    background: rgba(255,20,147,0.15); border: 1px solid rgba(255,20,147,0.3);
+    font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; color: var(--pink);
+  }
+
+  /* ── SETTINGS PANEL ── */
+  .settings-shell {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    min-height: 600px;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--b);
+    max-width: 900px;
+  }
+  .settings-sidebar {
+    background: var(--s);
+    border-right: 1px solid var(--b);
+    padding: 24px 0;
+  }
+  .settings-sidebar-title {
+    font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.14em; text-transform: uppercase; color: var(--td);
+    padding: 0 20px 12px;
+  }
+  .settings-nav-item {
+    padding: 9px 20px; font-size: 14px; color: var(--tm); cursor: pointer;
+    transition: all 0.15s; display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .settings-nav-item:hover { color: var(--t); background: var(--s); }
+  .settings-nav-item.active { color: var(--t); background: rgba(255,20,147,0.08); border-right: 2px solid var(--pink); }
+  .settings-content { padding: 32px; overflow-y: auto; }
+  .settings-section-title {
+    font-family: 'Outfit', sans-serif; font-size: 20px; font-weight: 700;
+    letter-spacing: -0.01em; margin-bottom: 6px;
+  }
+  .settings-section-desc { font-size: 14px; color: var(--tm); margin-bottom: 28px; }
+
+  /* ── REWARD BANNER ── */
+  .reward-banner {
+    display: flex; align-items: center; gap: 12px;
+    padding: 14px 18px; border-radius: 12px;
+    background: rgba(100,220,120,0.08); border: 1px solid rgba(100,220,120,0.2);
+    margin-bottom: 24px; font-size: 14px; color: var(--green);
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  /* ── HOW IT WORKS ── */
+  .how-it-works { display: flex; flex-direction: column; gap: 12px; margin: 20px 0; }
+  .how-step { display: flex; align-items: flex-start; gap: 12px; font-size: 14px; color: var(--tm); }
+  .how-step-icon { font-size: 16px; width: 24px; flex-shrink: 0; }
+  .how-step strong { color: var(--t); }
+
+  /* ── LINK ROW ── */
+  .link-row { display: flex; gap: 8px; margin-bottom: 20px; }
+  .link-row .input-field { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--tm); }
+  .btn-copy {
+    padding: 11px 20px; background: var(--s2); border: 1px solid var(--b2);
+    border-radius: 10px; color: var(--t); font-family: 'Outfit', sans-serif;
+    font-size: 13px; font-weight: 700; cursor: pointer; white-space: nowrap;
+    transition: all 0.2s; flex-shrink: 0;
+  }
+  .btn-copy:hover { background: rgba(255,255,255,0.1); }
+  .btn-copy.copied { color: var(--green); border-color: rgba(100,220,120,0.3); }
+
+  /* ── SEND INVITE ROW ── */
+  .send-row { display: flex; gap: 8px; margin-bottom: 8px; }
+  .footer-note { font-size: 12px; color: var(--td); text-align: center; margin-top: 12px; }
+
+  /* ── PAST INVITES TABLE ── */
+  .invites-table { width: 100%; border-collapse: collapse; }
+  .invites-table th {
+    text-align: left; font-family: 'Outfit', sans-serif; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--td); padding: 0 12px 12px; border-bottom: 1px solid var(--b);
+  }
+  .invites-table td { padding: 14px 12px; border-bottom: 1px solid var(--b); font-size: 14px; color: var(--tm); }
+  .invites-table tr:last-child td { border-bottom: none; }
+  .invites-table td:first-child { color: var(--t); font-weight: 500; }
+  .empty-state { text-align: center; padding: 40px 20px; color: var(--td); font-size: 14px; }
+  .empty-state p { margin-top: 8px; }
+
+  /* ── ONBOARDING SCREEN ── */
+  .onboarding-shell {
+    max-width: 500px; margin: 0 auto;
+    background: var(--bg); border-radius: 20px; border: 1px solid var(--b);
+    padding: 48px 40px; text-align: center;
+  }
+  .onboarding-logo { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; margin-bottom: 32px; }
+  .onboarding-logo .dot { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .onboarding-heading { font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 700; letter-spacing: -0.01em; margin: 24px 0 10px; }
+  .onboarding-sub { font-size: 15px; color: var(--tm); line-height: 1.6; margin-bottom: 28px; }
+
+  /* ── DASHBOARD PROMPT ── */
+  .dashboard-mock {
+    background: var(--bg); border-radius: 16px; border: 1px solid var(--b);
+    overflow: hidden; max-width: 760px;
+  }
+  .dash-topbar {
+    padding: 16px 24px; border-bottom: 1px solid var(--b);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .dash-logo { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 800; }
+  .dash-logo .dot { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .dash-body { padding: 24px; }
+  .dash-campaign-success {
+    background: rgba(100,220,120,0.06); border: 1px solid rgba(100,220,120,0.2);
+    border-radius: 12px; padding: 16px 20px; margin-bottom: 12px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .dash-success-icon { font-size: 20px; }
+  .dash-success-text { font-size: 14px; }
+  .dash-success-text strong { color: var(--green); display: block; font-size: 15px; margin-bottom: 2px; }
+
+  /* Momentum prompt */
+  .momentum-prompt {
+    background: var(--s); border: 1px solid var(--b2);
+    border-left: 3px solid var(--pink); border-radius: 12px;
+    padding: 14px 18px; display: flex; align-items: center;
+    justify-content: space-between; gap: 16px;
+    animation: slideUp 0.3s ease-out;
+  }
+  @keyframes slideUp { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .momentum-text { font-size: 14px; color: var(--tm); line-height: 1.4; }
+  .momentum-actions { display: flex; gap: 8px; flex-shrink: 0; align-items: center; }
+  .btn-momentum-cta {
+    padding: 7px 16px; background: var(--grad); border: none; border-radius: 100px;
+    color: white; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700;
+    cursor: pointer; white-space: nowrap;
+  }
+  .btn-momentum-dismiss {
+    font-size: 12px; color: var(--td); background: none; border: none;
+    cursor: pointer; font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  }
+  .btn-momentum-dismiss:hover { color: var(--tm); }
+
+  /* ── TRIAL EXPIRY BANNER ── */
+  .trial-banner {
+    padding: 12px 24px; background: rgba(255,157,66,0.08);
+    border-bottom: 1px solid rgba(255,157,66,0.2);
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+  }
+  .trial-banner-text { font-size: 13px; color: var(--amber); }
+  .trial-banner-actions { display: flex; gap: 10px; align-items: center; }
+  .btn-trial-link { font-size: 13px; color: var(--amber); text-decoration: underline; cursor: pointer; background: none; border: none; }
+  .btn-trial-upgrade {
+    padding: 6px 16px; background: var(--grad); border: none; border-radius: 100px;
+    color: white; font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer;
+  }
+
+  /* ── POST-UPGRADE ── */
+  .success-shell {
+    max-width: 480px; text-align: center;
+    background: var(--bg); border-radius: 20px; border: 1px solid var(--b);
+    padding: 48px 40px;
+  }
+  .success-icon { font-size: 48px; margin-bottom: 20px; }
+  .success-heading { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: 12px; }
+  .success-sub { font-size: 15px; color: var(--tm); line-height: 1.6; margin-bottom: 28px; }
+  .success-features { text-align: left; background: var(--s); border-radius: 12px; padding: 16px 20px; margin-bottom: 24px; }
+  .success-feature { display: flex; align-items: center; gap: 10px; padding: 6px 0; font-size: 14px; color: var(--tm); }
+  .success-feature span { color: var(--green); font-size: 16px; }
+  .success-referral-note { font-size: 13px; color: var(--td); margin-top: 16px; }
+  .success-referral-note a { color: var(--cyan); text-decoration: none; }
+
+  /* ── DIVIDER ── */
+  .divider { height: 1px; background: var(--b); margin: 8px 0 24px; }
+
+  /* ── ANNOTATIONS ── */
+  .annotation-list { display: flex; flex-direction: column; gap: 8px; margin-top: 16px; }
+  .annotation { display: flex; gap: 10px; align-items: flex-start; font-size: 13px; color: var(--td); }
+  .annotation-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--pink); margin-top: 5px; flex-shrink: 0; }
+
+  /* ── SCREEN GRID ── */
+  .screen-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 32px; }
+  .screen-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+
+  /* Section label bar */
+  .section-bar {
+    display: flex; align-items: center; gap: 16px; margin-bottom: 8px;
+  }
+  .section-bar-line { flex: 1; height: 1px; background: var(--b); }
+
+  /* Notification dot */
+  .notif-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--pink); display: inline-block; margin-right: 4px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="page-title">Pulse. — Wireframes</div>
+  <div class="page-name">Referral System <span>/ Phase 2.16</span></div>
+  <div class="page-desc">All views and user journeys. Click flow buttons to jump to a section.</div>
+</div>
+
+<div class="flow-nav">
+  <button class="flow-btn active" onclick="scrollTo('settings-default')">1 · Settings (empty)</button>
+  <button class="flow-btn" onclick="scrollTo('settings-active')">2 · Settings (active)</button>
+  <button class="flow-btn" onclick="scrollTo('past-invites')">3 · Past invites tab</button>
+  <button class="flow-btn" onclick="scrollTo('referee-onboarding')">4 · Referee onboarding</button>
+  <button class="flow-btn" onclick="scrollTo('prompt-first-campaign')">5 · Prompt: first campaign</button>
+  <button class="flow-btn" onclick="scrollTo('prompt-first-reply')">6 · Prompt: first reply</button>
+  <button class="flow-btn" onclick="scrollTo('prompt-trial-expiry')">7 · Trial expiry banner</button>
+  <button class="flow-btn" onclick="scrollTo('prompt-post-upgrade')">8 · Post-upgrade screen</button>
+  <button class="flow-btn" onclick="scrollTo('reward-notification')">9 · Reward notification</button>
+</div>
+
+<div class="screens">
+
+  <!-- ══════════════════════════════════════
+       1. SETTINGS → REFERRALS (EMPTY STATE)
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="settings-default">
+    <div class="screen-label">View 1</div>
+    <div class="screen-title">Settings → Referrals (no referrals yet)</div>
+    <div class="screen-desc">Default state when a user first visits the referrals panel. No prior invites, no rewards earned.</div>
+
+    <div class="settings-shell">
+      <div class="settings-sidebar">
+        <div class="settings-sidebar-title">Settings</div>
+        <div class="settings-nav-item">Account</div>
+        <div class="settings-nav-item">Appearance</div>
+        <div class="settings-nav-item active">Referrals</div>
+        <div class="settings-nav-item">Billing</div>
+        <div class="settings-nav-item">Notifications</div>
+      </div>
+      <div class="settings-content">
+        <div class="settings-section-title">Refer and earn</div>
+        <div class="settings-section-desc">Give friends 60 days of Pro free. Earn a free month when they send their first campaign.</div>
+
+        <div style="display:flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
+          <!-- Card visual -->
+          <div class="referral-card-visual" style="flex-shrink:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
+              <div class="card-product-name">Pulse<span class="dot">.</span> <div class="card-pro-badge">Pro</div></div>
+            </div>
+            <div class="card-offer">60 DAYS OF PRO FREE</div>
+            <div class="card-gifted">🎁 Gifted by You</div>
+          </div>
+
+          <!-- How it works + link -->
+          <div style="flex:1; min-width:240px;">
+            <div class="how-it-works">
+              <div class="how-step"><span class="how-step-icon">📣</span><span>Share your invite link</span></div>
+              <div class="how-step"><span class="how-step-icon">🎁</span><span><strong>They get 60 days of Pro free</strong> — double the standard trial</span></div>
+              <div class="how-step"><span class="how-step-icon">✨</span><span><strong>You earn a free month</strong> when they send their first campaign</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px;">Your invite link</div>
+        <div class="link-row">
+          <input class="input-field" value="https://pulse-outreach.co.uk/?ref=ax7k2m9p" readonly>
+          <button class="btn-copy" onclick="this.textContent='Copied!'; this.classList.add('copied'); setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},2000)">Copy</button>
+        </div>
+
+        <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px;">Send invites</div>
+        <div class="send-row">
+          <input class="input-field" placeholder="email@example.com">
+          <button class="btn-primary" style="padding: 11px 20px; flex-shrink:0;">Send</button>
+        </div>
+        <div class="footer-note">Rewards auto-applied to your next subscription payment.</div>
+
+        <div class="divider" style="margin-top:24px;"></div>
+
+        <div class="tab-row">
+          <div class="tab">Refer</div>
+          <div class="tab active">Past invites (0)</div>
+        </div>
+
+        <div class="empty-state">
+          <div style="font-size:32px;">📬</div>
+          <p>No invites yet</p>
+          <p style="margin-top:4px; font-size:12px;">Share your link or send a direct invite to get started.</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Card visual shows "Gifted by You" in default state — updates to referrer's first name when shared</div>
+      <div class="annotation"><div class="annotation-dot"></div>Link is pre-generated — no user action needed to create it</div>
+      <div class="annotation"><div class="annotation-dot"></div>Past invites tab shows (0) count in default state</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       2. SETTINGS → REFERRALS (ACTIVE STATE)
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="settings-active">
+    <div class="screen-label">View 2</div>
+    <div class="screen-title">Settings → Referrals (reward earned)</div>
+    <div class="screen-desc">State when the user has earned at least one reward.</div>
+
+    <div class="settings-shell">
+      <div class="settings-sidebar">
+        <div class="settings-sidebar-title">Settings</div>
+        <div class="settings-nav-item">Account</div>
+        <div class="settings-nav-item">Appearance</div>
+        <div class="settings-nav-item active">Referrals</div>
+        <div class="settings-nav-item">Billing</div>
+        <div class="settings-nav-item">Notifications</div>
+      </div>
+      <div class="settings-content">
+        <div class="settings-section-title">Refer and earn</div>
+        <div class="settings-section-desc">Give friends 60 days of Pro free. Earn a free month when they send their first campaign.</div>
+
+        <div class="reward-banner">
+          🎉 You've earned 1 month of Pro — applied to your next bill
+        </div>
+
+        <div style="display:flex; gap: 32px; align-items: flex-start; flex-wrap: wrap;">
+          <div class="referral-card-visual" style="flex-shrink:0;">
+            <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom: 20px;">
+              <div class="card-product-name">Pulse<span class="dot">.</span> <div class="card-pro-badge">Pro</div></div>
+            </div>
+            <div class="card-offer">60 DAYS OF PRO FREE</div>
+            <div class="card-gifted">🎁 Gifted by You</div>
+          </div>
+          <div style="flex:1; min-width:240px;">
+            <div class="how-it-works">
+              <div class="how-step"><span class="how-step-icon">📣</span><span>Share your invite link</span></div>
+              <div class="how-step"><span class="how-step-icon">🎁</span><span><strong>They get 60 days of Pro free</strong> — double the standard trial</span></div>
+              <div class="how-step"><span class="how-step-icon">✨</span><span><strong>You earn a free month</strong> when they send their first campaign</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="divider"></div>
+
+        <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px;">Your invite link</div>
+        <div class="link-row">
+          <input class="input-field" value="https://pulse-outreach.co.uk/?ref=ax7k2m9p" readonly>
+          <button class="btn-copy" onclick="this.textContent='Copied!'; this.classList.add('copied'); setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},2000)">Copy</button>
+        </div>
+
+        <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px;">Send invites</div>
+        <div class="send-row">
+          <input class="input-field" placeholder="email@example.com">
+          <button class="btn-primary" style="padding: 11px 20px; flex-shrink:0;">Send</button>
+        </div>
+        <div class="footer-note">Rewards auto-applied to your next subscription payment.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       3. PAST INVITES TAB
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="past-invites">
+    <div class="screen-label">View 3</div>
+    <div class="screen-title">Past invites tab — all statuses</div>
+    <div class="screen-desc">Shows referrals at different stages of the funnel.</div>
+
+    <div class="settings-shell">
+      <div class="settings-sidebar">
+        <div class="settings-sidebar-title">Settings</div>
+        <div class="settings-nav-item">Account</div>
+        <div class="settings-nav-item">Appearance</div>
+        <div class="settings-nav-item active">Referrals</div>
+        <div class="settings-nav-item">Billing</div>
+        <div class="settings-nav-item">Notifications</div>
+      </div>
+      <div class="settings-content">
+        <div class="settings-section-title">Refer and earn</div>
+
+        <div class="tab-row">
+          <div class="tab">Refer</div>
+          <div class="tab active">Past invites (4)</div>
+        </div>
+
+        <table class="invites-table">
+          <thead>
+            <tr>
+              <th>Name / Email</th>
+              <th>Invited</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <div>Sarah Mitchell</div>
+                <div style="font-size:12px; color:var(--td); margin-top:2px;">sarah@foldstudio.co</div>
+              </td>
+              <td>12 Mar 2026</td>
+              <td><span class="pill pill-green">✓ Reward earned</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div>Dan Kim</div>
+                <div style="font-size:12px; color:var(--td); margin-top:2px;">dan@studionorth.io</div>
+              </td>
+              <td>15 Mar 2026</td>
+              <td><span class="pill pill-cyan">Activated</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div>Priya Nair</div>
+                <div style="font-size:12px; color:var(--td); margin-top:2px;">priya@commonground.co</div>
+              </td>
+              <td>18 Mar 2026</td>
+              <td><span class="pill pill-amber">Signed up</span></td>
+            </tr>
+            <tr>
+              <td>
+                <div style="color:var(--td);">james@agency.com</div>
+              </td>
+              <td>20 Mar 2026</td>
+              <td><span class="pill" style="background:var(--s); color:var(--td); border:1px solid var(--b2);">Invited</span></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top:20px; padding:16px; background:var(--s); border-radius:10px; font-size:13px; color:var(--td);">
+          <strong style="color:var(--tm);">Status guide:</strong>
+          Invited → they received the email ·
+          Signed up → they created an account ·
+          Activated → they sent their first campaign ·
+          Reward earned → your free month has been applied
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Status progresses automatically — no manual action needed from referrer</div>
+      <div class="annotation"><div class="annotation-dot"></div>Reward earned row is the trigger for the green reward banner appearing in View 2</div>
+      <div class="annotation"><div class="annotation-dot"></div>Name shown once referee has signed up; email only shown before that</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       4. REFEREE ONBOARDING
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="referee-onboarding">
+    <div class="screen-label">View 4</div>
+    <div class="screen-title">Referee onboarding — arriving via referral link</div>
+    <div class="screen-desc">Shown after the referee completes Gmail OAuth. Confirms their extended trial and who gifted it.</div>
+
+    <div class="onboarding-shell">
+      <div class="onboarding-logo">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></div>
+
+      <div style="display:flex; justify-content:center; margin-bottom:8px;">
+        <div class="referral-card-visual" style="max-width:300px; text-align:center;">
+          <div style="display:flex; align-items:center; justify-content:center; margin-bottom:16px;">
+            <div class="card-product-name">Pulse<span class="dot">.</span> <div class="card-pro-badge">Pro</div></div>
+          </div>
+          <div class="card-offer">60 DAYS OF PRO FREE</div>
+          <div style="display:flex; justify-content:center; margin-top:4px;">
+            <div class="card-gifted">🎁 Gifted by Sarah</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="onboarding-heading">Sarah gave you an extra 30 days of Pro</div>
+      <div class="onboarding-sub">You'll get 60 days of Pro free — double the standard trial. No credit card required.</div>
+
+      <button class="btn-primary" style="width:100%; justify-content:center; margin-bottom:12px;">Get started →</button>
+      <div style="font-size:12px; color:var(--td);">Your trial starts now · No card needed · Cancel anytime</div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Referrer's first name shown on gifted card and in heading — personalisation requires referral code resolution at OAuth callback time</div>
+      <div class="annotation"><div class="annotation-dot"></div>Trial extension applied automatically in the background — user doesn't need to do anything</div>
+      <div class="annotation"><div class="annotation-dot"></div>If referral code is invalid, this screen is skipped — user goes straight to standard onboarding</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       5. CONTEXTUAL PROMPT — FIRST CAMPAIGN SENT
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="prompt-first-campaign">
+    <div class="screen-label">View 5</div>
+    <div class="screen-title">Contextual prompt — after first campaign sent</div>
+    <div class="screen-desc">Momentum prompt appears 2 seconds after the campaign send success confirmation. Non-blocking, dismissible.</div>
+
+    <div class="dashboard-mock">
+      <div class="dash-topbar">
+        <div class="dash-logo">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></div>
+        <span class="pill pill-pro">Pro trial · 29 days left</span>
+      </div>
+      <div class="dash-body">
+        <div class="dash-campaign-success">
+          <div class="dash-success-icon">✓</div>
+          <div class="dash-success-text">
+            <strong>Campaign live.</strong>
+            Your messages are on their way. Follow-ups will pause automatically if someone replies.
+          </div>
+        </div>
+        <div class="momentum-prompt">
+          <div class="momentum-text">Your outreach is live. Know someone who'd benefit from Pulse.? Give them a free month.</div>
+          <div class="momentum-actions">
+            <button class="btn-momentum-cta">Share →</button>
+            <button class="btn-momentum-dismiss">Maybe later</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Prompt slides up 2s after campaign success — uses existing MomentumPrompt component</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Share →" opens Settings → Referrals panel</div>
+      <div class="annotation"><div class="annotation-dot"></div>Auto-expires after 10s if no action — same behaviour as all momentum prompts</div>
+      <div class="annotation"><div class="annotation-dot"></div>Only shown once — never repeats after dismiss</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       6. CONTEXTUAL PROMPT — FIRST REPLY
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="prompt-first-reply">
+    <div class="screen-label">View 6</div>
+    <div class="screen-title">Contextual prompt — after first reply received</div>
+    <div class="screen-desc">Appears in the Conversations tab when the user first receives a reply.</div>
+
+    <div class="dashboard-mock">
+      <div class="dash-topbar">
+        <div class="dash-logo">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></div>
+        <span class="pill pill-cyan">1 new reply</span>
+      </div>
+      <div class="dash-body">
+        <div class="dash-campaign-success" style="background:rgba(0,212,255,0.05); border-color:rgba(0,212,255,0.2);">
+          <div class="dash-success-icon">💬</div>
+          <div class="dash-success-text">
+            <strong style="color:var(--cyan);">You got a reply.</strong>
+            Sarah Mitchell replied to your outreach. Check the Conversations tab.
+          </div>
+        </div>
+        <div class="momentum-prompt">
+          <div class="momentum-text">You got a reply. Pulse. is working. Pass it on.</div>
+          <div class="momentum-actions">
+            <button class="btn-momentum-cta">Share →</button>
+            <button class="btn-momentum-dismiss">Maybe later</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       7. TRIAL EXPIRY BANNER WITH REFERRAL NOTE
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="prompt-trial-expiry">
+    <div class="screen-label">View 7</div>
+    <div class="screen-title">Trial expiry banner — day 28 warning with referral nudge</div>
+    <div class="screen-desc">Persistent amber banner shown from day 28. Referral note sits within the banner as a secondary option.</div>
+
+    <div class="dashboard-mock">
+      <div class="trial-banner">
+        <div class="trial-banner-text">⏱ Your Pro trial ends in 2 days — <button class="btn-trial-link">see what's included</button> · Refer a friend and earn a free month of Pro.</div>
+        <div class="trial-banner-actions">
+          <button class="btn-trial-link" style="color:var(--td);">Refer →</button>
+          <button class="btn-trial-upgrade">Continue with Pro →</button>
+        </div>
+      </div>
+      <div class="dash-topbar">
+        <div class="dash-logo">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></div>
+        <span class="pill pill-amber">Trial ends in 2 days</span>
+      </div>
+      <div class="dash-body" style="color:var(--td); font-size:14px; text-align:center; padding:40px;">Dashboard content here</div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Referral note is secondary — upgrade CTA is the primary action</div>
+      <div class="annotation"><div class="annotation-dot"></div>"Refer →" opens Settings → Referrals — allows them to earn a free month rather than paying</div>
+      <div class="annotation"><div class="annotation-dot"></div>Banner persists until trial expires or user upgrades — cannot be dismissed</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       8. POST-UPGRADE SUCCESS SCREEN
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="prompt-post-upgrade">
+    <div class="screen-label">View 8</div>
+    <div class="screen-title">Post-upgrade success screen with referral prompt</div>
+    <div class="screen-desc">Shown after Stripe checkout completes. Referral note is a quiet secondary line beneath the primary CTA.</div>
+
+    <div style="display:flex; justify-content:center;">
+      <div class="success-shell">
+        <div class="success-icon">🎉</div>
+        <div class="success-heading">You're on Pro.</div>
+        <div class="success-sub">Your full prospect list is active. Your sequences can run. Go build your pipeline.</div>
+        <div class="success-features">
+          <div class="success-feature"><span>✓</span> Unlimited prospects</div>
+          <div class="success-feature"><span>✓</span> Multi-step sequences</div>
+          <div class="success-feature"><span>✓</span> Auto-scheduling</div>
+          <div class="success-feature"><span>✓</span> AI draft generation</div>
+          <div class="success-feature"><span>✓</span> All personality packs</div>
+        </div>
+        <button class="btn-primary" style="width:100%; justify-content:center; margin-bottom:16px;">Go to dashboard →</button>
+        <div class="success-referral-note">Know someone who could use this? <a href="#">Give them 30 extra days free →</a></div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Referral link goes directly to Settings → Referrals</div>
+      <div class="annotation"><div class="annotation-dot"></div>High-intent moment — user has just paid and feels positive about the product</div>
+      <div class="annotation"><div class="annotation-dot"></div>Copy is intentionally understated — doesn't compete with the primary CTA</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════
+       9. REWARD EARNED NOTIFICATION
+  ══════════════════════════════════════ -->
+  <div class="screen-section" id="reward-notification">
+    <div class="screen-label">View 9</div>
+    <div class="screen-title">In-app notification — reward earned</div>
+    <div class="screen-desc">Fires when a referee sends their first campaign. Appears as an in-app notification in the dashboard.</div>
+
+    <div class="dashboard-mock" style="max-width:500px;">
+      <div class="dash-topbar">
+        <div class="dash-logo">Pulse<span style="background:var(--grad-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span class="notif-dot"></span>
+          <span style="font-size:13px; color:var(--tm);">1 notification</span>
+        </div>
+      </div>
+      <div class="dash-body">
+        <div style="background:rgba(255,20,147,0.06); border:1px solid rgba(255,20,147,0.2); border-radius:12px; padding:18px 20px;">
+          <div style="display:flex; align-items:flex-start; gap:14px;">
+            <div style="font-size:24px;">🎁</div>
+            <div>
+              <div style="font-family:'Outfit',sans-serif; font-weight:700; font-size:15px; margin-bottom:4px;">Free month earned</div>
+              <div style="font-size:14px; color:var(--tm); line-height:1.5;">Your referral just sent their first campaign. You've earned a free month of Pro.</div>
+              <div style="margin-top:12px; display:flex; gap:10px; align-items:center;">
+                <span class="pill pill-green">Applied to next bill</span>
+                <span style="font-size:12px; color:var(--td);">Just now</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="annotation-list">
+      <div class="annotation"><div class="annotation-dot"></div>Notification fires server-side when activation trigger is detected</div>
+      <div class="annotation"><div class="annotation-dot"></div>For Free users: copy changes to "You've earned a free month of Pro access" instead of "Applied to next bill"</div>
+      <div class="annotation"><div class="annotation-dot"></div>Reward banner in Settings → Referrals updates simultaneously</div>
+    </div>
+  </div>
+
+</div><!-- end .screens -->
+
+<script>
+function scrollTo(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>
