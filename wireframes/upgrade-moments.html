@@ -253,6 +253,54 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 
 /* PILL group label in nav */
 .pill-group-sep{width:1px;height:20px;background:var(--b);flex-shrink:0;margin:0 2px;}
+
+/* ══════════════════════════════════════
+   PRICING — lifted directly from marketing site
+══════════════════════════════════════ */
+.billing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;}
+.billing-label{font-family:var(--of);font-size:13px;font-weight:600;color:var(--td);transition:color 0.25s;cursor:pointer;user-select:none;}
+.billing-label.active{color:var(--t);}
+.billing-save-badge{display:inline-block;padding:3px 9px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.06em;color:var(--green);margin-left:6px;vertical-align:middle;}
+.toggle-track{position:relative;width:44px;height:24px;flex-shrink:0;cursor:pointer;}
+.toggle-track input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-rail{position:absolute;inset:0;border-radius:100px;background:var(--b2);border:1px solid rgba(255,255,255,0.1);transition:background 0.25s,border-color 0.25s;}
+.toggle-track input:checked ~ .toggle-rail{background:linear-gradient(135deg,rgba(255,20,147,0.4),rgba(0,212,255,0.4));border-color:rgba(0,212,255,0.3);}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--t);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1),box-shadow 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4);pointer-events:none;}
+.toggle-track input:checked ~ .toggle-thumb{transform:translateX(20px);box-shadow:0 1px 4px rgba(0,212,255,0.3);}
+.pricing-grid-mk{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto;}
+.pricing-card-mk{background:rgba(13,9,20,0.35);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:40px 36px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.07);}
+.pricing-card-mk:hover{border-color:rgba(255,255,255,0.16);}
+.pricing-card-mk.featured{background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.25);box-shadow:0 8px 40px rgba(255,20,147,0.12),inset 0 1px 0 rgba(255,255,255,0.08);overflow:visible;}
+.pricing-card-mk.featured:hover{border-color:rgba(255,20,147,0.4);}
+.pricing-card-mk.featured::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:var(--gr);opacity:0.8;border-radius:100px;}
+.pricing-card-mk::after{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent);pointer-events:none;}
+.pricing-badge-mk{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 14px;background:var(--gr);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:white;white-space:nowrap;box-shadow:0 2px 12px rgba(255,20,147,0.4);}
+.pricing-tier-mk{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:20px;}
+.pricing-tier-mk.pro{color:var(--pink);}
+.pricing-price-wrap-mk{height:72px;margin-bottom:6px;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk .currency{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.pricing-price-mk .period{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-currency-mk{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.price-period-mk{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-static-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;}
+.digit-window{overflow:hidden;position:relative;}
+.digit-reel{display:flex;flex-direction:column;}
+.digit-reel span{display:block;text-align:center;}
+.pricing-desc-mk{font-size:13px;color:var(--td);margin-bottom:8px;line-height:1.5;min-height:20px;}
+.pricing-annual-saving-mk{font-size:12px;color:var(--green);font-weight:600;margin-bottom:24px;min-height:18px;opacity:0;transform:translateY(4px);transition:opacity 0.3s 0.15s,transform 0.3s 0.15s;}
+.pricing-annual-saving-mk.visible{opacity:1;transform:translateY(0);}
+.pricing-divider-mk{height:1px;background:var(--b);margin-bottom:28px;}
+.pricing-features-mk{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
+.pricing-feature-mk{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);}
+.pricing-feature-mk .check{width:16px;height:16px;border-radius:50%;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:var(--green);}
+.pricing-feature-mk .check.pro-check{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.2);color:var(--pink);}
+.pricing-cta-mk{display:block;width:100%;padding:14px;text-align:center;font-family:var(--of);font-size:14px;font-weight:700;letter-spacing:0.02em;border-radius:100px;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;}
+.pricing-cta-mk.cta-free{background:transparent;color:var(--tm);border:1px solid var(--b2);}
+.pricing-cta-mk.cta-free:hover{color:var(--t);border-color:rgba(255,255,255,0.3);}
+.pricing-cta-mk.cta-pro{background:var(--gr);color:white;box-shadow:0 0 32px rgba(255,20,147,0.25);}
+.pricing-cta-mk.cta-pro:hover{box-shadow:0 0 48px rgba(255,20,147,0.35);}
+.trust-line-mk{text-align:center;font-size:12px;color:var(--td);margin-top:20px;}
 </style>
 </head>
 <body>
@@ -965,62 +1013,87 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   <div class="screen-header">
     <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
     <div class="screen-title">Plans page</div>
-    <div class="screen-desc">The pricing comparison page. Annual is the hero. Simple, no-pressure framing throughout.</div>
+    <div class="screen-desc">Exact pricing component from the marketing site — same toggle, same digit reel, same card design.</div>
   </div>
 
-  <div style="max-width:600px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:28px;">
-      <div style="font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.01em;margin-bottom:8px;">Simple, honest pricing.</div>
-      <div style="font-size:14px;color:var(--tm);">No per-seat fees. No hidden costs.</div>
-    </div>
-    <div style="display:flex;justify-content:center;margin-bottom:24px;">
-      <div class="billing-toggle">
-        <button class="billing-opt">Monthly</button>
-        <button class="billing-opt active">Annual — save 42%</button>
-      </div>
-    </div>
-    <div class="plans-grid">
-      <div class="plan-card">
-        <div class="plan-name">Free</div>
-        <div class="plan-price">£0</div>
-        <div class="plan-billing">forever</div>
-        <div class="plan-features">
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> 1 campaign</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> 100 prospects</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Gmail integration</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Manual sending</div>
-          <div class="plan-feature locked"><span>✕</span> AI drafts</div>
-          <div class="plan-feature locked"><span>✕</span> Auto-scheduling</div>
-          <div class="plan-feature locked"><span>✕</span> Sequences</div>
-        </div>
-        <button class="btn-ghost" style="width:100%;justify-content:center;">Stay on Free</button>
-        <div style="text-align:center;font-size:11px;color:var(--td);margin-top:8px;font-style:italic;">You'll start with 30 days of Pro</div>
-      </div>
-      <div class="plan-card featured">
-        <div class="plan-badge">Most popular</div>
-        <div class="plan-name">Pro</div>
-        <div class="plan-price">£7<span style="font-size:16px;font-weight:500;">/mo</span></div>
-        <div class="plan-billing">billed annually · £84/year</div>
-        <div class="plan-features">
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Unlimited campaigns</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Unlimited prospects</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> AI-drafted emails</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Auto-scheduled sending</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Full sequences</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> All personality packs</div>
-          <div class="plan-feature"><span style="color:var(--green);">✓</span> Everything in Free</div>
-        </div>
-        <button class="btn-primary" style="width:100%;justify-content:center;">Start Pro →</button>
-      </div>
-    </div>
-    <div class="trust-line">Cancel any time · 14-day money-back guarantee · Secured by Stripe</div>
+  <div style="text-align:center;margin-bottom:32px;">
+    <div style="font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.01em;margin-bottom:8px;">Start with a full month of Pro. Free.</div>
+    <div style="font-size:14px;color:var(--tm);max-width:400px;margin:0 auto;line-height:1.6;">No credit card required. After 30 days, stay on Pro or drop to Free — your data stays either way.</div>
   </div>
 
-  <div class="ann">
+  <!-- Billing toggle — identical to marketing site -->
+  <div class="billing-toggle-wrap">
+    <span class="billing-label active" id="wf-bill-monthly">Monthly</span>
+    <label class="toggle-track">
+      <input type="checkbox" id="wf-billing-toggle">
+      <div class="toggle-rail"></div>
+      <div class="toggle-thumb"></div>
+    </label>
+    <span class="billing-label" id="wf-bill-annual">
+      Annual
+      <span class="billing-save-badge">Save 42%</span>
+    </span>
+  </div>
+
+  <!-- Pricing cards — identical markup to marketing site -->
+  <div class="pricing-grid-mk">
+
+    <!-- Free -->
+    <div class="pricing-card-mk">
+      <div class="pricing-tier-mk">Free</div>
+      <div class="pricing-price-wrap-mk">
+        <div class="pricing-price-mk">
+          <span class="currency">£</span><span>0</span><span class="period">/month</span>
+        </div>
+      </div>
+      <div class="pricing-desc-mk">Get started. No card required.</div>
+      <div class="pricing-annual-saving-mk" id="wf-free-saving">&nbsp;</div>
+      <div class="pricing-divider-mk"></div>
+      <div class="pricing-features-mk">
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>1 campaign</span></div>
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>Up to 100 prospects</span></div>
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>Gmail integration</span></div>
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>Follow-up queue</span></div>
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>Prospect status tracking</span></div>
+        <div class="pricing-feature-mk"><div class="check">✓</div><span>Manual sending</span></div>
+      </div>
+      <a href="#" class="pricing-cta-mk cta-free">Start for free</a>
+      <p style="text-align:center;font-size:12px;color:var(--td);margin-top:12px;font-style:italic;">You'll start with 30 days of Pro</p>
+    </div>
+
+    <!-- Pro -->
+    <div class="pricing-card-mk featured">
+      <div class="pricing-badge-mk">Most popular</div>
+      <div class="pricing-tier-mk pro">Pro</div>
+      <div class="pricing-price-wrap-mk" id="wf-pro-price-wrap">
+        <span class="price-currency-mk">£</span>
+        <div class="pricing-price-mk" id="wf-pro-price-digits">
+          <!-- digit reels injected by JS -->
+        </div>
+        <span class="price-period-mk" id="wf-pro-period">/month</span>
+      </div>
+      <div class="pricing-desc-mk" id="wf-pro-desc">Billed monthly. Cancel any time.</div>
+      <div class="pricing-annual-saving-mk" id="wf-pro-saving">&nbsp;</div>
+      <div class="pricing-divider-mk"></div>
+      <div class="pricing-features-mk">
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Unlimited campaigns</span></div>
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Unlimited prospects</span></div>
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>AI-drafted emails</span></div>
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Auto-scheduled sending</span></div>
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Smart follow-up suggestions</span></div>
+        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Everything in Free</span></div>
+      </div>
+      <a href="#" class="pricing-cta-mk cta-pro" id="wf-pro-cta">Get Pro →</a>
+    </div>
+
+  </div>
+  <div class="trust-line-mk">Cancel any time · 14-day money-back guarantee · Secured by Stripe</div>
+
+  <div class="ann" style="margin-top:32px;">
     <div class="ann-title">Notes</div>
-    <div class="ann-item"><div class="ann-dot"></div>Annual is pre-selected and visually the hero — monthly available but secondary</div>
-    <div class="ann-item"><div class="ann-dot"></div>Free tier CTA says "Stay on Free" not "Downgrade" — respects the user's choice</div>
-    <div class="ann-item"><div class="ann-dot"></div>Free tier still shows the 30-day Pro trial note — even from this page</div>
+    <div class="ann-item"><div class="ann-dot"></div>This is the exact pricing component from corisleachman.github.io/marketing-site — same toggle, same digit reel animation, same card design.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Toggle defaults to Monthly. Switching to Annual animates the price reel from 12 → 07 and shows the annual saving line.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Free tier shows "You'll start with 30 days of Pro" — even from this page.</div>
   </div>
 </div>
 
@@ -1075,5 +1148,144 @@ function show(id, el) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 </script>
+
+<script>
+/* ── PRICING ODOMETER (wireframe — scoped to wf- prefixed IDs) ── */
+(function () {
+  const DIGITS = '0123456789';
+  const EASING = 'cubic-bezier(0.45, 0, 0.15, 1)';
+  const DURATION = 676;
+  const STAGGER = 45;
+
+  const priceDigits = document.getElementById('wf-pro-price-digits');
+  const proPeriod   = document.getElementById('wf-pro-period');
+  if (!priceDigits) return;
+
+  let digitH = 0;
+  let slots = [];
+
+  function measureDigitH() {
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;font-family:Outfit,sans-serif;font-size:56px;font-weight:900;line-height:1;';
+    probe.textContent = '0';
+    document.body.appendChild(probe);
+    const h = probe.getBoundingClientRect().height;
+    document.body.removeChild(probe);
+    return Math.ceil(h);
+  }
+
+  function buildReels(str) {
+    if (!digitH) digitH = measureDigitH();
+    priceDigits.innerHTML = '';
+    slots = [];
+    for (const ch of str) {
+      if (DIGITS.includes(ch)) {
+        const idx = DIGITS.indexOf(ch);
+        const win = document.createElement('div');
+        win.className = 'digit-window';
+        win.style.height = digitH + 'px';
+        win.style.overflow = 'hidden';
+        const reel = document.createElement('div');
+        reel.className = 'digit-reel';
+        reel.style.transition = 'none';
+        reel.style.transform = `translateY(-${idx * digitH}px)`;
+        for (const d of DIGITS) {
+          const s = document.createElement('span');
+          s.textContent = d;
+          s.style.height = digitH + 'px';
+          s.style.lineHeight = digitH + 'px';
+          reel.appendChild(s);
+        }
+        win.appendChild(reel);
+        priceDigits.appendChild(win);
+        slots.push({ type: 'digit', win, reel, pos: idx });
+      } else {
+        const s = document.createElement('span');
+        s.className = 'price-static-mk';
+        s.textContent = ch;
+        priceDigits.appendChild(s);
+        slots.push({ type: 'static', el: s });
+      }
+    }
+  }
+
+  function setPrice(str) {
+    if (!digitH) digitH = measureDigitH();
+    const newDigits = [...str].filter(c => DIGITS.includes(c));
+    const currentSlots = slots.filter(s => s.type === 'digit');
+    if (newDigits.length !== currentSlots.length) {
+      buildReels(str);
+      requestAnimationFrame(() => {
+        slots.filter(s => s.type === 'digit').forEach((slot, i) => {
+          const target = DIGITS.indexOf(newDigits[i]);
+          const above = target > 0 ? target - 1 : 9;
+          slot.reel.style.transition = 'none';
+          slot.reel.style.transform = `translateY(-${above * digitH}px)`;
+          slot.reel.getBoundingClientRect();
+          setTimeout(() => {
+            slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
+            slot.reel.style.transform = `translateY(-${target * digitH}px)`;
+            slot.pos = target;
+          }, i * STAGGER);
+        });
+      });
+      return;
+    }
+    let di = 0;
+    slots.forEach((slot) => {
+      if (slot.type !== 'digit') return;
+      const target = DIGITS.indexOf(newDigits[di]);
+      const i = di++;
+      setTimeout(() => {
+        slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
+        slot.reel.style.transform = `translateY(-${target * digitH}px)`;
+        slot.pos = target;
+      }, i * STAGGER);
+    });
+  }
+
+  function updateLeadingZero() {
+    const digitSlots = slots.filter(s => s.type === 'digit');
+    if (!digitSlots.length) return;
+    const first = digitSlots[0];
+    const isZero = first.pos === 0;
+    first.win.style.transition = 'width 0.3s ease, opacity 0.3s ease';
+    first.win.style.opacity = isZero ? '0' : '1';
+    first.win.style.width = isZero ? '0' : '';
+    first.win.style.overflow = 'hidden';
+  }
+
+  buildReels('12');
+  updateLeadingZero();
+
+  const toggle      = document.getElementById('wf-billing-toggle');
+  const billMonthly = document.getElementById('wf-bill-monthly');
+  const billAnnual  = document.getElementById('wf-bill-annual');
+  const proDesc     = document.getElementById('wf-pro-desc');
+  const proSaving   = document.getElementById('wf-pro-saving');
+  if (!toggle) return;
+
+  toggle.addEventListener('change', () => {
+    const isAnnual = toggle.checked;
+    billMonthly.classList.toggle('active', !isAnnual);
+    billAnnual.classList.toggle('active', isAnnual);
+    if (isAnnual) {
+      setPrice('07');
+      setTimeout(updateLeadingZero, 50);
+      proPeriod.textContent = '/mo';
+      proDesc.textContent = '£84 billed annually.';
+      proSaving.textContent = 'You save £60 a year — that's 42% off';
+      proSaving.classList.add('visible');
+    } else {
+      setPrice('12');
+      setTimeout(updateLeadingZero, 50);
+      proPeriod.textContent = '/month';
+      proDesc.textContent = 'Billed monthly. Cancel any time.';
+      proSaving.classList.remove('visible');
+    }
+  });
+})();
+</script>
+
 </body>
 </html>
