@@ -461,6 +461,7 @@ pre code { color: var(--tm); }
     <div class="sidebar-group">
       <div class="sidebar-section-label">Reference</div>
       <a href="#files" class="sidebar-link">File Index</a>
+      <a href="#tier-matrix" class="sidebar-link">Tier Matrix</a>
     </div>
   </aside>
 
@@ -1141,7 +1142,39 @@ pre code { color: var(--tm); }
           <tr><td>ux-microcopy-system-spec.md + engineering.md</td><td>Phase 2.12</td></tr>
           <tr><td>emotional-design-system-spec.md + engineering.md</td><td>Phase 2.13</td></tr>
           <tr><td>FEATURE-BRAND-PERSONALISATION.md</td><td>Layer 5 (unspecced)</td></tr>
+          <tr>
+            <td><a href="https://github.com/corisleachman/outreach-app/blob/main/.planning/TIER-FEATURE-MATRIX.md" style="color:var(--cyan);text-decoration:none;">TIER-FEATURE-MATRIX.md</a></td>
+            <td>Monetisation — all tiers</td>
+          </tr>
         </table>
+      </div>
+    </section>
+
+    <!-- TIER MATRIX -->
+    <section id="tier-matrix">
+      <div class="section-label">Reference</div>
+      <h2>Tier Matrix</h2>
+      <div class="section-body">
+        <p>The canonical feature comparison across Free, Pro Light (first 30 days), and Pro tiers. This is the reference document for all monetisation phases (2.14–2.16) and any frontend feature-gating work.</p>
+        <p>Full spec: <a href="https://github.com/corisleachman/outreach-app/blob/main/.planning/TIER-FEATURE-MATRIX.md" style="color:var(--cyan);">TIER-FEATURE-MATRIX.md</a> in <code>.planning/</code></p>
+        <table>
+          <tr><th>Feature</th><th>Free</th><th>Pro Light</th><th>Pro</th></tr>
+          <tr><td>Campaigns</td><td>1</td><td>1</td><td>Unlimited</td></tr>
+          <tr><td>Prospects</td><td>100 (nudge at 80)</td><td>500 (nudge at 400)</td><td>Unlimited</td></tr>
+          <tr><td>Trial duration</td><td>—</td><td>30 days (auto, no card)</td><td>—</td></tr>
+          <tr><td>Manual sending</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Bulk send</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Auto-scheduling</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Multi-step sequences</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>AI draft generation</td><td>—</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Personality packs</td><td>—</td><td>✓ (all 4)</td><td>✓ (all 4)</td></tr>
+          <tr><td>Follow-up tab</td><td>Visible, actions locked</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Nurture tab</td><td>✓ fully active</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Brand personalisation</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Referral program</td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td>Emotional design / milestones</td><td>✓</td><td>✓</td><td>✓</td></tr>
+        </table>
+        <p style="margin-top:16px; color:var(--td); font-size:13px;">Transition: 3-day warning → 1-day grace → limits enforced. No data loss ever. No surprise blocking modals.</p>
       </div>
     </section>
 
