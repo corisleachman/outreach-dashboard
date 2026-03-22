@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Upgrade Moments Wireframes</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;--mf:'DM Mono',monospace;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --nav-h:64px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+
+/* ── STICKY NAV ── */
+.sticky-nav{
+  position:fixed;top:0;left:0;right:0;height:var(--nav-h);
+  background:rgba(13,9,20,0.96);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(16px);z-index:999;
+  display:flex;align-items:center;
+  padding:0 40px;gap:24px;
+}
+.nav-identity{flex-shrink:0;}
+.nav-product{font-family:var(--of);font-size:16px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;line-height:1.1;}
+.nav-doc{font-size:11px;color:var(--td);margin-top:1px;
+  font-family:var(--of);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-divider{width:1px;height:32px;background:var(--b);flex-shrink:0;}
+.nav-pills{display:flex;gap:6px;flex-wrap:nowrap;overflow-x:auto;
+  flex:1;justify-content:flex-end;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;}
+.nav-pills::-webkit-scrollbar{display:none;}
+.nav-group-label{
+  font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--td);white-space:nowrap;
+  display:flex;align-items:center;padding:0 4px;flex-shrink:0;
+}
+.pill{
+  font-family:var(--of);font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:100px;border:1px solid var(--b2);
+  background:transparent;color:var(--tm);cursor:pointer;
+  transition:all 0.15s;white-space:nowrap;flex-shrink:0;
+}
+.pill:hover{background:var(--s2);color:var(--t);border-color:rgba(255,255,255,0.2);}
+.pill.active{border-color:rgba(255,20,147,0.4);color:var(--pink);background:rgba(255,20,147,0.08);}
+.pill.type1{--pc:rgba(255,157,66,0.3);--tc:var(--amber);}
+.pill.type2{--pc:rgba(255,20,147,0.3);--tc:var(--pink);}
+.pill.type3{--pc:rgba(0,212,255,0.3);--tc:var(--cyan);}
+.pill.type4{--pc:rgba(100,220,120,0.3);--tc:var(--green);}
+.pill.type1.active{border-color:var(--pc);color:var(--tc);background:rgba(255,157,66,0.08);}
+.pill.type2.active{border-color:var(--pc);color:var(--tc);background:rgba(255,20,147,0.08);}
+.pill.type3.active{border-color:var(--pc);color:var(--tc);background:rgba(0,212,255,0.08);}
+.pill.type4.active{border-color:var(--pc);color:var(--tc);background:rgba(100,220,120,0.08);}
+
+/* ── MAIN ── */
+.main{padding-top:calc(var(--nav-h) + 48px);padding-bottom:80px;}
+.screen{display:none;max-width:800px;margin:0 auto;padding:0 40px;}
+.screen.active{display:block;}
+
+/* ── SCREEN HEADER ── */
+.screen-header{margin-bottom:32px;}
+.screen-type{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.14em;text-transform:uppercase;margin-bottom:6px;}
+.screen-type.t1{color:var(--amber);}
+.screen-type.t2{color:var(--pink);}
+.screen-type.t3{color:var(--cyan);}
+.screen-type.t4{color:var(--green);}
+.screen-title{font-family:var(--of);font-size:20px;font-weight:800;
+  letter-spacing:-0.01em;margin-bottom:6px;}
+.screen-desc{font-size:14px;color:var(--tm);line-height:1.6;max-width:580px;}
+
+/* ── SHARED COMPONENTS ── */
+.card{background:rgba(13,9,20,0.6);border:1px solid var(--b);
+  border-radius:16px;backdrop-filter:blur(20px);}
+.btn-primary{display:inline-flex;align-items:center;gap:8px;
+  padding:11px 24px;border-radius:100px;background:var(--gr);
+  color:white;border:none;cursor:pointer;font-family:var(--of);
+  font-size:14px;font-weight:700;box-shadow:0 0 28px rgba(255,20,147,0.25);
+  text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.btn-ghost{display:inline-flex;align-items:center;
+  padding:11px 24px;border-radius:100px;background:transparent;
+  color:var(--tm);border:1px solid var(--b2);cursor:pointer;
+  font-family:var(--of);font-size:14px;font-weight:500;
+  text-decoration:none;transition:all 0.2s;white-space:nowrap;}
+.btn-ghost:hover{color:var(--t);border-color:rgba(255,255,255,0.2);}
+.btn-text{background:none;border:none;color:var(--td);font-size:13px;
+  font-family:var(--sf);cursor:pointer;text-decoration:underline;
+  text-underline-offset:3px;}
+.btn-text:hover{color:var(--tm);}
+.lock-icon{display:inline-flex;align-items:center;justify-content:center;
+  width:18px;height:18px;color:var(--td);font-size:12px;}
+
+/* ── DASHBOARD SHELL ── */
+.dash-shell{border:1px solid var(--b);border-radius:16px;overflow:hidden;
+  background:var(--bg);}
+.dash-topbar{padding:14px 20px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;}
+.dash-logo{font-family:var(--of);font-size:16px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;}
+.dash-body{padding:20px;}
+.dash-plan-badge{font-family:var(--of);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;
+  border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+
+/* ── PROSPECT LIST MOCK ── */
+.prospect-list{display:flex;flex-direction:column;gap:0;}
+.prospect-row{display:flex;align-items:center;gap:12px;padding:11px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);}
+.prospect-row:last-child{border-bottom:none;}
+.prospect-avatar{width:32px;height:32px;border-radius:50%;background:var(--s2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;flex-shrink:0;}
+.prospect-name{font-size:14px;font-weight:500;flex:1;}
+.prospect-co{font-size:12px;color:var(--td);}
+.prospect-row.greyed{opacity:0.4;position:relative;}
+.prospect-row.greyed .prospect-name{color:var(--tm);}
+.greyed-tooltip{position:absolute;right:0;top:50%;transform:translateY(-50%);
+  background:var(--s2);border:1px solid var(--b2);border-radius:8px;
+  padding:5px 12px;font-size:11px;color:var(--tm);white-space:nowrap;}
+
+/* ── LIMIT BANNER ── */
+.limit-banner{display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:12px 18px;border-radius:10px;margin-bottom:16px;flex-wrap:wrap;}
+.limit-banner.soft{background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);}
+.limit-banner.hard{background:rgba(255,20,147,0.08);border:1px solid rgba(255,20,147,0.2);}
+.limit-banner__text{font-size:13px;}
+.limit-banner.soft .limit-banner__text{color:var(--amber);}
+.limit-banner.hard .limit-banner__text{color:var(--t);}
+.limit-banner__actions{display:flex;gap:8px;align-items:center;flex-shrink:0;}
+.btn-sm-primary{padding:6px 14px;border-radius:100px;background:var(--gr);
+  color:white;border:none;cursor:pointer;font-family:var(--of);
+  font-size:12px;font-weight:700;white-space:nowrap;}
+.btn-sm-ghost{padding:6px 14px;border-radius:100px;background:transparent;
+  color:var(--tm);border:1px solid var(--b2);cursor:pointer;
+  font-family:var(--of);font-size:12px;font-weight:500;white-space:nowrap;}
+.btn-sm-text{background:none;border:none;color:var(--td);font-size:12px;
+  cursor:pointer;font-family:var(--sf);}
+
+/* ── INLINE UPGRADE PANEL (desire trigger) ── */
+.desire-panel{margin-top:8px;padding:16px 18px;
+  background:var(--s);border:1px solid var(--b2);
+  border-left:3px solid var(--pink);border-radius:0 10px 10px 0;}
+.desire-panel__heading{font-family:var(--of);font-size:14px;font-weight:700;
+  margin-bottom:4px;}
+.desire-panel__body{font-size:13px;color:var(--tm);line-height:1.5;margin-bottom:12px;}
+.desire-panel__actions{display:flex;gap:10px;align-items:center;}
+
+/* ── LOCKED BUTTON ── */
+.locked-btn{display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:100px;background:var(--s);
+  border:1px solid var(--b2);color:var(--td);cursor:pointer;
+  font-family:var(--of);font-size:13px;font-weight:600;opacity:0.6;}
+.locked-btn .lock{font-size:12px;}
+
+/* ── FOLLOW-UP TAB MOCK ── */
+.followup-tab{border-radius:12px;overflow:hidden;border:1px solid var(--b);}
+.followup-tab-header{padding:12px 18px;background:var(--s);
+  border-bottom:1px solid var(--b);
+  font-family:var(--of);font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--td);}
+.followup-row{display:flex;align-items:center;gap:14px;
+  padding:14px 18px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.followup-row:last-child{border-bottom:none;}
+.followup-info{flex:1;}
+.followup-name{font-size:14px;font-weight:500;margin-bottom:2px;}
+.followup-meta{font-size:12px;color:var(--td);}
+.followup-actions{display:flex;gap:8px;align-items:center;flex-direction:column;align-items:flex-end;gap:4px;}
+.followup-unlock{font-size:11px;color:var(--pink);cursor:pointer;text-decoration:none;}
+
+/* ── TRIAL BANNER ── */
+.trial-banner{padding:12px 20px;display:flex;align-items:center;
+  justify-content:space-between;gap:16px;flex-wrap:wrap;}
+.trial-banner.warning{background:rgba(255,157,66,0.08);border-bottom:1px solid rgba(255,157,66,0.2);}
+.trial-banner.expired{background:rgba(255,76,76,0.06);border-bottom:1px solid rgba(255,76,76,0.15);}
+.trial-banner__text{font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;}
+.trial-banner.warning .trial-banner__text{color:var(--amber);}
+.trial-banner.expired .trial-banner__text{color:var(--t);}
+.trial-banner__link{color:inherit;text-decoration:underline;
+  text-underline-offset:2px;cursor:pointer;background:none;border:none;font-size:13px;}
+.trial-banner__actions{display:flex;gap:8px;flex-shrink:0;}
+
+/* ── WHAT CHANGED EXPAND ── */
+.what-changed{display:grid;grid-template-columns:1fr 1fr;gap:16px;
+  padding:16px 20px;background:var(--s);border-top:1px solid var(--b);}
+.what-changed__heading{font-family:var(--of);font-size:11px;font-weight:700;
+  letter-spacing:0.1em;text-transform:uppercase;margin-bottom:10px;}
+.what-changed--paused .what-changed__heading{color:var(--red);}
+.what-changed--active .what-changed__heading{color:var(--green);}
+.what-changed ul{list-style:none;display:flex;flex-direction:column;gap:6px;}
+.what-changed li{font-size:13px;color:var(--tm);display:flex;gap:8px;align-items:flex-start;}
+.what-changed li::before{font-size:11px;margin-top:2px;flex-shrink:0;}
+.what-changed--paused li::before{content:'✕';color:var(--red);opacity:0.7;}
+.what-changed--active li::before{content:'✓';color:var(--green);}
+.what-changed__footer{grid-column:1/-1;padding-top:14px;
+  border-top:1px solid var(--b);display:flex;gap:12px;align-items:center;flex-wrap:wrap;}
+
+/* ── PLANS PAGE ── */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.plan-card{padding:24px;border-radius:16px;border:1px solid var(--b);background:var(--s);}
+.plan-card.featured{border-color:rgba(255,20,147,0.3);background:rgba(255,20,147,0.04);}
+.plan-card.featured .plan-badge{display:inline-block;margin-bottom:12px;
+  font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;
+  text-transform:uppercase;padding:3px 10px;border-radius:100px;
+  background:var(--gr);color:white;}
+.plan-name{font-family:var(--of);font-size:13px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:4px;}
+.plan-price{font-family:var(--of);font-size:28px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:2px;}
+.plan-billing{font-size:12px;color:var(--td);margin-bottom:20px;}
+.plan-features{display:flex;flex-direction:column;gap:8px;margin-bottom:20px;}
+.plan-feature{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.plan-feature span{font-size:13px;}
+.plan-feature.locked{opacity:0.4;}
+.billing-toggle{display:flex;gap:0;background:var(--s);border-radius:100px;
+  border:1px solid var(--b);width:fit-content;margin-bottom:24px;}
+.billing-opt{padding:7px 18px;border-radius:100px;font-family:var(--of);
+  font-size:12px;font-weight:600;cursor:pointer;border:none;
+  background:transparent;color:var(--td);transition:all 0.15s;}
+.billing-opt.active{background:var(--gr);color:white;}
+.trust-line{text-align:center;font-size:12px;color:var(--td);margin-top:16px;}
+
+/* ── SUCCESS SCREEN ── */
+.success-screen{text-align:center;padding:48px 40px;
+  background:var(--s);border:1px solid var(--b);border-radius:20px;}
+.success-icon{font-size:44px;margin-bottom:20px;}
+.success-heading{font-family:var(--of);font-size:28px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:10px;}
+.success-body{font-size:15px;color:var(--tm);line-height:1.6;margin-bottom:28px;}
+.success-features{background:var(--s);border-radius:12px;
+  padding:16px 20px;margin-bottom:24px;text-align:left;}
+.success-feat{display:flex;gap:10px;align-items:center;
+  padding:5px 0;font-size:14px;color:var(--tm);}
+.success-feat span{color:var(--green);}
+.success-referral{font-size:13px;color:var(--td);margin-top:14px;}
+.success-referral a{color:var(--cyan);text-decoration:none;}
+
+/* ── ANNOTATIONS ── */
+.ann{margin-top:24px;padding:16px 18px;
+  background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);
+  border-radius:12px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:10px;}
+.ann-item{display:flex;gap:10px;font-size:13px;color:var(--td);
+  margin-bottom:6px;line-height:1.5;align-items:flex-start;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);
+  margin-top:6px;flex-shrink:0;}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--b);margin:20px 0;}
+
+/* PILL group label in nav */
+.pill-group-sep{width:1px;height:20px;background:var(--b);flex-shrink:0;margin:0 2px;}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+     STICKY NAV
+═══════════════════════════════════════ -->
+<nav class="sticky-nav">
+  <div class="nav-identity">
+    <div class="nav-product">Pulse.</div>
+    <div class="nav-doc">Upgrade Moments</div>
+  </div>
+  <div class="nav-divider"></div>
+  <div class="nav-pills">
+
+    <span class="nav-group-label">T1 · Limit</span>
+    <button class="pill type1 active" onclick="show('t1-soft',this)">Soft nudge</button>
+    <button class="pill type1" onclick="show('t1-hard',this)">Hard wall</button>
+    <button class="pill type1" onclick="show('t1-greyed',this)">Greyed prospect</button>
+    <button class="pill type1" onclick="show('t1-campaign',this)">2nd campaign</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">T2 · Desire</span>
+    <button class="pill type2" onclick="show('t2-ai',this)">AI drafts</button>
+    <button class="pill type2" onclick="show('t2-schedule',this)">Auto-schedule</button>
+    <button class="pill type2" onclick="show('t2-sequence',this)">Sequences</button>
+    <button class="pill type2" onclick="show('t2-personality',this)">Personality</button>
+    <button class="pill type2" onclick="show('t2-bulk',this)">Bulk send</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">T3 · Ambient</span>
+    <button class="pill type3" onclick="show('t3-followup',this)">Follow-up tab</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">T4 · Trial</span>
+    <button class="pill type4" onclick="show('t4-warning',this)">Day 28 warning</button>
+    <button class="pill type4" onclick="show('t4-expiry',this)">Day 30 expiry</button>
+    <button class="pill type4" onclick="show('t4-expired',this)">Post-expiry</button>
+    <button class="pill type4" onclick="show('t4-changes',this)">What changed</button>
+    <button class="pill type4" onclick="show('t4-plans',this)">Plans page</button>
+    <button class="pill type4" onclick="show('t4-success',this)">Post-upgrade</button>
+
+  </div>
+</nav>
+
+<div class="main">
+
+<!-- ════════════════════════════════════
+     T1-1 · SOFT NUDGE (80 prospects)
+════════════════════════════════════ -->
+<div class="screen active" id="t1-soft">
+  <div class="screen-header">
+    <div class="screen-type t1">Type 1 — Limit Wall</div>
+    <div class="screen-title">Soft nudge — 80 prospects reached</div>
+    <div class="screen-desc">A gentle inline banner appears beneath the prospect list when the user hits 80 prospects on Free. Dismissible. Reappears on next login until the hard limit is reached.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar">
+      <div class="dash-logo">Pulse.</div>
+      <span class="dash-plan-badge">Free</span>
+    </div>
+    <div class="dash-body">
+      <div class="limit-banner soft">
+        <span class="limit-banner__text">You're getting close to your Free limit — 20 prospects remaining.</span>
+        <div class="limit-banner__actions">
+          <button class="btn-sm-primary">See Pro plans</button>
+          <button class="btn-sm-text">Dismiss</button>
+        </div>
+      </div>
+      <div class="prospect-list">
+        <div class="prospect-row">
+          <div class="prospect-avatar">SM</div>
+          <div><div class="prospect-name">Sarah Mitchell</div><div class="prospect-co">Fold Studio</div></div>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">DK</div>
+          <div><div class="prospect-name">Dan Kim</div><div class="prospect-co">Studio North</div></div>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">PN</div>
+          <div><div class="prospect-name">Priya Nair</div><div class="prospect-co">Common Ground</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Dismissible — hides for the session, reappears on next login</div>
+    <div class="ann-item"><div class="ann-dot"></div>Banner sits above the prospect list, not as a page-level interrupt</div>
+    <div class="ann-item"><div class="ann-dot"></div>Amber colour treatment — informational, not alarming</div>
+    <div class="ann-item"><div class="ann-dot"></div>Pro Light equivalent: nudge fires at 400 prospects toward 500 limit</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T1-2 · HARD WALL (100 prospects)
+════════════════════════════════════ -->
+<div class="screen" id="t1-hard">
+  <div class="screen-header">
+    <div class="screen-type t1">Type 1 — Limit Wall</div>
+    <div class="screen-title">Hard wall — 100 prospect limit reached</div>
+    <div class="screen-desc">Shown when user tries to add a prospect beyond the 100 limit on Free. Overlay style — but always dismissible. Leads with what they've accomplished, not the constraint.</div>
+  </div>
+
+  <div style="max-width:480px;margin:0 auto;">
+    <div class="card" style="padding:28px;">
+      <div style="font-size:13px;color:var(--td);font-family:var(--mf);margin-bottom:16px;">100 / 100 prospects used</div>
+      <div style="font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.01em;margin-bottom:10px;">You've built a serious pipeline.</div>
+      <div style="font-size:14px;color:var(--tm);line-height:1.6;margin-bottom:24px;">100 prospects is the Free limit. Upgrade to Pro to unlock your full list and the tools to work through it faster.</div>
+      <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);">
+          <span style="color:var(--green);">∞</span> Unlimited prospects
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);">
+          <span style="color:var(--cyan);">AI</span> Unlimited AI drafts
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);">
+          <span style="color:var(--pink);">▶</span> Auto-scheduling
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn-primary" style="justify-content:center;">Continue with Pro →</button>
+        <button class="btn-ghost" style="justify-content:center;">Stay on Free</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Always dismissible — "Stay on Free" closes the prompt, never traps the user</div>
+    <div class="ann-item"><div class="ann-dot"></div>Leads with accomplishment ("You've built a serious pipeline") not constraint</div>
+    <div class="ann-item"><div class="ann-dot"></div>Shows 3 specific Pro benefits — not a full feature list</div>
+    <div class="ann-item"><div class="ann-dot"></div>Rendered as an overlay on the campaign view, not a new page</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T1-3 · GREYED PROSPECT
+════════════════════════════════════ -->
+<div class="screen" id="t1-greyed">
+  <div class="screen-header">
+    <div class="screen-type t1">Type 1 — Limit Wall</div>
+    <div class="screen-title">Greyed-out prospects past limit</div>
+    <div class="screen-desc">Prospects 101+ are visible but greyed out on Free. Hover shows a tooltip. Clicking shows a small inline prompt.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar">
+      <div class="dash-logo">Pulse.</div>
+      <span class="dash-plan-badge">Free</span>
+    </div>
+    <div class="dash-body">
+      <div class="prospect-list">
+        <div class="prospect-row">
+          <div class="prospect-avatar">SM</div>
+          <div><div class="prospect-name">Sarah Mitchell</div><div class="prospect-co">Fold Studio · prospect 99</div></div>
+        </div>
+        <div class="prospect-row">
+          <div class="prospect-avatar">DK</div>
+          <div><div class="prospect-name">Dan Kim</div><div class="prospect-co">Studio North · prospect 100</div></div>
+        </div>
+        <div class="prospect-row greyed" style="cursor:pointer;">
+          <div class="prospect-avatar" style="background:var(--s);">PN</div>
+          <div><div class="prospect-name">Priya Nair</div><div class="prospect-co">Common Ground · prospect 101</div></div>
+          <div class="greyed-tooltip">Available on Pro — upgrade →</div>
+        </div>
+        <div class="prospect-row greyed">
+          <div class="prospect-avatar" style="background:var(--s);">JM</div>
+          <div><div class="prospect-name">James Morris</div><div class="prospect-co">Bright Agency · prospect 102</div></div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <div style="padding:14px 0;">
+        <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:4px;">This prospect is outside your Free limit.</div>
+        <div style="font-size:13px;color:var(--tm);margin-bottom:14px;">Upgrade to Pro to message your full list.</div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-ghost">Stay on Free</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Greyed rows remain visible — data is never hidden, just inaccessible</div>
+    <div class="ann-item"><div class="ann-dot"></div>Tooltip appears on hover — inline click prompt appears on click</div>
+    <div class="ann-item"><div class="ann-dot"></div>Inline prompt shown here below the list for clarity — in implementation it appears where the prospect row was clicked</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T1-4 · SECOND CAMPAIGN
+════════════════════════════════════ -->
+<div class="screen" id="t1-campaign">
+  <div class="screen-header">
+    <div class="screen-type t1">Type 1 — Limit Wall</div>
+    <div class="screen-title">Second campaign attempt (Free)</div>
+    <div class="screen-desc">Shown when a Free user tries to create a second campaign. Inline prompt on the create campaign button.</div>
+  </div>
+
+  <div style="max-width:480px;margin:0 auto;">
+    <div class="card" style="padding:28px;">
+      <div style="font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.01em;margin-bottom:10px;">Ready to run another campaign?</div>
+      <div style="font-size:14px;color:var(--tm);line-height:1.6;margin-bottom:24px;">Pro gives you unlimited campaigns — so you can segment by audience, service line, or target market without limits.</div>
+      <div style="display:flex;flex-direction:column;gap:10px;">
+        <button class="btn-primary" style="justify-content:center;">Continue with Pro →</button>
+        <button class="btn-ghost" style="justify-content:center;">Stay on Free</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Triggered when Free user clicks "Create campaign" and already has 1 campaign</div>
+    <div class="ann-item"><div class="ann-dot"></div>Pro Light users also have 1 campaign limit — same prompt fires for them</div>
+    <div class="ann-item"><div class="ann-dot"></div>Rendered as a modal or inline prompt on the campaigns list page</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T2-1 · AI DRAFTS (desire trigger)
+════════════════════════════════════ -->
+<div class="screen" id="t2-ai">
+  <div class="screen-header">
+    <div class="screen-type t2">Type 2 — Desire Trigger</div>
+    <div class="screen-title">AI draft button — locked (inline reveal)</div>
+    <div class="screen-desc">When a Free user clicks the AI draft button, the panel expands inline beneath it. Never a modal. The user can still write manually — this shows a better path.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="margin-bottom:16px;font-size:13px;color:var(--td);">Message editor</div>
+      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
+        <button class="btn-sm-ghost">Write manually</button>
+        <div>
+          <div class="locked-btn" onclick="this.nextElementSibling.style.display='block'">
+            <span class="lock">🔒</span> Generate with AI
+          </div>
+          <div class="desire-panel" style="display:none;">
+            <div class="desire-panel__heading">AI drafts are a Pro feature.</div>
+            <div class="desire-panel__body">Write your first message in seconds — personalised to each prospect, in your tone of voice.</div>
+            <div class="desire-panel__actions">
+              <button class="btn-sm-primary">Unlock with Pro →</button>
+              <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px;font-size:13px;color:var(--td);">Message body text area...</div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click "Generate with AI" to see the inline reveal in action</div>
+    <div class="ann-item"><div class="ann-dot"></div>Panel expands inline below the locked button — never a modal interrupt</div>
+    <div class="ann-item"><div class="ann-dot"></div>"Maybe later" collapses the panel — button returns to locked state</div>
+    <div class="ann-item"><div class="ann-dot"></div>User can still write manually — the panel offers a better way, not a gate</div>
+    <div class="ann-item"><div class="ann-dot"></div>Dismissal stored in sessionStorage — doesn't reappear in same session</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T2-2 · AUTO-SCHEDULE
+════════════════════════════════════ -->
+<div class="screen" id="t2-schedule">
+  <div class="screen-header">
+    <div class="screen-type t2">Type 2 — Desire Trigger</div>
+    <div class="screen-title">Auto-scheduling toggle — locked</div>
+    <div class="screen-desc">Shown in the sequence builder when a Free user clicks the auto-schedule toggle. Expands inline beneath the toggle.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="margin-bottom:16px;font-size:13px;color:var(--td);">Sequence settings</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;margin-bottom:8px;">
+        <div>
+          <div style="font-size:14px;font-weight:500;margin-bottom:2px;">Auto-scheduling</div>
+          <div style="font-size:12px;color:var(--td);">Automatically create drafts when each step is due</div>
+        </div>
+        <div class="locked-btn" style="padding:7px 14px;" onclick="this.closest('.dash-body').querySelector('.desire-panel').style.display='block'">
+          <span class="lock">🔒</span> Locked
+        </div>
+      </div>
+      <div class="desire-panel" style="display:none;">
+        <div class="desire-panel__heading">Auto-scheduling is a Pro feature.</div>
+        <div class="desire-panel__body">Set your sequence once. Pulse. handles the timing — drafts appear in your Gmail when each step is due, no manual triggering needed.</div>
+        <div class="desire-panel__actions">
+          <button class="btn-sm-primary">Unlock with Pro →</button>
+          <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click "Locked" to see the inline reveal</div>
+    <div class="ann-item"><div class="ann-dot"></div>Toggle is visible but locked — not hidden — so the user knows it exists</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T2-3 · SEQUENCES
+════════════════════════════════════ -->
+<div class="screen" id="t2-sequence">
+  <div class="screen-header">
+    <div class="screen-type t2">Type 2 — Desire Trigger</div>
+    <div class="screen-title">Sequence step 2+ — locked</div>
+    <div class="screen-desc">Step 1 is available on Free. When a Free user tries to add step 2, the inline desire trigger appears.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="display:flex;flex-direction:column;gap:8px;">
+        <div style="padding:14px;background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:10px;font-size:13px;">
+          <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;">Step 1 — First email</div>
+          <div style="color:var(--td);">Day 0 · Value drop</div>
+        </div>
+        <div onclick="this.nextElementSibling.style.display='block'" style="cursor:pointer;">
+          <div class="locked-btn" style="width:100%;justify-content:center;border-radius:10px;padding:12px;">
+            <span class="lock">🔒</span> + Add follow-up step
+          </div>
+        </div>
+        <div class="desire-panel" style="display:none;">
+          <div class="desire-panel__heading">Multi-step sequences are a Pro feature.</div>
+          <div class="desire-panel__body">Add follow-ups, check-ins, and value drops — all timed automatically. Sequences pause the moment someone replies.</div>
+          <div class="desire-panel__actions">
+            <button class="btn-sm-primary">Unlock with Pro →</button>
+            <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click "+ Add follow-up step" to see the inline reveal</div>
+    <div class="ann-item"><div class="ann-dot"></div>Step 1 is fully active and clearly shown — user can see what they have and what they're missing</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T2-4 · PERSONALITY PACKS
+════════════════════════════════════ -->
+<div class="screen" id="t2-personality">
+  <div class="screen-header">
+    <div class="screen-type t2">Type 2 — Desire Trigger</div>
+    <div class="screen-title">Personality pack selector — locked</div>
+    <div class="screen-desc">Visible in Settings but locked on Free. Clicking any pack triggers the inline reveal.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="margin-bottom:16px;font-size:13px;color:var(--td);">Settings → Personality</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;">
+        <div style="padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;opacity:0.5;cursor:pointer;" onclick="document.getElementById('personality-panel').style.display='block'">
+          <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:2px;">🔒 Calm & Commercial</div>
+          <div style="font-size:12px;color:var(--td);">Measured and professional</div>
+        </div>
+        <div style="padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;opacity:0.5;cursor:pointer;" onclick="document.getElementById('personality-panel').style.display='block'">
+          <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:2px;">🔒 Direct & Confident</div>
+          <div style="font-size:12px;color:var(--td);">Clear and assertive</div>
+        </div>
+        <div style="padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;opacity:0.5;cursor:pointer;" onclick="document.getElementById('personality-panel').style.display='block'">
+          <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:2px;">🔒 Light Touch Relational</div>
+          <div style="font-size:12px;color:var(--td);">Warm and conversational</div>
+        </div>
+        <div style="padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;opacity:0.5;cursor:pointer;" onclick="document.getElementById('personality-panel').style.display='block'">
+          <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:2px;">🔒 Challenger</div>
+          <div style="font-size:12px;color:var(--td);">Provocative and bold</div>
+        </div>
+      </div>
+      <div id="personality-panel" class="desire-panel" style="display:none;">
+        <div class="desire-panel__heading">Personality packs are a Pro feature.</div>
+        <div class="desire-panel__body">Switch between four distinct outreach voices — or set a default and let it carry through every message you send.</div>
+        <div class="desire-panel__actions">
+          <button class="btn-sm-primary">Unlock with Pro →</button>
+          <button class="btn-sm-text" onclick="document.getElementById('personality-panel').style.display='none'">Maybe later</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click any personality pack to see the inline reveal</div>
+    <div class="ann-item"><div class="ann-dot"></div>All 4 packs visible but locked — user knows what they'd be getting</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T2-5 · BULK SEND
+════════════════════════════════════ -->
+<div class="screen" id="t2-bulk">
+  <div class="screen-header">
+    <div class="screen-type t2">Type 2 — Desire Trigger</div>
+    <div class="screen-title">Bulk send button — locked</div>
+    <div class="screen-desc">Bulk send appears in the Drafts tab but is locked on Free. Inline reveal on click.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
+        <div style="font-size:13px;color:var(--td);">3 drafts ready</div>
+        <div>
+          <div class="locked-btn" onclick="this.nextElementSibling.style.display='block'">
+            <span class="lock">🔒</span> Send all 3
+          </div>
+          <div class="desire-panel" style="display:none;">
+            <div class="desire-panel__heading">Bulk send is a Pro feature.</div>
+            <div class="desire-panel__body">Send to your full draft queue in one go — or select specific prospects and send as a batch.</div>
+            <div class="desire-panel__actions">
+              <button class="btn-sm-primary">Unlock with Pro →</button>
+              <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--td);margin-bottom:8px;">You can still send individually ↓</div>
+      <div class="prospect-list">
+        <div class="prospect-row">
+          <div class="prospect-avatar">SM</div>
+          <div style="flex:1;"><div class="prospect-name">Sarah Mitchell</div><div class="prospect-co">Draft ready</div></div>
+          <button class="btn-sm-primary">Send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click "Send all 3" to see the inline reveal</div>
+    <div class="ann-item"><div class="ann-dot"></div>Individual send still works on Free — bulk is the Pro upgrade, not sending itself</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T3-1 · FOLLOW-UP TAB
+════════════════════════════════════ -->
+<div class="screen" id="t3-followup">
+  <div class="screen-header">
+    <div class="screen-type t3">Type 3 — Ambient Prompt</div>
+    <div class="screen-title">Follow-up tab — visible, actions locked (Free)</div>
+    <div class="screen-desc">Free users can see the Follow-up tab and all prospects within it. Action buttons are locked with a quiet inline prompt. No modal, no banner — entirely ambient.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+    <div class="dash-body">
+      <div style="padding:10px 0 16px;font-family:var(--of);font-size:12px;font-weight:700;color:var(--pink);">
+        4 prospects need a follow-up. Manual follow-up actions are available on Pro.
+        <a href="#" style="color:var(--pink);margin-left:6px;">See Pro plans →</a>
+      </div>
+      <div class="followup-tab">
+        <div class="followup-tab-header">Follow-up due</div>
+        <div class="followup-row">
+          <div class="prospect-avatar">SM</div>
+          <div class="followup-info">
+            <div class="followup-name">Sarah Mitchell</div>
+            <div class="followup-meta">No reply · 6 days since last email</div>
+          </div>
+          <div class="followup-actions">
+            <div class="locked-btn" style="padding:6px 12px;font-size:12px;">🔒 Follow up</div>
+            <a class="followup-unlock" href="#">Pro feature — unlock →</a>
+          </div>
+        </div>
+        <div class="followup-row">
+          <div class="prospect-avatar">DK</div>
+          <div class="followup-info">
+            <div class="followup-name">Dan Kim</div>
+            <div class="followup-meta">No reply · 5 days since last email</div>
+          </div>
+          <div class="followup-actions">
+            <div class="locked-btn" style="padding:6px 12px;font-size:12px;">🔒 Follow up</div>
+            <a class="followup-unlock" href="#">Pro feature — unlock →</a>
+          </div>
+        </div>
+        <div class="followup-row">
+          <div class="prospect-avatar">PN</div>
+          <div class="followup-info">
+            <div class="followup-name">Priya Nair</div>
+            <div class="followup-meta">No reply · 5 days since last email</div>
+          </div>
+          <div class="followup-actions">
+            <div class="locked-btn" style="padding:6px 12px;font-size:12px;">🔒 Follow up</div>
+            <a class="followup-unlock" href="#">Pro feature — unlock →</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Tab is fully visible — user can see exactly how many prospects need attention</div>
+    <div class="ann-item"><div class="ann-dot"></div>The count itself creates the desire — the prompt just names the upgrade path</div>
+    <div class="ann-item"><div class="ann-dot"></div>No modal, no banner — entirely inline. Calm and non-intrusive</div>
+    <div class="ann-item"><div class="ann-dot"></div>"unlock →" links directly to plans page</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-1 · DAY 28 WARNING
+════════════════════════════════════ -->
+<div class="screen" id="t4-warning">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">Day 28 — 3-day warning banner</div>
+    <div class="screen-desc">Persistent amber banner appears from day 28 on every page. Cannot be dismissed. Includes referral option so user can earn a free month instead of paying.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div style="overflow:hidden;border-radius:16px;">
+      <div class="trial-banner warning">
+        <div class="trial-banner__text">
+          ⏱ Your Pro trial ends in 3 days —
+          <button class="trial-banner__link">see what's included</button>
+          · refer a friend and
+          <a href="#" style="color:var(--amber);">earn a free month</a>.
+        </div>
+        <div class="trial-banner__actions">
+          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);">Refer →</button>
+          <button class="btn-sm-primary">Continue with Pro →</button>
+        </div>
+      </div>
+      <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Pro trial · 3 days left</span></div>
+      <div class="dash-body" style="color:var(--td);font-size:13px;text-align:center;padding:32px;">Dashboard content</div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Cannot be dismissed — persists across all pages until upgrade or trial expiry</div>
+    <div class="ann-item"><div class="ann-dot"></div>Counter updates: "3 days" → "2 days" → "tomorrow" on each subsequent day</div>
+    <div class="ann-item"><div class="ann-dot"></div>Referral path given equal prominence — user can earn their way to Pro without paying</div>
+    <div class="ann-item"><div class="ann-dot"></div>Amber colour — urgent but not alarming</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-2 · DAY 30 EXPIRY
+════════════════════════════════════ -->
+<div class="screen" id="t4-expiry">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">Day 30 — expiry day banner</div>
+    <div class="screen-desc">On the final day of the trial. Tone remains calm — "ends today" not "expires in X hours". No countdown timer.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div style="overflow:hidden;border-radius:16px;">
+      <div class="trial-banner warning">
+        <div class="trial-banner__text">
+          ⏱ Your Pro trial ends today. Some features will pause at midnight.
+        </div>
+        <div class="trial-banner__actions">
+          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);">Refer →</button>
+          <button class="btn-sm-primary">Continue with Pro →</button>
+        </div>
+      </div>
+      <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Pro trial · last day</span></div>
+      <div class="dash-body" style="color:var(--td);font-size:13px;text-align:center;padding:32px;">Dashboard content</div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>No countdown timer — "ends today" is sufficient. Timers feel manipulative.</div>
+    <div class="ann-item"><div class="ann-dot"></div>"Some features will pause at midnight" — factual, tells user exactly what to expect</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-3 · POST-EXPIRY
+════════════════════════════════════ -->
+<div class="screen" id="t4-expired">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">Day 31+ — post-expiry persistent banner</div>
+    <div class="screen-desc">After trial expires. Tone shifts from warning to factual. Dismissible this time — user can choose to stay on Free.</div>
+  </div>
+
+  <div class="dash-shell">
+    <div style="overflow:hidden;border-radius:16px;">
+      <div class="trial-banner expired">
+        <div class="trial-banner__text">
+          Your Pro trial has ended. Some features are now paused.
+          <button class="trial-banner__link" style="color:var(--t);" onclick="document.getElementById('what-changed-1').style.display=document.getElementById('what-changed-1').style.display==='none'?'grid':'none'">
+            See what's changed ↓
+          </button>
+        </div>
+        <div class="trial-banner__actions">
+          <button class="btn-sm-ghost">Stay on Free</button>
+          <button class="btn-sm-primary">Continue with Pro →</button>
+        </div>
+      </div>
+      <div id="what-changed-1" class="what-changed" style="display:none;">
+        <div class="what-changed--paused">
+          <div class="what-changed__heading">Paused</div>
+          <ul>
+            <li>Multi-step sequences (frozen at current step)</li>
+            <li>Auto-scheduling</li>
+            <li>AI draft generation</li>
+            <li>Bulk send</li>
+            <li>Personality packs</li>
+            <li>Prospects 101+ (greyed out)</li>
+          </ul>
+        </div>
+        <div class="what-changed--active">
+          <div class="what-changed__heading">Still active</div>
+          <ul>
+            <li>Your campaign and all prospect data</li>
+            <li>Manual sending (first 100 prospects)</li>
+            <li>Conversations and reply tracking</li>
+            <li>Follow-up tab (visible)</li>
+            <li>Nurture tab</li>
+            <li>LinkedIn tracking</li>
+            <li>Brand personalisation</li>
+          </ul>
+        </div>
+      </div>
+      <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
+      <div class="dash-body" style="color:var(--td);font-size:13px;text-align:center;padding:32px;">Dashboard content</div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Click "See what's changed ↓" to toggle the expand in this prototype</div>
+    <div class="ann-item"><div class="ann-dot"></div>"Stay on Free" is now available — user has made their choice, no need to persist the banner forever</div>
+    <div class="ann-item"><div class="ann-dot"></div>Tone is factual and calm — "paused" not "lost", "still active" not "remaining"</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-4 · WHAT CHANGED (standalone)
+════════════════════════════════════ -->
+<div class="screen" id="t4-changes">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">"See what's changed" — expanded view</div>
+    <div class="screen-desc">The inline expand shown in full. Two columns: paused features and still-active features. Upgrade CTA at the bottom of the expand.</div>
+  </div>
+
+  <div class="dash-shell" style="max-width:600px;">
+    <div style="overflow:hidden;border-radius:16px;">
+      <div class="trial-banner expired">
+        <div class="trial-banner__text">
+          Your Pro trial has ended. Some features are now paused.
+          <button class="trial-banner__link" style="color:var(--t);">See what's changed ↑</button>
+        </div>
+        <div class="trial-banner__actions">
+          <button class="btn-sm-ghost">Stay on Free</button>
+          <button class="btn-sm-primary">Continue with Pro →</button>
+        </div>
+      </div>
+      <div class="what-changed" style="display:grid;">
+        <div class="what-changed--paused">
+          <div class="what-changed__heading">Paused</div>
+          <ul>
+            <li>Multi-step sequences (frozen at current step)</li>
+            <li>Auto-scheduling</li>
+            <li>AI draft generation</li>
+            <li>Bulk send</li>
+            <li>Personality packs</li>
+            <li>Prospects 101+ (greyed out)</li>
+          </ul>
+        </div>
+        <div class="what-changed--active">
+          <div class="what-changed__heading">Still active</div>
+          <ul>
+            <li>Your campaign and all prospect data</li>
+            <li>Manual sending (first 100 prospects)</li>
+            <li>Conversations and reply tracking</li>
+            <li>Follow-up tab (visible)</li>
+            <li>Nurture tab</li>
+            <li>LinkedIn tracking</li>
+            <li>Brand personalisation</li>
+          </ul>
+        </div>
+        <div class="what-changed__footer">
+          <button class="btn-sm-primary">Continue with Pro — from £12/month →</button>
+          <button class="btn-sm-ghost">Stay on Free</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Two-column layout — paused left, still active right. Honest and balanced.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Upgrade CTA inside the expand — user has all the information before they're asked to decide</div>
+    <div class="ann-item"><div class="ann-dot"></div>"from £12/month" — monthly price anchors the decision, annual available on plans page</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-5 · PLANS PAGE
+════════════════════════════════════ -->
+<div class="screen" id="t4-plans">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">Plans page</div>
+    <div class="screen-desc">The pricing comparison page. Annual is the hero. Simple, no-pressure framing throughout.</div>
+  </div>
+
+  <div style="max-width:600px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:28px;">
+      <div style="font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.01em;margin-bottom:8px;">Simple, honest pricing.</div>
+      <div style="font-size:14px;color:var(--tm);">No per-seat fees. No hidden costs.</div>
+    </div>
+    <div style="display:flex;justify-content:center;margin-bottom:24px;">
+      <div class="billing-toggle">
+        <button class="billing-opt">Monthly</button>
+        <button class="billing-opt active">Annual — save 42%</button>
+      </div>
+    </div>
+    <div class="plans-grid">
+      <div class="plan-card">
+        <div class="plan-name">Free</div>
+        <div class="plan-price">£0</div>
+        <div class="plan-billing">forever</div>
+        <div class="plan-features">
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> 1 campaign</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> 100 prospects</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Gmail integration</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Manual sending</div>
+          <div class="plan-feature locked"><span>✕</span> AI drafts</div>
+          <div class="plan-feature locked"><span>✕</span> Auto-scheduling</div>
+          <div class="plan-feature locked"><span>✕</span> Sequences</div>
+        </div>
+        <button class="btn-ghost" style="width:100%;justify-content:center;">Stay on Free</button>
+        <div style="text-align:center;font-size:11px;color:var(--td);margin-top:8px;font-style:italic;">You'll start with 30 days of Pro</div>
+      </div>
+      <div class="plan-card featured">
+        <div class="plan-badge">Most popular</div>
+        <div class="plan-name">Pro</div>
+        <div class="plan-price">£7<span style="font-size:16px;font-weight:500;">/mo</span></div>
+        <div class="plan-billing">billed annually · £84/year</div>
+        <div class="plan-features">
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Unlimited campaigns</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Unlimited prospects</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> AI-drafted emails</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Auto-scheduled sending</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Full sequences</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> All personality packs</div>
+          <div class="plan-feature"><span style="color:var(--green);">✓</span> Everything in Free</div>
+        </div>
+        <button class="btn-primary" style="width:100%;justify-content:center;">Start Pro →</button>
+      </div>
+    </div>
+    <div class="trust-line">Cancel any time · 14-day money-back guarantee · Secured by Stripe</div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Annual is pre-selected and visually the hero — monthly available but secondary</div>
+    <div class="ann-item"><div class="ann-dot"></div>Free tier CTA says "Stay on Free" not "Downgrade" — respects the user's choice</div>
+    <div class="ann-item"><div class="ann-dot"></div>Free tier still shows the 30-day Pro trial note — even from this page</div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     T4-6 · POST-UPGRADE SUCCESS
+════════════════════════════════════ -->
+<div class="screen" id="t4-success">
+  <div class="screen-header">
+    <div class="screen-type t4">Type 4 — Trial Lifecycle</div>
+    <div class="screen-title">Post-upgrade success screen</div>
+    <div class="screen-desc">Shown immediately after Stripe checkout completes. Action-oriented, not celebratory. Referral note as a quiet secondary line.</div>
+  </div>
+
+  <div style="max-width:440px;margin:0 auto;">
+    <div class="success-screen">
+      <div class="success-icon">🎉</div>
+      <div class="success-heading">You're on Pro.</div>
+      <div class="success-body">Your full prospect list is active. Your sequences can run. Go build your pipeline.</div>
+      <div class="success-features">
+        <div class="success-feat"><span>✓</span> Unlimited prospects</div>
+        <div class="success-feat"><span>✓</span> Multi-step sequences</div>
+        <div class="success-feat"><span>✓</span> Auto-scheduling</div>
+        <div class="success-feat"><span>✓</span> AI draft generation</div>
+        <div class="success-feat"><span>✓</span> All personality packs</div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:14px;">Go to dashboard →</button>
+      <div class="success-referral">Know someone who could use this? <a href="#">Give them 30 extra days free →</a></div>
+    </div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>No tour, no onboarding checklist — they already know the product. Just get them back into it.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Copy is action-oriented ("Go build your pipeline") not congratulatory</div>
+    <div class="ann-item"><div class="ann-dot"></div>Referral note is understated — doesn't compete with the primary CTA</div>
+    <div class="ann-item"><div class="ann-dot"></div>Referral link opens Settings → Referrals</div>
+  </div>
+</div>
+
+</div><!-- end .main -->
+
+<script>
+function show(id, el) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  // Show target
+  document.getElementById(id).classList.add('active');
+  // Update pills
+  document.querySelectorAll('.pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  // Scroll to top of content
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
