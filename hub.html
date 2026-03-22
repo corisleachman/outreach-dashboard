@@ -104,37 +104,37 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
   </div>
 
   <div class="quick-links">
-    <a href="https://corisleachman.github.io/outreach-dashboard/" target="_blank" class="quick-link">
+    <a href="https://corisleachman.github.io/outreach-dashboard/" class="quick-link">
       <div class="ql-icon ql-pink">🚀</div>
       <div class="ql-info"><div class="ql-title">Dashboard v1</div><div class="ql-desc">Live product</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="https://corisleachman.github.io/outreach-dashboard/exploration/" target="_blank" class="quick-link">
+    <a href="https://corisleachman.github.io/outreach-dashboard/exploration/" class="quick-link">
       <div class="ql-icon ql-purple">🎨</div>
       <div class="ql-info"><div class="ql-title">Brand exploration</div><div class="ql-desc">Design directions & typography</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="wireframes/campaign-view-drawer-spec.html" target="_blank" class="quick-link">
+    <a href="wireframes/campaign-view-drawer-spec.html" class="quick-link">
       <div class="ql-icon ql-cyan">📋</div>
       <div class="ql-info"><div class="ql-title">Campaign view spec</div><div class="ql-desc">Feature list for rewrite</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="wireframes/campaign-view-v3.html" target="_blank" class="quick-link">
+    <a href="wireframes/campaign-view-v3.html" class="quick-link">
       <div class="ql-icon ql-pink">🗂</div>
       <div class="ql-info"><div class="ql-title">Campaign view v3</div><div class="ql-desc">Canonical — incl. Edit sequence drawer</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="wireframes/summary-v2.html" target="_blank" class="quick-link">
+    <a href="wireframes/summary-v2.html" class="quick-link">
       <div class="ql-icon ql-cyan">📊</div>
       <div class="ql-info"><div class="ql-title">Summary / Today view</div><div class="ql-desc">Default landing page — in review</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="wireframes/referral-system.html" target="_blank" class="quick-link">
+    <a href="wireframes/referral-system.html" class="quick-link">
       <div class="ql-icon ql-pink">🎁</div>
       <div class="ql-info"><div class="ql-title">Referral system</div><div class="ql-desc">All 9 views — signed off</div></div>
       <span class="ql-arrow">→</span>
     </a>
-    <a href="exploration/00-brand-guidelines.html" target="_blank" class="quick-link">
+    <a href="exploration/00-brand-guidelines.html" class="quick-link">
       <div class="ql-icon ql-purple">📐</div>
       <div class="ql-info"><div class="ql-title">Brand guidelines</div><div class="ql-desc">Design system + tier matrix</div></div>
       <span class="ql-arrow">→</span>
@@ -310,10 +310,10 @@ JOURNEYS.forEach(j => {
   }
   const m = META[j.status];
   const name = (j.url && j.status !== 'none')
-    ? `<a class="wf-link" href="${j.url}" target="_blank">${j.name}</a>`
+    ? `<a class="wf-link" href="${j.url}">${j.name}</a>`
     : j.name;
   const wf = (j.url && j.status !== 'none')
-    ? `<a class="wf-link" href="${j.url}" target="_blank">View wireframe →</a>`
+    ? `<a class="wf-link" href="${j.url}">View wireframe →</a>`
     : `<span style="color:var(--text-dim)">—</span>`;
 
   const noteCell = j.note
