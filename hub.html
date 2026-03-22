@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>outreach. — dev hub</title>
+<title>Pulse. — dev hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
@@ -97,8 +97,8 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
 
   <div class="header">
     <div class="header-eyebrow">Development hub</div>
-    <h1 class="header-title">outreach<span>.</span></h1>
-    <p class="header-sub">Central links for everything in active development. Track wireframes from first build to sign-off.</p>
+    <h1 class="header-title">Pulse<span>.</span></h1>
+    <p class="header-sub">Central links for everything in active development. Track wireframes, specs, and feature packages from first build to sign-off.</p>
   </div>
 
   <div class="quick-links">
@@ -122,6 +122,21 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
       <div class="ql-info"><div class="ql-title">Campaign view v3</div><div class="ql-desc">Canonical — incl. Edit sequence drawer</div></div>
       <span class="ql-arrow">→</span>
     </a>
+    <a href="wireframes/summary-v2.html" target="_blank" class="quick-link">
+      <div class="ql-icon ql-cyan">📊</div>
+      <div class="ql-info"><div class="ql-title">Summary / Today view</div><div class="ql-desc">Default landing page — in review</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="wireframes/referral-system.html" target="_blank" class="quick-link">
+      <div class="ql-icon ql-pink">🎁</div>
+      <div class="ql-info"><div class="ql-title">Referral system</div><div class="ql-desc">All 9 views — signed off</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
+    <a href="exploration/00-brand-guidelines.html" target="_blank" class="quick-link">
+      <div class="ql-icon ql-purple">📐</div>
+      <div class="ql-info"><div class="ql-title">Brand guidelines</div><div class="ql-desc">Design system + tier matrix</div></div>
+      <span class="ql-arrow">→</span>
+    </a>
   </div>
 
   <div class="section">
@@ -141,7 +156,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
           <th style="width:38%">Journey</th>
           <th style="width:16%">Status</th>
           <th style="width:18%">Progress</th>
-          <th style="width:28%">Wireframe</th>
+          <th style="width:22%">Wireframe</th><th style="width:18%">Note</th>
         </tr>
       </thead>
       <tbody id="tracker-body"></tbody>
@@ -149,7 +164,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
   </div>
 
   <div class="footer">
-    <span class="footer-logo">outreach.</span>
+    <span class="footer-logo">Pulse.</span>
     <span id="footer-txt">dev hub</span>
   </div>
 </div>
@@ -161,72 +176,107 @@ const W2 = B + 'outreach-wizard-v2.html';
 const DH = B + 'dashboard-home.html';
 
 const JOURNEYS = [
+  // ── ACTIVATION & ONBOARDING ─────────────────────────────────────────────
   { group: 'Activation & onboarding' },
-  { name: 'Sign-up → Gmail OAuth',               status: 'built',  url: B + 'signup-oauth.html' },
-  { name: 'Campaign wizard — activation loop',   status: 'review', url: B + 'outreach-wizard-v3.html' },
-  { name: 'Empty state — first login',            status: 'built',  url: DH },
-  { name: 'Free tier cap + upgrade prompt',       status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Sign-up → Gmail OAuth',                      status: 'built',  url: B + 'signup-oauth.html' },
+  { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: 'Phase 2.10 spec locked — needs update to match' },
+  { name: 'Empty state — first login',                  status: 'built',  url: DH },
+  { name: 'Referee onboarding — referral gifted card',  status: 'done',   url: B + 'referral-system.html' },
 
+  // ── CAMPAIGN MANAGEMENT ──────────────────────────────────────────────────
   { group: 'Campaign management' },
-  { name: 'Campaigns list / home dashboard',     status: 'built',  url: DH },
-  { name: 'Create new campaign',                 status: 'built',  url: DH },
-  { name: 'Campaign view (persistent shell)',   status: 'done',  url: B + 'campaign-view-v3.html' },
-  { name: 'Campaign settings',                   status: 'none' },
+  { name: 'Campaigns list / home dashboard',            status: 'built',  url: DH },
+  { name: 'Create new campaign',                        status: 'built',  url: DH },
+  { name: 'Campaign view (persistent shell)',           status: 'done',   url: B + 'campaign-view-v3.html' },
+  { name: 'Campaign settings tab',                      status: 'none',   note: 'Content not yet decided — open question' },
 
+  // ── PROSPECT IMPORT & REVIEW ─────────────────────────────────────────────
   { group: 'Prospect import & review' },
-  { name: 'CSV import with column mapping',      status: 'built',  url: B + 'prospect-import.html' },
-  { name: 'Manual prospect add',                 status: 'built',  url: B + 'prospect-import.html' },
-  { name: 'Review tab — Contact / Later / Skip', status: 'built',  url: P1 },
-  { name: 'Prospect detail view',                status: 'built',  url: B + 'prospect-import.html' },
+  { name: 'CSV import with column mapping',             status: 'built',  url: B + 'prospect-import.html' },
+  { name: 'Manual prospect add',                        status: 'built',  url: B + 'prospect-import.html' },
+  { name: 'Review tab — Contact / Later / Skip',        status: 'built',  url: P1 },
+  { name: 'Prospect detail view',                       status: 'built',  url: B + 'prospect-import.html' },
 
+  // ── MESSAGE CREATION ─────────────────────────────────────────────────────
   { group: 'Message creation' },
-  { name: 'Message editor',                      status: 'built',  url: W2 },
-  { name: 'Sequence builder',                    status: 'done',   url: B + 'campaign-view-v3.html' },
-  { name: 'AI draft generation (Pro)',            status: 'built',  url: B + 'ai-drafts.html' },
-  { name: 'Personality pack selection',          status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Message editor',                             status: 'built',  url: W2 },
+  { name: 'Sequence builder',                           status: 'done',   url: B + 'campaign-view-v3.html' },
+  { name: 'AI draft generation (Pro)',                  status: 'built',  url: B + 'ai-drafts.html',           note: 'AI draft UX not yet fully specced — treat as placeholder' },
+  { name: 'Personality pack selection',                 status: 'built',  url: B + 'settings-account.html' },
 
+  // ── SENDING ──────────────────────────────────────────────────────────────
   { group: 'Sending' },
-  { name: 'Drafts tab — review & send',          status: 'built',  url: P1 },
-  { name: 'Review & send — sequence check',      status: 'review', url: W2 },
-  { name: 'Post-send celebration',               status: 'built',  url: W2 },
-  { name: 'Send failure state',                  status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Drafts tab — review & send',                 status: 'built',  url: P1 },
+  { name: 'Review & send — sequence check',             status: 'review', url: W2 },
+  { name: 'Post-send confirmation + momentum prompt',   status: 'built',  url: W2 },
+  { name: 'Send failure state',                         status: 'built',  url: B + 'error-edge-cases.html' },
 
+  // ── TRACKING & FOLLOW-UP ─────────────────────────────────────────────────
   { group: 'Tracking & follow-up' },
-  { name: 'Sent tab — 14 status options',        status: 'built',  url: P1 },
-  { name: 'Follow-up tab',                       status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Follow-up composer',                  status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Nurture tab',                         status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Conversations tab',                   status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'LinkedIn tab',                        status: 'built',  url: P1 },
+  { name: 'Sent tab — 14 status options',               status: 'built',  url: P1 },
+  { name: 'Follow-up tab (Free: visible, locked)',      status: 'built',  url: B + 'followup-nurture-conversations.html', note: 'Needs locked state for Free tier' },
+  { name: 'Follow-up composer',                         status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Nurture tab',                                status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversations tab',                          status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'LinkedIn tab',                               status: 'built',  url: P1 },
 
+  // ── REPLIES & CONVERSATIONS ──────────────────────────────────────────────
   { group: 'Replies & conversations' },
-  { name: 'Reply received → Conversations',      status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Conversation thread + notes',         status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Meeting booked → Won',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Closed / not a fit → Nurture',        status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'DO NOT CONTACT confirmation',         status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Reply received → Conversations',             status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversation thread + notes',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Meeting booked → Won',                       status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Closed / not a fit → Nurture',               status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'DO NOT CONTACT confirmation',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
 
+  // ── SUMMARY / TODAY VIEW ─────────────────────────────────────────────────
+  { group: 'Summary & Today view' },
+  { name: 'Today — work queue (default landing page)',  status: 'review', url: B + 'summary-v2.html',          note: 'New file — v1 summary-and-workflow.html preserved for reference' },
+  { name: 'Today — all done state',                     status: 'review', url: B + 'summary-v2.html' },
+  { name: 'This week — stats + activity feed',          status: 'review', url: B + 'summary-v2.html' },
+
+  // ── EMOTIONAL DESIGN ─────────────────────────────────────────────────────
   { group: 'Emotional design moments' },
-  { name: 'Milestone toasts & moments',          status: 'built',  url: B + 'emotional-design.html' },
-  { name: '"Done for today" end state',          status: 'built',  url: B + 'emotional-design.html' },
-  { name: 'Weekly rhythm summary',               status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Milestone toasts & moments',                 status: 'built',  url: B + 'emotional-design.html' },
+  { name: 'Momentum prompts',                           status: 'built',  url: B + 'emotional-design.html' },
+  { name: 'Activity report — monthly snapshot',         status: 'none',   note: 'Unspecced — FEATURE-ACTIVITY-REPORT.md captured' },
 
-  { group: 'Pricing & upgrade' },
-  { name: 'Free tier limit wall',                status: 'built',  url: B + 'pricing-upgrade.html' },
-  { name: 'Pricing / plan comparison',           status: 'built',  url: B + 'pricing-upgrade.html' },
-  { name: 'Stripe checkout flow',                status: 'built',  url: B + 'pricing-upgrade.html' },
-  { name: 'Post-upgrade confirmation',           status: 'built',  url: B + 'pricing-upgrade.html' },
+  // ── PRICING & UPGRADE ────────────────────────────────────────────────────
+  { group: 'Pricing & upgrade moments' },
+  { name: 'Prospect limit wall (Free — 100 prospects)', status: 'built',  url: B + 'pricing-upgrade.html',     note: 'Needs update: Pro Light trial (500) vs Free (100) distinction' },
+  { name: 'Desire trigger — inline Pro feature prompt', status: 'none',   note: 'Upgrade moment package needed — part of stickiness/conversion work' },
+  { name: 'Ambient prompt — Follow-up tab locked',      status: 'none',   note: 'Upgrade moment package needed' },
+  { name: 'Trial expiry warning banner (day 28)',        status: 'none',   note: 'Upgrade moment package needed' },
+  { name: 'Trial expiry — see what changed',             status: 'none',   note: 'Upgrade moment package needed' },
+  { name: 'Pricing / plan comparison',                  status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Stripe checkout flow',                       status: 'built',  url: B + 'pricing-upgrade.html' },
+  { name: 'Post-upgrade confirmation + referral note',  status: 'built',  url: B + 'pricing-upgrade.html',     note: 'Needs referral note added to success screen' },
 
+  // ── REFERRAL SYSTEM ──────────────────────────────────────────────────────
+  { group: 'Referral system' },
+  { name: 'Settings → Referrals (empty state)',         status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Settings → Referrals (reward earned)',       status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Past invites tab — all statuses',            status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Referee onboarding — gifted card',           status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Contextual prompt — first campaign sent',    status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Contextual prompt — first reply',            status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Trial expiry banner — referral nudge',       status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Post-upgrade — referral note',               status: 'done',   url: B + 'referral-system.html' },
+  { name: 'Reward earned notification',                 status: 'done',   url: B + 'referral-system.html' },
+
+  // ── SETTINGS & ACCOUNT ───────────────────────────────────────────────────
   { group: 'Settings & account' },
-  { name: 'Account settings',                    status: 'built',  url: B + 'settings-account.html' },
-  { name: 'Personality packs — global default',  status: 'built',  url: B + 'settings-account.html' },
-  { name: 'Billing & plan management',           status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Account settings',                           status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Personality packs — global default',         status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Appearance — brand personalisation',         status: 'none',   note: 'FEATURE-BRAND-PERSONALISATION.md captured — Layer 5' },
+  { name: 'Billing & plan management',                  status: 'built',  url: B + 'settings-account.html' },
+  { name: 'Referrals panel',                            status: 'done',   url: B + 'referral-system.html' },
 
+  // ── ERROR & EDGE CASES ───────────────────────────────────────────────────
   { group: 'Error & edge cases' },
-  { name: 'Gmail disconnected / reconnect',      status: 'built',  url: B + 'error-edge-cases.html' },
-  { name: 'Email bounce — retry flow',           status: 'built',  url: B + 'error-edge-cases.html' },
-  { name: 'Empty state — no prospects yet',      status: 'built',  url: B + 'error-edge-cases.html' },
-  { name: 'Sequence paused — reply detected',    status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Gmail disconnected / reconnect',             status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Email bounce — retry flow',                  status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Empty state — no prospects yet',             status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Sequence paused — reply detected',           status: 'built',  url: B + 'error-edge-cases.html' },
 ];
 
 const META = {
@@ -257,11 +307,15 @@ JOURNEYS.forEach(j => {
     ? `<a class="wf-link" href="${j.url}" target="_blank">View wireframe →</a>`
     : `<span style="color:var(--text-dim)">—</span>`;
 
+  const noteCell = j.note
+    ? `<span style="font-size:11px;color:var(--text-dim);">${j.note}</span>`
+    : `<span style="color:var(--text-dim)">—</span>`;
   rows += `<tr>
     <td class="journey-name">${name}</td>
     <td><span class="status ${m.cls}">${m.label}</span></td>
     <td><div class="pip-track">${pips(j.status)}</div></td>
     <td>${wf}</td>
+    <td>${noteCell}</td>
   </tr>`;
 
   total++;
