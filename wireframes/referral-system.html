@@ -334,15 +334,15 @@
 </div>
 
 <div class="flow-nav">
-  <button class="flow-btn active" onclick="scrollTo('settings-default')">1 · Settings (empty)</button>
-  <button class="flow-btn" onclick="scrollTo('settings-active')">2 · Settings (active)</button>
-  <button class="flow-btn" onclick="scrollTo('past-invites')">3 · Past invites tab</button>
-  <button class="flow-btn" onclick="scrollTo('referee-onboarding')">4 · Referee onboarding</button>
-  <button class="flow-btn" onclick="scrollTo('prompt-first-campaign')">5 · Prompt: first campaign</button>
-  <button class="flow-btn" onclick="scrollTo('prompt-first-reply')">6 · Prompt: first reply</button>
-  <button class="flow-btn" onclick="scrollTo('prompt-trial-expiry')">7 · Trial expiry banner</button>
-  <button class="flow-btn" onclick="scrollTo('prompt-post-upgrade')">8 · Post-upgrade screen</button>
-  <button class="flow-btn" onclick="scrollTo('reward-notification')">9 · Reward notification</button>
+  <button class="flow-btn active" onclick="jumpTo('settings-default')">1 · Settings (empty)</button>
+  <button class="flow-btn" onclick="jumpTo('settings-active')">2 · Settings (active)</button>
+  <button class="flow-btn" onclick="jumpTo('past-invites')">3 · Past invites tab</button>
+  <button class="flow-btn" onclick="jumpTo('referee-onboarding')">4 · Referee onboarding</button>
+  <button class="flow-btn" onclick="jumpTo('prompt-first-campaign')">5 · Prompt: first campaign</button>
+  <button class="flow-btn" onclick="jumpTo('prompt-first-reply')">6 · Prompt: first reply</button>
+  <button class="flow-btn" onclick="jumpTo('prompt-trial-expiry')">7 · Trial expiry banner</button>
+  <button class="flow-btn" onclick="jumpTo('prompt-post-upgrade')">8 · Post-upgrade screen</button>
+  <button class="flow-btn" onclick="jumpTo('reward-notification')">9 · Reward notification</button>
 </div>
 
 <div class="screens">
@@ -405,15 +405,20 @@
 
         <div class="divider" style="margin-top:24px;"></div>
 
-        <div class="tab-row">
-          <div class="tab">Refer</div>
-          <div class="tab active">Past invites (0)</div>
+        <div class="tab-row" id="tabs-default">
+          <div class="tab" onclick="switchTab('default','refer')">Refer</div>
+          <div class="tab active" onclick="switchTab('default','invites')">Past invites (0)</div>
         </div>
 
-        <div class="empty-state">
-          <div style="font-size:32px;">📬</div>
-          <p>No invites yet</p>
-          <p style="margin-top:4px; font-size:12px;">Share your link or send a direct invite to get started.</p>
+        <div id="default-refer" style="display:none;">
+          <div style="color:var(--td); font-size:14px; padding:8px 0;">Your link and invite form are above.</div>
+        </div>
+        <div id="default-invites">
+          <div class="empty-state">
+            <div style="font-size:32px;">📬</div>
+            <p>No invites yet</p>
+            <p style="margin-top:4px; font-size:12px;">Share your link or send a direct invite to get started.</p>
+          </div>
         </div>
 
       </div>
@@ -506,11 +511,26 @@
       <div class="settings-content">
         <div class="settings-section-title">Refer and earn</div>
 
-        <div class="tab-row">
-          <div class="tab">Refer</div>
-          <div class="tab active">Past invites (4)</div>
+        <div class="tab-row" id="tabs-pastinvites">
+          <div class="tab" onclick="switchTab('pastinvites','refer')">Refer</div>
+          <div class="tab active" onclick="switchTab('pastinvites','invites')">Past invites (4)</div>
         </div>
 
+        <div id="pastinvites-refer" style="display:none;">
+          <div style="padding:20px 0;">
+            <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px;">Your invite link</div>
+            <div class="link-row">
+              <input class="input-field" value="https://pulse-outreach.co.uk/?ref=ax7k2m9p" readonly style="font-family:'DM Mono',monospace;font-size:13px;color:var(--tm);">
+              <button class="btn-copy" onclick="this.textContent='Copied!'; this.classList.add('copied'); setTimeout(()=>{this.textContent='Copy';this.classList.remove('copied')},2000)">Copy</button>
+            </div>
+            <div style="font-family:'Outfit',sans-serif; font-size:12px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--td); margin-bottom:10px; margin-top:16px;">Send invites</div>
+            <div class="send-row">
+              <input class="input-field" placeholder="email@example.com">
+              <button class="btn-primary" style="padding:11px 20px;flex-shrink:0;">Send</button>
+            </div>
+          </div>
+        </div>
+        <div id="pastinvites-invites">
         <table class="invites-table">
           <thead>
             <tr>
@@ -561,6 +581,7 @@
           Activated → they sent their first campaign ·
           Reward earned → your free month has been applied
         </div>
+        </div><!-- end pastinvites-invites -->
       </div>
     </div>
 
@@ -784,10 +805,31 @@
 </div><!-- end .screens -->
 
 <script>
-function scrollTo(id) {
+// Flow nav — jump to section
+function jumpTo(id) {
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+
+// Settings tabs — switch between Refer and Past Invites panels
+function switchTab(panelId, tab) {
+  var referContent = document.getElementById(panelId + '-refer');
+  var invitesContent = document.getElementById(panelId + '-invites');
+  var tabRow = document.getElementById('tabs-' + panelId);
+  var tabs = tabRow.querySelectorAll('.tab');
+
+  if (tab === 'refer') {
+    if (referContent) referContent.style.display = 'block';
+    if (invitesContent) invitesContent.style.display = 'none';
+    tabs[0].classList.add('active');
+    tabs[1].classList.remove('active');
+  } else {
+    if (referContent) referContent.style.display = 'none';
+    if (invitesContent) invitesContent.style.display = 'block';
+    tabs[0].classList.remove('active');
+    tabs[1].classList.add('active');
+  }
 }
 </script>
 </body>
