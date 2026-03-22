@@ -27,28 +27,40 @@
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { background: #080610; color: var(--t); font-family: 'DM Sans', sans-serif; }
 
-  /* ── PAGE LAYOUT ── */
-  .page-header {
-    padding: 48px 60px 32px;
-    border-bottom: 1px solid var(--b);
+  /* ── LEFT NAV ── */
+  .left-nav{
+    position:fixed;top:0;left:0;bottom:0;width:200px;
+    background:rgba(13,9,20,0.97);border-right:1px solid var(--b);
+    backdrop-filter:blur(16px);z-index:999;
+    display:flex;flex-direction:column;
+    overflow-y:auto;scrollbar-width:none;
   }
-  .page-title { font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--td); margin-bottom: 8px; }
-  .page-name { font-family: 'Outfit', sans-serif; font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-  .page-name span { background: var(--grad-text); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-  .page-desc { color: var(--tm); font-size: 14px; margin-top: 8px; }
+  .left-nav::-webkit-scrollbar{display:none;}
+  .nav-identity{padding:20px 16px 16px;border-bottom:1px solid var(--b);flex-shrink:0;}
+  .nav-product{font-family:var(--of);font-size:15px;font-weight:800;
+    background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+    background-clip:text;line-height:1.1;}
+  .nav-doc{font-size:10px;color:var(--td);margin-top:3px;
+    font-family:var(--of);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+  .nav-pills{display:flex;flex-direction:column;gap:2px;padding:12px 10px 24px;}
+  .nav-group-label{font-family:var(--of);font-size:9px;font-weight:700;
+    letter-spacing:0.12em;text-transform:uppercase;color:var(--td);padding:10px 8px 4px;}
+  .flow-btn{
+    font-family:var(--of);font-size:12px;font-weight:600;
+    padding:7px 12px;border-radius:8px;border:1px solid transparent;
+    background:transparent;color:var(--tm);cursor:pointer;
+    transition:all 0.15s;text-align:left;width:100%;
+  }
+  .flow-btn:hover{background:var(--s2);color:var(--t);}
+  .flow-btn.active{color:var(--pink);background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.2);}
+  .pill-group-sep{height:1px;background:var(--b);margin:6px 8px;}
 
-  /* Flow nav */
-  .flow-nav { display: flex; gap: 8px; padding: 24px 60px; border-bottom: 1px solid var(--b); flex-wrap: wrap; }
-  .flow-btn { font-family: 'Outfit', sans-serif; font-size: 12px; font-weight: 600; padding: 6px 16px; border-radius: 100px; border: 1px solid var(--b2); background: transparent; color: var(--tm); cursor: pointer; transition: all 0.2s; letter-spacing: 0.01em; }
-  .flow-btn:hover, .flow-btn.active { background: var(--s2); color: var(--t); border-color: rgba(255,255,255,0.2); }
-  .flow-btn.active { border-color: rgba(255,20,147,0.4); color: var(--pink); background: rgba(255,20,147,0.06); }
-
-  /* Screens container */
-  .screens { padding: 48px 60px; display: flex; flex-direction: column; gap: 64px; }
-  .screen-section { display: flex; flex-direction: column; gap: 16px; }
-  .screen-label { font-family: 'Outfit', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--td); }
-  .screen-title { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--t); margin-bottom: 4px; }
-  .screen-desc { font-size: 13px; color: var(--tm); margin-bottom: 16px; }
+  /* ── MAIN ── */
+  .screens{margin-left:200px;padding:40px 48px 80px;display:flex;flex-direction:column;gap:64px;}
+  .screen-section{display:flex;flex-direction:column;gap:16px;}
+  .screen-label{font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);}
+  .screen-title{font-family:var(--of);font-size:18px;font-weight:700;color:var(--t);margin-bottom:4px;}
+  .screen-desc{font-size:13px;color:var(--tm);margin-bottom:16px;}
 
   /* ── SHARED COMPONENTS ── */
   .card {
@@ -333,19 +345,39 @@
   <div class="page-desc">All views and user journeys. Click flow buttons to jump to a section.</div>
 </div>
 
-<div class="flow-nav">
-  <button class="flow-btn active" onclick="jumpTo('settings-default')">1 · Settings (empty)</button>
-  <button class="flow-btn" onclick="jumpTo('settings-active')">2 · Settings (active)</button>
-  <button class="flow-btn" onclick="jumpTo('past-invites')">3 · Past invites tab</button>
-  <button class="flow-btn" onclick="jumpTo('referee-onboarding')">4 · Referee onboarding</button>
-  <button class="flow-btn" onclick="jumpTo('prompt-first-campaign')">5 · Prompt: first campaign</button>
-  <button class="flow-btn" onclick="jumpTo('prompt-first-reply')">6 · Prompt: first reply</button>
-  <button class="flow-btn" onclick="jumpTo('prompt-trial-expiry')">7 · Trial expiry banner</button>
-  <button class="flow-btn" onclick="jumpTo('prompt-post-upgrade')">8 · Post-upgrade screen</button>
-  <button class="flow-btn" onclick="jumpTo('reward-notification')">9 · Reward notification</button>
-  <button class="flow-btn" onclick="jumpTo('share-modal')">10 · Share modal</button>
-  <button class="flow-btn" onclick="jumpTo('dashboard-stat-card')">11 · Dashboard stat card</button>
-</div>
+<!-- LEFT NAV -->
+<nav class="left-nav">
+  <div class="nav-identity">
+    <div class="nav-product">Pulse.</div>
+    <div class="nav-doc">Referral System</div>
+  </div>
+  <div class="nav-pills">
+    <span class="nav-group-label">Settings</span>
+    <button class="flow-btn active" onclick="jumpTo('settings-default',this)">1 · Settings (empty)</button>
+    <button class="flow-btn" onclick="jumpTo('settings-active',this)">2 · Settings (active)</button>
+    <button class="flow-btn" onclick="jumpTo('past-invites',this)">3 · Past invites tab</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">Onboarding</span>
+    <button class="flow-btn" onclick="jumpTo('referee-onboarding',this)">4 · Referee onboarding</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">Contextual prompts</span>
+    <button class="flow-btn" onclick="jumpTo('prompt-first-campaign',this)">5 · First campaign</button>
+    <button class="flow-btn" onclick="jumpTo('prompt-first-reply',this)">6 · First reply</button>
+    <button class="flow-btn" onclick="jumpTo('prompt-trial-expiry',this)">7 · Trial expiry</button>
+    <button class="flow-btn" onclick="jumpTo('prompt-post-upgrade',this)">8 · Post-upgrade</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">Notifications</span>
+    <button class="flow-btn" onclick="jumpTo('reward-notification',this)">9 · Reward earned</button>
+
+    <div class="pill-group-sep"></div>
+    <span class="nav-group-label">Share & stats</span>
+    <button class="flow-btn" onclick="jumpTo('share-modal',this)">10 · Share modal</button>
+    <button class="flow-btn" onclick="jumpTo('dashboard-stat-card',this)">11 · Stat card</button>
+  </div>
+</nav>
 
 <div class="screens">
 
@@ -970,10 +1002,10 @@
 
 <script>
 // Flow nav — jump to section
-function jumpTo(id) {
+function jumpTo(id, el) {
   document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
   document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
-  event.currentTarget.classList.add('active');
+  if (el) el.classList.add('active');
 }
 
 // Settings tabs — switch between Refer and Past Invites panels
