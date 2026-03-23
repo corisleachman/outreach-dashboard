@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Settings v2</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.1);--ad:rgba(255,157,66,0.1);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+
+/* TOPBAR */
+.tb{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.92);
+  border-bottom:1px solid var(--b);backdrop-filter:blur(12px);z-index:100;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 16px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:90;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:rgba(255,255,255,0.45);}
+.si:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.75);}
+.si.active{background:rgba(255,20,147,0.12);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{width:18px;height:18px;}
+
+/* MAIN LAYOUT */
+.main{margin-top:var(--th);margin-left:var(--sw);padding:36px 40px 80px;
+  position:relative;z-index:1;max-width:700px;}
+
+/* SETTINGS TABS — left column nav */
+.settings-layout{display:grid;grid-template-columns:180px 1fr;gap:32px;min-height:600px;}
+.settings-nav{display:flex;flex-direction:column;gap:2px;padding-top:4px;}
+.settings-nav-group{font-family:var(--of);font-size:9px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--td);
+  padding:12px 10px 4px;}
+.snav-item{font-size:13px;color:var(--tm);padding:8px 12px;border-radius:8px;
+  cursor:pointer;transition:all 0.15s;font-family:var(--sf);
+  border:1px solid transparent;display:flex;align-items:center;gap:8px;}
+.snav-item:hover{background:var(--s2);color:var(--t);}
+.snav-item.active{background:rgba(255,20,147,0.08);color:var(--t);
+  border-color:rgba(255,20,147,0.2);}
+.snav-item .snav-dot{width:6px;height:6px;border-radius:50%;background:var(--pink);flex-shrink:0;}
+
+/* SETTINGS CONTENT */
+.settings-content{display:none;}
+.settings-content.active{display:block;}
+.page-title{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:6px;}
+.page-sub{font-size:13px;color:var(--tm);margin-bottom:28px;line-height:1.5;}
+
+/* SECTION */
+.sect{margin-bottom:28px;}
+.sect-title{font-family:var(--of);font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--td);
+  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+.row{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.row:last-child{border-bottom:none;}
+.row-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+.row-sub{font-size:12px;color:var(--tm);}
+
+/* INPUTS */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);}
+.input{width:100%;padding:10px 14px;background:var(--s);border:1px solid var(--b2);
+  border-radius:10px;color:var(--t);font-family:var(--sf);font-size:13px;outline:none;}
+.input:focus{border-color:rgba(255,20,147,0.4);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;
+  border-radius:100px;font-family:var(--of);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;}
+.btn-primary{background:var(--gr);color:white;box-shadow:0 0 24px rgba(255,20,147,0.2);}
+.btn-ghost{background:transparent;border:1px solid var(--b2);color:var(--tm);}
+.btn-ghost:hover{color:var(--t);border-color:rgba(255,255,255,0.2);}
+.btn-danger{background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);color:var(--red);}
+.btn-sm{padding:6px 14px;font-size:12px;}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.toggle{width:40px;height:22px;border-radius:100px;background:var(--b2);
+  position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle.on{background:linear-gradient(135deg,rgba(255,20,147,0.6),rgba(0,212,255,0.6));}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:var(--t);transition:transform 0.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.toggle.on .toggle-thumb{transform:translateX(18px);}
+
+/* PLAN BADGE */
+.plan-badge{display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:100px;font-family:var(--of);
+  font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.plan-pro{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.plan-free{background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);color:var(--green);}
+.plan-trial{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+
+/* CONNECTED BADGE */
+.connected-badge{display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:100px;
+  background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);
+  font-size:11px;color:var(--green);font-family:var(--of);font-weight:600;}
+
+/* PERSONALITY PACK CARD */
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.pack-card{padding:14px;border-radius:12px;background:var(--s);
+  border:1px solid var(--b);cursor:pointer;transition:all 0.15s;}
+.pack-card:hover{background:var(--s2);border-color:var(--b2);}
+.pack-card.sel{background:var(--pd);border-color:rgba(255,20,147,0.3);}
+.pack-name{font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:3px;}
+.pack-desc{font-size:11px;color:var(--tm);margin-bottom:8px;}
+.pack-preview{font-size:11px;color:var(--td);font-style:italic;line-height:1.5;
+  padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;}
+
+/* AVATAR UPLOAD */
+.avatar-section{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.avatar-large{width:64px;height:64px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:20px;font-weight:700;color:white;
+  position:relative;flex-shrink:0;}
+.avatar-edit{position:absolute;bottom:0;right:0;width:20px;height:20px;
+  border-radius:50%;background:#0d0914;border:2px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;}
+
+/* GRADIENT PREVIEW */
+.grad-preview{height:48px;border-radius:12px;margin-bottom:12px;
+  background:linear-gradient(135deg,#ff1493,#00d4ff);}
+.color-pickers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.color-field{display:flex;flex-direction:column;gap:6px;}
+.color-field label{font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);font-family:var(--of);}
+.color-swatch{width:100%;height:36px;border-radius:8px;border:1px solid var(--b2);
+  cursor:pointer;transition:transform 0.15s;}
+.color-swatch:hover{transform:scale(1.03);}
+
+/* NOTIFICATION ROWS */
+.notif-row{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.notif-row:last-child{border-bottom:none;}
+.notif-info{flex:1;}
+.notif-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+.notif-sub{font-size:12px;color:var(--tm);}
+
+/* INVOICE ROW */
+.invoice-row{display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.invoice-row:last-child{border-bottom:none;}
+.invoice-date{font-size:13px;color:var(--tm);width:100px;flex-shrink:0;}
+.invoice-desc{font-size:13px;flex:1;}
+.invoice-amt{font-size:13px;font-weight:600;font-family:var(--of);}
+
+/* DANGER ZONE */
+.danger-box{border:1px solid rgba(255,76,76,0.2);border-radius:12px;
+  padding:18px;background:rgba(255,76,76,0.04);}
+
+/* BILLING STATES SWITCHER */
+.state-switcher{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+.state-btn{font-family:var(--of);font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:100px;border:1px solid var(--b2);
+  background:transparent;color:var(--tm);cursor:pointer;transition:all 0.15s;}
+.state-btn:hover{color:var(--t);}
+.state-btn.active{border-color:rgba(255,20,147,0.4);color:var(--pink);
+  background:rgba(255,20,147,0.08);}
+
+/* ANNOTATIONS */
+.ann{margin-top:24px;padding:14px 16px;
+  background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);
+  border-radius:10px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
+.ann-item{display:flex;gap:8px;font-size:12px;color:var(--td);
+  margin-bottom:5px;line-height:1.5;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);
+  margin-top:6px;flex-shrink:0;}
+
+/* TOAST */
+.toast-zone{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 16px;
+  border-radius:10px;font-size:13px;animation:slideIn 0.3s ease;
+  font-family:var(--of);font-weight:600;}
+.t-cyan{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.t-pink{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- TOPBAR -->
+<div class="tb">
+  <a href="../hub.html" style="text-decoration:none;display:block;font-family:var(--of);font-size:18px;font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pulse.</a>
+  <div class="av">CL</div>
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+  <a href="summary-v2.html" class="si" title="Summary">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+  </a>
+  <a href="dashboard-home.html" class="si" title="Campaigns">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 7h18M3 12h18M3 17h12"/></svg>
+  </a>
+  <a href="#" class="si active" title="Settings" style="margin-top:auto;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 2v2m0 16v2M4.22 4.22l1.42 1.42m12.72 12.72 1.42 1.42M2 12h2m16 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+  </a>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <div class="page-title">Settings</div>
+
+  <div class="settings-layout">
+
+    <!-- LEFT NAV -->
+    <div class="settings-nav">
+      <div class="settings-nav-group">Account</div>
+      <div class="snav-item active" onclick="showTab('profile',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Profile
+      </div>
+      <div class="snav-item" onclick="showTab('connected',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M15 7h3a5 5 0 010 10h-3m-6 0H6A5 5 0 016 7h3"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Connected accounts
+      </div>
+      <div class="settings-nav-group">Product</div>
+      <div class="snav-item" onclick="showTab('personality',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 013 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+        Personality packs
+      </div>
+      <div class="snav-item" onclick="showTab('notifications',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+        Notifications
+      </div>
+      <div class="snav-item" onclick="showTab('appearance',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        Appearance
+      </div>
+      <div class="settings-nav-group">Billing</div>
+      <div class="snav-item" onclick="showTab('billing',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+        Plan &amp; billing
+      </div>
+      <div class="snav-item" onclick="showTab('referrals',this)">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+        Referrals
+      </div>
+    </div>
+
+    <!-- RIGHT CONTENT PANELS -->
+    <div>
+
+      <!-- ══ PROFILE ══ -->
+      <div class="settings-content active" id="tab-profile">
+        <div class="sect-title">Your profile</div>
+
+        <!-- Avatar -->
+        <div class="avatar-section">
+          <div class="avatar-large">
+            CL
+            <div class="avatar-edit" title="Change photo">✏</div>
+          </div>
+          <div>
+            <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Coris Leachman</div>
+            <div style="font-size:12px;color:var(--tm);margin-bottom:8px;">coris@example.com</div>
+            <button class="btn btn-ghost btn-sm" onclick="toast('→','Photo fetched from Gmail','t-cyan')">Fetch from Gmail</button>
+          </div>
+        </div>
+
+        <div class="two-col">
+          <div class="field"><label>First name</label><input class="input" value="Coris"></div>
+          <div class="field"><label>Last name</label><input class="input" value="Leachman"></div>
+        </div>
+        <div class="field"><label>Email</label><input class="input" value="coris@example.com" type="email"></div>
+        <button class="btn btn-primary btn-sm" onclick="toast('✓','Profile saved','t-cyan')">Save changes</button>
+
+        <div class="sect" style="margin-top:28px;">
+          <div class="sect-title">Preferences</div>
+          <div class="row">
+            <div><div class="row-label">Pause sequences on reply</div><div class="row-sub">Stop follow-ups automatically when a prospect replies</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="row">
+            <div><div class="row-label">Milestone notifications</div><div class="row-sub">Show celebration moments and progress prompts in the app</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect danger-box">
+          <div class="sect-title" style="color:var(--red);border-color:rgba(255,76,76,0.2);">Danger zone</div>
+          <div class="row" style="border:none;">
+            <div><div class="row-label">Delete account</div><div class="row-sub">Permanently delete your account and all data. Cannot be undone.</div></div>
+            <button class="btn btn-danger btn-sm">Delete account</button>
+          </div>
+        </div>
+
+        <div class="ann">
+          <div class="ann-title">Notes</div>
+          <div class="ann-item"><div class="ann-dot"></div>Profile photo fetched from Gmail via Google People API on first login — shown here as an editable field.</div>
+          <div class="ann-item"><div class="ann-dot"></div>"Fetch from Gmail" re-syncs the photo if the user updates their Google profile.</div>
+        </div>
+      </div>
+
+      <!-- ══ CONNECTED ACCOUNTS ══ -->
+      <div class="settings-content" id="tab-connected">
+        <div class="sect-title">Connected accounts</div>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">Pulse. sends emails from your connected account. Replies come back to your inbox — nothing looks automated.</p>
+
+        <!-- Gmail connected -->
+        <div style="padding:16px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:12px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:8px;background:rgba(255,20,147,0.1);display:flex;align-items:center;justify-content:center;font-size:16px;">G</div>
+              <div>
+                <div style="font-size:14px;font-weight:500;">Gmail</div>
+                <div style="font-size:12px;color:var(--tm);">coris@example.com</div>
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span class="connected-badge">✓ Connected</span>
+              <button class="btn btn-ghost btn-sm" onclick="toast('→','Reconnecting Gmail…','t-cyan')">Reconnect</button>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--td);">Connected 12 Mar 2026 · Sends and receives from this account</div>
+        </div>
+
+        <!-- Microsoft not connected -->
+        <div style="padding:16px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:12px;opacity:0.7;">
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:32px;height:32px;border-radius:8px;background:rgba(0,212,255,0.08);display:flex;align-items:center;justify-content:center;font-size:16px;">M</div>
+              <div>
+                <div style="font-size:14px;font-weight:500;">Microsoft Outlook</div>
+                <div style="font-size:12px;color:var(--tm);">Not connected</div>
+              </div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="toast('→','Connecting Microsoft…','t-cyan')">Connect</button>
+          </div>
+        </div>
+
+        <!-- Both connected state -->
+        <div style="padding:12px 16px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);border-radius:10px;margin-top:16px;">
+          <div style="font-size:12px;color:var(--cyan);font-family:var(--of);font-weight:600;margin-bottom:4px;">About connected accounts</div>
+          <div style="font-size:12px;color:var(--tm);line-height:1.6;">You can connect multiple accounts. Pulse. will use the account connected to each campaign. Emails go out from your real address — nothing is spoofed or anonymised.</div>
+        </div>
+
+        <div class="ann" style="margin-top:20px;">
+          <div class="ann-title">Notes — wireframe states</div>
+          <div class="ann-item"><div class="ann-dot"></div>Top: Gmail connected (current state for all beta users).</div>
+          <div class="ann-item"><div class="ann-dot"></div>Middle: Microsoft coming soon — shown as connectable but greyed (Phase 2.11).</div>
+          <div class="ann-item"><div class="ann-dot"></div>Both connected state: not yet wireframed — needed when Phase 2.11 ships.</div>
+        </div>
+      </div>
+
+      <!-- ══ PERSONALITY PACKS ══ -->
+      <div class="settings-content" id="tab-personality">
+        <div class="sect-title">Personality packs</div>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:6px;line-height:1.6;">Choose how your AI-generated messages are written. This sets your global default — you can override it per message or per sequence step.</p>
+        <p style="font-size:12px;color:var(--td);margin-bottom:20px;">This controls the writing style of messages sent to your prospects, not the product interface itself.</p>
+
+        <div class="pack-grid">
+          <div class="pack-card sel" onclick="selectPack(this)">
+            <div class="pack-name">Calm &amp; Commercial</div>
+            <div class="pack-desc">Measured · Low pressure · Soft CTA</div>
+            <div class="pack-preview">"Hi Sarah, I thought it might be useful to share something we've been seeing with teams in your space. Happy to explain if helpful."</div>
+          </div>
+          <div class="pack-card" onclick="selectPack(this)">
+            <div class="pack-name">Direct &amp; Confident</div>
+            <div class="pack-desc">Clear · Assertive · Strong CTA</div>
+            <div class="pack-preview">"Hi Sarah, I'll cut straight to it — we help companies like yours build a repeatable pipeline in 90 days. Worth a conversation?"</div>
+          </div>
+          <div class="pack-card" onclick="selectPack(this)">
+            <div class="pack-name">Light Touch Relational</div>
+            <div class="pack-desc">Warm · Conversational · No hard ask</div>
+            <div class="pack-preview">"Hi Sarah, came across something that made me think of you — no agenda, just figured it might land at the right moment."</div>
+          </div>
+          <div class="pack-card" onclick="selectPack(this)">
+            <div class="pack-name">Challenger</div>
+            <div class="pack-desc">Provocative · Bold · Reframes the problem</div>
+            <div class="pack-preview">"Hi Sarah, most outreach fails before it starts. Here's what we're seeing work instead — takes 2 minutes to read."</div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="toast('✓','Default personality saved','t-cyan')">Save default</button>
+
+        <div class="ann" style="margin-top:20px;">
+          <div class="ann-title">Notes</div>
+          <div class="ann-item"><div class="ann-dot"></div>Selected pack is the global default. Overridable per message and per sequence step.</div>
+          <div class="ann-item"><div class="ann-dot"></div>Locked on Free tier — all 4 packs shown but locked with desire trigger (see upgrade-moments.html T2).</div>
+          <div class="ann-item"><div class="ann-dot"></div>v1 has 4 predefined packs only. No custom packs.</div>
+        </div>
+      </div>
+
+      <!-- ══ NOTIFICATIONS ══ -->
+      <div class="settings-content" id="tab-notifications">
+        <div class="sect-title">Notifications</div>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">Control which in-app notifications you receive. Email notifications come separately — manage those in your email client.</p>
+
+        <div class="sect">
+          <div class="sect-title">Outreach activity</div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">New reply received</div>
+              <div class="notif-sub">When a prospect replies to one of your emails</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Follow-up due</div>
+              <div class="notif-sub">When prospects are ready for their next sequence step</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Sequence paused</div>
+              <div class="notif-sub">When a sequence pauses because a prospect replied</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Email bounced</div>
+              <div class="notif-sub">When a sent email bounces back undelivered</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Progress &amp; milestones</div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Milestone moments</div>
+              <div class="notif-sub">First reply, 10 replies, meetings booked — key achievements</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Momentum prompts</div>
+              <div class="notif-sub">Gentle nudges when your outreach has been quiet</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Referrals</div>
+          <div class="notif-row">
+            <div class="notif-info">
+              <div class="notif-label">Referral reward earned</div>
+              <div class="notif-sub">When someone you referred sends their first campaign</div>
+            </div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="toast('✓','Notification preferences saved','t-cyan')">Save preferences</button>
+      </div>
+
+      <!-- ══ APPEARANCE ══ -->
+      <div class="settings-content" id="tab-appearance">
+        <div class="sect-title">Appearance</div>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">Personalise your Pulse. dashboard. Changes apply immediately and are saved to your account.</p>
+
+        <div class="sect">
+          <div class="sect-title">Gradient colours</div>
+          <div class="grad-preview" id="grad-preview"></div>
+          <div class="color-pickers">
+            <div class="color-field">
+              <label>Gradient start</label>
+              <div class="color-swatch" style="background:#ff1493;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#ff1493</div>
+            </div>
+            <div class="color-field">
+              <label>Gradient end</label>
+              <div class="color-swatch" style="background:#00d4ff;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#00d4ff</div>
+            </div>
+            <div class="color-field">
+              <label>Background</label>
+              <div class="color-swatch" style="background:#0d0914;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
+              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#0d0914</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Presets</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
+            <div onclick="applyPreset('#ff1493','#00d4ff','#0d0914',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid rgba(255,20,147,0.4);">
+              <div style="height:28px;background:linear-gradient(135deg,#ff1493,#00d4ff);"></div>
+              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--t);">Electric</div>
+            </div>
+            <div onclick="applyPreset('#7c3aed','#06b6d4','#0a0a14',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
+              <div style="height:28px;background:linear-gradient(135deg,#7c3aed,#06b6d4);"></div>
+              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Cosmic</div>
+            </div>
+            <div onclick="applyPreset('#f97316','#eab308','#0f0a00',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
+              <div style="height:28px;background:linear-gradient(135deg,#f97316,#eab308);"></div>
+              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Ember</div>
+            </div>
+            <div onclick="applyPreset('#10b981','#0ea5e9','#001a14',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
+              <div style="height:28px;background:linear-gradient(135deg,#10b981,#0ea5e9);"></div>
+              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Ocean</div>
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="toast('✓','Appearance saved','t-cyan')">Save appearance</button>
+          <button class="btn btn-ghost btn-sm" style="margin-left:8px;" onclick="toast('→','Reset to default','t-cyan')">Reset to default</button>
+        </div>
+
+        <div class="ann">
+          <div class="ann-title">Notes</div>
+          <div class="ann-item"><div class="ann-dot"></div>Stored as theme_config JSONB on users table: { gradient_start, gradient_end, bg }.</div>
+          <div class="ann-item"><div class="ann-dot"></div>Free tier feature — drives stickiness. Available to all users.</div>
+          <div class="ann-item"><div class="ann-dot"></div>Full interactive prototype at branding/brand-explorer.html — use that as the reference for the colour picker implementation.</div>
+        </div>
+      </div>
+
+      <!-- ══ BILLING ══ -->
+      <div class="settings-content" id="tab-billing">
+
+        <!-- Billing state switcher (wireframe only) -->
+        <div style="margin-bottom:20px;padding:10px 14px;background:var(--s);border-radius:8px;border:1px solid var(--b);">
+          <div style="font-size:10px;font-family:var(--of);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:8px;">Wireframe state</div>
+          <div class="state-switcher">
+            <button class="state-btn active" onclick="setBillingState('pro',this)">Pro (paid)</button>
+            <button class="state-btn" onclick="setBillingState('trial',this)">Pro Light trial</button>
+            <button class="state-btn" onclick="setBillingState('free',this)">Free</button>
+          </div>
+        </div>
+
+        <!-- PRO STATE -->
+        <div id="billing-pro">
+          <div class="sect">
+            <div class="sect-title">Current plan</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--s);border:1px solid rgba(255,20,147,0.2);border-radius:12px;margin-bottom:12px;">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
+                  <span class="plan-badge plan-pro">Pro</span>
+                  <span style="font-size:12px;color:var(--green);">Active</span>
+                </div>
+                <div style="font-size:13px;color:var(--tm);">£84/year · renews 17 Mar 2027</div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="toast('→','Opening plan options','t-cyan')">Change plan</button>
+            </div>
+          </div>
+          <div class="sect">
+            <div class="sect-title">Payment method</div>
+            <div class="row">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <div style="padding:4px 8px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;font-size:11px;font-family:var(--of);font-weight:700;">VISA</div>
+                <div><div class="row-label">···· 4242</div><div class="row-sub">Expires 12/27</div></div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="toast('→','Update payment method','t-cyan')">Update</button>
+            </div>
+          </div>
+          <div class="sect">
+            <div class="sect-title">Invoice history</div>
+            <div class="invoice-row"><span class="invoice-date">17 Mar 2026</span><span class="invoice-desc">Pro Annual</span><span class="invoice-amt">£84.00</span><button class="btn btn-ghost btn-sm" onclick="toast('→','Downloading PDF','t-cyan')">PDF</button></div>
+            <div class="invoice-row"><span class="invoice-date">17 Mar 2025</span><span class="invoice-desc">Pro Annual</span><span class="invoice-amt">£84.00</span><button class="btn btn-ghost btn-sm" onclick="toast('→','Downloading PDF','t-cyan')">PDF</button></div>
+          </div>
+        </div>
+
+        <!-- PRO LIGHT TRIAL STATE -->
+        <div id="billing-trial" style="display:none;">
+          <div style="padding:16px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:12px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="plan-badge plan-trial">Pro trial</span>
+              <span style="font-size:12px;color:var(--cyan);">18 days remaining</span>
+            </div>
+            <div style="font-size:13px;color:var(--tm);margin-bottom:12px;line-height:1.6;">You're on a free 30-day Pro trial. No card required. After your trial, you can upgrade to Pro or continue on the free plan.</div>
+            <button class="btn btn-primary btn-sm" onclick="toast('→','Opening upgrade flow','t-pink')">Upgrade to Pro →</button>
+          </div>
+          <div style="padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;">
+            <div style="font-size:12px;font-family:var(--of);font-weight:700;margin-bottom:8px;">What's included in your trial</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>1 campaign · 500 prospects</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>Multi-step sequences</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>AI draft generation</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>Auto-scheduling</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- FREE STATE -->
+        <div id="billing-free" style="display:none;">
+          <div style="padding:16px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:20px;">
+            <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;">
+              <span class="plan-badge plan-free">Free</span>
+            </div>
+            <div style="font-size:13px;color:var(--tm);margin-bottom:12px;line-height:1.6;">1 campaign · 100 prospects · Manual sending only.</div>
+            <button class="btn btn-primary btn-sm" onclick="toast('→','Opening upgrade flow','t-pink')">Upgrade to Pro →</button>
+          </div>
+          <div style="padding:14px;background:rgba(255,20,147,0.04);border:1px solid rgba(255,20,147,0.15);border-radius:10px;">
+            <div style="font-size:12px;font-family:var(--of);font-weight:700;color:var(--pink);margin-bottom:8px;">What you get on Pro</div>
+            <div style="display:flex;flex-direction:column;gap:6px;">
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--pink);">+</span>Unlimited campaigns &amp; prospects</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--pink);">+</span>Multi-step sequences &amp; auto-scheduling</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--pink);">+</span>AI draft generation</div>
+              <div style="font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--pink);">+</span>All personality packs</div>
+            </div>
+            <div style="font-size:12px;color:var(--td);margin-top:10px;">From £12/month or £84/year — cancel any time.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══ REFERRALS ══ -->
+      <div class="settings-content" id="tab-referrals">
+        <div class="sect-title">Refer and earn</div>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">Give friends 60 days of Pro free — double the standard trial. You earn a free month when they send their first campaign.</p>
+
+        <!-- Gifted card -->
+        <div style="background:linear-gradient(145deg,#1a0d2e,#0d1a2e);border-radius:14px;padding:24px;margin-bottom:20px;position:relative;overflow:hidden;">
+          <div style="position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,#ff1493 30%,#00d4ff 70%,transparent);"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+            <div style="font-family:var(--of);font-size:18px;font-weight:800;">Pulse<span style="background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span> <span style="display:inline-flex;padding:2px 8px;background:linear-gradient(135deg,#ff1493,#00d4ff);border-radius:6px;font-size:10px;font-weight:800;letter-spacing:0.06em;color:white;">PRO</span></div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);letter-spacing:0.06em;text-transform:uppercase;">60 days free</div>
+          </div>
+          <div style="display:inline-flex;align-items:center;gap:6px;padding:5px 14px;border-radius:100px;background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.3);font-size:12px;font-weight:600;color:var(--pink);">🎁 Gifted by You</div>
+        </div>
+
+        <!-- How it works -->
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--tm);"><span>📣</span>Share your invite link</div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--tm);"><span>🎁</span><span><strong style="color:var(--t);">They get 60 days of Pro free</strong> — double the standard trial</span></div>
+          <div style="display:flex;gap:10px;font-size:13px;color:var(--tm);"><span>✨</span><span><strong style="color:var(--t);">You earn a free month</strong> when they send their first campaign</span></div>
+        </div>
+
+        <!-- Link -->
+        <div style="font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:8px;">Your invite link</div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <div style="flex:1;padding:10px 14px;background:var(--s);border:1px solid var(--b2);border-radius:10px;font-family:'DM Mono',monospace;font-size:12px;color:var(--tm);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">pulse-outreach.co.uk/?ref=ax7k2m9p</div>
+          <button class="btn btn-ghost btn-sm" onclick="this.textContent='Copied!';this.style.color='var(--green)';setTimeout(()=>{this.textContent='Copy';this.style.color=''},2000)">Copy</button>
+        </div>
+
+        <!-- Email invite -->
+        <div style="font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:8px;">Send invites</div>
+        <div style="display:flex;gap:8px;margin-bottom:8px;">
+          <input class="input" placeholder="email@example.com" style="flex:1;">
+          <button class="btn btn-primary btn-sm" onclick="toast('✓','Invite sent','t-cyan')">Send</button>
+        </div>
+        <div style="font-size:11px;color:var(--td);text-align:center;margin-bottom:20px;">Rewards auto-applied to your next subscription payment.</div>
+
+        <!-- Past invites -->
+        <div style="font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:10px;">Past invites</div>
+        <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;overflow:hidden;">
+          <table style="width:100%;border-collapse:collapse;font-size:13px;">
+            <thead><tr style="border-bottom:1px solid var(--b);">
+              <th style="text-align:left;padding:8px 14px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Name</th>
+              <th style="text-align:left;padding:8px 14px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Invited</th>
+              <th style="text-align:left;padding:8px 14px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);">Status</th>
+            </tr></thead>
+            <tbody>
+              <tr style="border-bottom:1px solid rgba(255,255,255,0.04);">
+                <td style="padding:12px 14px;color:var(--t);font-weight:500;">Sarah Mitchell</td>
+                <td style="padding:12px 14px;color:var(--tm);">12 Mar</td>
+                <td style="padding:12px 14px;"><span style="display:inline-flex;padding:3px 9px;border-radius:100px;background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);color:var(--green);font-size:10px;font-family:var(--of);font-weight:700;">✓ Reward earned</span></td>
+              </tr>
+              <tr>
+                <td style="padding:12px 14px;color:var(--td);">james@agency.com</td>
+                <td style="padding:12px 14px;color:var(--tm);">20 Mar</td>
+                <td style="padding:12px 14px;"><span style="display:inline-flex;padding:3px 9px;border-radius:100px;background:var(--s);border:1px solid var(--b2);color:var(--td);font-size:10px;font-family:var(--of);font-weight:700;">Invited</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div><!-- end right content -->
+  </div><!-- end settings-layout -->
+</div><!-- end main -->
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script>
+function showTab(name, el) {
+  document.querySelectorAll('.settings-content').forEach(c => c.classList.remove('active'));
+  document.querySelectorAll('.snav-item').forEach(i => i.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  el.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function selectPack(el) {
+  document.querySelectorAll('.pack-card').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function setBillingState(state, el) {
+  document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('billing-pro').style.display = state === 'pro' ? 'block' : 'none';
+  document.getElementById('billing-trial').style.display = state === 'trial' ? 'block' : 'none';
+  document.getElementById('billing-free').style.display = state === 'free' ? 'block' : 'none';
+}
+
+function applyPreset(start, end, bg, el) {
+  document.querySelectorAll('[onclick^="applyPreset"]').forEach(e => {
+    e.style.border = '1px solid var(--b)';
+  });
+  el.style.border = '2px solid rgba(255,20,147,0.4)';
+  document.getElementById('grad-preview').style.background = `linear-gradient(135deg,${start},${end})`;
+  toast('✓', 'Preset applied — save to keep it', 't-cyan');
+}
+
+function toast(icon, text, cls) {
+  const zone = document.getElementById('toast-zone');
+  const el = document.createElement('div');
+  el.className = 'toast ' + (cls || 't-cyan');
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+}
+</script>
+</body>
+</html>
