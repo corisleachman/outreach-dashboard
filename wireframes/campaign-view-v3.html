@@ -1294,6 +1294,22 @@ Coris</textarea>
 </div>
 
 <script>
+
+// ── RESTORE TAB FROM SUMMARY NAVIGATION ──────────────────────────────
+// When navigated from summary-v2.html work queue, jump to correct tab
+document.addEventListener('DOMContentLoaded', () => {
+  const goto = sessionStorage.getItem('pulse-goto-tab');
+  if (goto) {
+    sessionStorage.removeItem('pulse-goto-tab');
+    if (typeof switchTab === 'function') {
+      switchTab(goto);
+      // Scroll the tab bar into view
+      const tab = document.querySelector('[data-tab="' + goto + '"]');
+      if (tab) tab.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+});
+
 function openFollowUpComposer(name, email) {
   const modal = document.getElementById('fu-modal');
   document.getElementById('fu-name').textContent = name;
