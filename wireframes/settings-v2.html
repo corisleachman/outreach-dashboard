@@ -318,7 +318,15 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <div class="field"><label>First name</label><input class="input" value="Coris"></div>
           <div class="field"><label>Last name</label><input class="input" value="Leachman"></div>
         </div>
-        <div class="field"><label>Email</label><input class="input" value="coris@example.com" type="email"></div>
+        <div class="field">
+          <label>Email</label>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <input class="input" value="coris@example.com" type="email" readonly
+              style="flex:1;opacity:0.6;cursor:not-allowed;background:rgba(255,255,255,0.02);">
+            <span style="font-size:11px;color:var(--td);white-space:nowrap;">Set by Gmail</span>
+          </div>
+          <div style="font-size:11px;color:var(--td);margin-top:5px;line-height:1.5;">Your email is tied to your connected account and can't be changed here. To use a different address, connect a different account under <span style="color:var(--tm);cursor:pointer;" onclick="showTab('connected',document.querySelector('[onclick*=connected]'))">Connected accounts</span>.</div>
+        </div>
         <button class="btn btn-primary btn-sm" onclick="toast('✓','Profile saved','t-cyan')">Save changes</button>
 
         <div class="sect" style="margin-top:28px;">
@@ -338,10 +346,13 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         </div>
 
         <div class="sect danger-box">
-          <div class="sect-title" style="color:var(--red);border-color:rgba(255,76,76,0.2);">Danger zone</div>
+          <div class="sect-title" style="color:var(--red);border-color:rgba(255,76,76,0.2);">Account termination</div>
           <div class="row" style="border:none;">
-            <div><div class="row-label">Delete account</div><div class="row-sub">Permanently delete your account and all data. Cannot be undone.</div></div>
-            <button class="btn btn-danger btn-sm">Delete account</button>
+            <div>
+              <div class="row-label">Cancel account</div>
+              <div class="row-sub">Permanently deletes your account, all campaigns, prospects, and message history. This cannot be undone.</div>
+            </div>
+            <button class="btn btn-danger btn-sm" onclick="openCancelModal()">Cancel account</button>
           </div>
         </div>
 
@@ -390,9 +401,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         </div>
 
         <!-- Both connected state -->
-        <div style="padding:12px 16px;background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);border-radius:10px;margin-top:16px;">
-          <div style="font-size:12px;color:var(--cyan);font-family:var(--of);font-weight:600;margin-bottom:4px;">About connected accounts</div>
-          <div style="font-size:12px;color:var(--tm);line-height:1.6;">You can connect multiple accounts. Pulse. will use the account connected to each campaign. Emails go out from your real address — nothing is spoofed or anonymised.</div>
+        <div style="padding:12px 16px;background:rgba(255,255,255,0.03);border:1px solid var(--b);border-radius:10px;margin-top:16px;">
+          <div style="font-size:12px;color:var(--tm);line-height:1.6;">One account at a time. Emails go out from your connected address — nothing is spoofed or anonymised. To switch accounts, connect a different one and disconnect the current one.</div>
         </div>
 
         <div class="ann" style="margin-top:20px;">
@@ -537,34 +547,36 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <!-- Live gradient preview -->
           <div class="grad-swatch" id="grad-preview"></div>
 
-          <!-- Gradient start -->
-          <div class="field">
-            <label>Gradient start</label>
-            <button class="swatch-btn" onclick="document.getElementById('picker-a').click()">
-              <div class="swatch-circle" id="swatch-a" style="background:#ff1493;"></div>
-              <span class="swatch-hex" id="hex-a">#ff1493</span>
-            </button>
-            <input type="color" class="hidden-picker" id="picker-a" value="#ff1493" oninput="settingsUpdateA(this.value)">
-          </div>
+          <!-- Three colour pickers in one row -->
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;">
 
-          <!-- Gradient end -->
-          <div class="field">
-            <label>Gradient end</label>
-            <button class="swatch-btn" onclick="document.getElementById('picker-b').click()">
-              <div class="swatch-circle" id="swatch-b" style="background:#00d4ff;"></div>
-              <span class="swatch-hex" id="hex-b">#00d4ff</span>
-            </button>
-            <input type="color" class="hidden-picker" id="picker-b" value="#00d4ff" oninput="settingsUpdateB(this.value)">
-          </div>
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);">From</div>
+              <button class="swatch-btn" style="padding:7px 10px;" onclick="document.getElementById('picker-a').click()">
+                <div class="swatch-circle" id="swatch-a" style="background:#ff1493;width:22px;height:22px;"></div>
+                <span class="swatch-hex" id="hex-a" style="font-size:11px;">#ff1493</span>
+              </button>
+              <input type="color" class="hidden-picker" id="picker-a" value="#ff1493" oninput="settingsUpdateA(this.value)">
+            </div>
 
-          <!-- Background -->
-          <div class="field">
-            <label>Background colour</label>
-            <button class="swatch-btn" onclick="document.getElementById('picker-bg').click()">
-              <div class="swatch-circle" id="swatch-bg" style="background:#0d0914;border-color:rgba(255,255,255,0.3);"></div>
-              <span class="swatch-hex" id="hex-bg">#0d0914</span>
-            </button>
-            <input type="color" class="hidden-picker" id="picker-bg" value="#0d0914" oninput="settingsUpdateBg(this.value)">
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);">To</div>
+              <button class="swatch-btn" style="padding:7px 10px;" onclick="document.getElementById('picker-b').click()">
+                <div class="swatch-circle" id="swatch-b" style="background:#00d4ff;width:22px;height:22px;"></div>
+                <span class="swatch-hex" id="hex-b" style="font-size:11px;">#00d4ff</span>
+              </button>
+              <input type="color" class="hidden-picker" id="picker-b" value="#00d4ff" oninput="settingsUpdateB(this.value)">
+            </div>
+
+            <div>
+              <div style="font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);">Background</div>
+              <button class="swatch-btn" style="padding:7px 10px;" onclick="document.getElementById('picker-bg').click()">
+                <div class="swatch-circle" id="swatch-bg" style="background:#0d0914;border-color:rgba(255,255,255,0.3);width:22px;height:22px;"></div>
+                <span class="swatch-hex" id="hex-bg" style="font-size:11px;">#0d0914</span>
+              </button>
+              <input type="color" class="hidden-picker" id="picker-bg" value="#0d0914" oninput="settingsUpdateBg(this.value)">
+            </div>
+
           </div>
 
           <!-- Generate button -->
@@ -626,7 +638,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
                 </div>
                 <div style="font-size:13px;color:var(--tm);">£84/year · renews 17 Mar 2027</div>
               </div>
-              <button class="btn btn-ghost btn-sm" onclick="toast('→','Opening plan options','t-cyan')">Change plan</button>
+              <button class="btn btn-ghost btn-sm" onclick="openChangePlanModal()">Change plan</button>
             </div>
           </div>
           <div class="sect">
@@ -929,5 +941,255 @@ function toast(icon, text, cls) {
 })();
 
 </script>
+
+<!-- ══ CHANGE PLAN MODAL ══ -->
+<div class="modal-overlay" id="change-plan-modal" onclick="if(event.target===this)closeChangePlanModal()">
+  <div class="modal-box" style="max-width:480px;">
+
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:4px;">Change your plan</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:24px;line-height:1.6;">Switch billing cycle, or move to the Free plan.</p>
+
+    <!-- Billing cycle toggle -->
+    <div style="margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:10px;font-family:var(--of);">Billing cycle</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+        <div id="cycle-monthly" onclick="selectCycle('monthly')"
+          style="padding:14px;border-radius:12px;border:1px solid var(--b2);cursor:pointer;transition:all 0.15s;background:var(--s);">
+          <div style="font-family:var(--of);font-size:15px;font-weight:800;margin-bottom:2px;">£12<span style="font-size:12px;font-weight:500;color:var(--tm);">/month</span></div>
+          <div style="font-size:11px;color:var(--td);">Billed monthly</div>
+        </div>
+        <div id="cycle-annual" onclick="selectCycle('annual')"
+          style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.3);cursor:pointer;transition:all 0.15s;background:rgba(255,20,147,0.06);">
+          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
+            <div style="font-family:var(--of);font-size:15px;font-weight:800;">£7<span style="font-size:12px;font-weight:500;color:var(--tm);">/month</span></div>
+            <span style="font-size:9px;padding:2px 7px;border-radius:100px;background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.25);color:var(--green);font-family:var(--of);font-weight:700;">Save 42%</span>
+          </div>
+          <div style="font-size:11px;color:var(--td);">£84 billed annually · Current plan</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Downgrade to free -->
+    <div style="padding:14px;border-radius:12px;border:1px solid var(--b);background:var(--s);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Move to Free</div>
+        <div style="font-size:12px;color:var(--td);line-height:1.5;">1 campaign · 100 prospects · Manual sending. Your Pro features lock at the end of your current billing period.</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--td);" onclick="closeChangePlanModal();toast('→','Moving to Free at end of billing period','t-amber')">Downgrade</button>
+    </div>
+
+    <!-- Cancel account link -->
+    <div style="text-align:center;margin-bottom:20px;">
+      <button style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;text-decoration:underline;text-underline-offset:2px;"
+        onclick="closeChangePlanModal();openCancelModal()">Cancel account entirely →</button>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeChangePlanModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeChangePlanModal();toast('✓','Plan updated','t-cyan')">Confirm change →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CANCEL ACCOUNT MODAL — STEP 1 ══ -->
+<div class="modal-overlay" id="cancel-modal" onclick="if(event.target===this)closeCancelModal()">
+  <div class="modal-box" style="max-width:460px;">
+
+    <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M9 3v6M9 12v.5" stroke="#ff4c4c" stroke-width="2" stroke-linecap="round"/><circle cx="9" cy="9" r="7.5" stroke="#ff4c4c" stroke-width="1.5"/></svg>
+    </div>
+
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;color:var(--red);margin-bottom:6px;">Cancel your account</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:16px;line-height:1.6;">This will permanently delete everything — your campaigns, prospects, message history, sent emails, and any earned referral rewards. <strong style="color:var(--t);">This cannot be reversed.</strong></p>
+
+    <div style="padding:12px 14px;background:rgba(255,76,76,0.06);border:1px solid rgba(255,76,76,0.15);border-radius:10px;margin-bottom:20px;">
+      <div style="font-size:12px;color:rgba(255,160,160,0.9);line-height:1.6;">
+        · All campaigns and sequences deleted<br>
+        · All prospect data deleted<br>
+        · All sent email history deleted<br>
+        · Any remaining Pro subscription time forfeited<br>
+        · Your account email cannot be reused for 30 days
+      </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+      <label style="display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);">Type your email address to confirm</label>
+      <input class="input" id="cancel-email-input" placeholder="coris@example.com"
+        oninput="checkCancelEmail()" autocomplete="off"
+        style="margin-bottom:0;">
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeCancelModal()">Keep my account</button>
+      <button class="btn btn-sm" id="cancel-confirm-btn" disabled
+        style="padding:6px 14px;font-size:12px;background:rgba(255,76,76,0.15);border:1px solid rgba(255,76,76,0.3);color:var(--red);font-family:var(--of);font-weight:700;opacity:0.4;cursor:not-allowed;border-radius:100px;transition:all 0.2s;"
+        onclick="executeCancelAccount()">Cancel my account</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CANCEL ACCOUNT — PROCESSING STATE ══ -->
+<div class="modal-overlay" id="cancel-processing-modal">
+  <div class="modal-box" style="max-width:360px;text-align:center;">
+    <div style="width:40px;height:40px;border:3px solid rgba(255,255,255,0.1);border-top-color:var(--pink);border-radius:50%;animation:spin 1s linear infinite;margin:0 auto 16px;"></div>
+    <div style="font-family:var(--of);font-size:16px;font-weight:700;margin-bottom:6px;">Deleting your account…</div>
+    <div style="font-size:13px;color:var(--td);">This takes a moment. Please don't close this window.</div>
+  </div>
+</div>
+
+<!-- ══ INVOICE PDF PREVIEW ══ -->
+<div class="modal-overlay" id="invoice-modal" onclick="if(event.target===this)closeInvoiceModal()">
+  <div class="modal-box" style="max-width:520px;padding:0;overflow:hidden;">
+
+    <!-- PDF preview header -->
+    <div style="padding:14px 20px;background:var(--s2);border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;">
+      <div style="font-family:var(--of);font-size:13px;font-weight:600;color:var(--tm);">Invoice preview</div>
+      <div style="display:flex;gap:8px;">
+        <button class="btn btn-ghost btn-sm" onclick="toast('→','PDF downloading…','t-cyan')">⬇ Download PDF</button>
+        <button class="btn btn-ghost btn-sm" onclick="closeInvoiceModal()">✕</button>
+      </div>
+    </div>
+
+    <!-- PDF document simulation -->
+    <div style="background:#ffffff;padding:40px 48px;font-family:'DM Sans',sans-serif;color:#1a1a2e;">
+
+      <!-- Logo + invoice label -->
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:32px;">
+        <div>
+          <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;">Pulse.</div>
+          <div style="font-size:11px;color:#888;margin-top:4px;">pulse-outreach.co.uk</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:22px;font-weight:800;color:#1a1a2e;font-family:'Outfit',sans-serif;">INVOICE</div>
+          <div style="font-size:12px;color:#888;margin-top:2px;" id="pdf-inv-number">INV-2026-001</div>
+        </div>
+      </div>
+
+      <!-- Divider -->
+      <div style="height:1px;background:#eee;margin-bottom:24px;"></div>
+
+      <!-- Bill to + dates -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:28px;">
+        <div>
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin-bottom:6px;">Bill to</div>
+          <div style="font-size:13px;font-weight:600;color:#1a1a2e;">Coris Leachman</div>
+          <div style="font-size:12px;color:#888;margin-top:2px;">coris@example.com</div>
+        </div>
+        <div style="text-align:right;">
+          <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin-bottom:6px;">Invoice date</div>
+          <div style="font-size:13px;color:#1a1a2e;" id="pdf-inv-date">17 Mar 2026</div>
+        </div>
+      </div>
+
+      <!-- Line items -->
+      <table style="width:100%;border-collapse:collapse;margin-bottom:24px;">
+        <thead>
+          <tr style="border-bottom:2px solid #eee;">
+            <th style="text-align:left;padding:8px 0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;">Description</th>
+            <th style="text-align:right;padding:8px 0;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;">Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding:14px 0;font-size:13px;color:#1a1a2e;" id="pdf-inv-desc">Pro Annual — pulse-outreach.co.uk</td>
+            <td style="padding:14px 0;font-size:13px;color:#1a1a2e;text-align:right;" id="pdf-inv-amt">£84.00</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr style="border-top:1px solid #eee;">
+            <td style="padding:12px 0;font-size:13px;font-weight:700;color:#1a1a2e;">Total</td>
+            <td style="padding:12px 0;font-size:16px;font-weight:800;color:#1a1a2e;text-align:right;font-family:'Outfit',sans-serif;" id="pdf-inv-total">£84.00</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <!-- Footer note -->
+      <div style="font-size:11px;color:#aaa;text-align:center;padding-top:16px;border-top:1px solid #eee;line-height:1.6;">
+        Pulse. · pulse-outreach.co.uk · support@pulse-outreach.co.uk<br>
+        Payment processed by Stripe · This is your receipt for tax purposes
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+// ── CHANGE PLAN MODAL ──
+let selectedCycle = 'annual';
+function openChangePlanModal() {
+  selectCycle('annual');
+  document.getElementById('change-plan-modal').classList.add('open');
+}
+function closeChangePlanModal() {
+  document.getElementById('change-plan-modal').classList.remove('open');
+}
+function selectCycle(cycle) {
+  selectedCycle = cycle;
+  const monthly = document.getElementById('cycle-monthly');
+  const annual  = document.getElementById('cycle-annual');
+  if (!monthly || !annual) return;
+  const active = 'border-color:rgba(255,20,147,0.3);background:rgba(255,20,147,0.06);';
+  const inactive = 'border-color:var(--b2);background:var(--s);';
+  monthly.style.cssText = monthly.style.cssText.replace(/border-color:[^;]+;background:[^;]+;/, cycle === 'monthly' ? active : inactive);
+  annual.style.cssText  = annual.style.cssText.replace(/border-color:[^;]+;background:[^;]+;/, cycle === 'annual' ? active : inactive);
+}
+
+// ── CANCEL ACCOUNT MODAL ──
+function openCancelModal() {
+  document.getElementById('cancel-email-input').value = '';
+  const btn = document.getElementById('cancel-confirm-btn');
+  btn.disabled = true; btn.style.opacity = '0.4'; btn.style.cursor = 'not-allowed';
+  document.getElementById('cancel-modal').classList.add('open');
+  setTimeout(() => document.getElementById('cancel-email-input').focus(), 100);
+}
+function closeCancelModal() {
+  document.getElementById('cancel-modal').classList.remove('open');
+}
+function checkCancelEmail() {
+  const val = document.getElementById('cancel-email-input').value.trim().toLowerCase();
+  const btn = document.getElementById('cancel-confirm-btn');
+  const valid = val === 'coris@example.com';
+  btn.disabled = !valid;
+  btn.style.opacity = valid ? '1' : '0.4';
+  btn.style.cursor = valid ? 'pointer' : 'not-allowed';
+  btn.style.background = valid ? 'rgba(255,76,76,0.25)' : 'rgba(255,76,76,0.15)';
+}
+function executeCancelAccount() {
+  document.getElementById('cancel-modal').classList.remove('open');
+  document.getElementById('cancel-processing-modal').classList.add('open');
+  setTimeout(() => {
+    document.getElementById('cancel-processing-modal').classList.remove('open');
+    // Show farewell — redirect to a goodbye state
+    document.body.innerHTML = `
+      <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0d0914;font-family:'DM Sans',sans-serif;">
+        <div style="text-align:center;max-width:440px;padding:40px 24px;">
+          <div style="font-family:'Outfit',sans-serif;font-size:22px;font-weight:800;background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:24px;">Pulse.</div>
+          <div style="font-size:32px;margin-bottom:16px;">👋</div>
+          <div style="font-family:'Outfit',sans-serif;font-size:20px;font-weight:700;color:#f0f0ee;margin-bottom:10px;">Your account has been deleted.</div>
+          <p style="font-size:14px;color:#8a8a9a;line-height:1.7;margin-bottom:24px;">All your data has been permanently removed. We're sorry to see you go.<br>If you cancelled by mistake, contact us within 24 hours — we may be able to help.</p>
+          <a href="mailto:support@pulse-outreach.co.uk" style="display:inline-block;padding:10px 24px;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.13);border-radius:100px;color:#f0f0ee;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;text-decoration:none;margin-bottom:12px;">Contact support</a>
+          <div style="font-size:12px;color:#444456;margin-top:8px;">You have been signed out.</div>
+        </div>
+      </div>`;
+  }, 2500);
+}
+
+// ── INVOICE PDF MODAL ──
+function openInvoicePDF(invNum, invDate, invDesc, invAmt) {
+  document.getElementById('pdf-inv-number').textContent = invNum;
+  document.getElementById('pdf-inv-date').textContent = invDate;
+  document.getElementById('pdf-inv-desc').textContent = invDesc + ' — pulse-outreach.co.uk';
+  document.getElementById('pdf-inv-amt').textContent = invAmt;
+  document.getElementById('pdf-inv-total').textContent = invAmt;
+  document.getElementById('invoice-modal').classList.add('open');
+}
+function closeInvoiceModal() {
+  document.getElementById('invoice-modal').classList.remove('open');
+}
+</script>
+
 </body>
 </html>
