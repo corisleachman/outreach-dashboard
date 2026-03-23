@@ -445,14 +445,15 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
       <!-- ══ NOTIFICATIONS ══ -->
       <div class="settings-content" id="tab-notifications">
         <div class="sect-title">Notifications</div>
-        <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">Control which in-app notifications you receive. Email notifications come separately — manage those in your email client.</p>
+        <p style="font-size:13px;color:var(--tm);margin-bottom:6px;line-height:1.6;">These appear briefly inside Pulse. as things happen — a small toast at the bottom of the screen, gone in a few seconds. No inbox, no badge, no email.</p>
+        <p style="font-size:12px;color:var(--td);margin-bottom:20px;line-height:1.6;">Replies from prospects land in your Gmail inbox as normal — Pulse. doesn't intercept them.</p>
 
         <div class="sect">
           <div class="sect-title">Outreach activity</div>
           <div class="notif-row">
             <div class="notif-info">
-              <div class="notif-label">New reply received</div>
-              <div class="notif-sub">When a prospect replies to one of your emails</div>
+              <div class="notif-label">Reply received</div>
+              <div class="notif-sub">A brief flash when a prospect replies — reminds you to check your inbox</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -460,8 +461,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           </div>
           <div class="notif-row">
             <div class="notif-info">
-              <div class="notif-label">Follow-up due</div>
-              <div class="notif-sub">When prospects are ready for their next sequence step</div>
+              <div class="notif-label">Follow-ups due</div>
+              <div class="notif-sub">Shown on the Today view — how many prospects are ready for their next step</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -470,7 +471,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <div class="notif-row">
             <div class="notif-info">
               <div class="notif-label">Sequence paused</div>
-              <div class="notif-sub">When a sequence pauses because a prospect replied</div>
+              <div class="notif-sub">When a follow-up sequence stops automatically because a prospect replied</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -479,7 +480,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <div class="notif-row">
             <div class="notif-info">
               <div class="notif-label">Email bounced</div>
-              <div class="notif-sub">When a sent email bounces back undelivered</div>
+              <div class="notif-sub">When a sent email couldn't be delivered</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -488,11 +489,11 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         </div>
 
         <div class="sect">
-          <div class="sect-title">Progress &amp; milestones</div>
+          <div class="sect-title">Progress &amp; momentum</div>
           <div class="notif-row">
             <div class="notif-info">
               <div class="notif-label">Milestone moments</div>
-              <div class="notif-sub">First reply, 10 replies, meetings booked — key achievements</div>
+              <div class="notif-sub">A brief celebration when you hit a meaningful marker — first reply, meetings booked, and similar</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -501,7 +502,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <div class="notif-row">
             <div class="notif-info">
               <div class="notif-label">Momentum prompts</div>
-              <div class="notif-sub">Gentle nudges when your outreach has been quiet</div>
+              <div class="notif-sub">A quiet nudge on the Today view if your outreach has gone quiet for a few days</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
@@ -513,8 +514,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           <div class="sect-title">Referrals</div>
           <div class="notif-row">
             <div class="notif-info">
-              <div class="notif-label">Referral reward earned</div>
-              <div class="notif-sub">When someone you referred sends their first campaign</div>
+              <div class="notif-label">Reward earned</div>
+              <div class="notif-sub">A confirmation when someone you referred sends their first campaign and your reward activates</div>
             </div>
             <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
               <div class="toggle on"><div class="toggle-thumb"></div></div>
