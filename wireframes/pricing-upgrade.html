@@ -135,6 +135,54 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 /* ── LAYOUT OFFSET ── */
 .pg{padding-top:calc(var(--th) + 20px);padding-left:calc(var(--sw) + 20px);}
 
+
+
+/* ── PRICING COMPONENT (from upgrade-moments) ── */
+.billing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;}
+.billing-label{font-family:var(--of);font-size:13px;font-weight:600;color:var(--td);transition:color 0.25s;cursor:pointer;user-select:none;}
+.billing-label.active{color:var(--t);}
+.billing-save-badge{display:inline-block;padding:3px 9px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.06em;color:var(--green);margin-left:6px;vertical-align:middle;}
+.toggle-track{position:relative;width:44px;height:24px;flex-shrink:0;cursor:pointer;}
+.toggle-track input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-rail{position:absolute;inset:0;border-radius:100px;background:var(--b2);border:1px solid rgba(255,255,255,0.1);transition:background 0.25s,border-color 0.25s;}
+.toggle-track input:checked ~ .toggle-rail{background:linear-gradient(135deg,rgba(255,20,147,0.4),rgba(0,212,255,0.4));border-color:rgba(0,212,255,0.3);}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--t);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1),box-shadow 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4);pointer-events:none;}
+.toggle-track input:checked ~ .toggle-thumb{transform:translateX(20px);box-shadow:0 1px 4px rgba(0,212,255,0.3);}
+.pricing-grid-mk{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto;}
+.pricing-card-mk{background:rgba(13,9,20,0.35);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:40px 36px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.07);}
+.pricing-card-mk:hover{border-color:rgba(255,255,255,0.16);}
+.pricing-card-mk.featured{background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.25);box-shadow:0 8px 40px rgba(255,20,147,0.12),inset 0 1px 0 rgba(255,255,255,0.08);overflow:visible;}
+.pricing-card-mk.featured:hover{border-color:rgba(255,20,147,0.4);}
+.pricing-card-mk.featured::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:var(--gr);opacity:0.8;border-radius:100px;}
+.pricing-card-mk::after{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent);pointer-events:none;}
+.pricing-badge-mk{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 14px;background:var(--gr);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:white;white-space:nowrap;box-shadow:0 2px 12px rgba(255,20,147,0.4);}
+.pricing-tier-mk{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:20px;}
+.pricing-tier-mk.pro{color:var(--pink);}
+.pricing-price-wrap-mk{height:72px;margin-bottom:6px;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk .currency{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.pricing-price-mk .period{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-currency-mk{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.price-period-mk{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-static-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;}
+.digit-window{overflow:hidden;position:relative;}
+.digit-reel{display:flex;flex-direction:column;}
+.digit-reel span{display:block;text-align:center;}
+.pricing-desc-mk{font-size:13px;color:var(--td);margin-bottom:8px;line-height:1.5;min-height:20px;}
+.pricing-annual-saving-mk{font-size:12px;color:var(--green);font-weight:600;margin-bottom:24px;min-height:18px;opacity:0;transform:translateY(4px);transition:opacity 0.3s 0.15s,transform 0.3s 0.15s;}
+.pricing-annual-saving-mk.visible{opacity:1;transform:translateY(0);}
+.pricing-divider-mk{height:1px;background:var(--b);margin-bottom:28px;}
+.pricing-features-mk{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
+.pricing-feature-mk{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);}
+.pricing-feature-mk .check{width:16px;height:16px;border-radius:50%;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:var(--green);}
+.pricing-feature-mk .check.pro-check{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.2);color:var(--pink);}
+.pricing-cta-mk{display:block;width:100%;padding:14px;text-align:center;font-family:var(--of);font-size:14px;font-weight:700;letter-spacing:0.02em;border-radius:100px;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;}
+.pricing-cta-mk.cta-free{background:transparent;color:var(--tm);border:1px solid var(--b2);}
+.pricing-cta-mk.cta-free:hover{color:var(--t);border-color:rgba(255,255,255,0.3);}
+.pricing-cta-mk.cta-pro{background:var(--gr);color:white;box-shadow:0 0 32px rgba(255,20,147,0.25);}
+.pricing-cta-mk.cta-pro:hover{box-shadow:0 0 48px rgba(255,20,147,0.35);}
+.trust-line-mk{text-align:center;font-size:12px;color:var(--td);margin-top:20px;}
+
 </style>
 </head>
 <body>
