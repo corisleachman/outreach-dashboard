@@ -450,7 +450,6 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 <div class="wfc">
   <div class="wfc-label">Wireframe states</div>
   <button class="wfb active" onclick="showState('today',this)">Today — work waiting</button>
-  <button class="wfb" onclick="showState('done',this)">Today — all done</button>
   <button class="wfb" onclick="showState('week',this)">This week</button>
 </div>
 
@@ -477,6 +476,16 @@ function showState(name, el) {
 
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// ── WORK QUEUE NAVIGATION ──────────────────────────────────────────────
+// Stores the target tab in sessionStorage before navigating to campaign-view
+// campaign-view-v3.html reads this on load and switches to the correct tab
+function navigateToTab(tabName) {
+  sessionStorage.setItem('pulse-goto-tab', tabName);
+  window.location.href = 'campaign-view-v3.html';
+  return false;
+}
+
 </script>
 </body>
 </html>
