@@ -1365,5 +1365,49 @@ function closeInvoiceModal() {
   </div>
 </div>
 
+<script>
+// ── UPGRADE MODAL ──
+let upgradeSelectedCycle = 'annual';
+
+function openUpgradeModal() {
+  selectUpgradeCycle('annual');
+  document.getElementById('upgrade-modal').classList.add('open');
+}
+function closeUpgradeModal() {
+  document.getElementById('upgrade-modal').classList.remove('open');
+}
+function selectUpgradeCycle(cycle) {
+  upgradeSelectedCycle = cycle;
+  const monthly = document.getElementById('upgrade-monthly');
+  const annual  = document.getElementById('upgrade-annual');
+  const total   = document.getElementById('upgrade-total');
+  if (!monthly || !annual) return;
+  if (cycle === 'annual') {
+    annual.style.borderColor  = 'rgba(255,20,147,0.35)';
+    annual.style.background   = 'rgba(255,20,147,0.07)';
+    monthly.style.borderColor = 'var(--b2)';
+    monthly.style.background  = 'var(--s)';
+    if (total) total.innerHTML = '£84.00 <span style="font-size:12px;font-weight:500;color:var(--td);">/ year</span>';
+  } else {
+    monthly.style.borderColor = 'rgba(255,20,147,0.35)';
+    monthly.style.background  = 'rgba(255,20,147,0.07)';
+    annual.style.borderColor  = 'var(--b2)';
+    annual.style.background   = 'var(--s)';
+    if (total) total.innerHTML = '£12.00 <span style="font-size:12px;font-weight:500;color:var(--td);">/ month</span>';
+  }
+}
+function openCheckoutModal() {
+  const isAnnual = upgradeSelectedCycle === 'annual';
+  const planLabel = document.getElementById('checkout-plan-label');
+  const totalLabel = document.getElementById('checkout-total-label');
+  if (planLabel) planLabel.textContent = isAnnual ? 'Annual' : 'Monthly';
+  if (totalLabel) totalLabel.textContent = isAnnual ? '£84.00' : '£12.00';
+  document.getElementById('settings-checkout-modal').classList.add('open');
+}
+function closeCheckoutModal() {
+  document.getElementById('settings-checkout-modal').classList.remove('open');
+}
+</script>
+
 </body>
 </html>
