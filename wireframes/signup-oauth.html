@@ -18,7 +18,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .hi{position:fixed;top:12px;left:14px;z-index:99;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;}
 .hi:hover{background:rgba(255,255,255,0.14);}
 .wrap{position:relative;z-index:1;width:100%;max-width:420px;padding:24px;}
-.sc{display:none;}.sc.on{display:block;}
+.sc{display:none;}.sc.on{display:flex;justify-content:center;align-items:flex-start;width:100%;}
 /* card */
 .card{background:rgba(255,255,255,0.035);border:1px solid var(--b);border-radius:18px;padding:48px 40px;text-align:center;}
 .logo{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-1.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
@@ -150,8 +150,7 @@ window.show = function(id){
 
 
 <!-- S4: OAUTH ERROR / DENIED -->
-<div class="sc" id="s4">
-  <div class="card">
+<div class="sc" id="s4"><div style="width:100%;max-width:420px;padding:24px;"><div class="card">
     <div class="card-icon" style="background:rgba(255,76,76,0.1);border-color:rgba(255,76,76,0.2);">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4c4c" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
     </div>
@@ -162,12 +161,10 @@ window.show = function(id){
     </div>
     <button class="btn-primary" onclick="show('s1')">Try again →</button>
     <div class="hint">Need help? <a href="#" style="color:var(--cyan);text-decoration:none;">Contact support</a></div>
-  </div>
-</div>
+  </div></div></div>
 
 <!-- S5: MICROSOFT OAUTH (COMING SOON) -->
-<div class="sc" id="s5">
-  <div class="card">
+<div class="sc" id="s5"><div style="width:100%;max-width:420px;padding:24px;"><div class="card">
     <div class="card-icon" style="background:rgba(0,120,212,0.1);border-color:rgba(0,120,212,0.2);">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" fill="#f25022"/><rect x="13" y="2" width="9" height="9" fill="#7fba00"/><rect x="2" y="13" width="9" height="9" fill="#00a4ef"/><rect x="13" y="13" width="9" height="9" fill="#ffb900"/></svg>
     </div>
@@ -183,24 +180,20 @@ window.show = function(id){
     <div style="margin-top:16px;padding:10px 14px;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);border-radius:8px;font-size:12px;color:var(--amber);">
       ⚠ Microsoft / Outlook support is coming in Phase 2.11. This screen is a forward-looking wireframe.
     </div>
-  </div>
-</div>
+  </div></div></div>
 
 <!-- S6: MICROSOFT CONNECTING -->
-<div class="sc" id="s6">
-  <div class="card">
+<div class="sc" id="s6"><div style="width:100%;max-width:420px;padding:24px;"><div class="card">
     <div class="card-icon" style="background:rgba(0,120,212,0.1);border-color:rgba(0,120,212,0.2);">
       <div style="width:32px;height:32px;border:3px solid rgba(0,120,212,0.3);border-top-color:#0078d4;border-radius:50%;animation:spin 1s linear infinite;"></div>
     </div>
     <div class="card-title">Connecting to Microsoft…</div>
     <div class="card-sub">Requesting the permissions needed to send emails on your behalf.</div>
     <div style="margin-top:16px;" id="ms-timer"></div>
-  </div>
-</div>
+  </div></div></div>
 
 <!-- S7: MICROSOFT CONNECTED -->
-<div class="sc" id="s7">
-  <div class="card">
+<div class="sc" id="s7"><div style="width:100%;max-width:420px;padding:24px;"><div class="card">
     <div class="card-icon" style="background:rgba(100,220,120,0.1);border-color:rgba(100,220,120,0.2);">
       <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
     </div>
