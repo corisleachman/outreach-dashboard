@@ -139,9 +139,12 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   cursor:pointer;font-family:var(--sf);}
 
 /* ── INLINE UPGRADE PANEL (desire trigger) ── */
-.desire-panel{margin-top:8px;padding:16px 18px;
+.desire-panel{margin-top:10px;padding:16px 18px;
   background:var(--s);border:1px solid var(--b2);
-  border-left:3px solid var(--pink);border-radius:0 10px 10px 0;}
+  border-left:3px solid var(--pink);border-radius:0 10px 10px 0;
+  width:100%;box-sizing:border-box;}
+/* Wrap locked-btn + panel so panel always breaks below button row */  
+.locked-btn-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;}
 .desire-panel__heading{font-family:var(--of);font-size:14px;font-weight:700;
   margin-bottom:4px;}
 .desire-panel__body{font-size:13px;color:var(--tm);line-height:1.5;margin-bottom:12px;}
@@ -478,7 +481,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:4px;">This prospect is outside your Free limit.</div>
         <div style="font-size:13px;color:var(--tm);margin-bottom:14px;">Upgrade to Pro to message your full list.</div>
         <div style="display:flex;gap:10px;">
-          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-primary" onclick="show('t4-plans')">Continue with Pro →</button>
           <button class="btn-sm-ghost">Stay on Free</button>
         </div>
       </div>
@@ -536,19 +539,19 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
     <div class="dash-body">
       <div style="margin-bottom:16px;font-size:13px;color:var(--td);">Message editor</div>
-      <div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-        <button class="btn-sm-ghost">Write manually</button>
-        <div>
-          <div class="locked-btn" onclick="this.nextElementSibling.style.display='block'">
+      <div style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;">
+        <div class="locked-btn-row">
+          <button class="btn-sm-ghost">Write manually</button>
+          <div class="locked-btn" onclick="toggleDP('dp-ai',this)">
             <span class="lock">🔒</span> Generate with AI
           </div>
-          <div class="desire-panel" style="display:none;">
-            <div class="desire-panel__heading">AI drafts are a Pro feature.</div>
-            <div class="desire-panel__body">Write your first message in seconds — personalised to each prospect, in your tone of voice.</div>
-            <div class="desire-panel__actions">
-              <button class="btn-sm-primary">Unlock with Pro →</button>
-              <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
-            </div>
+        </div>
+        <div class="desire-panel" id="dp-ai" style="display:none;">
+          <div class="desire-panel__heading">AI drafts are a Pro feature.</div>
+          <div class="desire-panel__body">Write your first message in seconds — personalised to each prospect, in your tone of voice.</div>
+          <div class="desire-panel__actions">
+            <button class="btn-sm-primary" onclick="show('t4-plans')">Unlock with Pro →</button>
+            <button class="btn-sm-text" onclick="toggleDP('dp-ai')">Maybe later</button>
           </div>
         </div>
       </div>
@@ -712,19 +715,19 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   <div class="dash-shell">
     <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Free</span></div>
     <div class="dash-body">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:10px;">
-        <div style="font-size:13px;color:var(--td);">3 drafts ready</div>
-        <div>
-          <div class="locked-btn" onclick="this.nextElementSibling.style.display='block'">
+      <div style="display:flex;flex-direction:column;gap:0;margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;flex-wrap:wrap;gap:10px;">
+          <div style="font-size:13px;color:var(--td);">3 drafts ready</div>
+          <div class="locked-btn" onclick="toggleDP('dp-bulk',this)">
             <span class="lock">🔒</span> Send all 3
           </div>
-          <div class="desire-panel" style="display:none;">
-            <div class="desire-panel__heading">Bulk send is a Pro feature.</div>
-            <div class="desire-panel__body">Send to your full draft queue in one go — or select specific prospects and send as a batch.</div>
-            <div class="desire-panel__actions">
-              <button class="btn-sm-primary">Unlock with Pro →</button>
-              <button class="btn-sm-text" onclick="this.closest('.desire-panel').style.display='none'">Maybe later</button>
-            </div>
+        </div>
+        <div class="desire-panel" id="dp-bulk" style="display:none;">
+          <div class="desire-panel__heading">Bulk send is a Pro feature.</div>
+          <div class="desire-panel__body">Send to your full draft queue in one go — or select specific prospects and send as a batch.</div>
+          <div class="desire-panel__actions">
+            <button class="btn-sm-primary" onclick="show('t4-plans')">Unlock with Pro →</button>
+            <button class="btn-sm-text" onclick="toggleDP('dp-bulk')">Maybe later</button>
           </div>
         </div>
       </div>
@@ -826,13 +829,12 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
       <div class="trial-banner warning">
         <div class="trial-banner__text">
           ⏱ Your Pro trial ends in 3 days —
-          <button class="trial-banner__link">see what's included</button>
-          · refer a friend and
-          <a href="#" style="color:var(--amber);">earn a free month</a>.
+          <button class="trial-banner__link" onclick="show('t4-changes')">see what's included</button>
+          · or refer a friend and earn a free month.
         </div>
         <div class="trial-banner__actions">
-          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);">Refer →</button>
-          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);" onclick="window.open('referral-system.html','_self')">Refer →</button>
+          <button class="btn-sm-primary" onclick="show('t4-plans')">Continue with Pro →</button>
         </div>
       </div>
       <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Pro trial · 3 days left</span></div>
@@ -866,8 +868,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           ⏱ Your Pro trial ends today. Some features will pause at midnight.
         </div>
         <div class="trial-banner__actions">
-          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);">Refer →</button>
-          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-ghost" style="border-color:rgba(255,157,66,0.3);color:var(--amber);" onclick="window.open('referral-system.html','_self')">Refer →</button>
+          <button class="btn-sm-primary" onclick="show('t4-plans')">Continue with Pro →</button>
         </div>
       </div>
       <div class="dash-topbar"><div class="dash-logo">Pulse.</div><span class="dash-plan-badge">Pro trial · last day</span></div>
@@ -903,7 +905,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         </div>
         <div class="trial-banner__actions">
           <button class="btn-sm-ghost">Stay on Free</button>
-          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-primary" onclick="show('t4-plans')">Continue with Pro →</button>
         </div>
       </div>
       <div id="what-changed-1" class="what-changed" style="display:none;">
@@ -963,7 +965,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         </div>
         <div class="trial-banner__actions">
           <button class="btn-sm-ghost">Stay on Free</button>
-          <button class="btn-sm-primary">Continue with Pro →</button>
+          <button class="btn-sm-primary" onclick="show('t4-plans')">Continue with Pro →</button>
         </div>
       </div>
       <div class="what-changed" style="display:grid;">
@@ -1083,7 +1085,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Smart follow-up suggestions</span></div>
         <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Everything in Free</span></div>
       </div>
-      <a href="#" class="pricing-cta-mk cta-pro" id="wf-pro-cta">Get Pro →</a>
+      <a href="#" class="pricing-cta-mk cta-pro" id="wf-pro-cta" onclick="event.preventDefault();show('t4-success')">Get Pro →</a>
     </div>
 
   </div>
@@ -1147,6 +1149,15 @@ function show(id, el) {
   // Scroll to top of content
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// ── DESIRE PANEL TOGGLE ──
+function toggleDP(id, btn) {
+  const panel = document.getElementById(id);
+  if (!panel) return;
+  const isOpen = panel.style.display !== 'none';
+  panel.style.display = isOpen ? 'none' : 'block';
+}
+
 </script>
 
 <script>
