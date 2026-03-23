@@ -314,6 +314,14 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   <button style="color:#8a8a9a" onclick="show('s-empty')">Empty state</button>
   <span style="opacity:.3">·</span>
   <button style="color:#64dc78" onclick="show('s-weekly')">Weekly summary</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s-ratelimit')">Rate limit</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="show('s-offline')">Offline</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="show('s-session')">Session expired</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff4c4c" onclick="show('s-payment')">Payment failed</button>
 </div>
 <div class="tz" id="tz"></div>
 <script>
@@ -337,4 +345,117 @@ function toast(icon,text,cls){
   });
 })();
 </script>
+
+<!-- ══ RATE LIMIT ══ -->
+<div id="s-ratelimit" class="sc">
+  <div class="pt">Send rate limit reached</div>
+  <div class="psub">Gmail limits how many emails can be sent per day.</div>
+  <div class="banner banner-a">
+    <span class="banner-icon">⏱</span>
+    <div>
+      <div class="banner-title">Daily sending limit reached</div>
+      <div class="banner-sub">Gmail allows ~500 emails per day. Your remaining sends will resume automatically tomorrow.</div>
+    </div>
+  </div>
+  <div class="card" style="padding:20px 22px;">
+    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:16px;">
+      · Emails already sent today are delivered<br>
+      · Remaining drafts are queued and will send from tomorrow<br>
+      · Your sequence schedule adjusts automatically — no duplicates<br>
+      · Nothing is lost — your queue is safe
+    </p>
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,157,66,0.06);border:1px solid rgba(255,157,66,0.15);border-radius:8px;margin-bottom:16px;">
+      <span style="font-size:12px;color:var(--td);">Sends resume</span>
+      <span style="font-size:13px;font-weight:600;font-family:'Outfit',sans-serif;color:var(--amber);">Tomorrow · ~08:00</span>
+    </div>
+    <button class="btn btn-ghost" onclick="toast('→','Got it — queue continues tomorrow','tc')">Got it</button>
+  </div>
+  <div class="ann"><div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>This state appears as an inline banner in the campaign view, not a full-page block — shown full-page here for clarity.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Queue auto-resumes. User doesn't need to take action.</div>
+  </div>
+</div>
+
+<!-- ══ NO INTERNET ══ -->
+<div id="s-offline" class="sc">
+  <div class="pt">No internet connection</div>
+  <div class="psub">Pulse. can't reach its servers.</div>
+  <div class="banner banner-r">
+    <span class="banner-icon">📡</span>
+    <div>
+      <div class="banner-title">You appear to be offline</div>
+      <div class="banner-sub">Check your connection. Any unsaved changes will be preserved when you reconnect.</div>
+    </div>
+  </div>
+  <div class="card" style="padding:20px 22px;">
+    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:16px;">
+      · Nothing is being sent while offline — your queue is paused<br>
+      · Any draft edits made offline are saved locally<br>
+      · Pulse. will sync and resume automatically when you reconnect
+    </p>
+    <button class="btn btn-p" onclick="toast('↻','Checking connection…','tc')">Retry connection</button>
+  </div>
+  <div class="ann"><div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Shown as a persistent top banner across the whole app while offline. Full-page shown here for clarity.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Auto-dismisses when connection is restored.</div>
+  </div>
+</div>
+
+<!-- ══ SESSION EXPIRED ══ -->
+<div id="s-session" class="sc">
+  <div class="pt">Session expired</div>
+  <div class="psub">You've been logged out — sign back in to continue.</div>
+  <div class="banner banner-r">
+    <span class="banner-icon">🔒</span>
+    <div>
+      <div class="banner-title">Your session has expired</div>
+      <div class="banner-sub">For security, Pulse. logs you out after an extended period of inactivity. Sign back in to pick up where you left off.</div>
+    </div>
+  </div>
+  <div class="card" style="padding:20px 22px;">
+    <p style="font-size:13px;color:var(--tm);line-height:1.7;margin-bottom:16px;">
+      · No data has been lost<br>
+      · Your campaigns, prospects, and sequences are all intact<br>
+      · Any active scheduled sends will continue in the background
+    </p>
+    <button class="btn btn-p" onclick="toast('→','Redirecting to sign in…','tc')">Sign back in →</button>
+  </div>
+  <div class="ann"><div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>User is redirected to /login. After sign-in they're returned to the page they were on.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Scheduled sends on the server continue even while the user is logged out.</div>
+  </div>
+</div>
+
+<!-- ══ STRIPE PAYMENT FAILED ══ -->
+<div id="s-payment" class="sc">
+  <div class="pt">Payment failed</div>
+  <div class="psub">Your Pro subscription couldn't be renewed.</div>
+  <div class="banner banner-r">
+    <span class="banner-icon">💳</span>
+    <div>
+      <div class="banner-title">We couldn't process your payment</div>
+      <div class="banner-sub">Your Pro subscription has lapsed. Update your payment method to restore access.</div>
+    </div>
+  </div>
+  <div class="card" style="padding:20px 22px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,76,76,0.06);border:1px solid rgba(255,76,76,0.15);border-radius:8px;margin-bottom:16px;">
+      <div>
+        <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Visa ···· 4242</div>
+        <div style="font-size:11px;color:var(--td);">Card declined · 17 Mar 2026</div>
+      </div>
+      <span style="font-size:11px;padding:3px 9px;border-radius:100px;background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);color:#ff4c4c;font-family:'Outfit',sans-serif;font-weight:700;">Failed</span>
+    </div>
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">
+      Your account has moved to the Free plan. Your data, campaigns, and history are all preserved. Upgrade to restore Pro access.
+    </p>
+    <button class="btn btn-p" onclick="toast('→','Opening billing settings…','tc')" style="margin-bottom:10px;display:block;width:100%;text-align:center;">Update payment method →</button>
+    <button class="btn btn-ghost" onclick="toast('→','Staying on Free','tc')" style="display:block;width:100%;text-align:center;">Stay on Free</button>
+  </div>
+  <div class="ann"><div class="ann-title">Notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>Stripe sends a webhook on payment failure → Supabase updates user tier to Free.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Grace period: 7 days before Pro features lock (per Stripe retry schedule).</div>
+    <div class="ann-item"><div class="ann-dot"></div>This banner persists as a dismissible amber banner across the app until payment is resolved or user acknowledges downgrade.</div>
+  </div>
+</div>
+
 </body></html>
