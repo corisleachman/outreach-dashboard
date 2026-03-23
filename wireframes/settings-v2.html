@@ -612,7 +612,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
             <!-- built by JS -->
           </div>
           <div style="display:flex;gap:8px;flex-wrap:wrap;">
-            <button class="btn btn-primary btn-sm" onclick="toast('✓','Appearance saved','t-cyan')">Save appearance</button>
+            <button class="btn btn-primary btn-sm" id="save-appearance-btn" onclick="saveAppearance()">Save appearance</button>
             <button class="btn btn-ghost btn-sm" onclick="settingsReset()">Reset to default</button>
           </div>
         </div>
@@ -831,7 +831,7 @@ function toast(icon, text, cls) {
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
 }
 
-// ── APPEARANCE — COLOUR PICKER (ported from brand-explorer.html) ──────────
+// ── APPEARANCE — COLOUR PICKER ───────────────────────────────────────────
 (function () {
   const PRESETS = [
     { name: 'Electric', a: '#ff1493', b: '#00d4ff', bg: '#0d0914' },
@@ -855,29 +855,100 @@ function toast(icon, text, cls) {
     { name: 'Ember',            a: '#dc2626', b: '#f97316', desc: '— urgency and heat' },
   ];
 
-  let colA = '#ff1493', colB = '#00d4ff', colBg = '#0d0914';
+  // Saved defaults — what the page started with
+  const DEFAULTS = { a: '#ff1493', b: '#00d4ff', bg: '#0d0914' };
+
+  let colA = DEFAULTS.a, colB = DEFAULTS.b, colBg = DEFAULTS.bg;
+  let savedA = DEFAULTS.a, savedB = DEFAULTS.b, savedBg = DEFAULTS.bg;
   let sugIdx = 0;
   let pendingA = '', pendingB = '';
+  let unsaved = false;
 
+  // ── Apply gradient to both swatches AND live page CSS vars ──────────────
   function applyGradient(a, b) {
     colA = a; colB = b;
     const grad = 'linear-gradient(135deg,' + a + ',' + b + ')';
-    // Update swatches
+    const gradText = 'linear-gradient(135deg,' + a + ' 0%,' + b + ' 100%)';
+
+    // Update swatches + preview
     const sa = document.getElementById('swatch-a');
     const sb = document.getElementById('swatch-b');
-    const ha = document.getElementById('hex-a');
-    const hb = document.getElementById('hex-b');
-    const pa = document.getElementById('picker-a');
-    const pb = document.getElementById('picker-b');
-    const gp = document.getElementById('grad-preview');
     if (sa) sa.style.background = a;
     if (sb) sb.style.background = b;
+    const ha = document.getElementById('hex-a');
+    const hb = document.getElementById('hex-b');
     if (ha) ha.textContent = a;
     if (hb) hb.textContent = b;
+    const pa = document.getElementById('picker-a');
+    const pb = document.getElementById('picker-b');
     if (pa) pa.value = a;
     if (pb) pb.value = b;
+    const gp = document.getElementById('grad-preview');
     if (gp) gp.style.background = grad;
+
+    // ── Live update page CSS variables ──────────────────────────────────
+    const root = document.documentElement;
+    root.style.setProperty('--pink', a);
+    root.style.setProperty('--cyan', b);
+    root.style.setProperty('--gr',   grad);
+    root.style.setProperty('--grad', grad);
+    root.style.setProperty('--grad-text', gradText);
+    // Derive glow colours from hex
+    const [ar,ag,ab] = hexToRgb(a);
+    const [br,bg,bb] = hexToRgb(b);
+    root.style.setProperty('--glow-pink', 'rgba('+ar+','+ag+','+ab+',0.25)');
+    root.style.setProperty('--glow-cyan', 'rgba('+br+','+bg+','+bb+',0.2)');
+    root.style.setProperty('--pd', 'rgba('+ar+','+ag+','+ab+',0.1)');
+    root.style.setProperty('--cd', 'rgba('+br+','+bg+','+bb+',0.08)');
+
+    markUnsaved();
     syncPresetHighlight();
+  }
+
+  function settingsApplyBg(v) {
+    colBg = v;
+    const sbg = document.getElementById('swatch-bg');
+    const hbg = document.getElementById('hex-bg');
+    const pbg = document.getElementById('picker-bg');
+    if (sbg) sbg.style.background = v;
+    if (hbg) hbg.textContent = v;
+    if (pbg) pbg.value = v;
+
+    // Live update background
+    const root = document.documentElement;
+    root.style.setProperty('--bg', v);
+    document.body.style.background = v;
+
+    // Adjust text contrast for light backgrounds
+    const [r,g,b] = hexToRgb(v);
+    const lum = (0.299*r + 0.587*g + 0.114*b) / 255;
+    if (lum > 0.55) {
+      root.style.setProperty('--t',  '#1a1525');
+      root.style.setProperty('--tm', '#5a5070');
+      root.style.setProperty('--td', '#8a80a0');
+    } else {
+      root.style.setProperty('--t',  '#f0f0ee');
+      root.style.setProperty('--tm', '#8a8a9a');
+      root.style.setProperty('--td', '#444456');
+    }
+    markUnsaved();
+  }
+
+  function hexToRgb(hex) {
+    return [parseInt(hex.slice(1,3),16), parseInt(hex.slice(3,5),16), parseInt(hex.slice(5,7),16)];
+  }
+
+  function markUnsaved() {
+    unsaved = !(colA === savedA && colB === savedB && colBg === savedBg);
+    const btn = document.getElementById('save-appearance-btn');
+    if (!btn) return;
+    if (unsaved) {
+      btn.textContent = 'Save appearance ·';
+      btn.style.boxShadow = '0 0 24px rgba(255,20,147,0.4)';
+    } else {
+      btn.textContent = 'Save appearance';
+      btn.style.boxShadow = '';
+    }
   }
 
   function syncPresetHighlight() {
@@ -886,8 +957,9 @@ function toast(icon, text, cls) {
       if (el) {
         const match = p.a === colA && p.b === colB;
         el.style.borderColor = match ? 'rgba(255,20,147,0.5)' : '';
-        el.style.background = match ? 'rgba(255,20,147,0.08)' : '';
-        el.querySelector('span').style.color = match ? 'var(--t)' : '';
+        el.style.background  = match ? 'rgba(255,20,147,0.08)' : '';
+        const span = el.querySelector('span');
+        if (span) span.style.color = match ? 'var(--t)' : '';
       }
     });
   }
@@ -900,23 +972,17 @@ function toast(icon, text, cls) {
       const div = document.createElement('div');
       div.id = 'settings-pill-' + i;
       div.style.cssText = 'cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);transition:all 0.15s;';
-      div.onclick = () => { applyGradient(p.a, p.b); colBg = p.bg; settingsApplyBg(p.bg); };
-      div.innerHTML = '<div style="height:28px;background:linear-gradient(135deg,' + p.a + ',' + p.b + ');"></div>'
-        + '<div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;"><span style="color:var(--tm);">' + p.name + '</span></div>';
+      div.onclick = () => {
+        applyGradient(p.a, p.b);
+        settingsApplyBg(p.bg);
+      };
+      div.innerHTML = '<div style="height:28px;background:linear-gradient(135deg,'+p.a+','+p.b+');"></div>'
+        + '<div style="padding:6px 8px;"><span style="font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">'+p.name+'</span></div>';
       grid.appendChild(div);
     });
   }
 
-  function settingsApplyBg(v) {
-    colBg = v;
-    const sbg = document.getElementById('swatch-bg');
-    const hbg = document.getElementById('hex-bg');
-    const pbg = document.getElementById('picker-bg');
-    if (sbg) sbg.style.background = v;
-    if (hbg) hbg.textContent = v;
-    if (pbg) pbg.value = v;
-  }
-
+  // ── Public functions called by HTML ─────────────────────────────────────
   window.settingsUpdateA  = function(v) { applyGradient(v, colB); };
   window.settingsUpdateB  = function(v) { applyGradient(colA, v); };
   window.settingsUpdateBg = function(v) { settingsApplyBg(v); };
@@ -950,17 +1016,36 @@ function toast(icon, text, cls) {
   };
 
   window.settingsReset = function() {
-    applyGradient('#ff1493', '#00d4ff');
-    settingsApplyBg('#0d0914');
+    applyGradient(DEFAULTS.a, DEFAULTS.b);
+    settingsApplyBg(DEFAULTS.bg);
     document.getElementById('settings-suggestion').classList.remove('show');
     toast('↺', 'Reset to Electric Dreams default', 't-cyan');
   };
 
+  window.saveAppearance = function() {
+    // Commit current colours as saved state
+    savedA = colA; savedB = colB; savedBg = colBg;
+    unsaved = false;
+    const btn = document.getElementById('save-appearance-btn');
+    if (btn) {
+      btn.textContent = 'Saved ✓';
+      btn.style.boxShadow = '';
+      setTimeout(() => { btn.textContent = 'Save appearance'; }, 2000);
+    }
+    toast('✓', 'Appearance saved — looks great.', 't-cyan');
+    // In the real product this POSTs { gradient_start, gradient_end, bg }
+    // to the user profile API: PATCH /api/user/theme
+  };
+
   document.addEventListener('DOMContentLoaded', () => {
     buildPresets();
-    applyGradient('#ff1493', '#00d4ff');
+    applyGradient(DEFAULTS.a, DEFAULTS.b);
+    // Mark as not unsaved after initial load
+    setTimeout(() => { unsaved = false; markUnsaved(); }, 100);
   });
+
 })();
+
 
 </script>
 
