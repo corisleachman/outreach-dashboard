@@ -184,7 +184,46 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 </div>
 
 <!-- PLAN COMPARISON -->
-<div id="s-plans" class="sc">
+<div <!-- PRO LIGHT SOFT NUDGE (400/500 prospects) -->
+<div id="s-nudge-pl" class="sc">
+  <div class="wall">
+    <div class="wall-icon" style="font-size:22px;">📊</div>
+    <div class="wall-title" style="font-size:18px;">Getting close to your trial limit.</div>
+    <p class="wall-sub">You've added 400 prospects — 100 remaining on your Pro trial. Upgrade to Pro to remove the limit entirely.</p>
+    <div class="usage-wrap">
+      <div class="usage-bar"><div class="usage-fill" style="width:80%;background:linear-gradient(90deg,#ff9d42,#ff1493);"></div></div>
+      <div class="usage-lbl" style="color:var(--amber);">400 / 500 prospects used</div>
+    </div>
+    <div class="wall-ctas">
+      <button class="btn bp" onclick="show('s-plans')">See Pro plans →</button>
+      <button class="btn bs" onclick="show('s-wall')" style="font-size:12px;">Dismiss</button>
+    </div>
+  </div>
+</div>
+
+<!-- PRO LIGHT HARD WALL (500/500 prospects) -->
+<div id="s-wall-pl" class="sc">
+  <div class="wall">
+    <div class="wall-icon">📋</div>
+    <div class="wall-title">You've built a serious pipeline.</div>
+    <p class="wall-sub">500 prospects is the Pro trial limit. Upgrade to Pro to remove the limit entirely and keep your outreach running.</p>
+    <div class="usage-wrap">
+      <div class="usage-bar"><div class="usage-fill" style="width:100%;"></div></div>
+      <div class="usage-lbl">500 / 500 prospects used</div>
+    </div>
+    <div class="wall-ctas">
+      <button class="btn bp" onclick="show('s-plans')">Continue with Pro →</button>
+      <button class="btn bs" onclick="toast('✓','Staying on trial','tc')">Stay on trial</button>
+    </div>
+    <div class="feature-tease">
+      <div class="tease-card"><div class="tease-val">∞</div><div class="tease-lbl">Unlimited prospects</div></div>
+      <div class="tease-card"><div class="tease-val">AI</div><div class="tease-lbl">Unlimited AI drafts</div></div>
+      <div class="tease-card"><div class="tease-val">▶</div><div class="tease-lbl">Auto-scheduling</div></div>
+    </div>
+  </div>
+</div>
+
+id="s-plans" class="sc">
   <div class="plans-eyebrow">Upgrade</div>
   <div class="plans-title">Simple, honest pricing</div>
   <p class="plans-sub">No per-seat fees. No hidden costs. Cancel any time.</p>
@@ -275,7 +314,11 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 </div>
 <div class="pbar">
   <span>State:</span>
-  <button style="color:#ff1493" onclick="show('s-wall')">Limit wall</button>
+  <button style="color:#ff1493" onclick="show('s-wall')">Free limit wall</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s-nudge-pl')">Pro Light nudge</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff1493" onclick="show('s-wall-pl')">Pro Light wall</button>
   <span style="opacity:.3">·</span>
   <button style="color:#00d4ff" onclick="show('s-plans')">Plans</button>
   <span style="opacity:.3">·</span>
