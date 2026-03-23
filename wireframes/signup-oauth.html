@@ -49,6 +49,13 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 /* switcher */
 .sw{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;display:flex;gap:10px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);z-index:99;backdrop-filter:blur(12px);}
 .sw button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .btn-secondary { display:block;width:100%;padding:12px;border-radius:10px;
+    background:transparent;border:1px solid var(--b2);color:var(--tm);
+    font-family:var(--of);font-size:14px;font-weight:600;cursor:pointer;
+    transition:all 0.2s;text-align:center; }
+  .btn-secondary:hover { color:var(--t);border-color:rgba(255,255,255,0.2); }
 </style>
 </head>
 <body>
@@ -111,4 +118,73 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
 function startConnect(){show('s2');setTimeout(()=>show('s3'),2200);}
 </script>
+
+
+<!-- S4: OAUTH ERROR / DENIED -->
+<div class="screen" id="s4">
+  <div class="card">
+    <div class="card-icon" style="background:rgba(255,76,76,0.1);border-color:rgba(255,76,76,0.2);">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ff4c4c" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div class="card-title">Connection failed</div>
+    <div class="card-sub">Google didn't grant the permissions Pulse. needs to send emails on your behalf. This usually happens if you clicked "Deny" on the permissions screen.</div>
+    <div style="padding:12px 14px;background:rgba(255,76,76,0.06);border:1px solid rgba(255,76,76,0.15);border-radius:10px;font-size:12px;color:rgba(255,160,160,0.8);margin:16px 0;line-height:1.6;">
+      Pulse. needs permission to: <strong style="color:#ff8080;">send emails</strong>, <strong style="color:#ff8080;">create drafts</strong>, and <strong style="color:#ff8080;">read replies</strong>. Without these, outreach can't work.
+    </div>
+    <button class="btn-primary" onclick="show('s1')">Try again →</button>
+    <div class="hint">Need help? <a href="#" style="color:var(--cyan);text-decoration:none;">Contact support</a></div>
+  </div>
+</div>
+
+<!-- S5: MICROSOFT OAUTH (COMING SOON) -->
+<div class="screen" id="s5">
+  <div class="card">
+    <div class="card-icon" style="background:rgba(0,120,212,0.1);border-color:rgba(0,120,212,0.2);">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" fill="#f25022"/><rect x="13" y="2" width="9" height="9" fill="#7fba00"/><rect x="2" y="13" width="9" height="9" fill="#00a4ef"/><rect x="13" y="13" width="9" height="9" fill="#ffb900"/></svg>
+    </div>
+    <div class="card-title">Connect Microsoft</div>
+    <div class="card-sub">Connect your Outlook or Microsoft 365 account to send outreach from your work email.</div>
+    <button class="btn-primary" onclick="show('s6')">Continue with Microsoft →</button>
+    <div style="display:flex;align-items:center;gap:10px;margin:16px 0;">
+      <div style="flex:1;height:1px;background:var(--b);"></div>
+      <span style="font-size:12px;color:var(--td);">or</span>
+      <div style="flex:1;height:1px;background:var(--b);"></div>
+    </div>
+    <button class="btn-secondary" onclick="show('s1')">← Connect Gmail instead</button>
+    <div style="margin-top:16px;padding:10px 14px;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);border-radius:8px;font-size:12px;color:var(--amber);">
+      ⚠ Microsoft / Outlook support is coming in Phase 2.11. This screen is a forward-looking wireframe.
+    </div>
+  </div>
+</div>
+
+<!-- S6: MICROSOFT CONNECTING -->
+<div class="screen" id="s6">
+  <div class="card">
+    <div class="card-icon" style="background:rgba(0,120,212,0.1);border-color:rgba(0,120,212,0.2);">
+      <div style="width:32px;height:32px;border:3px solid rgba(0,120,212,0.3);border-top-color:#0078d4;border-radius:50%;animation:spin 1s linear infinite;"></div>
+    </div>
+    <div class="card-title">Connecting to Microsoft…</div>
+    <div class="card-sub">Requesting the permissions needed to send emails on your behalf.</div>
+    <div style="margin-top:16px;" id="ms-timer"></div>
+  </div>
+</div>
+
+<!-- S7: MICROSOFT CONNECTED -->
+<div class="screen" id="s7">
+  <div class="card">
+    <div class="card-icon" style="background:rgba(100,220,120,0.1);border-color:rgba(100,220,120,0.2);">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div class="card-title">Microsoft connected</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin:16px 0;padding:14px;background:var(--s);border:1px solid var(--b);border-radius:10px;">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> coris@company.com</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Send emails via Outlook</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Create drafts</div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Read replies</div>
+    </div>
+    <button class="btn-primary" onclick="window.location.href='dashboard-home.html'">Go to dashboard →</button>
+    <div class="hint">You can add more accounts later in Settings.</div>
+  </div>
+</div>
+
 </body></html>
