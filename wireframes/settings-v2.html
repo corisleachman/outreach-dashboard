@@ -202,6 +202,32 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .t-cyan{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
 .t-pink{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
 @keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── COLOUR PICKERS (from brand-explorer) ── */
+  .hidden-picker { position:absolute; width:0; height:0; opacity:0; pointer-events:none; }
+  .swatch-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 12px;
+    background:var(--s); border:1px solid var(--b2); border-radius:10px;
+    cursor:pointer; transition:all 0.15s; width:100%; }
+  .swatch-btn:hover { border-color:rgba(255,255,255,0.25); background:var(--s2); }
+  .swatch-circle { width:28px; height:28px; border-radius:50%;
+    border:2px solid rgba(255,255,255,0.15); flex-shrink:0; }
+  .swatch-hex { font-family:'DM Mono',monospace; font-size:12px; color:var(--tm); }
+  .gen-btn { display:flex; align-items:center; gap:8px; width:100%; padding:10px 14px;
+    background:var(--s); border:1px solid var(--b2); border-radius:10px;
+    color:var(--t); font-family:var(--of); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all 0.2s; }
+  .gen-btn:hover { background:var(--s2); border-color:rgba(255,255,255,0.2); }
+  .gen-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .suggestion-panel { display:none; margin-top:10px; padding:12px 14px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:10px; }
+  .suggestion-panel.show { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .sug-dot { width:18px; height:18px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
+  .sug-name { font-family:var(--of); font-size:13px; font-weight:700; }
+  .sug-desc { font-size:12px; color:var(--td); flex:1; }
+  .grad-swatch { height:36px; border-radius:8px; margin-bottom:16px;
+    background:linear-gradient(135deg,#ff1493,#00d4ff); }
+
 </style>
 </head>
 <body>
@@ -506,48 +532,64 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 
         <div class="sect">
           <div class="sect-title">Gradient colours</div>
-          <div class="grad-preview" id="grad-preview"></div>
-          <div class="color-pickers">
-            <div class="color-field">
-              <label>Gradient start</label>
-              <div class="color-swatch" style="background:#ff1493;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
-              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#ff1493</div>
-            </div>
-            <div class="color-field">
-              <label>Gradient end</label>
-              <div class="color-swatch" style="background:#00d4ff;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
-              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#00d4ff</div>
-            </div>
-            <div class="color-field">
-              <label>Background</label>
-              <div class="color-swatch" style="background:#0d0914;" onclick="toast('→','Colour picker — coming soon','t-cyan')"></div>
-              <div style="font-family:'DM Mono',monospace;font-size:11px;color:var(--td);margin-top:4px;">#0d0914</div>
-            </div>
+
+          <!-- Live gradient preview -->
+          <div class="grad-swatch" id="grad-preview"></div>
+
+          <!-- Gradient start -->
+          <div class="field">
+            <label>Gradient start</label>
+            <button class="swatch-btn" onclick="document.getElementById('picker-a').click()">
+              <div class="swatch-circle" id="swatch-a" style="background:#ff1493;"></div>
+              <span class="swatch-hex" id="hex-a">#ff1493</span>
+            </button>
+            <input type="color" class="hidden-picker" id="picker-a" value="#ff1493" oninput="settingsUpdateA(this.value)">
+          </div>
+
+          <!-- Gradient end -->
+          <div class="field">
+            <label>Gradient end</label>
+            <button class="swatch-btn" onclick="document.getElementById('picker-b').click()">
+              <div class="swatch-circle" id="swatch-b" style="background:#00d4ff;"></div>
+              <span class="swatch-hex" id="hex-b">#00d4ff</span>
+            </button>
+            <input type="color" class="hidden-picker" id="picker-b" value="#00d4ff" oninput="settingsUpdateB(this.value)">
+          </div>
+
+          <!-- Background -->
+          <div class="field">
+            <label>Background colour</label>
+            <button class="swatch-btn" onclick="document.getElementById('picker-bg').click()">
+              <div class="swatch-circle" id="swatch-bg" style="background:#0d0914;border-color:rgba(255,255,255,0.3);"></div>
+              <span class="swatch-hex" id="hex-bg">#0d0914</span>
+            </button>
+            <input type="color" class="hidden-picker" id="picker-bg" value="#0d0914" oninput="settingsUpdateBg(this.value)">
+          </div>
+
+          <!-- Generate button -->
+          <button class="gen-btn" id="settings-gen-btn" onclick="settingsGenerate()">
+            ✦ Generate colour pairing
+          </button>
+          <!-- Suggestion panel -->
+          <div class="suggestion-panel" id="settings-suggestion">
+            <div class="sug-dot" id="sug-dot-a"></div>
+            <span style="color:var(--td);font-size:12px;">→</span>
+            <div class="sug-dot" id="sug-dot-b"></div>
+            <span class="sug-name" id="sug-name"></span>
+            <span class="sug-desc" id="sug-desc"></span>
+            <button class="btn btn-ghost btn-sm" onclick="settingsApplySuggestion()">Apply →</button>
           </div>
         </div>
 
         <div class="sect">
           <div class="sect-title">Presets</div>
-          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;">
-            <div onclick="applyPreset('#ff1493','#00d4ff','#0d0914',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:2px solid rgba(255,20,147,0.4);">
-              <div style="height:28px;background:linear-gradient(135deg,#ff1493,#00d4ff);"></div>
-              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--t);">Electric</div>
-            </div>
-            <div onclick="applyPreset('#7c3aed','#06b6d4','#0a0a14',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
-              <div style="height:28px;background:linear-gradient(135deg,#7c3aed,#06b6d4);"></div>
-              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Cosmic</div>
-            </div>
-            <div onclick="applyPreset('#f97316','#eab308','#0f0a00',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
-              <div style="height:28px;background:linear-gradient(135deg,#f97316,#eab308);"></div>
-              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Ember</div>
-            </div>
-            <div onclick="applyPreset('#10b981','#0ea5e9','#001a14',this)" style="cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);">
-              <div style="height:28px;background:linear-gradient(135deg,#10b981,#0ea5e9);"></div>
-              <div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;color:var(--tm);">Ocean</div>
-            </div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:16px;" id="settings-presets">
+            <!-- built by JS -->
           </div>
-          <button class="btn btn-primary btn-sm" onclick="toast('✓','Appearance saved','t-cyan')">Save appearance</button>
-          <button class="btn btn-ghost btn-sm" style="margin-left:8px;" onclick="toast('→','Reset to default','t-cyan')">Reset to default</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" onclick="toast('✓','Appearance saved','t-cyan')">Save appearance</button>
+            <button class="btn btn-ghost btn-sm" onclick="settingsReset()">Reset to default</button>
+          </div>
         </div>
 
         <div class="ann">
@@ -753,6 +795,138 @@ function toast(icon, text, cls) {
   zone.appendChild(el);
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
 }
+
+// ── APPEARANCE — COLOUR PICKER (ported from brand-explorer.html) ──────────
+(function () {
+  const PRESETS = [
+    { name: 'Electric', a: '#ff1493', b: '#00d4ff', bg: '#0d0914' },
+    { name: 'Cosmic',   a: '#7c3aed', b: '#06b6d4', bg: '#0a0a14' },
+    { name: 'Ember',    a: '#f97316', b: '#eab308', bg: '#0f0a00' },
+    { name: 'Ocean',    a: '#10b981', b: '#0ea5e9', bg: '#001a14' },
+    { name: 'Rose',     a: '#f43f5e', b: '#fb923c', bg: '#140a0a' },
+    { name: 'Quantum',  a: '#7c3aed', b: '#00d4ff', bg: '#080514' },
+    { name: 'Solstice', a: '#f59e0b', b: '#8b5cf6', bg: '#0e0a00' },
+    { name: 'Celeste',  a: '#22d3ee', b: '#818cf8', bg: '#050814' },
+  ];
+
+  const SUGGESTIONS = [
+    { name: 'Deep Ultraviolet', a: '#6d28d9', b: '#2dd4bf', desc: '— moody authority, calm exit' },
+    { name: 'Solstice',         a: '#f59e0b', b: '#8b5cf6', desc: '— warm energy, cool intellect' },
+    { name: 'Pacific Fog',      a: '#0891b2', b: '#a78bfa', desc: '— collected calm, quiet confidence' },
+    { name: 'Celeste',          a: '#22d3ee', b: '#818cf8', desc: '— sky-bright, a little otherworldly' },
+    { name: 'Midnight Garden',  a: '#4f46e5', b: '#34d399', desc: '— night strategy, daylight result' },
+    { name: 'Blush Signal',     a: '#fb7185', b: '#fbbf24', desc: '— warmth with momentum' },
+    { name: 'Quantum',          a: '#7c3aed', b: '#06b6d4', desc: '— precision meets possibility' },
+    { name: 'Ember',            a: '#dc2626', b: '#f97316', desc: '— urgency and heat' },
+  ];
+
+  let colA = '#ff1493', colB = '#00d4ff', colBg = '#0d0914';
+  let sugIdx = 0;
+  let pendingA = '', pendingB = '';
+
+  function applyGradient(a, b) {
+    colA = a; colB = b;
+    const grad = 'linear-gradient(135deg,' + a + ',' + b + ')';
+    // Update swatches
+    const sa = document.getElementById('swatch-a');
+    const sb = document.getElementById('swatch-b');
+    const ha = document.getElementById('hex-a');
+    const hb = document.getElementById('hex-b');
+    const pa = document.getElementById('picker-a');
+    const pb = document.getElementById('picker-b');
+    const gp = document.getElementById('grad-preview');
+    if (sa) sa.style.background = a;
+    if (sb) sb.style.background = b;
+    if (ha) ha.textContent = a;
+    if (hb) hb.textContent = b;
+    if (pa) pa.value = a;
+    if (pb) pb.value = b;
+    if (gp) gp.style.background = grad;
+    syncPresetHighlight();
+  }
+
+  function syncPresetHighlight() {
+    PRESETS.forEach((p, i) => {
+      const el = document.getElementById('settings-pill-' + i);
+      if (el) {
+        const match = p.a === colA && p.b === colB;
+        el.style.borderColor = match ? 'rgba(255,20,147,0.5)' : '';
+        el.style.background = match ? 'rgba(255,20,147,0.08)' : '';
+        el.querySelector('span').style.color = match ? 'var(--t)' : '';
+      }
+    });
+  }
+
+  function buildPresets() {
+    const grid = document.getElementById('settings-presets');
+    if (!grid) return;
+    grid.innerHTML = '';
+    PRESETS.forEach((p, i) => {
+      const div = document.createElement('div');
+      div.id = 'settings-pill-' + i;
+      div.style.cssText = 'cursor:pointer;border-radius:10px;overflow:hidden;border:1px solid var(--b);transition:all 0.15s;';
+      div.onclick = () => { applyGradient(p.a, p.b); colBg = p.bg; settingsApplyBg(p.bg); };
+      div.innerHTML = '<div style="height:28px;background:linear-gradient(135deg,' + p.a + ',' + p.b + ');"></div>'
+        + '<div style="padding:6px 8px;font-size:10px;font-family:var(--of);font-weight:600;"><span style="color:var(--tm);">' + p.name + '</span></div>';
+      grid.appendChild(div);
+    });
+  }
+
+  function settingsApplyBg(v) {
+    colBg = v;
+    const sbg = document.getElementById('swatch-bg');
+    const hbg = document.getElementById('hex-bg');
+    const pbg = document.getElementById('picker-bg');
+    if (sbg) sbg.style.background = v;
+    if (hbg) hbg.textContent = v;
+    if (pbg) pbg.value = v;
+  }
+
+  window.settingsUpdateA  = function(v) { applyGradient(v, colB); };
+  window.settingsUpdateB  = function(v) { applyGradient(colA, v); };
+  window.settingsUpdateBg = function(v) { settingsApplyBg(v); };
+
+  window.settingsGenerate = function() {
+    const btn = document.getElementById('settings-gen-btn');
+    btn.textContent = '◌ Thinking…';
+    btn.disabled = true;
+    setTimeout(() => {
+      const s = SUGGESTIONS[sugIdx % SUGGESTIONS.length];
+      sugIdx++;
+      pendingA = s.a;
+      pendingB = s.b;
+      const da = document.getElementById('sug-dot-a');
+      const db = document.getElementById('sug-dot-b');
+      if (da) da.style.background = s.a;
+      if (db) db.style.background = s.b;
+      const sn = document.getElementById('sug-name');
+      const sd = document.getElementById('sug-desc');
+      if (sn) sn.textContent = s.name;
+      if (sd) sd.textContent = s.desc;
+      document.getElementById('settings-suggestion').classList.add('show');
+      btn.textContent = '✦ Generate colour pairing';
+      btn.disabled = false;
+    }, 700);
+  };
+
+  window.settingsApplySuggestion = function() {
+    applyGradient(pendingA, pendingB);
+    document.getElementById('settings-suggestion').classList.remove('show');
+  };
+
+  window.settingsReset = function() {
+    applyGradient('#ff1493', '#00d4ff');
+    settingsApplyBg('#0d0914');
+    document.getElementById('settings-suggestion').classList.remove('show');
+    toast('↺', 'Reset to Electric Dreams default', 't-cyan');
+  };
+
+  document.addEventListener('DOMContentLoaded', () => {
+    buildPresets();
+    applyGradient('#ff1493', '#00d4ff');
+  });
+})();
+
 </script>
 </body>
 </html>
