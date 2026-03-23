@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Campaign Settings</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+
+/* LEFT NAV */
+.left-nav{position:fixed;top:0;left:0;bottom:0;width:200px;
+  background:rgba(13,9,20,0.97);border-right:1px solid var(--b);
+  backdrop-filter:blur(16px);z-index:999;
+  display:flex;flex-direction:column;overflow-y:auto;scrollbar-width:none;}
+.left-nav::-webkit-scrollbar{display:none;}
+.nav-identity{padding:20px 16px 16px;border-bottom:1px solid var(--b);flex-shrink:0;}
+.nav-product{font-family:var(--of);font-size:15px;font-weight:800;line-height:1.1;}
+.nav-doc{font-size:10px;color:var(--td);margin-top:3px;
+  font-family:var(--of);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;}
+.nav-pills{display:flex;flex-direction:column;gap:2px;padding:12px 10px 24px;}
+.nav-group-label{font-family:var(--of);font-size:9px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--td);padding:10px 8px 4px;}
+.flow-btn{font-family:var(--of);font-size:12px;font-weight:600;
+  padding:7px 12px;border-radius:8px;border:1px solid transparent;
+  background:transparent;color:var(--tm);cursor:pointer;
+  transition:all 0.15s;text-align:left;width:100%;}
+.flow-btn:hover{background:var(--s2);color:var(--t);}
+.flow-btn.active{color:var(--pink);background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.2);}
+.pill-sep{height:1px;background:var(--b);margin:6px 8px;}
+
+/* MAIN */
+.screens{margin-left:200px;padding:40px 48px 80px;display:flex;flex-direction:column;gap:64px;}
+.screen-section{display:flex;flex-direction:column;gap:16px;}
+.screen-label{font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);}
+.screen-title{font-family:var(--of);font-size:18px;font-weight:700;color:var(--t);margin-bottom:4px;}
+.screen-desc{font-size:13px;color:var(--tm);margin-bottom:16px;}
+
+/* CAMPAIGN SHELL */
+.campaign-shell{background:var(--bg);border:1px solid var(--b);border-radius:16px;overflow:hidden;max-width:720px;}
+.camp-header{padding:16px 20px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.camp-name{font-family:var(--of);font-size:15px;font-weight:700;}
+.tab-bar{display:flex;border-bottom:1px solid var(--b);padding:0 20px;}
+.tab{padding:11px 14px;font-size:13px;color:var(--tm);cursor:pointer;
+  border-bottom:2px solid transparent;font-family:var(--of);font-weight:600;}
+.tab.active{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-content{padding:24px 20px;}
+
+/* SETTINGS FORM */
+.sect{margin-bottom:24px;}
+.sect-title{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--td);margin-bottom:14px;
+  padding-bottom:8px;border-bottom:1px solid var(--b);}
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);}
+.input{width:100%;padding:10px 14px;background:var(--s);border:1px solid var(--b2);
+  border-radius:10px;color:var(--t);font-family:var(--sf);font-size:13px;outline:none;}
+.input:focus{border-color:rgba(255,20,147,0.4);}
+.row{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.row:last-child{border-bottom:none;}
+.row-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+.row-sub{font-size:12px;color:var(--tm);}
+.toggle-wrap{display:flex;align-items:center;gap:8px;cursor:pointer;}
+.toggle{width:40px;height:22px;border-radius:100px;background:var(--b2);
+  position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle.on{background:linear-gradient(135deg,rgba(255,20,147,0.6),rgba(0,212,255,0.6));}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:var(--t);transition:transform 0.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.toggle.on .toggle-thumb{transform:translateX(18px);}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;
+  border-radius:100px;font-family:var(--of);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;border:none;}
+.btn-primary{background:var(--gr);color:white;box-shadow:0 0 24px rgba(255,20,147,0.2);}
+.btn-ghost{background:transparent;border:1px solid var(--b2);color:var(--tm);}
+.btn-ghost:hover{color:var(--t);}
+.btn-danger{background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);color:var(--red);}
+.btn-sm{padding:6px 14px;font-size:12px;}
+.danger-box{border:1px solid rgba(255,76,76,0.2);border-radius:12px;
+  padding:18px;background:rgba(255,76,76,0.04);}
+.status-badge{display:inline-flex;padding:4px 12px;border-radius:100px;
+  font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.status-active{background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);color:var(--green);}
+.status-paused{background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.2);color:var(--amber);}
+.status-archived{background:var(--s);border:1px solid var(--b2);color:var(--td);}
+
+/* ANNOTATIONS */
+.ann{margin-top:20px;padding:14px 16px;background:rgba(0,212,255,0.04);
+  border:1px solid rgba(0,212,255,0.1);border-radius:10px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
+.ann-item{display:flex;gap:8px;font-size:12px;color:var(--td);margin-bottom:5px;line-height:1.5;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);margin-top:6px;flex-shrink:0;}
+
+/* DELETE MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);
+  backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;
+  justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#1a0f2e;border:1px solid var(--b2);border-radius:14px;
+  padding:28px;width:440px;max-width:calc(100vw - 48px);
+  transform:translateY(12px);transition:transform 0.25s;
+  box-shadow:0 24px 80px rgba(0,0,0,0.6);}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-title{font-family:var(--of);font-size:18px;font-weight:700;margin-bottom:6px;}
+.modal-sub{font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:20px;}
+.modal-label{display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);}
+.modal-input{width:100%;padding:10px 14px;background:var(--s);border:1px solid var(--b2);
+  border-radius:10px;color:var(--t);font-family:var(--sf);font-size:13px;outline:none;margin-bottom:20px;}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;}
+
+.toast-zone{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;
+  font-size:13px;font-family:var(--of);font-weight:600;animation:slideIn 0.3s ease;}
+.t-cyan{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.t-pink{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.t-amber{background:rgba(255,157,66,0.12);border:1px solid rgba(255,157,66,0.25);color:var(--amber);}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<!-- LEFT NAV -->
+<nav class="left-nav">
+  <div class="nav-identity">
+    <a href="../hub.html" style="text-decoration:none;display:block;font-family:var(--of);font-size:15px;font-weight:800;background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;">Pulse.</a>
+    <div class="nav-doc">Campaign Settings</div>
+  </div>
+  <div class="nav-pills">
+    <span class="nav-group-label">Active campaign</span>
+    <button class="flow-btn active" onclick="jumpTo('active-general',this)">1 · General settings</button>
+    <button class="flow-btn" onclick="jumpTo('active-sequence',this)">2 · Sequence settings</button>
+    <button class="flow-btn" onclick="jumpTo('active-sending',this)">3 · Sending settings</button>
+    <button class="flow-btn" onclick="jumpTo('active-danger',this)">4 · Archive / Delete</button>
+    <div class="pill-sep"></div>
+    <span class="nav-group-label">Paused campaign</span>
+    <button class="flow-btn" onclick="jumpTo('paused-state',this)">5 · Paused state</button>
+    <div class="pill-sep"></div>
+    <span class="nav-group-label">Archived campaign</span>
+    <button class="flow-btn" onclick="jumpTo('archived-state',this)">6 · Archived state</button>
+  </div>
+</nav>
+
+<!-- SCREENS -->
+<div class="screens">
+
+  <!-- ══ 1. GENERAL SETTINGS (ACTIVE) ══ -->
+  <div class="screen-section" id="active-general">
+    <div class="screen-label">View 1 — Active campaign</div>
+    <div class="screen-title">Campaign settings — General</div>
+    <div class="screen-desc">The Settings tab within an active campaign view. Accessed from the campaign tab bar.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">Agency founders — Q2</div>
+          <div style="font-size:12px;color:var(--tm);margin-top:2px;">47 prospects · Started 12 Mar 2026</div>
+        </div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Review</div>
+        <div class="tab">Drafts</div>
+        <div class="tab">Sent</div>
+        <div class="tab">Follow-up</div>
+        <div class="tab">Sequences</div>
+        <div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <div class="sect">
+          <div class="sect-title">General</div>
+          <div class="field">
+            <label>Campaign name</label>
+            <input class="input" value="Agency founders — Q2">
+          </div>
+          <div class="field">
+            <label>Description <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input class="input" placeholder="e.g. LinkedIn connections from March event" value="">
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Status</div>
+          <div class="row">
+            <div><div class="row-label">Campaign status</div><div class="row-sub">Active — prospects are being contacted on schedule</div></div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-ghost btn-sm" onclick="toast('⏸','Campaign paused — sequences on hold','t-amber')">Pause campaign</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Connected account</div>
+          <div class="row">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:28px;height:28px;border-radius:6px;background:rgba(255,20,147,0.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">G</div>
+              <div><div class="row-label">coris@example.com</div><div class="row-sub">Gmail · Connected</div></div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="toast('→','Change sending account','t-cyan')">Change</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;margin-top:8px;">
+          <button class="btn btn-primary btn-sm" onclick="toast('✓','Campaign settings saved','t-cyan')">Save changes</button>
+          <button class="btn btn-ghost btn-sm" onclick="toast('→','Changes discarded','t-cyan')">Cancel</button>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Campaign name is editable here and updates immediately in the sidebar and dashboard list.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Pausing a campaign halts all scheduled sends. Existing drafts are preserved. Follow-ups already sent are unaffected.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Connected account can be changed per campaign — useful if the user has multiple Gmail accounts connected.</div>
+    </div>
+  </div>
+
+  <!-- ══ 2. SEQUENCE SETTINGS ══ -->
+  <div class="screen-section" id="active-sequence">
+    <div class="screen-label">View 2 — Active campaign</div>
+    <div class="screen-title">Campaign settings — Sequence</div>
+    <div class="screen-desc">Sequence behaviour and reply detection settings.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div class="camp-name">Agency founders — Q2</div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Review</div><div class="tab">Drafts</div><div class="tab">Sent</div>
+        <div class="tab">Follow-up</div><div class="tab">Sequences</div><div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <div class="sect">
+          <div class="sect-title">Sequence behaviour</div>
+          <div class="row">
+            <div><div class="row-label">Pause sequence on reply</div><div class="row-sub">Stop follow-ups automatically when a prospect replies</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="row">
+            <div><div class="row-label">Reply to original thread</div><div class="row-sub">Follow-ups reply in the same Gmail thread — keeps context</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="row">
+            <div><div class="row-label">Move to Nurture after sequence ends</div><div class="row-sub">Prospects with no reply go to Nurture automatically</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Sending window</div>
+          <div class="row">
+            <div><div class="row-label">Send on weekdays only</div><div class="row-sub">Emails scheduled on weekends shift to Monday</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle on"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="field">
+              <label>Earliest send time</label>
+              <input class="input" value="08:00" type="time">
+            </div>
+            <div class="field">
+              <label>Latest send time</label>
+              <input class="input" value="17:00" type="time">
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="toast('✓','Sequence settings saved','t-cyan')">Save changes</button>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Reply-to-original-thread is per the Phase 2.9 spec — boolean stored as reply_to_original_thread on sequence steps.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Sending window applies to this campaign only. Global default is in Account Settings → Preferences.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Auto-scheduling is a Pro feature — these controls are locked on Free with inline desire trigger.</div>
+    </div>
+  </div>
+
+  <!-- ══ 3. SENDING SETTINGS ══ -->
+  <div class="screen-section" id="active-sending">
+    <div class="screen-label">View 3 — Active campaign</div>
+    <div class="screen-title">Campaign settings — Sending</div>
+    <div class="screen-desc">Email signature, tracking, and sending preferences for this campaign.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div class="camp-name">Agency founders — Q2</div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Review</div><div class="tab">Drafts</div><div class="tab">Sent</div>
+        <div class="tab">Follow-up</div><div class="tab">Sequences</div><div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <div class="sect">
+          <div class="sect-title">Signature</div>
+          <div class="row">
+            <div><div class="row-label">Use Gmail signature</div><div class="row-sub">Append your default Gmail signature to outgoing messages</div></div>
+            <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+              <div class="toggle"><div class="toggle-thumb"></div></div>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label>Custom signature <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(overrides Gmail)</span></label>
+            <textarea class="input" style="height:80px;resize:vertical;line-height:1.5;">Best,
+Coris Leachman
+Fractional New Business Director</textarea>
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Tracking</div>
+          <div class="row">
+            <div><div class="row-label">Track email opens</div><div class="row-sub">Know when prospects open your messages</div></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:11px;color:var(--td);font-family:var(--of);font-weight:600;">Pro</span>
+              <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+                <div class="toggle"><div class="toggle-thumb"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div><div class="row-label">Track link clicks</div><div class="row-sub">Know when prospects click links in your messages</div></div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:11px;color:var(--td);font-family:var(--of);font-weight:600;">Pro</span>
+              <div class="toggle-wrap" onclick="this.querySelector('.toggle').classList.toggle('on')">
+                <div class="toggle"><div class="toggle-thumb"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="toast('✓','Sending settings saved','t-cyan')">Save changes</button>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Open and click tracking are Pro features — shown but locked on Free.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Custom signature overrides Gmail signature for this campaign only. Blank = no signature appended.</div>
+    </div>
+  </div>
+
+  <!-- ══ 4. ARCHIVE / DELETE ══ -->
+  <div class="screen-section" id="active-danger">
+    <div class="screen-label">View 4 — Active campaign</div>
+    <div class="screen-title">Campaign settings — Archive &amp; Delete</div>
+    <div class="screen-desc">Dangerous actions. Archive is reversible. Delete is permanent.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div class="camp-name">Agency founders — Q2</div>
+        <span class="status-badge status-active">Active</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Review</div><div class="tab">Drafts</div><div class="tab">Sent</div>
+        <div class="tab">Follow-up</div><div class="tab">Sequences</div><div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <!-- Archive -->
+        <div class="sect">
+          <div class="sect-title">Archive campaign</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Archive this campaign</div>
+              <div style="font-size:12px;color:var(--tm);line-height:1.6;">Archiving pauses all activity and hides the campaign from your main list. Your data is preserved. You can unarchive at any time.</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" style="flex-shrink:0;" onclick="toast('📦','Campaign archived — find it under Archived','t-amber')">Archive</button>
+          </div>
+        </div>
+
+        <!-- Delete -->
+        <div class="danger-box">
+          <div class="sect-title" style="color:var(--red);border-color:rgba(255,76,76,0.2);">Delete campaign</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="flex:1;">
+              <div style="font-size:14px;font-weight:500;margin-bottom:4px;">Permanently delete this campaign</div>
+              <div style="font-size:12px;color:var(--tm);line-height:1.6;">This will delete all prospects, messages, sent history, and sequence data for this campaign. <strong style="color:var(--t);">This cannot be undone.</strong></div>
+            </div>
+            <button class="btn btn-danger btn-sm" style="flex-shrink:0;" onclick="openDeleteModal()">Delete</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Archive is the recommended path — data preserved, reversible, removes from active view.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Delete requires typing DELETE in the confirmation modal (same pattern as dashboard-home.html).</div>
+      <div class="ann-item"><div class="ann-dot"></div>Neither action is available while a bulk send is in progress.</div>
+    </div>
+  </div>
+
+  <!-- ══ 5. PAUSED STATE ══ -->
+  <div class="screen-section" id="paused-state">
+    <div class="screen-label">View 5 — Paused campaign</div>
+    <div class="screen-title">Campaign settings — Paused state</div>
+    <div class="screen-desc">Settings tab when the campaign is paused. Resume CTA replaces Pause.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">Fractional CFO — Q1</div>
+          <div style="font-size:12px;color:var(--tm);margin-top:2px;">39 prospects · Paused 18 Mar 2026</div>
+        </div>
+        <span class="status-badge status-paused">Paused</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Review</div><div class="tab">Drafts</div><div class="tab">Sent</div>
+        <div class="tab">Follow-up</div><div class="tab">Sequences</div><div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <!-- Paused banner -->
+        <div style="padding:14px 16px;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);border-radius:10px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:14px;font-weight:500;color:var(--amber);margin-bottom:2px;">Campaign is paused</div>
+            <div style="font-size:12px;color:var(--tm);">No emails are being sent. Scheduled follow-ups are on hold.</div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="toast('▶','Campaign resumed — sequences restarting','t-cyan')">Resume</button>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">General</div>
+          <div class="field">
+            <label>Campaign name</label>
+            <input class="input" value="Fractional CFO — Q1">
+          </div>
+        </div>
+
+        <div class="sect">
+          <div class="sect-title">Status</div>
+          <div class="row" style="border:none;">
+            <div><div class="row-label">Resume campaign</div><div class="row-sub">Restart scheduled sends from where they left off</div></div>
+            <button class="btn btn-primary btn-sm" onclick="toast('▶','Campaign resumed','t-cyan')">Resume</button>
+          </div>
+        </div>
+
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;" onclick="toast('✓','Settings saved','t-cyan')">Save changes</button>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Paused banner is prominent — always visible at top of settings when campaign is paused.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Resume picks up exactly where the sequence left off — no gaps, no duplicates.</div>
+      <div class="ann-item"><div class="ann-dot"></div>All other settings remain editable while paused.</div>
+    </div>
+  </div>
+
+  <!-- ══ 6. ARCHIVED STATE ══ -->
+  <div class="screen-section" id="archived-state">
+    <div class="screen-label">View 6 — Archived campaign</div>
+    <div class="screen-title">Campaign settings — Archived state</div>
+    <div class="screen-desc">Settings tab for an archived campaign. Read-only with unarchive option.</div>
+
+    <div class="campaign-shell">
+      <div class="camp-header">
+        <div>
+          <div class="camp-name">New Biz Dev — Feb</div>
+          <div style="font-size:12px;color:var(--tm);margin-top:2px;">22 prospects · Archived 28 Feb 2026</div>
+        </div>
+        <span class="status-badge status-archived">Archived</span>
+      </div>
+      <div class="tab-bar">
+        <div class="tab">Sent</div><div class="tab">Conversations</div><div class="tab active">Settings</div>
+      </div>
+      <div class="tab-content">
+
+        <!-- Archived banner -->
+        <div style="padding:14px 16px;background:var(--s);border:1px solid var(--b2);border-radius:10px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;">
+          <div>
+            <div style="font-size:14px;font-weight:500;margin-bottom:2px;">Campaign is archived</div>
+            <div style="font-size:12px;color:var(--tm);">No new activity. Data is preserved — you can unarchive to reactivate.</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="toast('📂','Campaign unarchived','t-cyan')">Unarchive</button>
+        </div>
+
+        <!-- Read-only summary -->
+        <div class="sect">
+          <div class="sect-title">Campaign summary</div>
+          <div class="row">
+            <div class="row-label">Prospects</div>
+            <div style="font-size:13px;color:var(--tm);">22 total</div>
+          </div>
+          <div class="row">
+            <div class="row-label">Emails sent</div>
+            <div style="font-size:13px;color:var(--tm);">18</div>
+          </div>
+          <div class="row">
+            <div class="row-label">Replies received</div>
+            <div style="font-size:13px;color:var(--cyan);">4</div>
+          </div>
+          <div class="row" style="border:none;">
+            <div class="row-label">Meetings booked</div>
+            <div style="font-size:13px;color:var(--green);">2</div>
+          </div>
+        </div>
+
+        <!-- Delete still available -->
+        <div class="danger-box" style="margin-top:8px;">
+          <div class="sect-title" style="color:var(--red);border-color:rgba(255,76,76,0.2);">Delete permanently</div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;">
+            <div style="font-size:12px;color:var(--tm);line-height:1.6;flex:1;">Remove this campaign and all its data permanently. Cannot be undone.</div>
+            <button class="btn btn-danger btn-sm" style="flex-shrink:0;" onclick="openDeleteModal()">Delete</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Archived campaigns show a reduced tab bar — only Sent, Conversations, Settings. No drafts, follow-ups, or sequences.</div>
+      <div class="ann-item"><div class="ann-dot"></div>All settings are read-only except Unarchive and Delete.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Read-only summary shows campaign performance at a glance.</div>
+    </div>
+  </div>
+
+</div><!-- end .screens -->
+
+<!-- DELETE MODAL -->
+<div class="modal-overlay" id="delete-modal" onclick="if(event.target===this)closeDeleteModal()">
+  <div class="modal-box">
+    <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4h12M5 4V2h6v2M6 7v5M10 7v5M3 4l.9 9a1 1 0 001 .9h6.2a1 1 0 001-.9L13 4" stroke="#ff4c4c" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <div class="modal-title" style="color:var(--red);">Delete campaign</div>
+    <p class="modal-sub">This will permanently delete <strong id="delete-name">Agency founders — Q2</strong> and all its data — prospects, messages, sent history, sequences. This cannot be undone.</p>
+    <label class="modal-label">Type <strong style="color:var(--t);letter-spacing:0.05em;">DELETE</strong> to confirm</label>
+    <input class="modal-input" id="delete-input" placeholder="DELETE" oninput="checkDelete()" autocomplete="off">
+    <div class="modal-actions">
+      <button class="btn btn-ghost btn-sm" onclick="closeDeleteModal()">Cancel</button>
+      <button class="btn btn-sm" id="delete-btn" disabled
+        style="background:rgba(255,76,76,0.15);border:1px solid rgba(255,76,76,0.3);color:var(--red);font-family:var(--of);font-weight:700;opacity:0.5;cursor:not-allowed;transition:all 0.2s;border-radius:100px;"
+        onclick="executeDelete()">Delete campaign</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast-zone" id="toast-zone"></div>
+
+<script>
+function jumpTo(id, el) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.flow-btn').forEach(b => b.classList.remove('active'));
+  if (el) el.classList.add('active');
+}
+
+function openDeleteModal() {
+  document.getElementById('delete-input').value = '';
+  document.getElementById('delete-btn').disabled = true;
+  document.getElementById('delete-btn').style.opacity = '0.5';
+  document.getElementById('delete-btn').style.cursor = 'not-allowed';
+  document.getElementById('delete-modal').classList.add('open');
+  setTimeout(() => document.getElementById('delete-input').focus(), 100);
+}
+function closeDeleteModal() {
+  document.getElementById('delete-modal').classList.remove('open');
+}
+function checkDelete() {
+  const val = document.getElementById('delete-input').value;
+  const btn = document.getElementById('delete-btn');
+  const ok = val === 'DELETE';
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.5';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+  btn.style.background = ok ? 'rgba(255,76,76,0.25)' : 'rgba(255,76,76,0.15)';
+}
+function executeDelete() {
+  if (document.getElementById('delete-input').value !== 'DELETE') return;
+  closeDeleteModal();
+  toast('✓', 'Campaign deleted', 't-amber');
+}
+document.getElementById('delete-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !document.getElementById('delete-btn').disabled) executeDelete();
+  if (e.key === 'Escape') closeDeleteModal();
+});
+
+function toast(icon, text, cls) {
+  const zone = document.getElementById('toast-zone');
+  const el = document.createElement('div');
+  el.className = 'toast ' + (cls || 't-cyan');
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
+}
+</script>
+</body>
+</html>
