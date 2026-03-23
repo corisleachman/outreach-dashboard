@@ -185,15 +185,15 @@ const DH = B + 'dashboard-home.html';
 const JOURNEYS = [
   // ── ACTIVATION & ONBOARDING ─────────────────────────────────────────────
   { group: 'Activation & onboarding' },
-  { name: 'Sign-up → Gmail OAuth',                      status: 'built',  url: B + 'signup-oauth.html' },
+  { name: 'Sign-up → Gmail OAuth',                      status: 'review', url: B + 'signup-oauth.html',      note: 'Gmail connected + OAuth error + Microsoft variant states added' },
   { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: 'Updated: Pulse. branding, trial badge, column mapping, free tier locking, editable campaign name, S5 links. Awaiting sign-off.' },
-  { name: 'Empty state — first login',                  status: 'built',  url: DH, note: 'Empty state shown in dashboard-home.html' },
+  { name: 'Empty state — first login',                  status: 'built',  url: DH },
   { name: 'Referee onboarding — referral gifted card',  status: 'done',   url: B + 'referral-system.html' },
 
   // ── CAMPAIGN MANAGEMENT ──────────────────────────────────────────────────
   { group: 'Campaign management' },
   { name: 'Campaigns list / home dashboard',            status: 'review', url: DH, note: 'Styled rename + delete (type DELETE) modals added. Pulse. branding updated.' },
-  { name: 'Create new campaign',                        status: 'built',  url: DH, note: 'dashboard-home.html — create campaign modal' },
+  { name: 'Create new campaign',                        status: 'built',  url: DH },
   { name: 'Campaign view (persistent shell)',           status: 'done',   url: B + 'campaign-view-v3.html' },
   { name: 'Campaign settings tab',                      status: 'review', url: B + 'campaign-settings.html', note: '6 views: general, sequence, sending, archive/delete, paused, archived states.' },
 
@@ -274,7 +274,7 @@ const JOURNEYS = [
 
   // ── SETTINGS & ACCOUNT ───────────────────────────────────────────────────
   { group: 'Settings & account' },
-  { name: 'Account settings (v2 — all tabs)',           status: 'review', url: B + 'settings-v2.html',       note: 'Profile, Connected accounts, Personality packs, Notifications, Appearance, Billing x3, Referrals' },
+  { name: 'Account settings (v2)',                      status: 'review', url: B + 'settings-v2.html',       note: 'All 7 tabs: Profile, Connected accounts, Personality packs, Notifications, Appearance, Billing (3 states), Referrals' },
   { name: 'Personality packs — global default',         status: 'review', url: B + 'settings-v2.html',       note: 'Now in settings-v2.html as a tab' },
   { name: 'Appearance — brand personalisation',         status: 'review', url: B + 'settings-v2.html',       note: 'Now in settings-v2.html as a tab — presets + colour pickers' },
   { name: 'Billing & plan management',                  status: 'review', url: B + 'settings-v2.html',       note: 'Pro / Pro Light trial / Free states — switcher in wireframe' },
@@ -282,7 +282,7 @@ const JOURNEYS = [
 
   // ── ERROR & EDGE CASES ───────────────────────────────────────────────────
   { group: 'Error & edge cases' },
-  { name: 'Gmail disconnected / reconnect',             status: 'built',  url: B + 'error-edge-cases.html' },
+  { name: 'Gmail disconnected / reconnect',             status: 'review', url: B + 'error-edge-cases.html',  note: '4 new states added: rate limit, offline, session expired, payment failed' },
   { name: 'Email bounce — retry flow',                  status: 'built',  url: B + 'error-edge-cases.html' },
   { name: 'Empty state — no prospects yet',             status: 'built',  url: B + 'error-edge-cases.html' },
   { name: 'Sequence paused — reply detected',           status: 'built',  url: B + 'error-edge-cases.html' },
