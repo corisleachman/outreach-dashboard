@@ -1202,5 +1202,11 @@ function showToast(icon, msg) {
 
 
   <script src="campaign-view-v3.js"></script>
+  <script>
+    // Switch to Follow-up tab by default on this page
+    document.addEventListener('DOMContentLoaded', () => {
+      if (typeof switchTab === 'function') switchTab('followup');
+    });
+  </script>
 </body>
 </html>
