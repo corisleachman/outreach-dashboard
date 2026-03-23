@@ -626,11 +626,11 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
       <div class="stat-item"><div class="sn cyan">0</div><div class="sl">LinkedIn due</div></div>
     </div>
     <div class="tab-bar">
-      <div class="tab on" data-tab="review" onclick="switchTab('review')">Review <span class="tab-ct">563</span></div>
+      <div class="tab" data-tab="review" onclick="switchTab('review')">Review <span class="tab-ct">563</span></div>
       <div class="tab" data-tab="drafts" onclick="switchTab('drafts')">Drafts <span class="tab-ct">15</span></div>
       <div class="tab" data-tab="linkedin" onclick="switchTab('linkedin')">LinkedIn</div>
       <div class="tab" data-tab="sent" onclick="switchTab('sent')">Sent</div>
-      <div class="tab" data-tab="followup" onclick="switchTab('followup')" class="tab active">Follow-up <span class="tab-ct">14</span></div>
+      <div class="tab" class="on" data-tab="followup" onclick="switchTab('followup')">Follow-up <span class="tab-ct">14</span></div>
       <div class="tab" data-tab="nurture" onclick="switchTab('nurture')">Nurture</div>
       <div class="tab" data-tab="conversations" onclick="switchTab('conversations')">Conversations</div>
       <div class="tab" data-tab="bounced" onclick="switchTab('bounced')">Bounced</div>
@@ -641,28 +641,20 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
   <div class="tab-content">
 
     
-    <!-- ═══ REVIEW ═══ -->
-    <div id="tc-review" class="tc" style="display:none;">
-      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">← Go to campaign-view-v3.html to see the Review tab</div>
-    </div>
+    <!-- ═══ REVIEW (stub) ═══ -->
+    <div id="tc-review" class="tc">      <div style="padding:32px;text-align:center;font-size:13px;color:var(--td);">See campaign-view-v3.html for this tab →</div></div>
 
-    <!-- ═══ DRAFTS ═══ -->
-    <div id="tc-drafts" class="tc" style="display:none;">
-      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">← Go to campaign-view-v3.html to see the Drafts tab</div>
-    </div>
+    <!-- ═══ DRAFTS (stub) ═══ -->
+    <div id="tc-drafts" class="tc">      <div style="padding:32px;text-align:center;font-size:13px;color:var(--td);">See campaign-view-v3.html for this tab →</div></div>
 
-    <!-- ═══ LINKEDIN ═══ -->
-    <div id="tc-linkedin" class="tc" style="display:none;">
-      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">← Go to campaign-view-v3.html to see the LinkedIn tab</div>
-    </div>
+    <!-- ═══ LINKEDIN (stub) ═══ -->
+    <div id="tc-linkedin" class="tc">      <div style="padding:32px;text-align:center;font-size:13px;color:var(--td);">See campaign-view-v3.html for this tab →</div></div>
 
-    <!-- ═══ SENT ═══ -->
-    <div id="tc-sent" class="tc" style="display:none;">
-      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">← Go to campaign-view-v3.html to see the Sent tab</div>
-    </div>
+    <!-- ═══ SENT (stub) ═══ -->
+    <div id="tc-sent" class="tc">      <div style="padding:32px;text-align:center;font-size:13px;color:var(--td);">See campaign-view-v3.html for this tab →</div></div>
 
     <!-- ═══ FOLLOW-UP ═══ -->
-    <div id="tc-followup" class="tc active">
+    <div id="tc-followup" class="tc">
       <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">14 prospects due for follow-up. You can edit or send any one manually. Sequences pause automatically when they reply.</div>
       <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
       <div style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:8px;">Due today</div>
@@ -698,10 +690,8 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
       </div>
     </div>
 
-    <!-- ═══ BOUNCED ═══ -->
-    <div id="tc-bounced" class="tc" style="display:none;">
-      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">← Go to campaign-view-v3.html to see the Bounced tab</div>
-    </div>
+    <!-- ═══ BOUNCED (stub) ═══ -->
+    <div id="tc-bounced" class="tc">      <div style="padding:32px;text-align:center;font-size:13px;color:var(--td);">See campaign-view-v3.html for this tab →</div></div>
 
   <!-- /tab-content -->
 </main>
@@ -712,11 +702,505 @@ textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
      Simple: backdrop + panel, both position:fixed
 ════════════════════════════════════ -->
 <div id="pd-backdrop" onclick="closePD()"></div>
+<div id="pd-panel">
+  <div class="pd-hdr">
+    <div id="pd-av" class="pd-av">HS</div>
+    <div style="flex:1;min-width:0;">
+      <div id="pd-name" class="pd-name">Howard Sullivan</div>
+      <div id="pd-role" class="pd-role">Founder · YouStudio</div>
+    </div>
+    <div class="pd-close" onclick="closePD()">✕</div>
+  </div>
+  <div class="pd-body">
+    <div class="pd-sec-label" style="margin-top:0;">Contact details</div>
+    <div class="pd-grid">
+      <div class="pd-field"><div class="pd-fl">First name</div><input id="pd-first" class="pd-input" value="Howard"></div>
+      <div class="pd-field"><div class="pd-fl">Last name</div><input id="pd-last" class="pd-input" value="Sullivan"></div>
+      <div class="pd-field span2">
+        <div class="pd-fl">
+          <span>Email</span>
+          <span id="pd-gen-badge" class="gen-badge empty" onclick="genEmail()">No email found — Generate</span>
+        </div>
+        <input id="pd-email" class="pd-input" placeholder="Not yet verified">
+      </div>
+    </div>
+    <div class="pd-sec-label">Organisation</div>
+    <div class="pd-grid">
+      <div class="pd-field span2"><div class="pd-fl">Company</div><input id="pd-company" class="pd-input" value="YouStudio"></div>
+      <div class="pd-field"><div class="pd-fl">Industry</div><div id="pd-industry" class="pd-fv">Design Services</div></div>
+      <div class="pd-field"><div class="pd-fl">Org size</div><div id="pd-size" class="pd-fv">51–200</div></div>
+      <div class="pd-field span2"><div class="pd-fl">LinkedIn</div><div class="pd-fv"><a href="#" id="pd-li" onclick="return false">View profile →</a></div></div>
+    </div>
+    <div class="pd-sec-label">About</div>
+    <div id="pd-about" class="pd-about">A creative leader spearheading next generation retail.</div>
+    <div class="pd-sec-label">Notes</div>
+    <textarea class="pd-input" rows="3" placeholder="Add any context about this prospect…" style="resize:none;line-height:1.6;width:100%;"></textarea>
+  </div>
+  <div class="pd-ftr">
+    <span class="pd-skip" onclick="skipFromPD()">✕ Skip prospect</span>
+    <div style="display:flex;gap:8px;">
+      <button class="btn bs bsm" onclick="toast('✓','Changes saved','tc');closePD()">Save</button>
+      <button class="btn bp bsm" onclick="approveFromPD()">✓ Approve →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     SEND DRAWER
+════════════════════════════════════ -->
+<div id="sd-backdrop" onclick="closeSD()"></div>
+<div id="sd-panel">
+  <div class="sd-hdr">
+    <div style="flex:1;min-width:0;">
+      <div id="sd-title" class="sd-title">James Mitchell</div>
+      <div id="sd-sub" class="sd-sub">james@northagency.com</div>
+    </div>
+    <div class="sd-close" onclick="closeSD()">✕</div>
+  </div>
+  <div class="sd-body">
+    <div id="sd-confirm-msg" class="sd-confirm">✓ Ready to send. This message will be sent from your connected Gmail account.</div>
+    <div class="sd-fld"><label class="sd-label">Subject line</label><input id="sd-subject" class="sd-input" value="Quick thought on your pipeline"></div>
+    <div class="sd-fld"><label class="sd-label">Body copy</label>
+      <textarea id="sd-body" class="sd-input">Hi {{first_name}},
+
+Noticed you're scaling the team — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes?
+
+Best,
+Coris</textarea>
+    </div>
+    <div class="sd-fld">
+      <label class="sd-label">Attachment</label>
+      <div style="background:var(--s);border:1px solid var(--b2);border-radius:8px;padding:14px 16px;display:flex;align-items:center;gap:10px;cursor:pointer;" onclick="toast('📎','Attachment added','tc')">
+        <span style="font-size:18px;">📎</span>
+        <div><div style="font-size:13px;font-weight:500;color:var(--t);">Add an attachment</div><div style="font-size:11px;color:var(--td);">PDF, Word, or image — optional</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="sd-ftr">
+    <button class="btn bs bsm" onclick="closeSD()">Cancel</button>
+    <button id="sd-send-btn" class="btn bp bsm" onclick="handleSend()">Send email →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     LINKEDIN CONFIG MODAL
+════════════════════════════════════ -->
+<div id="li-backdrop" onclick="if(event.target===this)closeLI()">
+  <div id="li-modal">
+    <div class="li-hdr">
+      <div class="li-title">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="14" height="14" rx="2" fill="#0a66c2"/><path d="M4.5 6.5v5M4.5 4v.01M7 11.5V8.5c0-1.1.9-2 2-2s2 .9 2 2v3" stroke="white" stroke-width="1.3" stroke-linecap="round"/></svg>
+        LinkedIn message template
+      </div>
+      <span class="li-close" onclick="closeLI()">✕</span>
+    </div>
+    <div class="li-body">
+      <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">When you click the LinkedIn icon on a prospect row, this message is copied to your clipboard with <code style="background:var(--s2);padding:1px 5px;border-radius:3px;font-size:12px;color:var(--cyan);">{{first_name}}</code> merged in automatically.</p>
+      <div style="font-size:10px;font-family:var(--of);font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:6px;">Your message</div>
+      <textarea id="li-input" class="sd-input" style="min-height:130px;"></textarea>
+      <p style="font-size:11px;color:var(--td);margin-top:8px;">Use <code style="background:var(--s2);padding:1px 4px;border-radius:3px;color:var(--cyan);">{{first_name}}</code> and <code style="background:var(--s2);padding:1px 4px;border-radius:3px;color:var(--cyan);">{{company}}</code> as merge tags.</p>
+    </div>
+    <div class="li-ftr">
+      <button class="btn bs bsm" onclick="closeLI()">Cancel</button>
+      <button class="btn bp bsm" onclick="saveLI()">Save message</button>
+    </div>
+  </div>
+</div>
+
+  <div id="fu-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="if(event.target===this)closeFUModal()">
+  <div style="background:#0d0914;border:1px solid rgba(255,255,255,0.13);border-radius:20px;padding:28px 32px;width:520px;max-width:90vw;position:relative;">
+    <button onclick="closeFUModal()" style="position:absolute;top:16px;right:18px;background:none;border:none;color:var(--td);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    <div style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:4px;">Follow-up</div>
+    <div id="fu-name" style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.01em;margin-bottom:4px;"></div>
+    <div id="fu-email" style="font-size:12px;color:var(--td);margin-bottom:20px;"></div>
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Subject</div>
+    <input id="fu-subject" type="text" value="Re: Quick thought on your pipeline" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:14px;outline:none;">
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Message</div>
+    <textarea style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;height:140px;resize:vertical;outline:none;line-height:1.6;">Hi James,
+
+Just following up on my previous message. Would love to find 15 minutes to chat — happy to work around your schedule.
+
+Best,
+Coris</textarea>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;align-items:center;">
+      <button onclick="closeFUModal()" style="padding:9px 20px;background:transparent;border:1px solid rgba(255,255,255,0.13);border-radius:100px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="closeFUModal();showToast('✓','Follow-up sent to '+document.getElementById('fu-name').textContent)" style="padding:9px 24px;background:linear-gradient(135deg,#ff1493,#00d4ff);border:none;border-radius:100px;color:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 0 20px rgba(255,20,147,0.25);">Send follow-up →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── RESTORE TAB FROM SUMMARY NAVIGATION ──────────────────────────────
+// When navigated from summary-v2.html work queue, jump to correct tab
+document.addEventListener('DOMContentLoaded', () => {
+  const goto = sessionStorage.getItem('pulse-goto-tab');
+  if (goto) {
+    sessionStorage.removeItem('pulse-goto-tab');
+    if (typeof switchTab === 'function') {
+      switchTab(goto);
+      // Scroll the tab bar into view
+      const tab = document.querySelector('[data-tab="' + goto + '"]');
+      if (tab) tab.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+});
+
+function openFollowUpComposer(name, email) {
+  const modal = document.getElementById('fu-modal');
+  document.getElementById('fu-name').textContent = name;
+  document.getElementById('fu-email').textContent = email;
+  modal.style.display = 'flex';
+}
+function closeFUModal() {
+  document.getElementById('fu-modal').style.display = 'none';
+}
+function showToast(icon, msg) {
+  // reuse existing toast if available, otherwise simple alert
+  if (typeof toast === 'function') {
+    toast(icon, msg, 'tc');
+  }
+}
+</script>
+
+</body>
+</html>
+
+  <!-- TOAST ZONE -->
+<div id="tz"></div>
+
+<!-- DEV CAMPAIGN SWITCHER -->
+<div class="pbar">
+  <span>Campaign:</span>
+  <button style="color:var(--pink)" onclick="setCampaign('Agency founders — Q1',47,'3-step sequence')">Agency founders Q1</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:var(--cyan)" onclick="setCampaign('Fractional CFO — Q1',39,'2-step sequence')">Fractional CFO Q1</button>
+</div>
+
+<!-- SEQUENCE MODAL -->
+<!-- SEQUENCE DRAWER OVERLAY -->
+<div id="seq-overlay" onclick="closeSeq()"></div>
+
+<!-- SEQUENCE DRAWER -->
+<div id="seq-drawer">
+  <div class="seq-hdr">
+    <div class="seq-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="8" y2="11"/></svg>
+      Edit sequence
+      <span class="seq-title-sub">Agency founders Q1</span>
+    </div>
+    <span class="seq-close" onclick="closeSeq()">✕</span>
+  </div>
+
+  <div class="seq-body">
+
+    <!-- STEP 1 -->
+    <div class="seq-step" id="step1row">
+      <div class="seq-step-left">
+        <div class="seq-step-num s1" id="num1">1</div>
+        <div class="seq-connector"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc1">
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc1')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc1-type-badge">Value drop</span>
+              <span class="seq-badge tone" id="sc1-tone-badge">Calm &amp; Commercial</span>
+              <span class="seq-delay-txt">Initial email</span>
+            </div>
+            <span class="seq-card-chevron">▼</span>
+          </div>
+          <div class="seq-editor">
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc1" data-group="type">
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc1','type')">Value drop</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Follow-up</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Post-meeting</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc1" data-group="tone">
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc1','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','tone')">Light Touch</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Subject line</div>
+              <input class="seq-input" type="text" value="Quick thought on {{company}}'s pipeline">
+            </div>
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="5">Hi {{first_name}},
+
+Noticed you're scaling the team at {{company}} — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes?
+
+Best,</textarea>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/></svg>
+                <div><div class="seq-attach-lbl">Add attachment</div><div class="seq-attach-sub">PDF, Word, or image — optional</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="seq-step" id="step2row">
+      <div class="seq-step-left">
+        <div class="seq-step-num sn" id="num2">2</div>
+        <div class="seq-connector"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc2">
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc2')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc2-type-badge">Follow-up</span>
+              <span class="seq-badge tone" id="sc2-tone-badge">Light Touch</span>
+              <span class="seq-delay-txt">3 days after step 1</span>
+            </div>
+            <span class="seq-card-del" title="Remove step" onclick="event.stopPropagation();showDelConfirm('dc2')">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/></svg>
+            </span>
+            <span class="seq-card-chevron">▼</span>
+          </div>
+          <div class="seq-del-confirm" id="dc2">
+            <span class="seq-del-msg">Remove this follow-up?</span>
+            <div class="seq-del-btns">
+              <button class="btn bs bsm" onclick="hideDelConfirm('dc2')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+              <button class="btn bsm" onclick="removeStep('step2row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+            </div>
+          </div>
+          <div class="seq-editor">
+            <div>
+              <div class="seq-field-lbl">Delay after previous step</div>
+              <div class="seq-delay-row">
+                <input class="seq-delay-input" type="number" value="3" min="1" max="365">
+                <span class="seq-delay-unit">days</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc2" data-group="type">
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Value drop</span>
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc2','type')">Follow-up</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Post-meeting</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc2" data-group="tone">
+                <span class="seq-chip" onclick="pickChip(this,'sc2','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc2','tone')">Light Touch</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-toggle-row">
+                <div class="seq-toggle-info">
+                  <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
+                  <div class="seq-toggle-sub">Keeps context — recommended</div>
+                </div>
+                <div class="seq-tog on" id="tog2" onclick="seqToggleThread(this,'sr2')"></div>
+              </div>
+              <div class="seq-subject-reveal" id="sr2">
+                <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="4">Hi {{first_name}},
+
+Just wanted to make sure this didn't get buried. Happy to keep it really brief if easier.
+
+Coris</textarea>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/></svg>
+                <div><div class="seq-attach-lbl">Add attachment</div><div class="seq-attach-sub">Optional — different from Step 1</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="seq-step" id="step3row">
+      <div class="seq-step-left">
+        <div class="seq-step-num sn" id="num3">3</div>
+        <div class="seq-connector" id="conn3" style="display:none;"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc3">
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc3')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc3-type-badge">Check-in</span>
+              <span class="seq-badge tone" id="sc3-tone-badge">Direct &amp; Confident</span>
+              <span class="seq-delay-txt">5 days after step 2</span>
+            </div>
+            <span class="seq-card-del" title="Remove step" onclick="event.stopPropagation();showDelConfirm('dc3')">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/></svg>
+            </span>
+            <span class="seq-card-chevron">▼</span>
+          </div>
+          <div class="seq-del-confirm" id="dc3">
+            <span class="seq-del-msg">Remove this follow-up?</span>
+            <div class="seq-del-btns">
+              <button class="btn bs bsm" onclick="hideDelConfirm('dc3')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+              <button class="btn bsm" onclick="removeStep('step3row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+            </div>
+          </div>
+          <div class="seq-editor">
+            <div>
+              <div class="seq-field-lbl">Delay after previous step</div>
+              <div class="seq-delay-row">
+                <input class="seq-delay-input" type="number" value="5" min="1" max="365">
+                <span class="seq-delay-unit">days</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc3" data-group="type">
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Value drop</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Follow-up</span>
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc3','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Post-meeting</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc3" data-group="tone">
+                <span class="seq-chip" onclick="pickChip(this,'sc3','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc3','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','tone')">Light Touch</span>
+              </div>
+            </div>
+            <div>
+              <div class="seq-toggle-row">
+                <div class="seq-toggle-info">
+                  <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
+                  <div class="seq-toggle-sub">Keeps context — recommended</div>
+                </div>
+                <div class="seq-tog on" id="tog3" onclick="seqToggleThread(this,'sr3')"></div>
+              </div>
+              <div class="seq-subject-reveal" id="sr3">
+                <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
+              </div>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="4">Hi {{first_name}},
+
+Last nudge from me — if the timing's off I'll leave you to it. If new business pipeline is on your agenda for the next quarter, happy to have a very quick call.
+
+Coris</textarea>
+            </div>
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/></svg>
+                <div><div class="seq-attach-lbl">Add attachment</div><div class="seq-attach-sub">Optional — different from previous step</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ADD FOLLOW-UP -->
+    <div class="seq-add-row" id="seq-add-row">
+      <div class="seq-add-line"></div>
+      <div style="flex:1;">
+        <button class="seq-add-btn" onclick="addFollowUp()">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/></svg>
+          Add follow-up
+        </button>
+      </div>
+    </div>
+
+  </div><!-- end seq-body -->
+
+  <div class="seq-ftr">
+    <button class="btn bs bsm" onclick="closeSeq()">Cancel</button>
+    <button class="btn bp bsm" onclick="saveSeq()">Save changes</button>
+  </div>
+</div>
+
+<script src="campaign-view-v3.js"></script>
+
+<!-- ═══ FOLLOW-UP COMPOSER MODAL ═══ -->
+<div id="fu-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9999;display:none;align-items:center;justify-content:center;backdrop-filter:blur(4px);" onclick="if(event.target===this)closeFUModal()">
+  <div style="background:#0d0914;border:1px solid rgba(255,255,255,0.13);border-radius:20px;padding:28px 32px;width:520px;max-width:90vw;position:relative;">
+    <button onclick="closeFUModal()" style="position:absolute;top:16px;right:18px;background:none;border:none;color:var(--td);font-size:18px;cursor:pointer;line-height:1;">✕</button>
+    <div style="font-family:'Outfit',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:4px;">Follow-up</div>
+    <div id="fu-name" style="font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;letter-spacing:-0.01em;margin-bottom:4px;"></div>
+    <div id="fu-email" style="font-size:12px;color:var(--td);margin-bottom:20px;"></div>
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Subject</div>
+    <input id="fu-subject" type="text" value="Re: Quick thought on your pipeline" style="width:100%;padding:10px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;margin-bottom:14px;outline:none;">
+    <div style="font-size:12px;color:var(--td);margin-bottom:6px;font-family:'Outfit',sans-serif;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;">Message</div>
+    <textarea style="width:100%;padding:12px 14px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.13);border-radius:10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;height:140px;resize:vertical;outline:none;line-height:1.6;">Hi James,
+
+Just following up on my previous message. Would love to find 15 minutes to chat — happy to work around your schedule.
+
+Best,
+Coris</textarea>
+    <div style="display:flex;gap:10px;margin-top:16px;justify-content:flex-end;align-items:center;">
+      <button onclick="closeFUModal()" style="padding:9px 20px;background:transparent;border:1px solid rgba(255,255,255,0.13);border-radius:100px;color:var(--tm);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">Cancel</button>
+      <button onclick="closeFUModal();showToast('✓','Follow-up sent to '+document.getElementById('fu-name').textContent)" style="padding:9px 24px;background:linear-gradient(135deg,#ff1493,#00d4ff);border:none;border-radius:100px;color:white;font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;cursor:pointer;box-shadow:0 0 20px rgba(255,20,147,0.25);">Send follow-up →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+
+// ── RESTORE TAB FROM SUMMARY NAVIGATION ──────────────────────────────
+// When navigated from summary-v2.html work queue, jump to correct tab
+document.addEventListener('DOMContentLoaded', () => {
+  const goto = sessionStorage.getItem('pulse-goto-tab');
+  if (goto) {
+    sessionStorage.removeItem('pulse-goto-tab');
+    if (typeof switchTab === 'function') {
+      switchTab(goto);
+      // Scroll the tab bar into view
+      const tab = document.querySelector('[data-tab="' + goto + '"]');
+      if (tab) tab.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+  }
+});
+
+function openFollowUpComposer(name, email) {
+  const modal = document.getElementById('fu-modal');
+  document.getElementById('fu-name').textContent = name;
+  document.getElementById('fu-email').textContent = email;
+  modal.style.display = 'flex';
+}
+function closeFUModal() {
+  document.getElementById('fu-modal').style.display = 'none';
+}
+function showToast(icon, msg) {
+  // reuse existing toast if available, otherwise simple alert
+  if (typeof toast === 'function') {
+    toast(icon, msg, 'tc');
+  }
+}
+</script>
 
 
-<div class="toast-zone" id="tz"></div>
-
-
-
+  <script src="campaign-view-v3.js"></script>
 </body>
 </html>
