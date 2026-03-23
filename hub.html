@@ -185,7 +185,7 @@ const DH = B + 'dashboard-home.html';
 const JOURNEYS = [
   // ── ACTIVATION & ONBOARDING ─────────────────────────────────────────────
   { group: 'Activation & onboarding' },
-  { name: 'Sign-up → Gmail OAuth',                      status: 'review', url: B + 'signup-oauth.html',      note: 'Gmail connected + OAuth error + Microsoft variant states added' },
+  { name: 'Sign-up → Gmail OAuth',                      status: 'review', url: B + 'signup-oauth.html',      note: '7 states: Gmail (sign up, connecting, connected, error) + Microsoft (connect, connecting, connected)' },
   { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: 'Updated: Pulse. branding, trial badge, column mapping, free tier locking, editable campaign name, S5 links. Awaiting sign-off.' },
   { name: 'Empty state — first login',                  status: 'built',  url: DH },
   { name: 'Referee onboarding — referral gifted card',  status: 'done',   url: B + 'referral-system.html' },
@@ -274,15 +274,15 @@ const JOURNEYS = [
 
   // ── SETTINGS & ACCOUNT ───────────────────────────────────────────────────
   { group: 'Settings & account' },
-  { name: 'Account settings (v2)',                      status: 'review', url: B + 'settings-v2.html',       note: 'All 7 tabs: Profile, Connected accounts, Personality packs, Notifications, Appearance, Billing (3 states), Referrals' },
-  { name: 'Personality packs — global default',         status: 'review', url: B + 'settings-v2.html',       note: 'Now in settings-v2.html as a tab' },
-  { name: 'Appearance — brand personalisation',         status: 'review', url: B + 'settings-v2.html',       note: 'Now in settings-v2.html as a tab — presets + colour pickers' },
-  { name: 'Billing & plan management',                  status: 'review', url: B + 'settings-v2.html',       note: 'Pro / Pro Light trial / Free states — switcher in wireframe' },
+  { name: 'Account settings (v2)',                      status: 'done',   url: B + 'settings-v2.html',       note: 'Signed off March 2026' },
+  { name: 'Personality packs — global default',         status: 'done',   url: B + 'settings-v2.html' },
+  { name: 'Appearance — brand personalisation',         status: 'done',   url: B + 'settings-v2.html' },
+  { name: 'Billing & plan management',                  status: 'done',   url: B + 'settings-v2.html' },
   { name: 'Referrals panel',                            status: 'done',   url: B + 'referral-system.html' },
 
   // ── ERROR & EDGE CASES ───────────────────────────────────────────────────
   { group: 'Error & edge cases' },
-  { name: 'Gmail disconnected / reconnect',             status: 'review', url: B + 'error-edge-cases.html',  note: '4 new states added: rate limit, offline, session expired, payment failed' },
+  { name: 'Gmail disconnected / reconnect',             status: 'done',   url: B + 'error-edge-cases.html',  note: 'Signed off March 2026. 10 states total.' },
   { name: 'Email bounce — retry flow',                  status: 'built',  url: B + 'error-edge-cases.html' },
   { name: 'Empty state — no prospects yet',             status: 'built',  url: B + 'error-edge-cases.html' },
   { name: 'Sequence paused — reply detected',           status: 'built',  url: B + 'error-edge-cases.html' },
