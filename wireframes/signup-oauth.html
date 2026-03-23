@@ -21,6 +21,9 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .sc{display:none;}.sc.on{display:block;}
 /* card */
 .card{background:rgba(255,255,255,0.035);border:1px solid var(--b);border-radius:18px;padding:48px 40px;text-align:center;}
+.card-icon{width:56px;height:56px;border-radius:50%;border:1px solid;
+  display:flex;align-items:center;justify-content:center;
+  margin:0 auto 20px;flex-shrink:0;}
 .logo{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-1.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:8px;}
 .tagline{font-size:14px;color:var(--tm);line-height:1.7;margin-bottom:36px;max-width:280px;margin-left:auto;margin-right:auto;}
 .gmail-btn{width:100%;padding:15px 20px;background:white;color:#1a1a1a;border:none;border-radius:10px;font-family:var(--of);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;transition:all 0.15s;box-shadow:0 2px 12px rgba(0,0,0,0.3);}
@@ -116,7 +119,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     </div>
     <button class="btn-primary" onclick="show('s1')">Try again →</button>
     <div class="hint">Need help? <a href="#" style="color:var(--cyan);text-decoration:none;">Contact support</a></div>
-  </div></div></div>
+  </div>
+</div>
 
 <!-- S5: MICROSOFT OAUTH (COMING SOON) -->
 <div class="sc" id="s5">
@@ -136,7 +140,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     <div style="margin-top:16px;padding:10px 14px;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);border-radius:8px;font-size:12px;color:var(--amber);">
       ⚠ Microsoft / Outlook support is coming in Phase 2.11. This screen is a forward-looking wireframe.
     </div>
-  </div></div></div>
+  </div>
+</div>
 
 <!-- S6: MICROSOFT CONNECTING -->
 <div class="sc" id="s6">
@@ -147,7 +152,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     <div class="card-title">Connecting to Microsoft…</div>
     <div class="card-sub">Requesting the permissions needed to send emails on your behalf.</div>
     <div style="margin-top:16px;" id="ms-timer"></div>
-  </div></div></div>
+  </div>
+</div>
 
 <!-- S7: MICROSOFT CONNECTED -->
 <div class="sc" id="s7">
