@@ -989,25 +989,64 @@ function toast(icon, text, cls) {
 
   window.settingsGenerate = function() {
     const btn = document.getElementById('settings-gen-btn');
-    btn.textContent = '◌ Thinking…';
+    btn.textContent = '◌ Generating…';
     btn.disabled = true;
     setTimeout(() => {
-      const s = SUGGESTIONS[sugIdx % SUGGESTIONS.length];
-      sugIdx++;
-      pendingA = s.a;
-      pendingB = s.b;
+
+      // Generate a genuinely random harmonious colour pair using HSL.
+      // Rules:
+      //   • Both colours are vivid (saturation 70–100%, lightness 45–65%)
+      //   • Hue separation is 120–200° so they always contrast well
+      //   • Avoid the 30–60° band (yellow/orange) which muddies on dark bg
+      function randomVividHex() {
+        // Keep trying until we land outside the muddy yellow band
+        let h, s, l;
+        do {
+          h = Math.floor(Math.random() * 360);
+        } while (h > 30 && h < 60);
+        s = 70 + Math.floor(Math.random() * 30);   // 70–100%
+        l = 48 + Math.floor(Math.random() * 17);   // 48–65%
+        return hslToHex(h, s, l);
+      }
+
+      function hslToHex(h, s, l) {
+        s /= 100; l /= 100;
+        const a = s * Math.min(l, 1 - l);
+        const f = n => {
+          const k = (n + h / 30) % 12;
+          const col = l - a * Math.max(Math.min(k - 3, 9 - k, 1), -1);
+          return Math.round(255 * col).toString(16).padStart(2, '0');
+        };
+        return '#' + f(0) + f(8) + f(4);
+      }
+
+      // Pick colour A, then pick colour B with a hue 120–200° away
+      const hueA = Math.floor(Math.random() * 360);
+      const separation = 120 + Math.floor(Math.random() * 81); // 120–200°
+      const hueB = (hueA + separation) % 360;
+      const satA = 75 + Math.floor(Math.random() * 25);
+      const satB = 75 + Math.floor(Math.random() * 25);
+      const litA = 50 + Math.floor(Math.random() * 15);
+      const litB = 50 + Math.floor(Math.random() * 15);
+
+      pendingA = hslToHex(hueA, satA, litA);
+      pendingB = hslToHex(hueB, satB, litB);
+
       const da = document.getElementById('sug-dot-a');
       const db = document.getElementById('sug-dot-b');
-      if (da) da.style.background = s.a;
-      if (db) db.style.background = s.b;
+      if (da) da.style.background = pendingA;
+      if (db) db.style.background = pendingB;
+
+      // Show the hex values as the name so it's informative
       const sn = document.getElementById('sug-name');
       const sd = document.getElementById('sug-desc');
-      if (sn) sn.textContent = s.name;
-      if (sd) sd.textContent = s.desc;
+      if (sn) sn.textContent = pendingA + '  →  ' + pendingB;
+      if (sd) sd.textContent = '';
+
       document.getElementById('settings-suggestion').classList.add('show');
       btn.textContent = '✦ Generate colour pairing';
       btn.disabled = false;
-    }, 700);
+    }, 400);
   };
 
   window.settingsApplySuggestion = function() {
