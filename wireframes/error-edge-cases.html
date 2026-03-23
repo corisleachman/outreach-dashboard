@@ -298,53 +298,6 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   </div>
 </div>
 
-</main>
-</div>
-
-<div class="pbar">
-  <span>State:</span>
-  <button style="color:#ff4c4c" onclick="show('s-gmail')">Gmail disconnect</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#ff9d42" onclick="show('s-bounce')">Bounce retry</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#ff4c4c" onclick="show('s-fail')">Send failure</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#00d4ff" onclick="show('s-paused')">Seq paused</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#8a8a9a" onclick="show('s-empty')">Empty state</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#64dc78" onclick="show('s-weekly')">Weekly summary</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#ff9d42" onclick="show('s-ratelimit')">Rate limit</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#8a8a9a" onclick="show('s-offline')">Offline</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#8a8a9a" onclick="show('s-session')">Session expired</button>
-  <span style="opacity:.3">·</span>
-  <button style="color:#ff4c4c" onclick="show('s-payment')">Payment failed</button>
-</div>
-<div class="tz" id="tz"></div>
-<script>
-function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
-function toast(icon,text,cls){
-  const z=document.getElementById('tz'),e=document.createElement('div');
-  e.className='tst '+cls;e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
-  z.appendChild(e);setTimeout(()=>e.remove(),3200);
-}
-// Draw chart bars
-(function(){
-  const vals=[3,2,4,2,3,0,0];
-  const max=Math.max(...vals)||1;
-  const c=document.getElementById('chart');
-  vals.forEach(v=>{
-    const b=document.createElement('div');
-    b.className='chart-bar';
-    b.style.height=Math.max(4,(v/max)*100)+'%';
-    if(v===0){b.style.opacity='0.15';b.style.background='var(--s2)';}
-    c.appendChild(b);
-  });
-})();
-</script>
 
 <!-- ══ RATE LIMIT ══ -->
 <div id="s-ratelimit" class="sc">
@@ -458,4 +411,53 @@ function toast(icon,text,cls){
   </div>
 </div>
 
+
+
+</main>
+</div>
+
+<div class="pbar">
+  <span>State:</span>
+  <button style="color:#ff4c4c" onclick="show('s-gmail')">Gmail disconnect</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s-bounce')">Bounce retry</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff4c4c" onclick="show('s-fail')">Send failure</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="show('s-paused')">Seq paused</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="show('s-empty')">Empty state</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s-weekly')">Weekly summary</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s-ratelimit')">Rate limit</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="show('s-offline')">Offline</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8a8a9a" onclick="show('s-session')">Session expired</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff4c4c" onclick="show('s-payment')">Payment failed</button>
+</div>
+<div class="tz" id="tz"></div>
+<script>
+function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function toast(icon,text,cls){
+  const z=document.getElementById('tz'),e=document.createElement('div');
+  e.className='tst '+cls;e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
+  z.appendChild(e);setTimeout(()=>e.remove(),3200);
+}
+// Draw chart bars
+(function(){
+  const vals=[3,2,4,2,3,0,0];
+  const max=Math.max(...vals)||1;
+  const c=document.getElementById('chart');
+  vals.forEach(v=>{
+    const b=document.createElement('div');
+    b.className='chart-bar';
+    b.style.height=Math.max(4,(v/max)*100)+'%';
+    if(v===0){b.style.opacity='0.15';b.style.background='var(--s2)';}
+    c.appendChild(b);
+  });
+})();
+</script>
 </body></html>
