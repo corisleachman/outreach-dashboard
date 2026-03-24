@@ -192,10 +192,10 @@ const JOURNEYS = [
 
   // ── CAMPAIGN MANAGEMENT ──────────────────────────────────────────────────
   { group: 'Campaign management' },
-  { name: 'Campaigns list / home dashboard',            status: 'review', url: DH, note: 'Styled rename + delete (type DELETE) modals added. Pulse. branding updated.' },
+  { name: 'Campaigns list / home dashboard',            status: 'review', url: DH, note: 'Settings → settings-v2, empty state lifted 50px, rename/delete modals. Awaiting sign-off.' },
   { name: 'Create new campaign',                        status: 'built',  url: DH },
   { name: 'Campaign view (persistent shell)',           status: 'done',   url: B + 'campaign-view-v3.html' },
-  { name: 'Campaign settings tab',                      status: 'review', url: B + 'campaign-settings.html', note: '6 views: general, sequence, sending, archive/delete, paused, archived states.' },
+  { name: 'Campaign settings tab',                      status: 'review', url: B + 'campaign-settings.html', note: '6 views. Tracking removed (deferred to backlog). Awaiting sign-off.' },
 
   // ── PROSPECT IMPORT & REVIEW ─────────────────────────────────────────────
   { group: 'Prospect import & review' },
@@ -221,24 +221,24 @@ const JOURNEYS = [
   // ── TRACKING & FOLLOW-UP ─────────────────────────────────────────────────
   { group: 'Tracking & follow-up' },
   { name: 'Sent tab — 14 status options',               status: 'built',  url: B + 'campaign-view-v3.html' },
-  { name: 'Follow-up tab (Free: visible, locked)',      status: 'review', url: B + 'followup-nurture-conversations.html', note: 'Skip removed from hint. Locked Free state shown in upgrade-moments.html T3. Click-to-edit added to cv3.' },
-  { name: 'Follow-up composer',                         status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Nurture tab',                                status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Conversations tab',                          status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Follow-up tab (Free: visible, locked)',      status: 'done',   url: B + 'followup-nurture-conversations.html', note: 'Rebuilt to match cv3 exactly. Signed off March 2026.' },
+  { name: 'Follow-up composer',                         status: 'done',   url: B + 'followup-nurture-conversations.html', note: 'Signed off as part of followup-nurture-conversations rebuild March 2026' },
+  { name: 'Nurture tab',                                status: 'done',   url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversations tab',                          status: 'done',   url: B + 'followup-nurture-conversations.html' },
   { name: 'LinkedIn tab',                               status: 'built',  url: B + 'campaign-view-v3.html' },
 
   // ── REPLIES & CONVERSATIONS ──────────────────────────────────────────────
   { group: 'Replies & conversations' },
-  { name: 'Reply received → Conversations',             status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Conversation thread + notes',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Meeting booked → Won',                       status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'Closed / not a fit → Nurture',               status: 'built',  url: B + 'followup-nurture-conversations.html' },
-  { name: 'DO NOT CONTACT confirmation',                status: 'built',  url: B + 'followup-nurture-conversations.html' },
+  { name: 'Reply received → Conversations',             status: 'done',   url: B + 'followup-nurture-conversations.html' },
+  { name: 'Conversation thread + notes',                status: 'done',   url: B + 'followup-nurture-conversations.html' },
+  { name: 'Meeting booked → Won',                       status: 'done',   url: B + 'followup-nurture-conversations.html' },
+  { name: 'Closed / not a fit → Nurture',               status: 'done',   url: B + 'followup-nurture-conversations.html' },
+  { name: 'DO NOT CONTACT confirmation',                status: 'done',   url: B + 'followup-nurture-conversations.html' },
 
   // ── SUMMARY / TODAY VIEW ─────────────────────────────────────────────────
   { group: 'Summary & Today view' },
-  { name: 'Today — work queue (default landing page)',  status: 'review', url: B + 'summary-v2.html',          note: 'New file — v1 summary-and-workflow.html preserved for reference' },
-  { name: 'Today — all done state',                     status: 'review', url: B + 'summary-v2.html' },
+  { name: 'Today — work queue (default landing page)',  status: 'review', url: B + 'summary-v2.html',          note: 'Queue rows wired to campaign tabs, settings icon → settings-v2, sidebar order confirmed. Awaiting sign-off.' },
+  { name: 'Today — all done state',                     status: 'done',   url: B + 'summary-v2.html',  note: 'Removed from wireframe switcher — not a navigable state, appears automatically when queue empties.' },
   { name: 'This week — stats + activity feed',          status: 'review', url: B + 'summary-v2.html' },
 
   // ── EMOTIONAL DESIGN ─────────────────────────────────────────────────────
@@ -249,14 +249,14 @@ const JOURNEYS = [
 
   // ── PRICING & UPGRADE ────────────────────────────────────────────────────
   { group: 'Pricing & upgrade moments' },
-  { name: 'Prospect limit wall (Free — 100 prospects)', status: 'review', url: B + 'pricing-upgrade.html',     note: 'Copy updated to match new tier model. Still needs Pro Light (500) soft nudge state.' },
-  { name: 'Desire trigger — inline Pro feature prompt', url: B + 'upgrade-moments.html', status: 'review',   note: 'Upgrade moment package needed — part of stickiness/conversion work' },
-  { name: 'Ambient prompt — Follow-up tab locked', url: B + 'upgrade-moments.html',      status: 'none',   note: 'Upgrade moment package needed' },
-  { name: 'Trial expiry warning banner (day 28)', url: B + 'upgrade-moments.html',        status: 'none',   note: 'Upgrade moment package needed' },
-  { name: 'Trial expiry — see what changed', url: B + 'upgrade-moments.html',             status: 'none',   note: 'Upgrade moment package needed' },
+  { name: 'Prospect limit wall (Free — 100 prospects)', status: 'done',   url: B + 'pricing-upgrade.html',     note: 'All 6 states: Free wall, Pro Light nudge/wall, Plans (animated toggle), Checkout, Success. Signed off.' },
+  { name: 'Desire trigger — inline Pro feature prompt', url: B + 'upgrade-moments.html', status: 'done',   note: 'All T1–T4 upgrade moments signed off March 2026. Desire panels fixed, all CTAs wired.' },
+  { name: 'Ambient prompt — Follow-up tab locked', url: B + 'upgrade-moments.html',      status: 'done',   note: 'T3 in upgrade-moments.html. Signed off.' },
+  { name: 'Trial expiry warning banner (day 28)', url: B + 'upgrade-moments.html',        status: 'done',   note: 'T4 Day 28 warning in upgrade-moments.html. Signed off.' },
+  { name: 'Trial expiry — see what changed', url: B + 'upgrade-moments.html',             status: 'done',   note: 'T4 in upgrade-moments.html. Signed off.' },
   { name: 'Pricing / plan comparison',                  status: 'built',  url: B + 'pricing-upgrade.html' },
   { name: 'Stripe checkout flow',                       status: 'built',  url: B + 'pricing-upgrade.html' },
-  { name: 'Post-upgrade confirmation + referral note',  status: 'review', url: B + 'upgrade-moments.html',     note: 'Shown in upgrade-moments.html T4-6 with referral note. pricing-upgrade.html version outdated.' },
+  { name: 'Post-upgrade confirmation + referral note',  status: 'done',   url: B + 'upgrade-moments.html',     note: 'T4 post-upgrade in upgrade-moments.html + pricing-upgrade.html success screen. Signed off.' },
 
   // ── REFERRAL SYSTEM ──────────────────────────────────────────────────────
   { group: 'Referral system' },
