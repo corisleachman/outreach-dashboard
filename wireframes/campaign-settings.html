@@ -214,7 +214,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
               <div style="width:28px;height:28px;border-radius:6px;background:rgba(255,20,147,0.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;">G</div>
               <div><div class="row-label">coris@example.com</div><div class="row-sub">Gmail · Connected</div></div>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="toast('→','Change sending account','t-cyan')">Change</button>
+            <button class="btn btn-ghost btn-sm" onclick="openChangeAccountModal()">Change</button>
           </div>
         </div>
 
@@ -596,5 +596,52 @@ function toast(icon, text, cls) {
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
 }
 </script>
+
+<!-- ══ CHANGE CONNECTED ACCOUNT MODAL ══ -->
+<div class="modal-overlay" id="change-account-modal" onclick="if(event.target===this)closeChangeAccountModal()">
+  <div class="modal-box" style="max-width:440px;">
+
+    <div style="width:44px;height:44px;border-radius:50%;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.15);display:flex;align-items:center;justify-content:center;margin-bottom:16px;">
+      <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M3 9a6 6 0 1 0 12 0A6 6 0 0 0 3 9z" stroke="var(--cyan)" stroke-width="1.5"/><path d="M9 6v3l2 2" stroke="var(--cyan)" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </div>
+
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;">Change connected account</div>
+
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">
+      Pulse. connects one account at a time. Changing your connected account affects <strong style="color:var(--t);">all campaigns</strong> — not just this one. Any emails you send will go from the new address.
+    </p>
+
+    <!-- Current account -->
+    <div style="padding:12px 14px;background:var(--s);border:1px solid var(--b);border-radius:10px;margin-bottom:20px;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.07em;text-transform:uppercase;color:var(--td);font-family:var(--of);margin-bottom:8px;">Currently connected</div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="width:28px;height:28px;border-radius:6px;background:rgba(255,20,147,0.1);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--pink);font-family:var(--of);">G</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;">coris@example.com</div>
+          <div style="font-size:11px;color:var(--td);">Gmail · Connected</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeChangeAccountModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeChangeAccountModal();window.location.href='settings-v2.html#connected'">Go to Connected accounts →</button>
+    </div>
+
+    <div style="text-align:center;margin-top:14px;font-size:11px;color:var(--td);line-height:1.5;">
+      After switching, return here and your campaigns will use the new address.
+    </div>
+  </div>
+</div>
+
+<script>
+function openChangeAccountModal() {
+  document.getElementById('change-account-modal').classList.add('open');
+}
+function closeChangeAccountModal() {
+  document.getElementById('change-account-modal').classList.remove('open');
+}
+</script>
+
 </body>
 </html>
