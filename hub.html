@@ -101,6 +101,12 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
     <div class="header-eyebrow">Development hub</div>
     <h1 class="header-title">Pulse<span>.</span></h1>
     <p class="header-sub">Central links for everything in active development. Track wireframes, specs, and feature packages from first build to sign-off.</p>
+    <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+      <div style="padding:8px 16px;border-radius:100px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#64dc78;">✓ 37 signed off</div>
+      <div style="padding:8px 16px;border-radius:100px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#00d4ff;">🔍 6 awaiting sign-off</div>
+      <div style="padding:8px 16px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);">📋 21 built not reviewed</div>
+      <div style="padding:8px 16px;border-radius:100px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#ff9d42;">⚡ Implementation starts April 2026</div>
+    </div>
   </div>
 
   <div class="quick-links">
@@ -186,16 +192,16 @@ const JOURNEYS = [
   // ── ACTIVATION & ONBOARDING ─────────────────────────────────────────────
   { group: 'Activation & onboarding' },
   { name: 'Sign-up → Gmail OAuth',                      status: 'done',   url: B + 'signup-oauth.html',      note: '7 states: Gmail (sign up, connecting, connected, error) + Microsoft (connect, connecting, connected)' },
-  { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: 'Updated: Pulse. branding, trial badge, column mapping, free tier locking, editable campaign name, S5 links. Awaiting sign-off.' },
+  { name: 'Campaign wizard — activation loop',          status: 'review', url: B + 'outreach-wizard-v3.html',  note: '⏳ Needs sign-off. Pulse. branding, trial badge, column mapping, free tier locking, editable name.' },
   { name: 'Empty state — first login',                  status: 'built',  url: DH },
   { name: 'Referee onboarding — referral gifted card',  status: 'done',   url: B + 'referral-system.html' },
 
   // ── CAMPAIGN MANAGEMENT ──────────────────────────────────────────────────
   { group: 'Campaign management' },
-  { name: 'Campaigns list / home dashboard',            status: 'review', url: DH, note: 'Settings → settings-v2, empty state lifted 50px, rename/delete modals. Awaiting sign-off.' },
+  { name: 'Campaigns list / home dashboard',            status: 'review', url: DH, note: '⏳ Needs sign-off. Settings → settings-v2, empty state lifted, rename/delete modals.' },
   { name: 'Create new campaign',                        status: 'built',  url: DH },
   { name: 'Campaign view (persistent shell)',           status: 'done',   url: B + 'campaign-view-v3.html' },
-  { name: 'Campaign settings tab',                      status: 'review', url: B + 'campaign-settings.html', note: '6 views. Tracking removed (deferred to backlog). Awaiting sign-off.' },
+  { name: 'Campaign settings tab',                      status: 'review', url: B + 'campaign-settings.html', note: '⏳ Needs sign-off. 6 views. Tracking removed (deferred to backlog).' },
 
   // ── PROSPECT IMPORT & REVIEW ─────────────────────────────────────────────
   { group: 'Prospect import & review' },
@@ -214,7 +220,7 @@ const JOURNEYS = [
   // ── SENDING ──────────────────────────────────────────────────────────────
   { group: 'Sending' },
   { name: 'Drafts tab — review & send',                 status: 'built',  url: B + 'campaign-view-v3.html' },
-  { name: 'Review & send — sequence check',             status: 'review', url: B + 'campaign-view-v3.html',  note: 'Send drawer in cv3 shows sequence info + reply guard. Awaiting explicit sign-off.' },
+  { name: 'Review & send — sequence check',             status: 'review', url: B + 'campaign-view-v3.html',  note: '⏳ Needs sign-off. Send drawer shows sequence info + reply guard. In cv3.' },
   { name: 'Post-send confirmation + momentum prompt',   status: 'built',  url: B + 'emotional-design.html' },
   { name: 'Send failure state',                         status: 'built',  url: B + 'error-edge-cases.html' },
 
@@ -237,7 +243,7 @@ const JOURNEYS = [
 
   // ── SUMMARY / TODAY VIEW ─────────────────────────────────────────────────
   { group: 'Summary & Today view' },
-  { name: 'Today — work queue (default landing page)',  status: 'review', url: B + 'summary-v2.html',          note: 'Queue rows wired to campaign tabs, settings icon → settings-v2, sidebar order confirmed. Awaiting sign-off.' },
+  { name: 'Today — work queue (default landing page)',  status: 'review', url: B + 'summary-v2.html',          note: '⏳ Needs sign-off. Queue rows wired to campaign tabs, settings → settings-v2.' },
   { name: 'Today — all done state',                     status: 'done',   url: B + 'summary-v2.html',  note: 'Removed from wireframe switcher — not a navigable state, appears automatically when queue empties.' },
   { name: 'This week — stats + activity feed',          status: 'review', url: B + 'summary-v2.html' },
 
