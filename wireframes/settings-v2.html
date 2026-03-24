@@ -392,7 +392,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
             </div>
             <div style="display:flex;align-items:center;gap:10px;">
               <span class="connected-badge">✓ Connected</span>
-              <button class="btn btn-ghost btn-sm" onclick="toast('→','Reconnecting Gmail…','t-cyan')">Reconnect</button>
+              <button class="btn btn-ghost btn-sm" onclick="openReconnectGmailModal()">Reconnect</button>
             </div>
           </div>
           <div style="font-size:11px;color:var(--td);">Connected 12 Mar 2026 · Sends and receives from this account</div>
@@ -1622,6 +1622,31 @@ function finishMSConnect() {
   // Swap Gmail to disconnected, Microsoft to connected
   const gmailCard = document.querySelector('#tab-connected .sect ~ div, #tab-connected [style*="coris@example"]');
   toast('✓', 'Microsoft connected · Gmail disconnected', 't-cyan');
+}
+</script>
+
+
+<!-- ══ RECONNECT GMAIL MODAL ══ -->
+<div class="modal-overlay" id="reconnect-gmail-modal" onclick="if(event.target===this)closeReconnectModal()">
+  <div class="modal-box" style="max-width:420px;">
+    <div style="width:44px;height:44px;border-radius:50%;background:rgba(255,20,147,0.08);border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;font-weight:800;color:var(--pink);font-family:var(--of);">G</div>
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;">Reconnect Gmail</div>
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:20px;">
+      You'll be taken to Google's permissions screen to re-authorise Pulse. This refreshes your connection without changing your account.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeReconnectModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeReconnectModal();toast('✓','Gmail reconnected successfully','t-cyan')">Go to Google →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openReconnectGmailModal() {
+  document.getElementById('reconnect-gmail-modal').classList.add('open');
+}
+function closeReconnectModal() {
+  document.getElementById('reconnect-gmail-modal').classList.remove('open');
 }
 </script>
 
