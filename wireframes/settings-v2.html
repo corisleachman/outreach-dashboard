@@ -408,7 +408,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
                 <div style="font-size:12px;color:var(--tm);">Not connected</div>
               </div>
             </div>
-            <button class="btn btn-ghost btn-sm" onclick="toast('→','Connecting Microsoft…','t-cyan')">Connect</button>
+            <button class="btn btn-ghost btn-sm" onclick="openConnectMicrosoftModal()">Connect</button>
           </div>
         </div>
 
@@ -1530,6 +1530,98 @@ function openCheckoutModal() {
 }
 function closeCheckoutModal() {
   document.getElementById('settings-checkout-modal').classList.remove('open');
+}
+</script>
+
+
+<!-- ══ CONNECT MICROSOFT — STEP 1: CONFIRMATION ══ -->
+<div class="modal-overlay" id="ms-connect-modal" onclick="if(event.target===this)closeMSModal()">
+  <div class="modal-box" style="max-width:460px;">
+
+    <div style="width:44px;height:44px;border-radius:50%;background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.2);display:flex;align-items:center;justify-content:center;margin-bottom:16px;font-size:20px;">M</div>
+
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;">Connect Microsoft Outlook</div>
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">
+      Pulse. connects one account at a time. Connecting Microsoft will <strong style="color:var(--t);">disconnect your Gmail account</strong> (<span style="color:var(--cyan);">coris@example.com</span>). All future emails will send from your Microsoft address.
+    </p>
+
+    <div style="padding:12px 14px;background:rgba(255,157,66,0.06);border:1px solid rgba(255,157,66,0.18);border-radius:10px;margin-bottom:20px;font-size:12px;color:rgba(255,200,120,0.85);line-height:1.6;">
+      ⚠ Any drafts already queued will still show your Gmail address as the sender until re-drafted.
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeMSModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="startMSConnect()">Continue to Microsoft →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CONNECT MICROSOFT — STEP 2: CONNECTING (OAUTH IN PROGRESS) ══ -->
+<div class="modal-overlay" id="ms-connecting-modal">
+  <div class="modal-box" style="max-width:360px;text-align:center;">
+    <div style="width:56px;height:56px;border-radius:50%;background:rgba(0,120,212,0.1);border:1px solid rgba(0,120,212,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <div style="width:28px;height:28px;border:3px solid rgba(0,120,212,0.2);border-top-color:#0078d4;border-radius:50%;animation:spin 1s linear infinite;"></div>
+    </div>
+    <div style="font-family:var(--of);font-size:16px;font-weight:700;margin-bottom:6px;">Connecting to Microsoft…</div>
+    <div style="font-size:13px;color:var(--td);">Requesting permissions to send and receive on your behalf.</div>
+  </div>
+</div>
+
+<!-- ══ CONNECT MICROSOFT — STEP 3: SUCCESS ══ -->
+<div class="modal-overlay" id="ms-success-modal" onclick="if(event.target===this)finishMSConnect()">
+  <div class="modal-box" style="max-width:400px;text-align:center;">
+
+    <div style="width:56px;height:56px;border-radius:50%;background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:6px;">Microsoft connected</div>
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;">
+      Your Outlook account is now active. Gmail has been disconnected. All outreach will send from your Microsoft address going forward.
+    </p>
+
+    <!-- New account summary -->
+    <div style="padding:12px 14px;background:var(--s);border:1px solid var(--b);border-radius:10px;margin-bottom:20px;text-align:left;">
+      <div style="display:flex;flex-direction:column;gap:7px;">
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> coris@company.com</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Send emails via Outlook</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Create drafts</div>
+        <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span style="color:var(--green);">✓</span> Read replies</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;" onclick="finishMSConnect()">Done</button>
+  </div>
+</div>
+
+<style>
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+
+<script>
+// ── CONNECT MICROSOFT FLOW ──
+function openConnectMicrosoftModal() {
+  document.getElementById('ms-connect-modal').classList.add('open');
+}
+function closeMSModal() {
+  document.getElementById('ms-connect-modal').classList.remove('open');
+}
+function startMSConnect() {
+  // Step 1 → Step 2: close confirmation, show connecting spinner
+  document.getElementById('ms-connect-modal').classList.remove('open');
+  document.getElementById('ms-connecting-modal').classList.add('open');
+  // Simulate OAuth round-trip (2.5s) then show success
+  setTimeout(() => {
+    document.getElementById('ms-connecting-modal').classList.remove('open');
+    document.getElementById('ms-success-modal').classList.add('open');
+  }, 2500);
+}
+function finishMSConnect() {
+  // Step 3 → close and update the connected accounts UI
+  document.getElementById('ms-success-modal').classList.remove('open');
+  // Swap Gmail to disconnected, Microsoft to connected
+  const gmailCard = document.querySelector('#tab-connected .sect ~ div, #tab-connected [style*="coris@example"]');
+  toast('✓', 'Microsoft connected · Gmail disconnected', 't-cyan');
 }
 </script>
 
