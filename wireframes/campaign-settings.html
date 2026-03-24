@@ -595,6 +595,53 @@ function toast(icon, text, cls) {
   zone.appendChild(el);
   setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3500);
 }
+
+function pauseCampaign() {
+  // Hide the active campaign sections, show paused state
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const paused = document.getElementById('paused-state');
+  if (paused) {
+    paused.style.display = 'block';
+    paused.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // Hide archived state if visible
+  const archived = document.getElementById('archived-state');
+  if (archived) archived.style.display = 'none';
+  toast('⏸', 'Campaign paused — sequences on hold', 't-amber');
+}
+
+function resumeCampaign() {
+  // Show the active campaign sections, hide paused + archived
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
+  ['paused-state','archived-state'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const general = document.getElementById('active-general');
+  if (general) general.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('▶', 'Campaign resumed — sequences restarting', 't-cyan');
+}
+
+function unarchiveCampaign() {
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
+  const archived = document.getElementById('archived-state');
+  if (archived) archived.style.display = 'none';
+  const paused = document.getElementById('paused-state');
+  if (paused) paused.style.display = 'none';
+  const general = document.getElementById('active-general');
+  if (general) general.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('✓', 'Campaign unarchived and active', 't-cyan');
+}
+
 </script>
 
 <!-- ══ CHANGE CONNECTED ACCOUNT MODAL ══ -->
@@ -641,6 +688,53 @@ function openChangeAccountModal() {
 function closeChangeAccountModal() {
   document.getElementById('change-account-modal').classList.remove('open');
 }
+
+function pauseCampaign() {
+  // Hide the active campaign sections, show paused state
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const paused = document.getElementById('paused-state');
+  if (paused) {
+    paused.style.display = 'block';
+    paused.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  // Hide archived state if visible
+  const archived = document.getElementById('archived-state');
+  if (archived) archived.style.display = 'none';
+  toast('⏸', 'Campaign paused — sequences on hold', 't-amber');
+}
+
+function resumeCampaign() {
+  // Show the active campaign sections, hide paused + archived
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
+  ['paused-state','archived-state'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'none';
+  });
+  const general = document.getElementById('active-general');
+  if (general) general.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('▶', 'Campaign resumed — sequences restarting', 't-cyan');
+}
+
+function unarchiveCampaign() {
+  ['active-general','active-sequence','active-sending','active-danger'].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.style.display = 'block';
+  });
+  const archived = document.getElementById('archived-state');
+  if (archived) archived.style.display = 'none';
+  const paused = document.getElementById('paused-state');
+  if (paused) paused.style.display = 'none';
+  const general = document.getElementById('active-general');
+  if (general) general.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  toast('✓', 'Campaign unarchived and active', 't-cyan');
+}
+
 </script>
 
 </body>
