@@ -1,556 +1,690 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pulse. — Pricing & Upgrade</title>
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-:root{--bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
-  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;
-  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.1);
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
   --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
-  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;--gr:linear-gradient(135deg,#ff1493,#00d4ff);}
-html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
-.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;}
-.o1{width:600px;height:600px;background:rgba(255,20,147,0.06);top:-200px;right:-150px;}
-.o2{width:500px;height:500px;background:rgba(0,212,255,0.05);bottom:-150px;left:-150px;}
-.hi{position:fixed;top:12px;left:14px;z-index:99;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;}
-.hi:hover{background:rgba(255,255,255,0.14);}
-.pg{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:60px 32px 100px;}
-.sc{display:none;}.sc.on{display:block;}
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
-.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(255,20,147,0.3);}
-.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
-.bg_{background:transparent;color:var(--tm);}.bg_:hover{color:var(--t);}
-.bsm{padding:7px 14px;font-size:12px;}
-.inp{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);border-radius:8px;padding:11px 14px;font-family:var(--sf);font-size:14px;color:var(--t);outline:none;transition:border-color 0.2s;}
-.inp:focus{border-color:var(--cyan);}
-.inp::placeholder{color:var(--td);}
-.lbl{font-size:11px;font-family:var(--of);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:6px;display:block;}
-.fld{margin-bottom:14px;}
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+}
+html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(--sf);}
 
-/* ── FREE TIER WALL ── */
-.wall{background:linear-gradient(135deg,rgba(255,20,147,0.07),rgba(0,212,255,0.05));border:1px solid rgba(255,20,147,0.18);border-radius:16px;padding:32px;text-align:center;margin-bottom:28px;}
-.wall-icon{font-size:40px;margin-bottom:14px;}
-.wall-title{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
-.wall-sub{font-size:14px;color:var(--tm);line-height:1.7;max-width:420px;margin:0 auto 24px;}
-.usage-wrap{max-width:280px;margin:0 auto 22px;}
-.usage-bar{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-bottom:6px;}
-.usage-fill{height:100%;background:var(--gr);border-radius:3px;}
-.usage-lbl{font-size:11px;color:var(--tm);}
-.wall-ctas{display:flex;gap:10px;justify-content:center;}
-.feature-tease{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;}
-.tease-card{background:var(--pd);border:1px solid rgba(255,20,147,0.12);border-radius:10px;padding:16px;text-align:center;}
-.tease-val{font-family:var(--of);font-size:22px;font-weight:800;color:var(--pink);margin-bottom:4px;}
-.tease-lbl{font-size:12px;color:var(--tm);}
+/* ── ORB BACKGROUND ── */
+.orb{position:fixed;border-radius:50%;filter:blur(100px);opacity:0.12;pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:#ff1493;top:-200px;right:-200px;}
+.o2{width:400px;height:400px;background:#00d4ff;bottom:-100px;left:-100px;}
 
-/* ── PLANS ── */
-.plans-eyebrow{font-family:var(--of);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);text-align:center;margin-bottom:10px;}
-.plans-title{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-0.03em;text-align:center;margin-bottom:8px;}
-.plans-sub{font-size:14px;color:var(--tm);text-align:center;margin-bottom:28px;}
-.billing-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:28px;}
-.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
-.plan-card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:26px;position:relative;transition:all 0.2s;}
-.plan-card.featured{border-color:var(--pink);background:rgba(255,20,147,0.05);}
-.plan-card.featured::before{content:"Most popular";position:absolute;top:0;left:50%;transform:translate(-50%,-50%);background:var(--gr);color:white;font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 12px;border-radius:20px;}
-.plan-name{font-family:var(--of);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--tm);margin-bottom:10px;}
-.plan-price{font-family:var(--of);font-size:42px;font-weight:800;letter-spacing:-0.04em;line-height:1;}
-.plan-price sup{font-size:18px;vertical-align:super;}
-.plan-price sub{font-size:16px;font-weight:500;color:var(--tm);vertical-align:baseline;}
-.plan-period{font-size:12px;color:var(--td);margin-top:4px;margin-bottom:20px;}
-.plan-feats{list-style:none;margin-bottom:24px;}
-.plan-feats li{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--tm);padding:5px 0;}
-.feat-y{color:var(--t)!important;}
-.feat-y::before{content:"✓";color:var(--green);flex-shrink:0;font-weight:700;}
-.feat-n::before{content:"–";color:var(--td);flex-shrink:0;}
-
-/* ── CHECKOUT ── */
-.checkout-wrap{max-width:460px;margin:0 auto;}
-.checkout-eyebrow{font-family:var(--of);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);text-align:center;margin-bottom:8px;}
-.checkout-title{font-family:var(--of);font-size:28px;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:28px;}
-.checkout-card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:26px;}
-.order-summary{background:rgba(255,255,255,0.025);border:1px solid var(--b2);border-radius:8px;padding:14px;margin-bottom:20px;}
-.order-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--tm);}
-.order-total{border-top:1px solid var(--b2);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-family:var(--of);font-weight:700;font-size:15px;color:var(--t);}
-.order-price{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:20px;}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.secure-note{font-size:11px;color:var(--td);text-align:center;margin-top:12px;}
-
-/* ── POST UPGRADE ── */
-.success-wrap{text-align:center;padding:56px 20px;}
-.confetti-icon{font-size:56px;margin-bottom:18px;animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1);}
-@keyframes pop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
-.success-title{font-family:var(--of);font-size:36px;font-weight:800;letter-spacing:-0.03em;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
-.success-sub{font-size:14px;color:var(--tm);line-height:1.7;max-width:360px;margin:0 auto 32px;}
-.unlocked-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px;text-align:left;}
-.unlocked-item{background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--green);}
-
-/* pbar */
-.pbar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;display:flex;gap:10px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
-.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
-.tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;}
-.tst{background:rgba(20,10,35,0.96);border:1px solid var(--b2);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
-.tst.tc{border-left:2px solid var(--cyan);}
-.tst.tp{border-left:2px solid var(--pink);}
-.tst.tg{border-left:2px solid var(--green);}
-@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
-
-  --th:56px; --sw:56px;
+/* ── HUB ICON ── */
+.hi{position:fixed;top:14px;left:14px;width:28px;height:28px;border-radius:7px;
+  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+  display:flex;align-items:center;justify-content:center;z-index:100;
+  text-decoration:none;transition:background 0.15s;}
+.hi:hover{background:rgba(255,255,255,0.12);}
 
 /* ── TOPBAR ── */
-.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
-  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
-  backdrop-filter:blur(14px);z-index:200;
-  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
-.logo{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;
-  letter-spacing:-0.5px;background:linear-gradient(135deg,#ff1493,#00d4ff);
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
-.plan-badge{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;
-  text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
-  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
-.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ff1493,#00d4ff);
-  display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;
-  font-size:11px;font-weight:700;color:white;}
-/* ── SIDEBAR ── */
-.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
-  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
-  display:flex;flex-direction:column;align-items:center;padding:14px 0;
-  z-index:190;gap:4px;}
-.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
-  justify-content:center;cursor:pointer;transition:all 0.15s;
-  border:1px solid transparent;text-decoration:none;color:var(--tm);
-  position:relative;background:transparent;}
-.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);} .si:hover svg{opacity:1;}
-.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
-.si svg{display:block;color:var(--tm);opacity:0.7;transition:opacity 0.15s;}
-.si-tip{position:absolute;left:calc(100% + 10px);
-  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
-  border-radius:6px;padding:5px 10px;font-family:'Outfit',sans-serif;font-size:11px;
-  font-weight:600;white-space:nowrap;pointer-events:none;
-  opacity:0;transition:opacity 0.15s;z-index:300;}
-.si:hover .si-tip{opacity:1;}
-.si-bottom{margin-top:auto;}
-/* ── LAYOUT OFFSET ── */
-.pg{padding-top:calc(var(--th) + 20px);padding-left:calc(var(--sw) + 20px);}
+.topbar{position:relative;z-index:10;display:flex;align-items:center;justify-content:space-between;
+  padding:16px 32px;border-bottom:1px solid var(--b);}
+.topbar-logo{font-family:var(--of);font-size:20px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;}
+.plan-badge{font-family:var(--of);font-size:11px;font-weight:700;padding:4px 12px;
+  border-radius:100px;border:1px solid var(--b2);color:var(--tm);}
 
+/* ── SCREEN SYSTEM ── */
+.sc{display:none;}.sc.on{display:block;}
 
+/* ── PAGE WRAPPER ── */
+.pg{position:relative;z-index:1;max-width:960px;margin:0 auto;padding:48px 24px 120px;}
 
-/* ── PRICING COMPONENT (from upgrade-moments) ── */
-.billing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;}
-.billing-label{font-family:var(--of);font-size:13px;font-weight:600;color:var(--td);transition:color 0.25s;cursor:pointer;user-select:none;}
-.billing-label.active{color:var(--t);}
-.billing-save-badge{display:inline-block;padding:3px 9px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.06em;color:var(--green);margin-left:6px;vertical-align:middle;}
-.toggle-track{position:relative;width:44px;height:24px;flex-shrink:0;cursor:pointer;}
-.toggle-track input{opacity:0;width:0;height:0;position:absolute;}
-.toggle-rail{position:absolute;inset:0;border-radius:100px;background:var(--b2);border:1px solid rgba(255,255,255,0.1);transition:background 0.25s,border-color 0.25s;}
-.toggle-track input:checked ~ .toggle-rail{background:linear-gradient(135deg,rgba(255,20,147,0.4),rgba(0,212,255,0.4));border-color:rgba(0,212,255,0.3);}
-.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--t);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1),box-shadow 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4);pointer-events:none;}
-.toggle-track input:checked ~ .toggle-thumb{transform:translateX(20px);box-shadow:0 1px 4px rgba(0,212,255,0.3);}
-.pricing-grid-mk{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto;}
-.pricing-card-mk{background:rgba(13,9,20,0.35);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:40px 36px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.07);}
-.pricing-card-mk:hover{border-color:rgba(255,255,255,0.16);}
-.pricing-card-mk.featured{background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.25);box-shadow:0 8px 40px rgba(255,20,147,0.12),inset 0 1px 0 rgba(255,255,255,0.08);overflow:visible;}
-.pricing-card-mk.featured:hover{border-color:rgba(255,20,147,0.4);}
-.pricing-card-mk.featured::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:var(--gr);opacity:0.8;border-radius:100px;}
-.pricing-card-mk::after{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent);pointer-events:none;}
-.pricing-badge-mk{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 14px;background:var(--gr);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:white;white-space:nowrap;box-shadow:0 2px 12px rgba(255,20,147,0.4);}
-.pricing-tier-mk{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:20px;}
-.pricing-tier-mk.pro{color:var(--pink);}
-.pricing-price-wrap-mk{height:72px;margin-bottom:6px;display:flex;align-items:flex-start;gap:0;}
-.pricing-price-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;display:flex;align-items:flex-start;gap:0;}
-.pricing-price-mk .currency{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
-.pricing-price-mk .period{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
-.price-currency-mk{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
-.price-period-mk{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
-.price-static-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;}
-.digit-window{overflow:hidden;position:relative;}
-.digit-reel{display:flex;flex-direction:column;}
-.digit-reel span{display:block;text-align:center;}
-.pricing-desc-mk{font-size:13px;color:var(--td);margin-bottom:8px;line-height:1.5;min-height:20px;}
-.pricing-annual-saving-mk{font-size:12px;color:var(--green);font-weight:600;margin-bottom:24px;min-height:18px;opacity:0;transform:translateY(4px);transition:opacity 0.3s 0.15s,transform 0.3s 0.15s;}
-.pricing-annual-saving-mk.visible{opacity:1;transform:translateY(0);}
-.pricing-divider-mk{height:1px;background:var(--b);margin-bottom:28px;}
-.pricing-features-mk{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
-.pricing-feature-mk{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);}
-.pricing-feature-mk .check{width:16px;height:16px;border-radius:50%;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:var(--green);}
-.pricing-feature-mk .check.pro-check{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.2);color:var(--pink);}
-.pricing-cta-mk{display:block;width:100%;padding:14px;text-align:center;font-family:var(--of);font-size:14px;font-weight:700;letter-spacing:0.02em;border-radius:100px;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;}
-.pricing-cta-mk.cta-free{background:transparent;color:var(--tm);border:1px solid var(--b2);}
-.pricing-cta-mk.cta-free:hover{color:var(--t);border-color:rgba(255,255,255,0.3);}
-.pricing-cta-mk.cta-pro{background:var(--gr);color:white;box-shadow:0 0 32px rgba(255,20,147,0.25);}
-.pricing-cta-mk.cta-pro:hover{box-shadow:0 0 48px rgba(255,20,147,0.35);}
-.trust-line-mk{text-align:center;font-size:12px;color:var(--td);margin-top:20px;}
+/* ── PLANS PAGE ── */
+.plans-eyebrow{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.12em;
+  text-transform:uppercase;color:var(--pink);text-align:center;margin-bottom:12px;}
+.plans-title{font-family:var(--of);font-size:36px;font-weight:900;letter-spacing:-0.02em;
+  text-align:center;margin-bottom:10px;line-height:1.1;}
+.plans-sub{font-size:15px;color:var(--tm);text-align:center;margin-bottom:36px;line-height:1.6;
+  max-width:480px;margin-left:auto;margin-right:auto;}
 
+/* ── BILLING TOGGLE ── */
+.billing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:40px;}
+.toggle-track{position:relative;width:52px;height:28px;border-radius:100px;
+  background:rgba(255,255,255,0.08);border:1px solid var(--b2);cursor:pointer;transition:background 0.2s;}
+.toggle-track.annual{background:rgba(255,20,147,0.25);border-color:rgba(255,20,147,0.4);}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;
+  background:#fff;transition:transform 0.2s;box-shadow:0 2px 6px rgba(0,0,0,0.3);}
+.toggle-track.annual .toggle-thumb{transform:translateX(24px);}
+.toggle-label{font-family:var(--of);font-size:13px;font-weight:600;color:var(--tm);cursor:pointer;}
+.toggle-label.active{color:var(--t);}
+.save-badge{padding:3px 10px;border-radius:100px;font-family:var(--of);font-size:10px;
+  font-weight:800;background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.3);
+  color:var(--green);letter-spacing:0.04em;}
+
+/* ── PLANS GRID — 3 COLUMNS ── */
+.plans-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:32px;
+  align-items:start;}
+@media(max-width:720px){.plans-grid{grid-template-columns:1fr;}}
+
+.plan-card{border-radius:20px;border:1px solid var(--b);background:var(--s);
+  padding:28px 24px;position:relative;transition:border-color 0.2s;}
+.plan-card:hover{border-color:rgba(255,255,255,0.15);}
+.plan-card.featured{border-color:rgba(255,20,147,0.35);background:rgba(255,20,147,0.04);}
+.plan-card.featured:hover{border-color:rgba(255,20,147,0.5);}
+.plan-card.anchor{opacity:0.85;}
+
+/* Most popular badge */
+.popular-badge{position:absolute;top:-13px;left:50%;transform:translateX(-50%);
+  padding:4px 14px;border-radius:100px;font-family:var(--of);font-size:10px;font-weight:800;
+  letter-spacing:0.08em;text-transform:uppercase;
+  background:linear-gradient(135deg,#ff1493,#00d4ff);color:#fff;
+  white-space:nowrap;box-shadow:0 4px 16px rgba(255,20,147,0.3);}
+
+.plan-tier{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.1em;
+  text-transform:uppercase;color:var(--tm);margin-bottom:14px;}
+.plan-tier.featured{color:var(--pink);}
+
+/* Price display with digit reel */
+.plan-price-wrap{margin-bottom:6px;display:flex;align-items:flex-start;gap:2px;}
+.plan-currency{font-family:var(--of);font-size:18px;font-weight:700;margin-top:6px;color:var(--t);}
+.plan-price-int{font-family:var(--of);font-size:52px;font-weight:900;letter-spacing:-0.03em;
+  line-height:1;color:var(--t);}
+.plan-price-int.featured{background:var(--gr);-webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;background-clip:text;}
+.plan-period{font-size:13px;color:var(--td);margin-top:10px;margin-left:2px;font-family:var(--of);}
+.plan-billing-note{font-size:12px;color:var(--td);margin-bottom:20px;min-height:18px;}
+
+/* Digit reel for animated price */
+.digit-window{display:inline-block;overflow:hidden;height:52px;line-height:1;}
+.digit-reel{display:flex;flex-direction:column;transition:transform 0.45s cubic-bezier(0.4,0,0.2,1);}
+.digit-reel span{height:52px;display:flex;align-items:center;font-family:var(--of);
+  font-size:52px;font-weight:900;letter-spacing:-0.03em;}
+
+/* Features list */
+.plan-divider{height:1px;background:var(--b);margin-bottom:20px;}
+.plan-feats{list-style:none;margin-bottom:24px;}
+.plan-feats li{font-size:13px;color:var(--tm);padding:5px 0;display:flex;gap:10px;
+  align-items:flex-start;line-height:1.4;}
+.plan-feats li::before{content:"✓";color:var(--green);font-size:11px;font-weight:700;
+  flex-shrink:0;margin-top:2px;}
+.plan-feats li.locked{color:var(--td);}
+.plan-feats li.locked::before{content:"—";color:var(--td);}
+.plan-feats li strong{color:var(--t);}
+
+/* CTAs */
+.btn-plan{display:block;width:100%;padding:13px;border-radius:100px;text-align:center;
+  font-family:var(--of);font-size:14px;font-weight:700;cursor:pointer;border:none;
+  transition:all 0.2s;text-decoration:none;}
+.btn-plan-primary{background:var(--gr);color:#fff;box-shadow:0 0 32px rgba(255,20,147,0.25);}
+.btn-plan-primary:hover{opacity:0.88;box-shadow:0 0 48px rgba(255,20,147,0.35);}
+.btn-plan-ghost{background:transparent;border:1px solid var(--b2);color:var(--tm);}
+.btn-plan-ghost:hover{border-color:rgba(255,255,255,0.25);color:var(--t);}
+.btn-plan-anchor{background:rgba(255,255,255,0.05);border:1px solid var(--b);color:var(--td);}
+.btn-plan-anchor:hover{background:rgba(255,255,255,0.08);color:var(--tm);}
+
+/* Trust line */
+.trust-line{text-align:center;font-size:12px;color:var(--td);margin-top:20px;line-height:1.8;}
+.trust-line a{color:var(--tm);text-decoration:underline;text-underline-offset:2px;}
+
+/* ── FREE WALL SCREENS ── */
+.wall{max-width:520px;margin:0 auto;text-align:center;}
+.wall-icon{font-size:40px;margin-bottom:16px;}
+.wall-title{font-family:var(--of);font-size:26px;font-weight:800;letter-spacing:-0.01em;
+  margin-bottom:10px;line-height:1.2;}
+.wall-sub{font-size:14px;color:var(--tm);line-height:1.7;margin-bottom:28px;
+  max-width:420px;margin-left:auto;margin-right:auto;}
+.usage-wrap{margin-bottom:28px;}
+.usage-bar{height:6px;background:rgba(255,255,255,0.08);border-radius:100px;
+  margin-bottom:8px;overflow:hidden;}
+.usage-fill{height:100%;border-radius:100px;
+  background:linear-gradient(90deg,var(--pink),var(--cyan));}
+.usage-lbl{font-size:12px;color:var(--td);font-family:'DM Mono',monospace;}
+.wall-ctas{display:flex;flex-direction:column;gap:10px;max-width:320px;margin:0 auto 24px;}
+.feature-tease{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;
+  max-width:400px;margin:0 auto;}
+.tease-card{padding:14px 10px;background:var(--s);border:1px solid var(--b);
+  border-radius:12px;text-align:center;}
+.tease-val{font-family:var(--of);font-size:20px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:4px;}
+.tease-lbl{font-size:11px;color:var(--td);line-height:1.3;}
+
+/* ── REFERRAL EXTENSION PANEL ── */
+.referral-panel{max-width:480px;margin:0 auto 0;
+  padding:20px 24px;background:rgba(100,220,120,0.04);
+  border:1px solid rgba(100,220,120,0.2);border-radius:16px;
+  text-align:center;}
+.referral-panel-title{font-family:var(--of);font-size:14px;font-weight:700;
+  margin-bottom:6px;color:var(--t);}
+.referral-panel-sub{font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;}
+.referral-reward{display:inline-flex;gap:16px;padding:10px 20px;
+  background:rgba(100,220,120,0.08);border:1px solid rgba(100,220,120,0.2);
+  border-radius:10px;margin-bottom:16px;font-size:12px;}
+.referral-reward-item{display:flex;align-items:center;gap:6px;color:var(--green);font-weight:600;}
+.btn-referral{display:inline-flex;align-items:center;gap:8px;padding:11px 24px;
+  border-radius:100px;background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.3);
+  color:var(--green);font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;
+  transition:all 0.2s;margin-bottom:12px;}
+.btn-referral:hover{background:rgba(100,220,120,0.25);}
+.referral-or{font-size:11px;color:var(--td);margin-bottom:10px;}
+.btn-extend-paid{background:none;border:none;font-size:12px;color:var(--td);
+  cursor:pointer;text-decoration:underline;text-underline-offset:2px;
+  transition:color 0.15s;}
+.btn-extend-paid:hover{color:var(--tm);}
+
+/* ── CHECKOUT ── */
+.checkout-wrap{max-width:440px;margin:0 auto;}
+.checkout-title{font-family:var(--of);font-size:24px;font-weight:800;
+  letter-spacing:-0.01em;margin-bottom:6px;}
+.checkout-sub{font-size:13px;color:var(--tm);margin-bottom:28px;line-height:1.6;}
+.checkout-summary{padding:16px;background:var(--s);border:1px solid var(--b);
+  border-radius:12px;margin-bottom:20px;}
+.checkout-row{display:flex;justify-content:space-between;align-items:center;
+  font-size:13px;padding:4px 0;}
+.checkout-row.total{padding-top:12px;border-top:1px solid var(--b);
+  font-family:var(--of);font-weight:700;font-size:15px;}
+.checkout-row.total span:last-child{color:var(--pink);}
+.stripe-note{text-align:center;font-size:11px;color:var(--td);margin-top:14px;}
+
+/* ── SUCCESS ── */
+.success-wrap{max-width:480px;margin:0 auto;text-align:center;}
+.success-icon{width:64px;height:64px;border-radius:50%;
+  background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);
+  display:flex;align-items:center;justify-content:center;margin:0 auto 20px;}
+.success-title{font-family:var(--of);font-size:28px;font-weight:900;
+  letter-spacing:-0.02em;margin-bottom:8px;}
+.success-sub{font-size:14px;color:var(--tm);line-height:1.7;margin-bottom:28px;}
+.unlocked-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;
+  margin-bottom:28px;text-align:left;}
+.unlocked-item{padding:10px 14px;background:var(--s);border:1px solid var(--b);
+  border-radius:10px;font-size:12px;color:var(--tm);display:flex;gap:8px;align-items:center;}
+.unlocked-item::before{content:"✓";color:var(--green);font-weight:700;flex-shrink:0;}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  font-family:var(--of);font-weight:700;cursor:pointer;border:none;transition:all 0.2s;
+  text-decoration:none;}
+.btn-primary{padding:13px 28px;border-radius:100px;background:var(--gr);color:#fff;
+  font-size:14px;box-shadow:0 0 32px rgba(255,20,147,0.2);}
+.btn-primary:hover{opacity:0.88;}
+.btn-ghost{padding:11px 24px;border-radius:100px;background:transparent;
+  border:1px solid var(--b2);color:var(--tm);font-size:13px;}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);color:var(--t);}
+
+/* ── STATE SWITCHER ── */
+.pbar{position:fixed;bottom:0;left:0;right:0;background:rgba(13,9,20,0.92);
+  backdrop-filter:blur(8px);border-top:1px solid var(--b);padding:10px 16px;
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px;
+  color:var(--td);font-family:var(--of);z-index:200;}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;
+  font-weight:600;cursor:pointer;padding:2px 4px;}
+.pbar button:hover{opacity:0.7;}
+
+/* ── TOAST ── */
+.tz{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;gap:8px;z-index:500;pointer-events:none;}
+.tst{padding:10px 18px;border-radius:100px;font-family:var(--of);font-size:13px;
+  font-weight:600;display:flex;align-items:center;gap:8px;pointer-events:none;
+  animation:toast-in 0.3s ease;}
+@keyframes toast-in{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+.t-cyan{background:rgba(0,212,255,0.15);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);}
+.t-pink{background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.3);color:var(--pink);}
+.t-green{background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.3);color:var(--green);}
 </style>
 </head>
 <body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
 
-<!-- TOPBAR -->
+<a href="../hub.html" class="hi" title="Hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/>
+  </svg>
+</a>
+
 <header class="topbar">
-  <a href="../hub.html" style="text-decoration:none;font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;background:linear-gradient(135deg,#ff1493,#00d4ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pulse.</a>
-  <div class="topbar-right">
-    <span class="plan-badge">Free</span>
-    <div class="av">CL</div>
-  </div>
+  <a href="dashboard-home.html" class="topbar-logo">Pulse.</a>
+  <span class="plan-badge">Free</span>
 </header>
 
-<!-- SIDEBAR -->
-<aside class="sidebar">
-  <a class="si" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
-  <a class="si" href="summary-and-workflow.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
-  <a class="si si-bottom" href="settings-account.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
-</aside>
-
-<div class="orb o1"></div><div class="orb o2"></div>
-<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
-  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
-</a>
 <div class="pg">
 
-<!-- FREE TIER WALL -->
+<!-- ════════════════════════════════════
+     S-WALL · FREE HARD LIMIT (100 prospects)
+════════════════════════════════════ -->
 <div id="s-wall" class="sc on">
   <div class="wall">
-    <div class="wall-icon">📋</div>
+    <div class="wall-icon">🚀</div>
     <div class="wall-title">You've built a serious pipeline.</div>
-    <p class="wall-sub">100 prospects is the Free limit. Upgrade to Pro to unlock your full list and the tools to work through it faster.</p>
+    <div class="wall-sub">100 prospects is the Free limit. Everything you've built is safe — upgrade to Pro Light to keep going and unlock the full outreach engine.</div>
     <div class="usage-wrap">
-      <div class="usage-bar"><div class="usage-fill" style="width:100%"></div></div>
+      <div class="usage-bar"><div class="usage-fill" style="width:100%;"></div></div>
       <div class="usage-lbl">100 / 100 prospects used</div>
     </div>
     <div class="wall-ctas">
-      <button class="btn bp" onclick="show('s-plans')">Continue with Pro →</button>
-      <button class="btn bs" onclick="toast('✓','Staying on Free','tc')">Stay on Free</button>
+      <button class="btn-plan btn-plan-primary" onclick="show('s-plans')">Continue with Pro Light →</button>
+      <button class="btn-plan btn-plan-ghost" onclick="show('s-wall')">Stay on Free</button>
     </div>
     <div class="feature-tease">
-      <div class="tease-card"><div class="tease-val">∞</div><div class="tease-lbl">Unlimited prospects</div></div>
-      <div class="tease-card"><div class="tease-val">AI</div><div class="tease-lbl">Unlimited AI drafts</div></div>
-      <div class="tease-card"><div class="tease-val">▶</div><div class="tease-lbl">Auto-scheduling</div></div>
+      <div class="tease-card"><div class="tease-val">5</div><div class="tease-lbl">campaigns</div></div>
+      <div class="tease-card"><div class="tease-val">1k</div><div class="tease-lbl">prospects</div></div>
+      <div class="tease-card"><div class="tease-val">AI</div><div class="tease-lbl">draft gen</div></div>
+    </div>
+  </div>
+
+  <!-- Referral extension — secondary option -->
+  <div style="margin-top:28px;">
+    <div style="text-align:center;font-size:12px;color:var(--td);margin-bottom:16px;font-family:var(--of);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">Not ready to upgrade?</div>
+    <div class="referral-panel">
+      <div class="referral-panel-title">Invite one person. Extend for free.</div>
+      <div class="referral-panel-sub">Refer a friend to Pulse. and unlock more room on your Free account — no subscription needed. One time only.</div>
+      <div class="referral-reward">
+        <div class="referral-reward-item">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="2 7 5 10 12 3" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          200 prospects
+        </div>
+        <div class="referral-reward-item">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polyline points="2 7 5 10 12 3" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          2 campaigns
+        </div>
+      </div>
+      <button class="btn-referral" onclick="toast('✓','Referral link copied — share it to unlock your extension','t-green')">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="10.5" cy="3.5" r="1.5" stroke="var(--green)" stroke-width="1.4"/><circle cx="10.5" cy="10.5" r="1.5" stroke="var(--green)" stroke-width="1.4"/><circle cx="3.5" cy="7" r="1.5" stroke="var(--green)" stroke-width="1.4"/><line x1="5" y1="7" x2="9" y2="4" stroke="var(--green)" stroke-width="1.4"/><line x1="5" y1="7" x2="9" y2="10" stroke="var(--green)" stroke-width="1.4"/></svg>
+        Invite a friend →
+      </button>
+      <div class="referral-or">or</div>
+      <button class="btn-extend-paid" onclick="toast('→','One-time £2 extension — redirecting to checkout','t-cyan')">Extend for £2 instead</button>
     </div>
   </div>
 </div>
 
-<!-- PRO LIGHT SOFT NUDGE (400/500) -->
+<!-- ════════════════════════════════════
+     S-NUDGE-PL · PRO LIGHT SOFT NUDGE (800/1000)
+════════════════════════════════════ -->
 <div id="s-nudge-pl" class="sc">
   <div class="wall">
-    <div class="wall-icon" style="font-size:22px;">📊</div>
-    <div class="wall-title" style="font-size:18px;">Getting close to your trial limit.</div>
-    <p class="wall-sub">You've added 400 prospects — 100 remaining on your Pro trial. Upgrade to Pro to remove the limit entirely.</p>
+    <div class="wall-icon">📊</div>
+    <div class="wall-title">Your pipeline is growing.</div>
+    <div class="wall-sub">You've reached 800 prospects — 200 remaining on Pro Light. Upgrade to Pro Plus for 10,000 prospects and unlimited campaigns when you're ready to scale.</div>
     <div class="usage-wrap">
       <div class="usage-bar"><div class="usage-fill" style="width:80%;background:linear-gradient(90deg,#ff9d42,#ff1493);"></div></div>
-      <div class="usage-lbl" style="color:var(--amber);">400 / 500 prospects used</div>
+      <div class="usage-lbl" style="color:var(--amber);">800 / 1,000 prospects used</div>
     </div>
     <div class="wall-ctas">
-      <button class="btn bp" onclick="show('s-plans')">See Pro plans →</button>
-      <button class="btn bs" onclick="toast('✓','Dismissed','tc')">Dismiss</button>
+      <button class="btn-plan btn-plan-primary" onclick="show('s-plans-plus')">See Pro Plus →</button>
+      <button class="btn-plan btn-plan-ghost" onclick="toast('✓','Dismissed — we\'ll remind you when you hit the limit','t-cyan')">Dismiss for now</button>
     </div>
   </div>
 </div>
 
-<!-- PRO LIGHT HARD WALL (500/500) -->
+<!-- ════════════════════════════════════
+     S-WALL-PL · PRO LIGHT HARD WALL (1000/1000)
+════════════════════════════════════ -->
 <div id="s-wall-pl" class="sc">
   <div class="wall">
-    <div class="wall-icon">📋</div>
-    <div class="wall-title">You've built a serious pipeline.</div>
-    <p class="wall-sub">500 prospects is the Pro trial limit. Upgrade to Pro to remove the limit entirely and keep your outreach running.</p>
+    <div class="wall-icon">⚡</div>
+    <div class="wall-title">You've outgrown Pro Light.</div>
+    <div class="wall-sub">1,000 prospects is the Pro Light limit. Everything you've built is safe — Pro Plus removes the ceiling entirely.</div>
     <div class="usage-wrap">
-      <div class="usage-bar"><div class="usage-fill" style="width:100%;"></div></div>
-      <div class="usage-lbl">500 / 500 prospects used</div>
+      <div class="usage-bar"><div class="usage-fill" style="width:100%;background:linear-gradient(90deg,#ff9d42,#ff1493);"></div></div>
+      <div class="usage-lbl" style="color:var(--amber);">1,000 / 1,000 prospects used</div>
     </div>
     <div class="wall-ctas">
-      <button class="btn bp" onclick="show('s-plans')">Continue with Pro →</button>
-      <button class="btn bs" onclick="toast('✓','Staying on trial','tc')">Stay on trial</button>
+      <button class="btn-plan btn-plan-primary" onclick="show('s-plans-plus')">Unlock Pro Plus →</button>
+      <button class="btn-plan btn-plan-ghost" onclick="toast('✓','Staying on Pro Light — existing prospects still active','t-cyan')">Stay on Pro Light</button>
     </div>
     <div class="feature-tease">
-      <div class="tease-card"><div class="tease-val">∞</div><div class="tease-lbl">Unlimited prospects</div></div>
-      <div class="tease-card"><div class="tease-val">AI</div><div class="tease-lbl">Unlimited AI drafts</div></div>
-      <div class="tease-card"><div class="tease-val">▶</div><div class="tease-lbl">Auto-scheduling</div></div>
+      <div class="tease-card"><div class="tease-val">∞</div><div class="tease-lbl">campaigns</div></div>
+      <div class="tease-card"><div class="tease-val">10k</div><div class="tease-lbl">prospects</div></div>
+      <div class="tease-card"><div class="tease-val">★</div><div class="tease-lbl">priority support</div></div>
     </div>
   </div>
 </div>
 
-<!-- PLANS (animated toggle from marketing site) -->
+<!-- ════════════════════════════════════
+     S-PLANS · THREE-TIER PLANS PAGE (from Free)
+════════════════════════════════════ -->
 <div id="s-plans" class="sc">
-  <div style="max-width:720px;margin:0 auto;">
-    <div style="text-align:center;margin-bottom:32px;">
-      <div style="font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.01em;margin-bottom:8px;">Start with a full month of Pro. Free.</div>
-      <div style="font-size:14px;color:var(--tm);max-width:400px;margin:0 auto;line-height:1.6;">No credit card required. After 30 days, stay on Pro or drop to Free — your data stays either way.</div>
-    </div>
-  <!-- Billing toggle — identical to marketing site -->
+  <div class="plans-eyebrow">Choose your plan</div>
+  <div class="plans-title">Simple, honest pricing.</div>
+  <p class="plans-sub">No per-seat fees. No hidden costs. Start with a 30-day Pro Light trial — no card required.</p>
+
   <div class="billing-toggle-wrap">
-    <span class="billing-label active" id="wf-bill-monthly">Monthly</span>
-    <label class="toggle-track">
-      <input type="checkbox" id="wf-billing-toggle">
-      <div class="toggle-rail"></div>
+    <span class="toggle-label active" id="lbl-mo" onclick="setBilling('monthly')">Monthly</span>
+    <div class="toggle-track annual" id="toggle-track" onclick="toggleBilling()">
       <div class="toggle-thumb"></div>
-    </label>
-    <span class="billing-label" id="wf-bill-annual">
-      Annual
-      <span class="billing-save-badge">Save 42%</span>
-    </span>
+    </div>
+    <span class="toggle-label active" id="lbl-yr" onclick="setBilling('annual')">Annual</span>
+    <span class="save-badge">Save 42%</span>
   </div>
 
-  <!-- Pricing cards — identical markup to marketing site -->
-  <div class="pricing-grid-mk">
+  <div class="plans-grid">
 
-    <!-- Free -->
-    <div class="pricing-card-mk">
-      <div class="pricing-tier-mk">Free</div>
-      <div class="pricing-price-wrap-mk">
-        <div class="pricing-price-mk">
-          <span class="currency">£</span><span>0</span><span class="period">/month</span>
-        </div>
+    <!-- FREE -->
+    <div class="plan-card">
+      <div class="plan-tier">Free</div>
+      <div class="plan-price-wrap">
+        <div class="plan-currency">£</div>
+        <div class="plan-price-int">0</div>
       </div>
-      <div class="pricing-desc-mk">Get started. No card required.</div>
-      <div class="pricing-annual-saving-mk" id="wf-free-saving">&nbsp;</div>
-      <div class="pricing-divider-mk"></div>
-      <div class="pricing-features-mk">
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>1 campaign</span></div>
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>Up to 100 prospects</span></div>
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>Gmail integration</span></div>
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>Follow-up queue</span></div>
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>Prospect status tracking</span></div>
-        <div class="pricing-feature-mk"><div class="check">✓</div><span>Manual sending</span></div>
-      </div>
-      <a href="#" class="pricing-cta-mk cta-free">Start for free</a>
-      <p style="text-align:center;font-size:12px;color:var(--td);margin-top:12px;font-style:italic;">You'll start with 30 days of Pro</p>
+      <div class="plan-billing-note">Forever free</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li>1 campaign</li>
+        <li>100 prospects</li>
+        <li>Manual sending only</li>
+        <li>Step 1 sequences</li>
+        <li class="locked">AI draft generation</li>
+        <li class="locked">Auto-scheduling</li>
+        <li class="locked">Full sequences</li>
+      </ul>
+      <button class="btn-plan btn-plan-ghost" onclick="toast('✓','Staying on Free','t-cyan')">Stay on Free</button>
     </div>
 
-    <!-- Pro -->
-    <div class="pricing-card-mk featured">
-      <div class="pricing-badge-mk">Most popular</div>
-      <div class="pricing-tier-mk pro">Pro</div>
-      <div class="pricing-price-wrap-mk" id="wf-pro-price-wrap">
-        <span class="price-currency-mk">£</span>
-        <div class="pricing-price-mk" id="wf-pro-price-digits">
-          <!-- digit reels injected by JS -->
+    <!-- PRO LIGHT — FEATURED -->
+    <div class="plan-card featured">
+      <div class="popular-badge">✦ Most popular</div>
+      <div class="plan-tier featured">Pro Light</div>
+      <div class="plan-price-wrap">
+        <div class="plan-currency" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">£</div>
+        <div class="plan-price-int featured">
+          <div class="digit-window" id="pl-price-window">
+            <div class="digit-reel" id="pl-price-reel">
+              <span>7</span>
+            </div>
+          </div>
         </div>
-        <span class="price-period-mk" id="wf-pro-period">/month</span>
+        <div class="plan-period">/mo</div>
       </div>
-      <div class="pricing-desc-mk" id="wf-pro-desc">Billed monthly. Cancel any time.</div>
-      <div class="pricing-annual-saving-mk" id="wf-pro-saving">&nbsp;</div>
-      <div class="pricing-divider-mk"></div>
-      <div class="pricing-features-mk">
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Unlimited campaigns</span></div>
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Unlimited prospects</span></div>
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>AI-drafted emails</span></div>
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Auto-scheduled sending</span></div>
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Smart follow-up suggestions</span></div>
-        <div class="pricing-feature-mk"><div class="check pro-check">✓</div><span>Everything in Free</span></div>
+      <div class="plan-billing-note" id="pl-billing-note">billed annually · £84/year</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><strong>5 campaigns</strong></li>
+        <li><strong>1,000 prospects</strong></li>
+        <li><strong>Unlimited AI drafts</strong></li>
+        <li><strong>Full sequences (Steps 1–6)</strong></li>
+        <li><strong>Auto-scheduling</strong></li>
+        <li><strong>All personality packs</strong></li>
+        <li><strong>Activity report PDF</strong></li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" id="pl-cta" onclick="openCheckout('pro-light')">Start free 30-day trial →</button>
+    </div>
+
+    <!-- PRO PLUS — ANCHOR -->
+    <div class="plan-card anchor">
+      <div class="plan-tier">Pro Plus</div>
+      <div class="plan-price-wrap">
+        <div class="plan-currency">£</div>
+        <div class="plan-price-int">
+          <div class="digit-window" id="pp-price-window">
+            <div class="digit-reel" id="pp-price-reel">
+              <span>19</span>
+            </div>
+          </div>
+        </div>
+        <div class="plan-period">/mo</div>
       </div>
-      <a href="#" class="pricing-cta-mk cta-pro" id="wf-pro-cta" onclick="event.preventDefault();show('s-checkout')">Get Pro →</a>
+      <div class="plan-billing-note" id="pp-billing-note">billed annually · £228/year</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><strong>Unlimited campaigns</strong></li>
+        <li><strong>10,000 prospects</strong></li>
+        <li>Everything in Pro Light</li>
+        <li>Priority support</li>
+        <li>Multiple accounts <span style="font-size:10px;color:var(--td);">(coming)</span></li>
+        <li>API access <span style="font-size:10px;color:var(--td);">(coming)</span></li>
+      </ul>
+      <button class="btn-plan btn-plan-anchor" onclick="openCheckout('pro-plus')">Get Pro Plus →</button>
     </div>
 
   </div>
-  <div class="trust-line-mk">Cancel any time · 14-day money-back guarantee · Secured by Stripe</div>
+
+  <div class="trust-line">
+    No credit card required for trial · Cancel any time · <a href="#">See what's included</a> · <a href="#">Privacy policy</a>
   </div>
 </div>
 
-<!-- CHECKOUT -->
+<!-- ════════════════════════════════════
+     S-PLANS-PLUS · UPGRADE PAGE (from Pro Light)
+════════════════════════════════════ -->
+<div id="s-plans-plus" class="sc">
+  <div class="plans-eyebrow">Upgrade to Pro Plus</div>
+  <div class="plans-title">Built for scale.</div>
+  <p class="plans-sub">You've maxed out Pro Light. Pro Plus removes every limit — unlimited campaigns, 10,000 prospects, and priority support.</p>
+
+  <div class="billing-toggle-wrap">
+    <span class="toggle-label active" id="lbl-mo-plus" onclick="setBillingPlus('monthly')">Monthly</span>
+    <div class="toggle-track annual" id="toggle-track-plus" onclick="toggleBillingPlus()">
+      <div class="toggle-thumb"></div>
+    </div>
+    <span class="toggle-label active" id="lbl-yr-plus" onclick="setBillingPlus('annual')">Annual</span>
+    <span class="save-badge">Save 34%</span>
+  </div>
+
+  <div style="max-width:440px;margin:0 auto;">
+    <div class="plan-card featured" style="margin-bottom:20px;">
+      <div class="plan-tier featured">Pro Plus</div>
+      <div class="plan-price-wrap">
+        <div class="plan-currency" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">£</div>
+        <div class="plan-price-int featured" id="pp-upgrade-price">19</div>
+        <div class="plan-period">/mo</div>
+      </div>
+      <div class="plan-billing-note" id="pp-upgrade-note">billed annually · £228/year</div>
+      <div class="plan-divider"></div>
+      <ul class="plan-feats">
+        <li><strong>Unlimited campaigns</strong></li>
+        <li><strong>10,000 prospects</strong></li>
+        <li>Everything in Pro Light</li>
+        <li>Priority support</li>
+        <li>Multiple accounts <span style="font-size:10px;color:var(--td);">(coming)</span></li>
+        <li>API access <span style="font-size:10px;color:var(--td);">(coming)</span></li>
+      </ul>
+      <button class="btn-plan btn-plan-primary" onclick="openCheckout('pro-plus')">Upgrade to Pro Plus →</button>
+    </div>
+    <div style="text-align:center;">
+      <button style="background:none;border:none;font-size:13px;color:var(--td);cursor:pointer;" onclick="show('s-wall-pl')">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════
+     S-CHECKOUT · STRIPE HANDOFF
+════════════════════════════════════ -->
 <div id="s-checkout" class="sc">
-  <div class="checkout-eyebrow">Checkout</div>
-  <div class="checkout-title">Upgrade to Pro</div>
   <div class="checkout-wrap">
-    <div class="checkout-card">
-      <div class="order-summary">
-        <div class="order-row"><span>outreach. Pro</span><span>Annual</span></div>
-        <div class="order-row"><span style="font-size:11px;color:var(--td)">£5.40/month × 12</span><span style="font-size:11px;color:var(--td)">£64.80</span></div>
-        <div class="order-total"><span>Total today</span><span class="order-price">£64.80</span></div>
-      </div>
-      <div class="fld"><label class="lbl">Email</label><input class="inp" value="coris@example.com" readonly style="opacity:0.65;cursor:default"></div>
-      <div class="fld"><label class="lbl">Card number</label><input class="inp" placeholder="•••• •••• •••• ••••"></div>
-      <div class="two-col fld">
-        <div><label class="lbl">Expiry</label><input class="inp" placeholder="MM / YY"></div>
-        <div><label class="lbl">CVC</label><input class="inp" placeholder="•••"></div>
-      </div>
-      <button class="btn bp" style="width:100%;padding:14px;font-size:14px;" onclick="show('s-success');toast('🎉','Welcome to Pro!','tg')">Pay £64.80 →</button>
-      <div class="secure-note">🔒 Secured by Stripe · Cancel any time · 14-day money-back guarantee</div>
+    <div class="checkout-title" id="checkout-title">Start your Pro Light trial</div>
+    <div class="checkout-sub" id="checkout-sub">30 days free — no card required during trial. We'll ask for payment details on day 30 if you'd like to continue.</div>
+    <div class="checkout-summary">
+      <div class="checkout-row"><span>Plan</span><span id="checkout-plan">Pro Light</span></div>
+      <div class="checkout-row"><span>Trial period</span><span id="checkout-trial">30 days free</span></div>
+      <div class="checkout-row"><span>Billing after trial</span><span id="checkout-billing">£84/year</span></div>
+      <div class="checkout-row total"><span>Due today</span><span id="checkout-due">£0</span></div>
     </div>
-    <div style="text-align:center;margin-top:14px;">
-      <button class="btn bg_ bsm" onclick="show('s-plans')">← Back to plans</button>
+    <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;" onclick="show('s-success')">
+      Continue →
+    </button>
+    <div class="stripe-note">🔒 Secured by Stripe · No card required today · Cancel any time</div>
+    <div style="text-align:center;margin-top:16px;">
+      <button style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;" onclick="show('s-plans')">← Back to plans</button>
     </div>
   </div>
 </div>
 
-<!-- POST-UPGRADE -->
+<!-- ════════════════════════════════════
+     S-SUCCESS · POST-UPGRADE / TRIAL START
+════════════════════════════════════ -->
 <div id="s-success" class="sc">
   <div class="success-wrap">
-    <div class="confetti-icon">🎉</div>
-    <div class="success-title">Welcome to Pro</div>
-    <p class="success-sub">Your account is upgraded. Everything is unlocked and ready. Go build your pipeline.</p>
-    <div class="unlocked-grid">
-      <div class="unlocked-item">✓ Unlimited campaigns</div>
-      <div class="unlocked-item">✓ 1,000 prospects</div>
-      <div class="unlocked-item">✓ Unlimited AI drafts</div>
-      <div class="unlocked-item">✓ Auto-scheduling</div>
-      <div class="unlocked-item">✓ Full sequences</div>
-      <div class="unlocked-item">✓ All personality packs</div>
+    <div class="success-icon">
+      <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+        <polyline points="6 14 11 19 22 8" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
-    <button class="btn bp" onclick="window.location.href='dashboard-home.html'">Go to dashboard →</button>
+    <div class="success-title" id="success-title">Your Pro Light trial is live.</div>
+    <div class="success-sub" id="success-sub">30 days of the full Pulse. experience — everything unlocked, nothing held back. We'll remind you before your trial ends.</div>
+    <div class="unlocked-grid">
+      <div class="unlocked-item">5 campaigns</div>
+      <div class="unlocked-item">1,000 prospects</div>
+      <div class="unlocked-item">Unlimited AI drafts</div>
+      <div class="unlocked-item">Full sequences</div>
+      <div class="unlocked-item">Auto-scheduling</div>
+      <div class="unlocked-item">All personality packs</div>
+    </div>
+    <button class="btn btn-primary" style="padding:13px 40px;" onclick="window.location.href='dashboard-home.html'">Go to dashboard →</button>
   </div>
 </div>
 
-</div>
-</div>
+</div><!-- end .pg -->
+
+<div class="tz" id="tz"></div>
+
 <div class="pbar">
-  <span>State:</span>
+  <span>Free →</span>
   <button style="color:#ff1493" onclick="show('s-wall')">Free wall</button>
   <span style="opacity:.3">·</span>
-  <button style="color:#00d4ff" onclick="show('s-plans')">Plans</button>
+  <button style="color:#64dc78" onclick="show('s-plans')">Plans page</button>
   <span style="opacity:.3">·</span>
   <button style="color:#ff9d42" onclick="show('s-checkout')">Checkout</button>
   <span style="opacity:.3">·</span>
   <button style="color:#64dc78" onclick="show('s-success')">Success</button>
+  <span style="opacity:.3;margin:0 8px;">|</span>
+  <span>Pro Light →</span>
+  <button style="color:#ff9d42" onclick="show('s-nudge-pl')">Nudge (800)</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff4c4c" onclick="show('s-wall-pl')">Hard wall</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#00d4ff" onclick="show('s-plans-plus')">Pro Plus page</button>
 </div>
-<div class="tz" id="tz"></div>
+
 <script>
-function show(id){document.querySelectorAll('.sc').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
-function setBilling(type){
-  document.getElementById('pp-price').innerHTML=type==='annual'?'<sup>£</sup>5.40<sub>/mo</sub>':'<sup>£</sup>9<sub>/mo</sub>';
-  document.getElementById('pp-period').textContent=type==='annual'?'billed annually (£64.80/yr)':'billed monthly';
-}
-function toast(icon,text,cls){
-  const z=document.getElementById('tz'),e=document.createElement('div');
-  e.className='tst '+cls;e.innerHTML='<span>'+icon+'</span><span>'+text+'</span>';
-  z.appendChild(e);setTimeout(()=>e.remove(),3200);
-}
-</script>
-<script>
-/* ── PRICING ODOMETER (wireframe — scoped to wf- prefixed IDs) ── */
-(function () {
-  const DIGITS = '0123456789';
-  const EASING = 'cubic-bezier(0.45, 0, 0.15, 1)';
-  const DURATION = 676;
-  const STAGGER = 45;
-
-  const priceDigits = document.getElementById('wf-pro-price-digits');
-  const proPeriod   = document.getElementById('wf-pro-period');
-  if (!priceDigits) return;
-
-  let digitH = 0;
-  let slots = [];
-
-  function measureDigitH() {
-    const probe = document.createElement('span');
-    probe.style.cssText = 'position:absolute;visibility:hidden;font-family:Outfit,sans-serif;font-size:56px;font-weight:900;line-height:1;';
-    probe.textContent = '0';
-    document.body.appendChild(probe);
-    const h = probe.getBoundingClientRect().height;
-    document.body.removeChild(probe);
-    return Math.ceil(h);
-  }
-
-  function buildReels(str) {
-    if (!digitH) digitH = measureDigitH();
-    priceDigits.innerHTML = '';
-    slots = [];
-    for (const ch of str) {
-      if (DIGITS.includes(ch)) {
-        const idx = DIGITS.indexOf(ch);
-        const win = document.createElement('div');
-        win.className = 'digit-window';
-        win.style.height = digitH + 'px';
-        win.style.overflow = 'hidden';
-        const reel = document.createElement('div');
-        reel.className = 'digit-reel';
-        reel.style.transition = 'none';
-        reel.style.transform = `translateY(-${idx * digitH}px)`;
-        for (const d of DIGITS) {
-          const s = document.createElement('span');
-          s.textContent = d;
-          s.style.height = digitH + 'px';
-          s.style.lineHeight = digitH + 'px';
-          reel.appendChild(s);
-        }
-        win.appendChild(reel);
-        priceDigits.appendChild(win);
-        slots.push({ type: 'digit', win, reel, pos: idx });
-      } else {
-        const s = document.createElement('span');
-        s.className = 'price-static-mk';
-        s.textContent = ch;
-        priceDigits.appendChild(s);
-        slots.push({ type: 'static', el: s });
-      }
-    }
-  }
-
-  function setPrice(str) {
-    if (!digitH) digitH = measureDigitH();
-    const newDigits = [...str].filter(c => DIGITS.includes(c));
-    const currentSlots = slots.filter(s => s.type === 'digit');
-    if (newDigits.length !== currentSlots.length) {
-      buildReels(str);
-      requestAnimationFrame(() => {
-        slots.filter(s => s.type === 'digit').forEach((slot, i) => {
-          const target = DIGITS.indexOf(newDigits[i]);
-          const above = target > 0 ? target - 1 : 9;
-          slot.reel.style.transition = 'none';
-          slot.reel.style.transform = `translateY(-${above * digitH}px)`;
-          slot.reel.getBoundingClientRect();
-          setTimeout(() => {
-            slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
-            slot.reel.style.transform = `translateY(-${target * digitH}px)`;
-            slot.pos = target;
-          }, i * STAGGER);
-        });
-      });
-      return;
-    }
-    let di = 0;
-    slots.forEach((slot) => {
-      if (slot.type !== 'digit') return;
-      const target = DIGITS.indexOf(newDigits[di]);
-      const i = di++;
-      setTimeout(() => {
-        slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
-        slot.reel.style.transform = `translateY(-${target * digitH}px)`;
-        slot.pos = target;
-      }, i * STAGGER);
-    });
-  }
-
-  function updateLeadingZero() {
-    const digitSlots = slots.filter(s => s.type === 'digit');
-    if (!digitSlots.length) return;
-    const first = digitSlots[0];
-    const isZero = first.pos === 0;
-    first.win.style.transition = 'width 0.3s ease, opacity 0.3s ease';
-    first.win.style.opacity = isZero ? '0' : '1';
-    first.win.style.width = isZero ? '0' : '';
-    first.win.style.overflow = 'hidden';
-  }
-
-  buildReels('12');
-  updateLeadingZero();
-
-  const toggle      = document.getElementById('wf-billing-toggle');
-  const billMonthly = document.getElementById('wf-bill-monthly');
-  const billAnnual  = document.getElementById('wf-bill-annual');
-  const proDesc     = document.getElementById('wf-pro-desc');
-  const proSaving   = document.getElementById('wf-pro-saving');
-  if (!toggle) return;
-
-  toggle.addEventListener('change', () => {
-    const isAnnual = toggle.checked;
-    billMonthly.classList.toggle('active', !isAnnual);
-    billAnnual.classList.toggle('active', isAnnual);
-    if (isAnnual) {
-      setPrice('07');
-      setTimeout(updateLeadingZero, 50);
-      proPeriod.textContent = '/mo';
-      proDesc.textContent = '£84 billed annually.';
-      proSaving.textContent = 'You save £60 a year \u2014 that\'s 42% off';
-      proSaving.classList.add('visible');
-    } else {
-      setPrice('12');
-      setTimeout(updateLeadingZero, 50);
-      proPeriod.textContent = '/month';
-      proDesc.textContent = 'Billed monthly. Cancel any time.';
-      proSaving.classList.remove('visible');
-    }
+const SCREENS = ['s-wall','s-nudge-pl','s-wall-pl','s-plans','s-plans-plus','s-checkout','s-success'];
+function show(id) {
+  SCREENS.forEach(s => {
+    const el = document.getElementById(s);
+    if (el) el.classList.remove('on');
   });
-})();
+  const target = document.getElementById(id);
+  if (target) { target.classList.add('on'); window.scrollTo(0,0); }
+}
+
+function toast(icon, text, cls) {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + (cls||'t-cyan');
+  e.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(),300); }, 3000);
+}
+
+// ── BILLING TOGGLE (Free → plans page) ──────────────────────────────────
+let billing = 'annual';
+
+function toggleBilling() {
+  billing = billing === 'annual' ? 'monthly' : 'annual';
+  const track = document.getElementById('toggle-track');
+  if (billing === 'annual') track.classList.add('annual');
+  else track.classList.remove('annual');
+  updatePrices();
+}
+function setBilling(type) { billing = type; updatePrices(); }
+
+function updatePrices() {
+  const isAnnual = billing === 'annual';
+  // Pro Light
+  const plNote = document.getElementById('pl-billing-note');
+  if (plNote) plNote.textContent = isAnnual ? 'billed annually · £84/year' : 'billed monthly';
+  // Pro Plus
+  const ppNote = document.getElementById('pp-billing-note');
+  if (ppNote) ppNote.textContent = isAnnual ? 'billed annually · £228/year' : 'billed monthly';
+  // Animate digits
+  animatePrice('pl-price-reel', isAnnual ? '7' : '12');
+  animatePrice('pp-price-reel', isAnnual ? '19' : '29');
+}
+
+function animatePrice(reelId, newVal) {
+  const reel = document.getElementById(reelId);
+  if (!reel) return;
+  const digits = '0123456789';
+  const targetDigit = newVal.slice(-1);
+  const idx = digits.indexOf(targetDigit);
+  if (idx === -1) return;
+  const digitH = 52;
+  reel.style.transition = 'none';
+  reel.style.transform = 'translateY(0)';
+  reel.innerHTML = '';
+  for (const d of digits) {
+    const s = document.createElement('span');
+    s.textContent = d;
+    reel.appendChild(s);
+  }
+  // Also handle two-digit prices like 12, 29, 19
+  const window_el = document.getElementById(reelId.replace('-reel','-window'));
+  if (window_el && newVal.length > 1) {
+    window_el.innerHTML = `<span style="font-family:var(--of);font-size:52px;font-weight:900;letter-spacing:-0.03em;">${newVal}</span>`;
+    return;
+  }
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      reel.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
+      reel.style.transform = `translateY(-${idx * digitH}px)`;
+    });
+  });
+}
+
+// ── BILLING TOGGLE (Pro Plus upgrade page) ────────────────────────────────
+let billingPlus = 'annual';
+function toggleBillingPlus() {
+  billingPlus = billingPlus === 'annual' ? 'monthly' : 'annual';
+  const track = document.getElementById('toggle-track-plus');
+  if (billingPlus === 'annual') track.classList.add('annual');
+  else track.classList.remove('annual');
+  updatePricesPlus();
+}
+function setBillingPlus(type) { billingPlus = type; updatePricesPlus(); }
+function updatePricesPlus() {
+  const isAnnual = billingPlus === 'annual';
+  const price = document.getElementById('pp-upgrade-price');
+  const note = document.getElementById('pp-upgrade-note');
+  if (price) price.textContent = isAnnual ? '19' : '29';
+  if (note) note.textContent = isAnnual ? 'billed annually · £228/year' : 'billed monthly';
+}
+
+// ── CHECKOUT ──────────────────────────────────────────────────────────────
+function openCheckout(tier) {
+  const isAnnual = billing === 'annual';
+  const isPlus = tier === 'pro-plus';
+  document.getElementById('checkout-title').textContent = isPlus
+    ? 'Upgrade to Pro Plus'
+    : 'Start your Pro Light trial';
+  document.getElementById('checkout-sub').textContent = isPlus
+    ? 'You\'ll be charged today. Cancel any time from your account settings.'
+    : '30 days free — no card required during trial. We\'ll ask for payment on day 30 if you\'d like to continue.';
+  document.getElementById('checkout-plan').textContent = isPlus ? 'Pro Plus' : 'Pro Light';
+  document.getElementById('checkout-trial').textContent = isPlus ? '—' : '30 days free';
+  document.getElementById('checkout-billing').textContent = isPlus
+    ? (isAnnual ? '£228/year' : '£29/month')
+    : (isAnnual ? '£84/year' : '£12/month');
+  document.getElementById('checkout-due').textContent = isPlus
+    ? (isAnnual ? '£228.00' : '£29.00')
+    : '£0';
+  // Update success state
+  document.getElementById('success-title').textContent = isPlus
+    ? 'Welcome to Pro Plus.'
+    : 'Your Pro Light trial is live.';
+  document.getElementById('success-sub').textContent = isPlus
+    ? 'Every limit is gone. 10,000 prospects, unlimited campaigns, priority support — all yours.'
+    : '30 days of the full Pulse. experience — everything unlocked, nothing held back. We\'ll remind you before your trial ends.';
+  show('s-checkout');
+}
+
+// Init
+updatePrices();
 </script>
-</body></html>
+</body>
+</html>
