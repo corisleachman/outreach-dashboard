@@ -632,20 +632,21 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         <div style="margin-bottom:20px;padding:10px 14px;background:var(--s);border-radius:8px;border:1px solid var(--b);">
           <div style="font-size:10px;font-family:var(--of);font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--td);margin-bottom:8px;">Wireframe state</div>
           <div class="state-switcher">
-            <button class="state-btn active" onclick="setBillingState('pro',this)">Pro (paid)</button>
+            <button class="state-btn active" onclick="setBillingState('pro-light',this)">Pro Light (paid)</button>
             <button class="state-btn" onclick="setBillingState('trial',this)">Pro Light trial</button>
+            <button class="state-btn" onclick="setBillingState('pro-plus',this)">Pro Plus (paid)</button>
             <button class="state-btn" onclick="setBillingState('free',this)">Free</button>
           </div>
         </div>
 
         <!-- PRO STATE -->
-        <div id="billing-pro">
+        <div id="billing-pro-light">
           <div class="sect">
             <div class="sect-title">Current plan</div>
             <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:var(--s);border:1px solid rgba(255,20,147,0.2);border-radius:12px;margin-bottom:12px;">
               <div>
                 <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px;">
-                  <span class="plan-badge plan-pro">Pro</span>
+                  <span class="plan-badge plan-pro">Pro Light</span>
                   <span style="font-size:12px;color:var(--green);">Active</span>
                 </div>
                 <div style="font-size:13px;color:var(--tm);">£84/year · renews 17 Mar 2027</div>
@@ -1095,33 +1096,50 @@ function toast(icon, text, cls) {
     <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:4px;">Change your plan</div>
     <p style="font-size:13px;color:var(--tm);margin-bottom:24px;line-height:1.6;">Switch billing cycle, or move to the Free plan.</p>
 
-    <!-- Billing cycle toggle -->
+    <!-- Tier options -->
     <div style="margin-bottom:20px;">
-      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:10px;font-family:var(--of);">Billing cycle</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-        <div id="cycle-monthly" onclick="selectCycle('monthly')"
-          style="padding:14px;border-radius:12px;border:1px solid var(--b2);cursor:pointer;transition:all 0.15s;background:var(--s);">
-          <div style="font-family:var(--of);font-size:15px;font-weight:800;margin-bottom:2px;">£12<span style="font-size:12px;font-weight:500;color:var(--tm);">/month</span></div>
-          <div style="font-size:11px;color:var(--td);">Billed monthly</div>
-        </div>
-        <div id="cycle-annual" onclick="selectCycle('annual')"
-          style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.3);cursor:pointer;transition:all 0.15s;background:rgba(255,20,147,0.06);">
-          <div style="display:flex;align-items:center;gap:6px;margin-bottom:2px;">
-            <div style="font-family:var(--of);font-size:15px;font-weight:800;">£7<span style="font-size:12px;font-weight:500;color:var(--tm);">/month</span></div>
-            <span style="font-size:9px;padding:2px 7px;border-radius:100px;background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.25);color:var(--green);font-family:var(--of);font-weight:700;">Save 42%</span>
-          </div>
-          <div style="font-size:11px;color:var(--td);">£84 billed annually · Current plan</div>
-        </div>
-      </div>
-    </div>
+      <div style="font-size:11px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:var(--td);margin-bottom:10px;font-family:var(--of);">Switch plan</div>
+      <div style="display:flex;flex-direction:column;gap:8px;">
 
-    <!-- Downgrade to free -->
-    <div style="padding:14px;border-radius:12px;border:1px solid var(--b);background:var(--s);margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;gap:12px;">
-      <div>
-        <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Move to Free</div>
-        <div style="font-size:12px;color:var(--td);line-height:1.5;">1 campaign · 100 prospects · Manual sending. Your Pro features lock at the end of your current billing period.</div>
+        <!-- Pro Light -->
+        <div id="cycle-pro-light" onclick="selectCycle('pro-light')"
+          style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.3);cursor:pointer;transition:all 0.15s;background:rgba(255,20,147,0.06);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--of);font-size:14px;font-weight:800;">Pro Light <span style="font-size:10px;padding:2px 8px;border-radius:100px;background:rgba(255,20,147,0.15);color:var(--pink);font-weight:700;">Most popular</span></div>
+              <div style="font-size:11px;color:var(--td);margin-top:3px;">5 campaigns · 1,000 prospects · AI drafts</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:var(--of);font-size:15px;font-weight:800;">£7<span style="font-size:11px;font-weight:500;color:var(--tm);">/mo</span></div>
+              <div style="font-size:10px;color:var(--td);">£84/year</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pro Plus -->
+        <div id="cycle-pro-plus" onclick="selectCycle('pro-plus')"
+          style="padding:14px;border-radius:12px;border:1px solid var(--b2);cursor:pointer;transition:all 0.15s;background:var(--s);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--of);font-size:14px;font-weight:800;">Pro Plus</div>
+              <div style="font-size:11px;color:var(--td);margin-top:3px;">Unlimited campaigns · 10,000 prospects · Priority support</div>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-family:var(--of);font-size:15px;font-weight:800;">£19<span style="font-size:11px;font-weight:500;color:var(--tm);">/mo</span></div>
+              <div style="font-size:10px;color:var(--td);">£228/year</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Move to Free -->
+        <div style="padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:var(--s);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Move to Free</div>
+            <div style="font-size:12px;color:var(--td);line-height:1.5;">1 campaign · 100 prospects. Data above your Free limits will be preserved but locked.</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--td);" onclick="closeChangePlanModal();openDowngradeModal('free')">Downgrade</button>
+        </div>
       </div>
-      <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--td);" onclick="closeChangePlanModal();toast('→','Moving to Free at end of billing period','t-amber')">Downgrade</button>
     </div>
 
     <!-- Cancel account link -->
@@ -1276,7 +1294,7 @@ function toast(icon, text, cls) {
 
 <script>
 // ── CHANGE PLAN MODAL ──
-let selectedCycle = 'annual';
+let selectedCycle = 'pro-light';
 function openChangePlanModal() {
   selectCycle('annual');
   document.getElementById('change-plan-modal').classList.add('open');
@@ -1405,7 +1423,7 @@ function closeInvoiceModal() {
     <!-- Header -->
     <div style="text-align:center;margin-bottom:24px;">
       <div style="font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:6px;">
-        Upgrade to <span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro</span>
+        Upgrade to <span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Pro Light</span>
       </div>
       <div style="font-size:13px;color:var(--tm);">Choose your billing cycle. Cancel any time.</div>
     </div>
@@ -1647,6 +1665,48 @@ function openReconnectGmailModal() {
 }
 function closeReconnectModal() {
   document.getElementById('reconnect-gmail-modal').classList.remove('open');
+}
+</script>
+
+
+<!-- ══ DOWNGRADE CONFIRMATION MODAL ══ -->
+<div class="modal-overlay" id="downgrade-modal" onclick="if(event.target===this)closeDowngradeModal()">
+  <div class="modal-box" style="max-width:460px;">
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;" id="downgrade-title">Move to Free</div>
+    <p style="font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:16px;" id="downgrade-body">
+      Your data is safe — nothing gets deleted. Campaigns and prospects above your Free limits will be preserved but locked until you upgrade again.
+    </p>
+    <div style="padding:12px 14px;background:rgba(255,157,66,0.06);border:1px solid rgba(255,157,66,0.18);border-radius:10px;margin-bottom:20px;font-size:12px;color:rgba(255,200,120,0.85);line-height:1.6;" id="downgrade-detail">
+      What gets locked: campaigns 2–5 · prospects above 100 · AI draft generation · sequences steps 2–6 · auto-scheduling
+    </div>
+    <p style="font-size:12px;color:var(--td);margin-bottom:20px;line-height:1.6;">
+      The change takes effect at the end of your current billing period. You can upgrade again any time to unlock everything instantly.
+    </p>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="closeDowngradeModal()">Keep current plan</button>
+      <button class="btn btn-sm" style="padding:6px 14px;font-size:12px;background:rgba(255,157,66,0.12);border:1px solid rgba(255,157,66,0.3);color:var(--amber);font-family:var(--of);font-weight:700;border-radius:100px;" onclick="closeDowngradeModal();toast('→','Downgrade scheduled — takes effect at billing period end','t-amber')">Confirm downgrade</button>
+    </div>
+  </div>
+</div>
+
+<script>
+function openDowngradeModal(toTier) {
+  const titles = { 'free': 'Move to Free', 'pro-light': 'Downgrade to Pro Light' };
+  const bodies = {
+    'free': 'Your data is safe — nothing gets deleted. Campaigns and prospects above your Free limits will be preserved but locked until you upgrade again.',
+    'pro-light': 'Your data is safe — nothing gets deleted. Campaigns and prospects above your Pro Light limits will be preserved but locked until you upgrade again.'
+  };
+  const details = {
+    'free': 'What gets locked: campaigns 2–5 · prospects above 100 · AI draft generation · sequence steps 2–6 · auto-scheduling',
+    'pro-light': 'What gets locked: campaigns above 5 · prospects above 1,000'
+  };
+  document.getElementById('downgrade-title').textContent = titles[toTier] || 'Downgrade';
+  document.getElementById('downgrade-body').textContent = bodies[toTier] || '';
+  document.getElementById('downgrade-detail').textContent = details[toTier] || '';
+  document.getElementById('downgrade-modal').classList.add('open');
+}
+function closeDowngradeModal() {
+  document.getElementById('downgrade-modal').classList.remove('open');
 }
 </script>
 
