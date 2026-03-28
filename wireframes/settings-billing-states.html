@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Settings: Billing States (Three-Tier)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.1);--ad:rgba(255,157,66,0.1);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);--th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(100px);pointer-events:none;z-index:0;}
+.o1{width:500px;height:500px;background:rgba(255,20,147,0.05);top:-150px;right:-100px;}
+.o2{width:350px;height:350px;background:rgba(0,212,255,0.04);bottom:-100px;left:100px;}
+
+/* TOPBAR */
+.tb{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.92);
+  border-bottom:1px solid var(--b);backdrop-filter:blur(12px);z-index:100;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 16px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;margin-left:auto;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:90;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:rgba(255,255,255,0.45);}
+.si:hover{background:rgba(255,255,255,0.07);color:rgba(255,255,255,0.75);}
+.si.active{background:rgba(255,20,147,0.12);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{width:18px;height:18px;}
+
+/* MAIN LAYOUT */
+.main{margin-top:var(--th);margin-left:var(--sw);padding:36px 40px 80px;
+  position:relative;z-index:1;max-width:700px;}
+
+/* SETTINGS TABS — left column nav */
+.settings-layout{display:grid;grid-template-columns:180px 1fr;gap:32px;min-height:600px;}
+.settings-nav{display:flex;flex-direction:column;gap:2px;padding-top:4px;}
+.settings-nav-group{font-family:var(--of);font-size:9px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--td);
+  padding:12px 10px 4px;}
+.snav-item{font-size:13px;color:var(--tm);padding:8px 12px;border-radius:8px;
+  cursor:pointer;transition:all 0.15s;font-family:var(--sf);
+  border:1px solid transparent;display:flex;align-items:center;gap:8px;}
+.snav-item:hover{background:var(--s2);color:var(--t);}
+.snav-item.active{background:rgba(255,20,147,0.08);color:var(--t);
+  border-color:rgba(255,20,147,0.2);}
+.snav-item .snav-dot{width:6px;height:6px;border-radius:50%;background:var(--pink);flex-shrink:0;}
+
+/* SETTINGS CONTENT */
+.settings-content{display:none;}
+.settings-content.active{display:block;}
+.page-title{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;margin-bottom:6px;}
+.page-sub{font-size:13px;color:var(--tm);margin-bottom:28px;line-height:1.5;}
+
+/* SECTION */
+.sect{margin-bottom:28px;}
+.sect-title{font-family:var(--of);font-size:12px;font-weight:700;
+  letter-spacing:0.08em;text-transform:uppercase;color:var(--td);
+  margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--b);}
+.row{display:flex;align-items:center;justify-content:space-between;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.row:last-child{border-bottom:none;}
+.row-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+.row-sub{font-size:12px;color:var(--tm);}
+
+/* INPUTS */
+.field{margin-bottom:14px;}
+.field label{display:block;font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);margin-bottom:6px;font-family:var(--of);}
+.input{width:100%;padding:10px 14px;background:var(--s);border:1px solid var(--b2);
+  border-radius:10px;color:var(--t);font-family:var(--sf);font-size:13px;outline:none;}
+.input:focus{border-color:rgba(255,20,147,0.4);}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;
+  border-radius:100px;font-family:var(--of);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 0.2s;border:none;text-decoration:none;}
+.btn-primary{background:var(--gr);color:white;box-shadow:0 0 24px rgba(255,20,147,0.2);}
+.btn-ghost{background:transparent;border:1px solid var(--b2);color:var(--tm);}
+.btn-ghost:hover{color:var(--t);border-color:rgba(255,255,255,0.2);}
+.btn-danger{background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);color:var(--red);}
+.btn-sm{padding:6px 14px;font-size:12px;}
+
+/* TOGGLE */
+.toggle-wrap{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.toggle{width:40px;height:22px;border-radius:100px;background:var(--b2);
+  position:relative;transition:background 0.2s;flex-shrink:0;}
+.toggle.on{background:linear-gradient(135deg,rgba(255,20,147,0.6),rgba(0,212,255,0.6));}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;
+  border-radius:50%;background:var(--t);transition:transform 0.2s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.4);}
+.toggle.on .toggle-thumb{transform:translateX(18px);}
+
+/* PLAN BADGE */
+.plan-badge{display:inline-flex;align-items:center;gap:6px;
+  padding:4px 12px;border-radius:100px;font-family:var(--of);
+  font-size:11px;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.plan-pro{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.plan-free{background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);color:var(--green);}
+.plan-trial{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+
+/* CONNECTED BADGE */
+.connected-badge{display:inline-flex;align-items:center;gap:6px;
+  padding:4px 10px;border-radius:100px;
+  background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);
+  font-size:11px;color:var(--green);font-family:var(--of);font-weight:600;}
+
+/* PERSONALITY PACK CARD */
+.pack-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.pack-card{padding:14px;border-radius:12px;background:var(--s);
+  border:1px solid var(--b);cursor:pointer;transition:all 0.15s;}
+.pack-card:hover{background:var(--s2);border-color:var(--b2);}
+.pack-card.sel{background:var(--pd);border-color:rgba(255,20,147,0.3);}
+.pack-name{font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:3px;}
+.pack-desc{font-size:11px;color:var(--tm);margin-bottom:8px;}
+.pack-preview{font-size:11px;color:var(--td);font-style:italic;line-height:1.5;
+  padding:8px;background:rgba(255,255,255,0.03);border-radius:6px;}
+
+/* AVATAR UPLOAD */
+.avatar-section{display:flex;align-items:center;gap:16px;margin-bottom:24px;}
+.avatar-large{width:64px;height:64px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:20px;font-weight:700;color:white;
+  position:relative;flex-shrink:0;}
+.avatar-edit{position:absolute;bottom:0;right:0;width:20px;height:20px;
+  border-radius:50%;background:#0d0914;border:2px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;}
+
+/* GRADIENT PREVIEW */
+.grad-preview{height:48px;border-radius:12px;margin-bottom:12px;
+  background:linear-gradient(135deg,#ff1493,#00d4ff);}
+.color-pickers{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px;}
+.color-field{display:flex;flex-direction:column;gap:6px;}
+.color-field label{font-size:11px;font-weight:700;letter-spacing:0.06em;
+  text-transform:uppercase;color:var(--td);font-family:var(--of);}
+.color-swatch{width:100%;height:36px;border-radius:8px;border:1px solid var(--b2);
+  cursor:pointer;transition:transform 0.15s;}
+.color-swatch:hover{transform:scale(1.03);}
+
+/* NOTIFICATION ROWS */
+.notif-row{display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.notif-row:last-child{border-bottom:none;}
+.notif-info{flex:1;}
+.notif-label{font-size:14px;font-weight:500;margin-bottom:2px;}
+.notif-sub{font-size:12px;color:var(--tm);}
+
+/* INVOICE ROW */
+.invoice-row{display:flex;align-items:center;gap:12px;
+  padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.04);}
+.invoice-row:last-child{border-bottom:none;}
+.invoice-date{font-size:13px;color:var(--tm);width:100px;flex-shrink:0;}
+.invoice-desc{font-size:13px;flex:1;}
+.invoice-amt{font-size:13px;font-weight:600;font-family:var(--of);}
+
+/* DANGER ZONE */
+.danger-box{border:1px solid rgba(255,76,76,0.2);border-radius:12px;
+  padding:18px;background:rgba(255,76,76,0.04);}
+
+/* BILLING STATES SWITCHER */
+.state-switcher{display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;}
+.state-btn{font-family:var(--of);font-size:11px;font-weight:600;
+  padding:5px 12px;border-radius:100px;border:1px solid var(--b2);
+  background:transparent;color:var(--tm);cursor:pointer;transition:all 0.15s;}
+.state-btn:hover{color:var(--t);}
+.state-btn.active{border-color:rgba(255,20,147,0.4);color:var(--pink);
+  background:rgba(255,20,147,0.08);}
+
+/* ANNOTATIONS */
+.ann{margin-top:24px;padding:14px 16px;
+  background:rgba(0,212,255,0.04);border:1px solid rgba(0,212,255,0.1);
+  border-radius:10px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:8px;}
+.ann-item{display:flex;gap:8px;font-size:12px;color:var(--td);
+  margin-bottom:5px;line-height:1.5;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:4px;height:4px;border-radius:50%;background:var(--cyan);
+  margin-top:6px;flex-shrink:0;}
+
+/* TOAST */
+.toast-zone{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px;}
+.toast{display:flex;align-items:center;gap:8px;padding:10px 16px;
+  border-radius:10px;font-size:13px;animation:slideIn 0.3s ease;
+  font-family:var(--of);font-weight:600;}
+.t-cyan{background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.t-pink{background:rgba(255,20,147,0.12);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+@keyframes slideIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+  /* ── COLOUR PICKERS (from brand-explorer) ── */
+  .hidden-picker { position:absolute; width:0; height:0; opacity:0; pointer-events:none; }
+  .swatch-btn { display:inline-flex; align-items:center; gap:8px; padding:8px 12px;
+    background:var(--s); border:1px solid var(--b2); border-radius:10px;
+    cursor:pointer; transition:all 0.15s; width:100%; }
+  .swatch-btn:hover { border-color:rgba(255,255,255,0.25); background:var(--s2); }
+  .swatch-circle { width:28px; height:28px; border-radius:50%;
+    border:2px solid rgba(255,255,255,0.15); flex-shrink:0; }
+  .swatch-hex { font-family:'DM Mono',monospace; font-size:12px; color:var(--tm); }
+  .gen-btn { display:flex; align-items:center; gap:8px; width:100%; padding:10px 14px;
+    background:var(--s); border:1px solid var(--b2); border-radius:10px;
+    color:var(--t); font-family:var(--of); font-size:13px; font-weight:600;
+    cursor:pointer; transition:all 0.2s; }
+  .gen-btn:hover { background:var(--s2); border-color:rgba(255,255,255,0.2); }
+  .gen-btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .suggestion-panel { display:none; margin-top:10px; padding:12px 14px;
+    background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.1);
+    border-radius:10px; }
+  .suggestion-panel.show { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .sug-dot { width:18px; height:18px; border-radius:50%; border:1px solid rgba(255,255,255,0.2); flex-shrink:0; }
+  .sug-name { font-family:var(--of); font-size:13px; font-weight:700; }
+  .sug-desc { font-size:12px; color:var(--td); flex:1; }
+  .grad-swatch { height:36px; border-radius:8px; margin-bottom:16px;
+    background:linear-gradient(135deg,#ff1493,#00d4ff); }
+
+
+  /* ── MODALS ── */
+  .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.75);
+    backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;
+    justify-content:center;opacity:0;pointer-events:none;transition:opacity 0.2s;}
+  .modal-overlay.open{opacity:1;pointer-events:all;}
+  .modal-box{background:#1a0f2e;border:1px solid var(--b2);border-radius:14px;
+    padding:28px;width:460px;max-width:calc(100vw - 48px);
+    transform:translateY(12px);transition:transform 0.25s;
+    box-shadow:0 24px 80px rgba(0,0,0,0.6);}
+  .modal-overlay.open .modal-box{transform:translateY(0);}
+
+</style>
+<style>
+/* billing-specific overrides */
+.billing-card {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 12px;
+}
+.billing-tier-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 12px; border-radius: 100px;
+  font-family: var(--of); font-size: 11px; font-weight: 800;
+}
+.badge-free    { background: var(--s2); color: var(--tm); border: 1px solid var(--b2); }
+.badge-trial   { background: rgba(255,157,66,0.1); color: var(--amber); border: 1px solid rgba(255,157,66,0.25); }
+.badge-prolight { background: rgba(255,20,147,0.1); color: var(--pink); border: 1px solid rgba(255,20,147,0.25); }
+.badge-proplus { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.3); }
+.trial-countdown {
+  padding: 12px 16px;
+  background: rgba(255,157,66,0.06);
+  border: 1px solid rgba(255,157,66,0.2);
+  border-radius: 10px;
+  margin-bottom: 12px;
+}
+.sc { display: none; }
+.sc.on { display: block; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body style="background:var(--bg,#0d0914);color:var(--t,#f0f0ee);font-family:'DM Sans',sans-serif;padding:32px 24px;max-width:600px;margin:0 auto;">
+
+<a href="../hub.html" style="font-size:11px;color:var(--td);text-decoration:none;display:block;margin-bottom:24px;">← Hub</a>
+
+<div style="font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:4px;">Settings — Plan & Billing</div>
+<div style="font-size:13px;color:var(--tm);margin-bottom:28px;">All four billing states for the three-tier pricing model</div>
+
+<!-- ═══════════════════════════
+     STATE 1: FREE
+═══════════════════════════ -->
+<div class="sc on" id="state-free">
+  <div class="billing-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--of);font-size:16px;font-weight:800;margin-bottom:4px;">Your plan</div>
+        <div class="billing-tier-badge badge-free">Free</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openUpgradeFromFree()">Upgrade to Pro Light →</button>
+    </div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--b);">
+      1 campaign · 100 prospects · Step 1 sequences only · No AI drafts
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.15);border-radius:10px;font-size:12px;color:var(--tm);line-height:1.6;">
+      <strong style="color:var(--t);">Start your free 30-day Pro Light trial.</strong> No credit card needed. Drop back to Free any time.
+      <button class="btn btn-primary btn-sm" style="margin-top:8px;width:100%;justify-content:center;" onclick="openUpgradeFromFree()">Start free trial →</button>
+    </div>
+  </div>
+  <div class="billing-card" style="opacity:0.5;">
+    <div style="font-size:12px;color:var(--td);">No invoices yet — you're on the Free plan.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     STATE 2: PRO LIGHT TRIAL
+═══════════════════════════ -->
+<div class="sc" id="state-trial">
+  <div class="trial-countdown">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;">
+      <div style="font-family:var(--of);font-size:13px;font-weight:700;color:var(--amber);">⏱ Pro Light trial — 18 days remaining</div>
+      <div style="font-size:11px;color:var(--td);">Ends Apr 17, 2026</div>
+    </div>
+    <div style="font-size:12px;color:rgba(255,200,120,0.75);line-height:1.6;">After your trial ends you'll move to Free unless you upgrade. Your data stays either way.</div>
+  </div>
+  <div class="billing-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--of);font-size:16px;font-weight:800;margin-bottom:4px;">Your plan</div>
+        <div class="billing-tier-badge badge-trial">Pro Light — Trial</div>
+      </div>
+      <button class="btn btn-primary btn-sm" onclick="openConvertTrial()">Convert now →</button>
+    </div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--b);">
+      5 campaigns · 1,000 prospects · Unlimited AI · Full sequences · All packs
+    </div>
+    <div style="margin-top:14px;padding:12px 14px;background:rgba(255,157,66,0.05);border:1px solid rgba(255,157,66,0.15);border-radius:10px;font-size:12px;line-height:1.6;">
+      <strong style="color:var(--t);">Lock in £7/month before your trial ends.</strong> <span style="color:var(--tm);">Annual plan saves 42% vs monthly.</span>
+      <div style="display:flex;gap:8px;margin-top:8px;">
+        <button class="btn btn-primary btn-sm" style="flex:1;justify-content:center;" onclick="openConvertTrial()">Convert — £7/mo annual</button>
+        <button class="btn btn-ghost btn-sm" onclick="openConvertTrial()">Monthly — £12/mo</button>
+      </div>
+    </div>
+  </div>
+  <div class="billing-card" style="opacity:0.5;">
+    <div style="font-size:12px;color:var(--td);">No invoices yet — your trial is free.</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     STATE 3: PRO LIGHT PAID
+═══════════════════════════ -->
+<div class="sc" id="state-prolight">
+  <div class="billing-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--of);font-size:16px;font-weight:800;margin-bottom:4px;">Your plan</div>
+        <div class="billing-tier-badge badge-prolight">Pro Light</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="openChangePlan('prolight')">Change plan</button>
+    </div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--b);">
+      5 campaigns · 1,000 prospects · Unlimited AI · Full sequences · All packs
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--td);">
+      <span>£84/year · renews Apr 1, 2027</span>
+      <span style="color:var(--tm);">Annual plan</span>
+    </div>
+  </div>
+
+  <!-- Payment method -->
+  <div class="billing-card">
+    <div style="font-size:12px;font-weight:700;font-family:var(--of);text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:12px;">Payment method</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="padding:3px 8px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;font-size:11px;font-family:var(--of);font-weight:800;">VISA</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;">···· ···· ···· 4242</div>
+          <div style="font-size:11px;color:var(--td);">Expires 12/27</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="toast('→','Opening Stripe portal…','tc')">Update</button>
+    </div>
+    <div style="font-size:11px;color:var(--td);margin-top:8px;">Card details stored securely by Stripe. Pulse. never sees your full card number.</div>
+  </div>
+
+  <!-- Invoice history -->
+  <div class="billing-card">
+    <div style="font-size:12px;font-weight:700;font-family:var(--of);text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:12px;">Invoice history</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b);font-size:13px;">
+      <span style="color:var(--td);">1 Apr 2026</span>
+      <span>Pro Light Annual</span>
+      <span>£84.00</span>
+      <button class="btn btn-ghost btn-sm" onclick="toast('→','Downloading PDF…','tc')">PDF</button>
+    </div>
+  </div>
+
+  <!-- Upgrade nudge to Pro Plus -->
+  <div style="padding:14px 16px;background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.18);border-radius:12px;margin-bottom:12px;">
+    <div style="font-family:var(--of);font-size:13px;font-weight:700;margin-bottom:4px;color:#c4b5fd;">Need more scale?</div>
+    <div style="font-size:12px;color:var(--tm);line-height:1.5;margin-bottom:10px;">Pro Plus gives you 10,000 prospects, unlimited campaigns, and priority support.</div>
+    <button class="btn btn-ghost btn-sm" style="border-color:rgba(139,92,246,0.3);color:#a78bfa;" onclick="openChangePlan('prolight')">Upgrade to Pro Plus →</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     STATE 4: PRO PLUS PAID
+═══════════════════════════ -->
+<div class="sc" id="state-proplus">
+  <div class="billing-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;">
+      <div>
+        <div style="font-family:var(--of);font-size:16px;font-weight:800;margin-bottom:4px;">Your plan</div>
+        <div class="billing-tier-badge badge-proplus">Pro Plus</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="openChangePlan('proplus')">Change plan</button>
+    </div>
+    <div style="font-size:12px;color:var(--td);line-height:1.7;padding:12px 14px;background:rgba(255,255,255,0.02);border-radius:8px;border:1px solid var(--b);">
+      Unlimited campaigns · 10,000 prospects · Unlimited AI · Full sequences · Priority support
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--td);">
+      <span>£228/year · renews Apr 1, 2027</span>
+      <span style="color:var(--tm);">Annual plan</span>
+    </div>
+  </div>
+
+  <!-- Payment method (same as prolight state) -->
+  <div class="billing-card">
+    <div style="font-size:12px;font-weight:700;font-family:var(--of);text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:12px;">Payment method</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="padding:3px 8px;background:var(--s2);border:1px solid var(--b2);border-radius:4px;font-size:11px;font-family:var(--of);font-weight:800;">VISA</div>
+        <div>
+          <div style="font-size:13px;font-weight:500;">···· ···· ···· 4242</div>
+          <div style="font-size:11px;color:var(--td);">Expires 12/27</div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="toast('→','Opening Stripe portal…','tc')">Update</button>
+    </div>
+  </div>
+
+  <!-- Invoice history -->
+  <div class="billing-card">
+    <div style="font-size:12px;font-weight:700;font-family:var(--of);text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:12px;">Invoice history</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--b);font-size:13px;">
+      <span style="color:var(--td);">1 Apr 2026</span>
+      <span>Pro Plus Annual</span>
+      <span>£228.00</span>
+      <button class="btn btn-ghost btn-sm" onclick="toast('→','Downloading PDF…','tc')">PDF</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     CHANGE PLAN MODAL
+     (tier-aware — different for each starting tier)
+═══════════════════════════ -->
+<div class="modal-overlay" id="change-plan-modal" onclick="if(event.target===this)closeChangePlan()">
+  <div class="modal-box" style="max-width:500px;" id="change-plan-box">
+    <!-- content injected by JS based on current tier -->
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     UPGRADE FROM FREE MODAL
+═══════════════════════════ -->
+<div class="modal-overlay" id="upgrade-free-modal" onclick="if(event.target===this)document.getElementById('upgrade-free-modal').classList.remove('open')">
+  <div class="modal-box" style="max-width:480px;">
+    <div style="font-family:var(--of);font-size:20px;font-weight:800;margin-bottom:6px;">Start your free trial</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">30 days of Pro Light, completely free. No credit card needed. Drop back to Free any time.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
+      <div style="padding:14px;border-radius:12px;border:1px solid var(--b2);background:var(--s);text-align:center;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:6px;font-family:var(--of);">After trial</div>
+        <div style="font-family:var(--of);font-size:24px;font-weight:900;">£12<span style="font-size:12px;color:var(--td);font-weight:400;">/mo</span></div>
+        <div style="font-size:11px;color:var(--td);">Billed monthly</div>
+      </div>
+      <div style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.3);background:rgba(255,20,147,0.06);text-align:center;">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;color:var(--td);margin-bottom:6px;font-family:var(--of);">Annual (best value)</div>
+        <div style="font-family:var(--of);font-size:24px;font-weight:900;color:var(--pink);">£7<span style="font-size:12px;color:var(--td);font-weight:400;">/mo</span></div>
+        <div style="font-size:11px;color:var(--green);">Save 42% · £84/year</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;" onclick="document.getElementById('upgrade-free-modal').classList.remove('open');toast('✓','Pro Light trial started — 30 days free','tc')">Start free trial →</button>
+    <button onclick="document.getElementById('upgrade-free-modal').classList.remove('open')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:10px;display:block;width:100%;text-align:center;">Maybe later</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     CONVERT TRIAL MODAL
+═══════════════════════════ -->
+<div class="modal-overlay" id="convert-trial-modal" onclick="if(event.target===this)document.getElementById('convert-trial-modal').classList.remove('open')">
+  <div class="modal-box" style="max-width:440px;">
+    <div style="font-family:var(--of);font-size:20px;font-weight:800;margin-bottom:6px;">Convert to Pro Light</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:16px;line-height:1.6;">Lock in your price before your trial ends in 18 days. Your account, campaigns, and data stay exactly as they are.</p>
+    <div style="padding:12px 14px;background:rgba(255,157,66,0.06);border:1px solid rgba(255,157,66,0.18);border-radius:10px;margin-bottom:16px;font-size:12px;color:rgba(255,200,120,0.85);line-height:1.6;">
+      ⏱ Your trial ends <strong style="color:var(--amber);">Apr 17, 2026</strong> — after that you'll need to subscribe or move to Free.
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
+      <div style="padding:14px;border-radius:12px;border:1px solid var(--b2);background:var(--s);text-align:center;cursor:pointer;" onclick="selectConvertCycle('monthly',this)">
+        <div style="font-family:var(--of);font-size:22px;font-weight:900;">£12<span style="font-size:11px;color:var(--td);font-weight:400;">/mo</span></div>
+        <div style="font-size:11px;color:var(--td);margin-top:2px;">Billed monthly</div>
+      </div>
+      <div id="convert-annual-card" style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.35);background:rgba(255,20,147,0.07);text-align:center;cursor:pointer;" onclick="selectConvertCycle('annual',this)">
+        <div style="font-family:var(--of);font-size:22px;font-weight:900;color:var(--pink);">£7<span style="font-size:11px;color:var(--td);font-weight:400;">/mo</span></div>
+        <div style="font-size:11px;color:var(--green);margin-top:2px;">£84/year · save 42%</div>
+      </div>
+    </div>
+    <button class="btn btn-primary btn-sm" style="width:100%;justify-content:center;" onclick="document.getElementById('convert-trial-modal').classList.remove('open');toast('✓','Redirecting to Stripe checkout…','tc')">Continue to payment →</button>
+    <button onclick="document.getElementById('convert-trial-modal').classList.remove('open')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:10px;display:block;width:100%;text-align:center;">Keep using trial</button>
+  </div>
+</div>
+
+<!-- ═══════════════════════════
+     DOWNGRADE CONFIRMATION MODAL
+═══════════════════════════ -->
+<div class="modal-overlay" id="downgrade-modal" onclick="if(event.target===this)document.getElementById('downgrade-modal').classList.remove('open')">
+  <div class="modal-box" style="max-width:460px;" id="downgrade-box">
+    <!-- content injected by JS -->
+  </div>
+</div>
+
+<!-- State switcher -->
+<div class="pbar" style="position:fixed;bottom:0;left:0;right:0;">
+  <span>Billing state:</span>
+  <button onclick="showState('free')">Free</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="showState('trial')">Pro Light — Trial</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff1493" onclick="showState('prolight')">Pro Light — Paid</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#a78bfa" onclick="showState('proplus')">Pro Plus — Paid</button>
+</div>
+
+<div style="height:60px;"></div>
+<div class="tz" id="tz" style="position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:999;"></div>
+
+<script>
+function showState(id) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('on'));
+  document.getElementById('state-' + id).classList.add('on');
+}
+
+function openUpgradeFromFree() {
+  document.getElementById('upgrade-free-modal').classList.add('open');
+}
+
+function openConvertTrial() {
+  document.getElementById('convert-trial-modal').classList.add('open');
+}
+
+function selectConvertCycle(cycle, el) {
+  document.querySelectorAll('#convert-trial-modal [onclick*="selectConvertCycle"]').forEach(c => {
+    c.style.borderColor = 'var(--b2)';
+    c.style.background = 'var(--s)';
+  });
+  el.style.borderColor = 'rgba(255,20,147,0.35)';
+  el.style.background = 'rgba(255,20,147,0.07)';
+}
+
+function openChangePlan(currentTier) {
+  const box = document.getElementById('change-plan-box');
+  if (currentTier === 'prolight') {
+    box.innerHTML = `
+      <div style="font-family:var(--of);font-size:20px;font-weight:800;margin-bottom:8px;">Change your plan</div>
+      <div style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">You're currently on <strong style="color:var(--pink);">Pro Light</strong> (annual, £84/year).</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+        <div style="padding:14px;border-radius:12px;border:1px solid rgba(139,92,246,0.3);background:rgba(139,92,246,0.06);cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--of);font-weight:700;color:#c4b5fd;margin-bottom:2px;">Upgrade to Pro Plus</div>
+              <div style="font-size:12px;color:var(--td);">10,000 prospects · unlimited campaigns · priority support</div>
+            </div>
+            <div style="font-family:var(--of);font-weight:800;font-size:16px;color:#a78bfa;">£19/mo</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px;border-color:rgba(139,92,246,0.3);color:#a78bfa;width:100%;justify-content:center;" onclick="closeChangePlan();toast('→','Redirecting to Stripe…','tc')">Upgrade to Pro Plus →</button>
+        </div>
+        <div style="padding:14px;border-radius:12px;border:1px solid var(--b);background:var(--s);cursor:pointer;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;">Switch to monthly billing</div>
+              <div style="font-size:12px;color:var(--td);">Same Pro Light features · £12/month</div>
+            </div>
+            <div style="font-family:var(--of);font-weight:800;font-size:16px;">£12/mo</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px;width:100%;justify-content:center;" onclick="closeChangePlan();toast('✓','Billing updated to monthly','tc')">Switch to monthly</button>
+        </div>
+        <div style="padding:14px;border-radius:12px;border:1px solid rgba(255,76,76,0.15);background:rgba(255,76,76,0.04);">
+          <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;color:var(--td);">Downgrade to Free</div>
+          <div style="font-size:12px;color:var(--td);margin-bottom:8px;">Your data is preserved but campaigns above 1 and prospects above 100 will be locked.</div>
+          <button class="btn btn-ghost btn-sm" style="border-color:rgba(255,76,76,0.2);color:var(--red);width:100%;justify-content:center;" onclick="closeChangePlan();openDowngrade('prolight-to-free')">Downgrade to Free</button>
+        </div>
+      </div>
+      <button onclick="closeChangePlan()" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;width:100%;text-align:center;">Cancel</button>
+    `;
+  } else if (currentTier === 'proplus') {
+    box.innerHTML = `
+      <div style="font-family:var(--of);font-size:20px;font-weight:800;margin-bottom:8px;">Change your plan</div>
+      <div style="font-size:13px;color:var(--tm);margin-bottom:20px;line-height:1.6;">You're currently on <strong style="color:#a78bfa;">Pro Plus</strong> (annual, £228/year).</div>
+      <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
+        <div style="padding:14px;border-radius:12px;border:1px solid var(--b);background:var(--s);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div>
+              <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;">Switch to monthly billing</div>
+              <div style="font-size:12px;color:var(--td);">Same Pro Plus features · £29/month</div>
+            </div>
+            <div style="font-family:var(--of);font-weight:800;font-size:16px;">£29/mo</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="margin-top:10px;width:100%;justify-content:center;" onclick="closeChangePlan();toast('✓','Billing updated to monthly','tc')">Switch to monthly</button>
+        </div>
+        <div style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.2);background:rgba(255,20,147,0.04);">
+          <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;color:var(--tm);">Downgrade to Pro Light</div>
+          <div style="font-size:12px;color:var(--td);margin-bottom:8px;">Campaigns above 5 and prospects above 1,000 will be locked. Your data is preserved.</div>
+          <button class="btn btn-ghost btn-sm" style="border-color:rgba(255,20,147,0.2);color:var(--tm);width:100%;justify-content:center;" onclick="closeChangePlan();openDowngrade('proplus-to-prolight')">Downgrade to Pro Light</button>
+        </div>
+        <div style="padding:14px;border-radius:12px;border:1px solid rgba(255,76,76,0.15);background:rgba(255,76,76,0.04);">
+          <div style="font-family:var(--of);font-weight:700;margin-bottom:2px;color:var(--td);">Downgrade to Free</div>
+          <div style="font-size:12px;color:var(--td);margin-bottom:8px;">Campaigns above 1 and prospects above 100 will be locked. Your data is preserved.</div>
+          <button class="btn btn-ghost btn-sm" style="border-color:rgba(255,76,76,0.2);color:var(--red);width:100%;justify-content:center;" onclick="closeChangePlan();openDowngrade('proplus-to-free')">Downgrade to Free</button>
+        </div>
+      </div>
+      <button onclick="closeChangePlan()" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;width:100%;text-align:center;">Cancel</button>
+    `;
+  }
+  document.getElementById('change-plan-modal').classList.add('open');
+}
+function closeChangePlan() {
+  document.getElementById('change-plan-modal').classList.remove('open');
+}
+
+function openDowngrade(type) {
+  const box = document.getElementById('downgrade-box');
+  const configs = {
+    'prolight-to-free': {
+      title: 'Downgrade to Free',
+      keeps: 'You keep: 1 campaign, 100 prospects, your sent email history.',
+      locks: 'Locked (not deleted): campaigns 2–5, prospects 101–1,000, AI drafts, sequences steps 2–6.',
+      when: 'Takes effect at the end of your current billing period (Apr 1, 2027).',
+      colour: 'rgba(255,76,76',
+    },
+    'proplus-to-prolight': {
+      title: 'Downgrade to Pro Light',
+      keeps: 'You keep: 5 campaigns, 1,000 prospects, unlimited AI, full sequences.',
+      locks: 'Locked (not deleted): campaigns above 5, prospects above 1,000.',
+      when: 'Takes effect at the end of your current billing period (Apr 1, 2027).',
+      colour: 'rgba(255,20,147',
+    },
+    'proplus-to-free': {
+      title: 'Downgrade to Free',
+      keeps: 'You keep: 1 campaign, 100 prospects, your sent email history.',
+      locks: 'Locked (not deleted): campaigns 2+, prospects 101+, all AI drafts, all sequences.',
+      when: 'Takes effect at the end of your current billing period (Apr 1, 2027).',
+      colour: 'rgba(255,76,76',
+    },
+  };
+  const c = configs[type];
+  box.innerHTML = `
+    <div style="font-family:var(--of);font-size:20px;font-weight:800;margin-bottom:8px;">${c.title}</div>
+    <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:20px;">
+      <div style="padding:12px 14px;background:rgba(100,220,120,0.06);border:1px solid rgba(100,220,120,0.18);border-radius:10px;font-size:12px;color:rgba(180,255,190,0.85);line-height:1.6;">
+        <strong style="color:#64dc78;">✓ What you keep:</strong> ${c.keeps}
+      </div>
+      <div style="padding:12px 14px;background:${c.colour},0.06);border:1px solid ${c.colour},0.18);border-radius:10px;font-size:12px;color:rgba(255,220,200,0.85);line-height:1.6;">
+        <strong>⊘ What gets locked:</strong> ${c.locks} <em style="color:var(--td);">Nothing is deleted — your data is always safe.</em>
+      </div>
+      <div style="padding:10px 14px;background:var(--s);border:1px solid var(--b);border-radius:10px;font-size:12px;color:var(--td);line-height:1.6;">
+        🗓 ${c.when}
+      </div>
+    </div>
+    <div style="display:flex;gap:10px;justify-content:flex-end;">
+      <button class="btn btn-ghost btn-sm" onclick="document.getElementById('downgrade-modal').classList.remove('open')">Keep current plan</button>
+      <button class="btn btn-sm" style="background:rgba(255,76,76,0.15);border:1px solid rgba(255,76,76,0.3);color:var(--red);font-family:var(--of);font-weight:700;" onclick="document.getElementById('downgrade-modal').classList.remove('open');toast('✓','Downgrade scheduled for end of billing period','tc')">Confirm downgrade</button>
+    </div>
+  `;
+  document.getElementById('downgrade-modal').classList.add('open');
+}
+
+function toast(icon, text, cls) {
+  const zone = document.getElementById('tz');
+  const el = document.createElement('div');
+  el.className = 'tst ' + (cls || 'tc');
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+</script>
+</body>
+</html>
