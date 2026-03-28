@@ -681,6 +681,50 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
           </div>
         </div>
 
+        <!-- PRO PLUS STATE -->
+        <div id="billing-pro-plus" style="display:none;">
+          <div class="sect">
+            <div class="sect-title">Current plan</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:16px;background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.2);border-radius:12px;margin-bottom:12px;">
+              <div>
+                <div style="font-family:var(--of);font-size:16px;font-weight:800;margin-bottom:2px;">Pro Plus</div>
+                <div style="font-size:12px;color:var(--tm);">Annual · renews 17 Mar 2027</div>
+              </div>
+              <div style="text-align:right;">
+                <div style="font-family:var(--of);font-size:18px;font-weight:800;color:var(--pink);">£19<span style="font-size:12px;font-weight:500;color:var(--tm);">/mo</span></div>
+                <div style="font-size:11px;color:var(--td);">£228 billed annually</div>
+              </div>
+            </div>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-ghost btn-sm" onclick="openChangePlanModal()">Change plan</button>
+            </div>
+          </div>
+          <div class="sect">
+            <div class="sect-title">Pro Plus features</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="padding:10px 12px;background:var(--s);border:1px solid var(--b);border-radius:8px;font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>Unlimited campaigns</div>
+              <div style="padding:10px 12px;background:var(--s);border:1px solid var(--b);border-radius:8px;font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>10,000 prospects</div>
+              <div style="padding:10px 12px;background:var(--s);border:1px solid var(--b);border-radius:8px;font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>Unlimited AI drafts</div>
+              <div style="padding:10px 12px;background:var(--s);border:1px solid var(--b);border-radius:8px;font-size:12px;color:var(--tm);display:flex;gap:8px;"><span style="color:var(--green);">✓</span>Priority support</div>
+            </div>
+          </div>
+          <div class="sect">
+            <div class="sect-title">Payment method</div>
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:14px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:10px;">
+              <div style="display:flex;align-items:center;gap:12px;">
+                <div style="padding:4px 10px;background:var(--s2);border:1px solid var(--b2);border-radius:5px;font-size:11px;font-family:var(--of);font-weight:800;">VISA</div>
+                <div><div style="font-size:14px;font-weight:500;">···· ···· ···· 4242</div><div style="font-size:12px;color:var(--td);margin-top:1px;">Expires 12/27</div></div>
+              </div>
+              <button class="btn btn-ghost btn-sm" onclick="openUpdateCardModal()">Update</button>
+            </div>
+          </div>
+          <div class="sect">
+            <div class="sect-title">Invoice history</div>
+            <div class="invoice-row"><span class="invoice-date">17 Mar 2026</span><span class="invoice-desc">Pro Plus Annual</span><span class="invoice-amt">£228.00</span><button class="btn btn-ghost btn-sm" onclick="openInvoicePDF('INV-2026-PP-001','17 Mar 2026','Pro Plus Annual','£228.00')">PDF</button></div>
+          </div>
+        </div>
+
+
         <!-- PRO LIGHT TRIAL STATE -->
         <div id="billing-trial" style="display:none;">
           <div style="padding:16px;background:rgba(0,212,255,0.06);border:1px solid rgba(0,212,255,0.2);border-radius:12px;margin-bottom:20px;">
