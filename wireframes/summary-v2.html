@@ -175,9 +175,19 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   color:var(--tm);cursor:pointer;transition:all 0.2s;white-space:nowrap;}
 .wfb:hover{color:var(--t);border-color:rgba(255,255,255,0.2);}
 .wfb.active{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+  .hi{position:fixed;top:14px;left:14px;width:28px;height:28px;border-radius:7px;
+    background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
+    display:flex;align-items:center;justify-content:center;z-index:200;
+    text-decoration:none;transition:background 0.15s;}
+  .hi:hover{background:rgba(255,255,255,0.12);}
+
 </style>
 </head>
 <body>
+<a href="../hub.html" class="hi" title="Hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
 
 <div class="orb o1"></div>
 <div class="orb o2"></div>
