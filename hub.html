@@ -150,7 +150,342 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
       <div class="ql-info"><div class="ql-title">Product backlog</div><div class="ql-desc">Features, fixes & ideas queue</div></div>
       <span class="ql-arrow">→</span>
     </a>
-  </div>
+  
+  <!-- ══ BUILD PHASES ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">Build phases</div>
+      <div class="section-meta">Layers 1–5 · all phases tracked</div>
+    </div>
+
+    <style>
+      .phase-layer { margin-bottom: 28px; }
+      .phase-layer-title {
+        font-family: var(--of, 'Outfit', sans-serif);
+        font-size: 10px; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.1em;
+        color: var(--text-dim, #666); margin-bottom: 10px;
+        padding-bottom: 6px; border-bottom: 1px solid var(--border, rgba(255,255,255,0.07));
+      }
+      .phase-row {
+        display: flex; align-items: flex-start; gap: 14px;
+        padding: 10px 0; border-bottom: 1px solid var(--border, rgba(255,255,255,0.05));
+      }
+      .phase-row:last-child { border-bottom: none; }
+      .phase-num {
+        font-family: 'DM Mono', monospace; font-size: 11px;
+        color: var(--text-dim, #666); min-width: 32px; padding-top: 2px;
+        flex-shrink: 0;
+      }
+      .phase-info { flex: 1; min-width: 0; }
+      .phase-name {
+        font-family: var(--of, 'Outfit', sans-serif);
+        font-size: 13px; font-weight: 600;
+        color: var(--text, #f0f0ee); margin-bottom: 2px;
+      }
+      .phase-desc { font-size: 12px; color: var(--text-dim, #888); line-height: 1.5; }
+      .phase-badge {
+        font-family: var(--of, 'Outfit', sans-serif);
+        font-size: 10px; font-weight: 700;
+        padding: 3px 10px; border-radius: 100px;
+        white-space: nowrap; flex-shrink: 0;
+      }
+      .badge-complete  { background: rgba(100,220,120,0.12); border: 1px solid rgba(100,220,120,0.25); color: #64dc78; }
+      .badge-partial   { background: rgba(0,212,255,0.08);   border: 1px solid rgba(0,212,255,0.2);   color: #00d4ff; }
+      .badge-locked    { background: rgba(255,20,147,0.08);  border: 1px solid rgba(255,20,147,0.2);  color: #ff1493; }
+      .badge-planning  { background: rgba(255,157,66,0.08);  border: 1px solid rgba(255,157,66,0.2);  color: #ff9d42; }
+      .badge-future    { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.4); }
+      .badge-backlog   { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); color: rgba(255,255,255,0.25); }
+    </style>
+
+    <!-- LAYER 1 -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Layer 1 — Infrastructure</div>
+      <div class="phase-row">
+        <div class="phase-num">2.1</div>
+        <div class="phase-info">
+          <div class="phase-name">Supabase setup</div>
+          <div class="phase-desc">6 tables, 22 RLS policies, 10 indexes, Storage bucket</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.2</div>
+        <div class="phase-info">
+          <div class="phase-name">Next.js scaffold + Vercel deploy</div>
+          <div class="phase-desc">Project created, deployed, routing scaffolded, brand applied</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.3</div>
+        <div class="phase-info">
+          <div class="phase-name">Gmail OAuth</div>
+          <div class="phase-desc">Sign up, login, single consent screen, token storage in Vault</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+    </div>
+
+    <!-- LAYER 2 -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Layer 2 — Core Engine</div>
+      <div class="phase-row">
+        <div class="phase-num">2.4</div>
+        <div class="phase-info">
+          <div class="phase-name">Campaign creation</div>
+          <div class="phase-desc">Create, name, pause, resume, archive campaigns; list view</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.5</div>
+        <div class="phase-info">
+          <div class="phase-name">CSV prospect import</div>
+          <div class="phase-desc">Upload, parse, store; 100-prospect Free cap enforced; column mapping</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.6</div>
+        <div class="phase-info">
+          <div class="phase-name">Message editor</div>
+          <div class="phase-desc">Subject, body, merge tags, attachment upload to Supabase Storage</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.7</div>
+        <div class="phase-info">
+          <div class="phase-name">Approve to Draft</div>
+          <div class="phase-desc">Approval triggers Gmail draft creation; no automated sending</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.8</div>
+        <div class="phase-info">
+          <div class="phase-name">Campaign dashboard</div>
+          <div class="phase-desc">7-tab structure: Review, Drafts, LinkedIn, Sent, Follow-up, Nurture, Conversations</div>
+        </div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.9</div>
+        <div class="phase-info">
+          <div class="phase-name">Sequence builder</div>
+          <div class="phase-desc">Multi-step sequences, reply detection, auto-scheduling. Spec locked.</div>
+        </div>
+        <div class="phase-badge badge-locked">🔒 Builds April</div>
+      </div>
+    </div>
+
+    <!-- LAYER 3 -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Layer 3 — Activation</div>
+      <div class="phase-row">
+        <div class="phase-num">2.10</div>
+        <div class="phase-info">
+          <div class="phase-name">Activation loop</div>
+          <div class="phase-desc">Onboarding wizard — first campaign sent in under 5 minutes. Spec locked.</div>
+        </div>
+        <div class="phase-badge badge-locked">🔒 Builds April</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.11</div>
+        <div class="phase-info">
+          <div class="phase-name">Personality packs</div>
+          <div class="phase-desc">4 predefined tones — global default + per-message override. Spec locked.</div>
+        </div>
+        <div class="phase-badge badge-locked">🔒 Builds April</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.12</div>
+        <div class="phase-info">
+          <div class="phase-name">UX microcopy system</div>
+          <div class="phase-desc">2.12a infrastructure ✓ merged. 2.12b component integration + 2.12c testing — April.</div>
+        </div>
+        <div class="phase-badge badge-partial">◑ 2.12a done</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.13</div>
+        <div class="phase-info">
+          <div class="phase-name">Emotional design + momentum engine</div>
+          <div class="phase-desc">Milestones, momentum prompts, celebration states. Spec locked.</div>
+        </div>
+        <div class="phase-badge badge-locked">🔒 Builds April</div>
+      </div>
+    </div>
+
+    <!-- LAYER 4 -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Layer 4 — Monetisation</div>
+      <div class="phase-row">
+        <div class="phase-num">2.14</div>
+        <div class="phase-info">
+          <div class="phase-name">Pricing UX + Stripe integration</div>
+          <div class="phase-desc">Subscription creation, webhook handling, feature gating by tier. Wireframes signed off.</div>
+        </div>
+        <div class="phase-badge badge-planning">📐 Planning</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.15</div>
+        <div class="phase-info">
+          <div class="phase-name">Referral system</div>
+          <div class="phase-desc">Referral tracking, reward fulfilment, free month crediting. Full spec written.</div>
+        </div>
+        <div class="phase-badge badge-planning">📐 Planning</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.16</div>
+        <div class="phase-info">
+          <div class="phase-name">Upgrade moments</div>
+          <div class="phase-desc">Desire triggers and limit walls wired to live product. Full spec written.</div>
+        </div>
+        <div class="phase-badge badge-planning">📐 Planning</div>
+      </div>
+    </div>
+
+    <!-- LAYER 5 -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Layer 5 — Expansion</div>
+      <div class="phase-row">
+        <div class="phase-num">2.17</div>
+        <div class="phase-info">
+          <div class="phase-name">In-app feedback widget</div>
+          <div class="phase-desc">Float button → modal, saves to feedback table with category + severity</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.18</div>
+        <div class="phase-info">
+          <div class="phase-name">Follow-up reminder system</div>
+          <div class="phase-desc">Date/time reminders on conversations, auto-moves to Nurture with re-contact date</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.19</div>
+        <div class="phase-info">
+          <div class="phase-name">Microsoft OAuth (Outlook)</div>
+          <div class="phase-desc">Graph API integration, email provider abstraction layer</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.20</div>
+        <div class="phase-info">
+          <div class="phase-name">Admin dashboard</div>
+          <div class="phase-desc">Beta tester management, discount codes, user activity metrics</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.21</div>
+        <div class="phase-info">
+          <div class="phase-name">Marketing site</div>
+          <div class="phase-desc">Home, pricing, sign up, login, legal pages. Post-beta.</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">2.22</div>
+        <div class="phase-info">
+          <div class="phase-name">Polish pass</div>
+          <div class="phase-desc">Empty states, error handling, GDPR data export, campaign deletion flows</div>
+        </div>
+        <div class="phase-badge badge-future">Planned</div>
+      </div>
+    </div>
+
+    <!-- BACKLOG -->
+    <div class="phase-layer">
+      <div class="phase-layer-title">Product backlog — captured, not yet scheduled</div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Template creation (post-import + Drafts tab)</div>
+          <div class="phase-desc">Create message template after CSV import or from Drafts tab; apply to prospects in batch</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Bulk email send</div>
+          <div class="phase-desc">"Send all" in Drafts tab with confirmation dialog and background processing</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Enhanced draft viewing & confirmation</div>
+          <div class="phase-desc">Email address in draft drawer header; send confirmation dialog per prospect</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Excel / XLSX import</div>
+          <div class="phase-desc">Accept .xlsx/.xls alongside CSV with same column mapping flow</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">User profile picture</div>
+          <div class="phase-desc">Fetch from Gmail via Google People API; display in dashboard header</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Email open & click tracking</div>
+          <div class="phase-desc">Tracking pixel injection, link wrapping, stats surface per campaign/prospect</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Prospect export (CSV)</div>
+          <div class="phase-desc">Export name, email, company, status, reply/meeting flags per campaign</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Brand personalisation / theme config</div>
+          <div class="phase-desc">User-set gradient + background colour. Prototype live at branding/brand-explorer.html</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Light/dark mode</div>
+          <div class="phase-desc">CSS variable toggle stored in user profile</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+      <div class="phase-row">
+        <div class="phase-num">—</div>
+        <div class="phase-info">
+          <div class="phase-name">Activity report / monthly snapshot</div>
+          <div class="phase-desc">Monthly performance PDF — stats visible all tiers, PDF download Pro-only</div>
+        </div>
+        <div class="phase-badge badge-backlog">Backlog</div>
+      </div>
+    </div>
+
+  </div><!-- end build phases section -->
+
 
   <div class="section">
     <div class="section-header">
