@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Pricing (Three-Tier)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500;600&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);--b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--amber:#ff9d42;--green:#64dc78;
+  --pd:rgba(255,20,147,0.1);--cd:rgba(0,212,255,0.08);--gd:rgba(100,220,120,0.1);
+  --t:#f0f0ee;--tm:#8a8a9a;--td:#444456;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;--gr:linear-gradient(135deg,#ff1493,#00d4ff);}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.06);top:-200px;right:-150px;}
+.o2{width:500px;height:500px;background:rgba(0,212,255,0.05);bottom:-150px;left:-150px;}
+.hi{position:fixed;top:12px;left:14px;z-index:99;width:32px;height:32px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;}
+.hi:hover{background:rgba(255,255,255,0.14);}
+.pg{position:relative;z-index:1;max-width:780px;margin:0 auto;padding:60px 32px 100px;}
+.sc{display:none;}.sc.on{display:block;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 20px;border-radius:8px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}.bp:hover{transform:translateY(-1px);box-shadow:0 8px 28px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}.bs:hover{color:var(--t);}
+.bg_{background:transparent;color:var(--tm);}.bg_:hover{color:var(--t);}
+.bsm{padding:7px 14px;font-size:12px;}
+.inp{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);border-radius:8px;padding:11px 14px;font-family:var(--sf);font-size:14px;color:var(--t);outline:none;transition:border-color 0.2s;}
+.inp:focus{border-color:var(--cyan);}
+.inp::placeholder{color:var(--td);}
+.lbl{font-size:11px;font-family:var(--of);font-weight:600;text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:6px;display:block;}
+.fld{margin-bottom:14px;}
+
+/* ── FREE TIER WALL ── */
+.wall{background:linear-gradient(135deg,rgba(255,20,147,0.07),rgba(0,212,255,0.05));border:1px solid rgba(255,20,147,0.18);border-radius:16px;padding:32px;text-align:center;margin-bottom:28px;}
+.wall-icon{font-size:40px;margin-bottom:14px;}
+.wall-title{font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px;}
+.wall-sub{font-size:14px;color:var(--tm);line-height:1.7;max-width:420px;margin:0 auto 24px;}
+.usage-wrap{max-width:280px;margin:0 auto 22px;}
+.usage-bar{height:5px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;margin-bottom:6px;}
+.usage-fill{height:100%;background:var(--gr);border-radius:3px;}
+.usage-lbl{font-size:11px;color:var(--tm);}
+.wall-ctas{display:flex;gap:10px;justify-content:center;}
+.feature-tease{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:28px;}
+.tease-card{background:var(--pd);border:1px solid rgba(255,20,147,0.12);border-radius:10px;padding:16px;text-align:center;}
+.tease-val{font-family:var(--of);font-size:22px;font-weight:800;color:var(--pink);margin-bottom:4px;}
+.tease-lbl{font-size:12px;color:var(--tm);}
+
+/* ── PLANS ── */
+.plans-eyebrow{font-family:var(--of);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);text-align:center;margin-bottom:10px;}
+.plans-title{font-family:var(--of);font-size:34px;font-weight:800;letter-spacing:-0.03em;text-align:center;margin-bottom:8px;}
+.plans-sub{font-size:14px;color:var(--tm);text-align:center;margin-bottom:28px;}
+.billing-toggle{display:flex;gap:6px;justify-content:center;margin-bottom:28px;}
+.plans-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:32px;}
+.plan-card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:26px;position:relative;transition:all 0.2s;}
+.plan-card.featured{border-color:var(--pink);background:rgba(255,20,147,0.05);}
+.plan-card.featured::before{content:"Most popular";position:absolute;top:0;left:50%;transform:translate(-50%,-50%);background:var(--gr);color:white;font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 12px;border-radius:20px;}
+.plan-name{font-family:var(--of);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--tm);margin-bottom:10px;}
+.plan-price{font-family:var(--of);font-size:42px;font-weight:800;letter-spacing:-0.04em;line-height:1;}
+.plan-price sup{font-size:18px;vertical-align:super;}
+.plan-price sub{font-size:16px;font-weight:500;color:var(--tm);vertical-align:baseline;}
+.plan-period{font-size:12px;color:var(--td);margin-top:4px;margin-bottom:20px;}
+.plan-feats{list-style:none;margin-bottom:24px;}
+.plan-feats li{display:flex;align-items:flex-start;gap:9px;font-size:12px;color:var(--tm);padding:5px 0;}
+.feat-y{color:var(--t)!important;}
+.feat-y::before{content:"✓";color:var(--green);flex-shrink:0;font-weight:700;}
+.feat-n::before{content:"–";color:var(--td);flex-shrink:0;}
+
+/* ── CHECKOUT ── */
+.checkout-wrap{max-width:460px;margin:0 auto;}
+.checkout-eyebrow{font-family:var(--of);font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);text-align:center;margin-bottom:8px;}
+.checkout-title{font-family:var(--of);font-size:28px;font-weight:800;letter-spacing:-0.02em;text-align:center;margin-bottom:28px;}
+.checkout-card{background:var(--s);border:1px solid var(--b);border-radius:14px;padding:26px;}
+.order-summary{background:rgba(255,255,255,0.025);border:1px solid var(--b2);border-radius:8px;padding:14px;margin-bottom:20px;}
+.order-row{display:flex;justify-content:space-between;font-size:13px;padding:4px 0;color:var(--tm);}
+.order-total{border-top:1px solid var(--b2);margin-top:8px;padding-top:10px;display:flex;justify-content:space-between;font-family:var(--of);font-weight:700;font-size:15px;color:var(--t);}
+.order-price{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-size:20px;}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.secure-note{font-size:11px;color:var(--td);text-align:center;margin-top:12px;}
+
+/* ── POST UPGRADE ── */
+.success-wrap{text-align:center;padding:56px 20px;}
+.confetti-icon{font-size:56px;margin-bottom:18px;animation:pop 0.6s cubic-bezier(0.34,1.56,0.64,1);}
+@keyframes pop{from{transform:scale(0.4);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-title{font-family:var(--of);font-size:36px;font-weight:800;letter-spacing:-0.03em;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:10px;}
+.success-sub{font-size:14px;color:var(--tm);line-height:1.7;max-width:360px;margin:0 auto 32px;}
+.unlocked-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-bottom:32px;text-align:left;}
+.unlocked-item{background:var(--gd);border:1px solid rgba(100,220,120,0.2);border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--green);}
+
+/* pbar */
+.pbar{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:999;background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:7px 14px;display:flex;gap:10px;align-items:center;font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;padding:0;}
+.tz{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;}
+.tst{background:rgba(20,10,35,0.96);border:1px solid var(--b2);border-radius:10px;padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:2px solid var(--cyan);}
+.tst.tp{border-left:2px solid var(--pink);}
+.tst.tg{border-left:2px solid var(--green);}
+@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}
+
+  --th:56px; --sw:56px;
+
+/* ── TOPBAR ── */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:'Outfit',sans-serif;font-size:18px;font-weight:800;
+  letter-spacing:-0.5px;background:linear-gradient(135deg,#ff1493,#00d4ff);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.topbar-right{display:flex;align-items:center;gap:12px;margin-left:auto;}
+.plan-badge{font-family:'Outfit',sans-serif;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:linear-gradient(135deg,#ff1493,#00d4ff);
+  display:flex;align-items:center;justify-content:center;font-family:'Outfit',sans-serif;
+  font-size:11px;font-weight:700;color:white;}
+/* ── SIDEBAR ── */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;padding:14px 0;
+  z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;color:var(--tm);
+  position:relative;background:transparent;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);} .si:hover svg{opacity:1;}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;color:var(--tm);opacity:0.7;transition:opacity 0.15s;}
+.si-tip{position:absolute;left:calc(100% + 10px);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:'Outfit',sans-serif;font-size:11px;
+  font-weight:600;white-space:nowrap;pointer-events:none;
+  opacity:0;transition:opacity 0.15s;z-index:300;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+/* ── LAYOUT OFFSET ── */
+.pg{padding-top:calc(var(--th) + 20px);padding-left:calc(var(--sw) + 20px);}
+
+
+
+/* ── PRICING COMPONENT (from upgrade-moments) ── */
+.billing-toggle-wrap{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:48px;}
+.billing-label{font-family:var(--of);font-size:13px;font-weight:600;color:var(--td);transition:color 0.25s;cursor:pointer;user-select:none;}
+.billing-label.active{color:var(--t);}
+.billing-save-badge{display:inline-block;padding:3px 9px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.06em;color:var(--green);margin-left:6px;vertical-align:middle;}
+.toggle-track{position:relative;width:44px;height:24px;flex-shrink:0;cursor:pointer;}
+.toggle-track input{opacity:0;width:0;height:0;position:absolute;}
+.toggle-rail{position:absolute;inset:0;border-radius:100px;background:var(--b2);border:1px solid rgba(255,255,255,0.1);transition:background 0.25s,border-color 0.25s;}
+.toggle-track input:checked ~ .toggle-rail{background:linear-gradient(135deg,rgba(255,20,147,0.4),rgba(0,212,255,0.4));border-color:rgba(0,212,255,0.3);}
+.toggle-thumb{position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--t);transition:transform 0.25s cubic-bezier(0.4,0,0.2,1),box-shadow 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.4);pointer-events:none;}
+.toggle-track input:checked ~ .toggle-thumb{transform:translateX(20px);box-shadow:0 1px 4px rgba(0,212,255,0.3);}
+.pricing-grid-mk{display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:720px;margin:0 auto;}
+.pricing-card-mk{background:rgba(13,9,20,0.35);backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,0.09);border-radius:20px;padding:40px 36px;position:relative;overflow:hidden;box-shadow:0 8px 40px rgba(0,0,0,0.35),inset 0 1px 0 rgba(255,255,255,0.07);}
+.pricing-card-mk:hover{border-color:rgba(255,255,255,0.16);}
+.pricing-card-mk.featured{background:rgba(255,20,147,0.08);border-color:rgba(255,20,147,0.25);box-shadow:0 8px 40px rgba(255,20,147,0.12),inset 0 1px 0 rgba(255,255,255,0.08);overflow:visible;}
+.pricing-card-mk.featured:hover{border-color:rgba(255,20,147,0.4);}
+.pricing-card-mk.featured::before{content:'';position:absolute;top:0;left:10%;right:10%;height:1px;background:var(--gr);opacity:0.8;border-radius:100px;}
+.pricing-card-mk::after{content:'';position:absolute;top:0;left:0;width:60%;height:1px;background:linear-gradient(90deg,rgba(255,255,255,0.12),transparent);pointer-events:none;}
+.pricing-badge-mk{position:absolute;top:-13px;left:50%;transform:translateX(-50%);padding:4px 14px;background:var(--gr);border-radius:100px;font-family:var(--of);font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:white;white-space:nowrap;box-shadow:0 2px 12px rgba(255,20,147,0.4);}
+.pricing-tier-mk{font-family:var(--of);font-size:11px;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:var(--td);margin-bottom:20px;}
+.pricing-tier-mk.pro{color:var(--pink);}
+.pricing-price-wrap-mk{height:72px;margin-bottom:6px;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;display:flex;align-items:flex-start;gap:0;}
+.pricing-price-mk .currency{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.pricing-price-mk .period{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-currency-mk{font-family:var(--of);font-size:28px;font-weight:900;color:var(--t);align-self:flex-start;margin-top:4px;margin-right:2px;letter-spacing:-0.02em;}
+.price-period-mk{font-family:var(--of);font-size:22px;font-weight:900;color:var(--t);letter-spacing:-0.02em;margin-left:4px;align-self:flex-end;padding-bottom:2px;}
+.price-static-mk{font-family:var(--of);font-size:56px;font-weight:900;letter-spacing:-0.02em;color:var(--t);line-height:1;}
+.digit-window{overflow:hidden;position:relative;}
+.digit-reel{display:flex;flex-direction:column;}
+.digit-reel span{display:block;text-align:center;}
+.pricing-desc-mk{font-size:13px;color:var(--td);margin-bottom:8px;line-height:1.5;min-height:20px;}
+.pricing-annual-saving-mk{font-size:12px;color:var(--green);font-weight:600;margin-bottom:24px;min-height:18px;opacity:0;transform:translateY(4px);transition:opacity 0.3s 0.15s,transform 0.3s 0.15s;}
+.pricing-annual-saving-mk.visible{opacity:1;transform:translateY(0);}
+.pricing-divider-mk{height:1px;background:var(--b);margin-bottom:28px;}
+.pricing-features-mk{display:flex;flex-direction:column;gap:10px;margin-bottom:36px;}
+.pricing-feature-mk{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--tm);}
+.pricing-feature-mk .check{width:16px;height:16px;border-radius:50%;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:9px;color:var(--green);}
+.pricing-feature-mk .check.pro-check{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.2);color:var(--pink);}
+.pricing-cta-mk{display:block;width:100%;padding:14px;text-align:center;font-family:var(--of);font-size:14px;font-weight:700;letter-spacing:0.02em;border-radius:100px;text-decoration:none;cursor:pointer;transition:all 0.2s;border:none;}
+.pricing-cta-mk.cta-free{background:transparent;color:var(--tm);border:1px solid var(--b2);}
+.pricing-cta-mk.cta-free:hover{color:var(--t);border-color:rgba(255,255,255,0.3);}
+.pricing-cta-mk.cta-pro{background:var(--gr);color:white;box-shadow:0 0 32px rgba(255,20,147,0.25);}
+.pricing-cta-mk.cta-pro:hover{box-shadow:0 0 48px rgba(255,20,147,0.35);}
+.trust-line-mk{text-align:center;font-size:12px;color:var(--td);margin-top:20px;}
+
+</style>
+<style>
+/* ── THREE-TIER PRICING GRID ── */
+.plans-grid-3 {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 16px;
+  max-width: 860px;
+  margin: 0 auto 32px;
+}
+.plan-card-3 {
+  background: var(--s);
+  border: 1px solid var(--b2);
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+  transition: border-color 0.2s;
+}
+.plan-card-3.featured {
+  border-color: rgba(255,20,147,0.4);
+  background: rgba(255,20,147,0.05);
+}
+.plan-card-3.anchor {
+  opacity: 0.85;
+}
+.most-popular-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 3px 14px;
+  border-radius: 100px;
+  background: var(--gr);
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #fff;
+  white-space: nowrap;
+}
+.plan-name-3 {
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--tm);
+  margin-bottom: 12px;
+}
+.plan-card-3.featured .plan-name-3 { color: var(--pink); }
+.plan-price-3 {
+  font-family: var(--of);
+  font-size: 36px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  margin-bottom: 2px;
+  line-height: 1;
+}
+.plan-price-3 sup { font-size: 18px; font-weight: 700; vertical-align: top; margin-top: 6px; }
+.plan-price-3 sub { font-size: 13px; font-weight: 500; color: var(--tm); }
+.plan-period-3 { font-size: 11px; color: var(--td); margin-bottom: 20px; }
+.plan-divider { height: 1px; background: var(--b); margin: 16px 0; }
+.plan-feat-3 {
+  font-size: 12px;
+  color: var(--tm);
+  padding: 5px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.plan-feat-3 .tick { color: var(--green); flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+.plan-feat-3 .cross { color: var(--td); flex-shrink: 0; font-size: 11px; margin-top: 1px; }
+.plan-feat-3 .future { color: var(--td); flex-shrink: 0; font-size: 10px; margin-top: 2px; font-style: italic; }
+.plan-cta-3 {
+  display: block;
+  width: 100%;
+  padding: 12px;
+  border-radius: 100px;
+  font-family: var(--of);
+  font-size: 14px;
+  font-weight: 700;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 20px;
+  border: none;
+  text-decoration: none;
+}
+.cta-free-3 {
+  background: var(--s2);
+  color: var(--tm);
+  border: 1px solid var(--b2);
+}
+.cta-free-3:hover { background: var(--b); color: var(--t); }
+.cta-prolight-3 {
+  background: var(--gr);
+  color: #fff;
+}
+.cta-prolight-3:hover { opacity: 0.88; }
+.cta-proplus-3 {
+  background: transparent;
+  color: var(--t);
+  border: 1px solid var(--b2);
+}
+.cta-proplus-3:hover { border-color: var(--cyan); color: var(--cyan); }
+.trust-line-3 {
+  text-align: center;
+  font-size: 11px;
+  color: var(--td);
+  margin-top: 8px;
+}
+.referral-note {
+  max-width: 860px;
+  margin: 0 auto 24px;
+  padding: 14px 20px;
+  background: rgba(100,220,120,0.06);
+  border: 1px solid rgba(100,220,120,0.18);
+  border-radius: 12px;
+  font-size: 12px;
+  color: rgba(200,255,210,0.8);
+  line-height: 1.6;
+  text-align: center;
+}
+.feat-section-label {
+  font-family: var(--of);
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--td);
+  margin: 12px 0 4px;
+}
+@media (max-width: 700px) {
+  .plans-grid-3 { grid-template-columns: 1fr; max-width: 380px; }
+}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+<a href="../hub.html" class="hi" title="Hub">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+
+<div class="pg">
+<div class="sc active" id="s-plans">
+
+  <!-- Header -->
+  <div style="text-align:center;margin-bottom:32px;">
+    <div style="font-family:var(--of);font-size:13px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:var(--tm);margin-bottom:10px;">Pricing</div>
+    <div style="font-family:var(--of);font-size:28px;font-weight:900;letter-spacing:-0.02em;margin-bottom:10px;">Simple, honest pricing.</div>
+    <p style="font-size:14px;color:var(--tm);max-width:460px;margin:0 auto 24px;line-height:1.6;">No per-seat fees. No hidden costs. Start free — your first 30 days on Pro Light are on us.</p>
+
+    <!-- Billing toggle -->
+    <div class="billing-toggle-wrap" style="margin-bottom:8px;">
+      <span class="billing-label" id="wf-label-mo" style="opacity:0.5;">Monthly</span>
+      <label class="billing-toggle-mk">
+        <input type="checkbox" id="wf-billing-toggle" checked onchange="setBillingMode(this.checked)">
+        <span class="billing-slider-mk"></span>
+      </label>
+      <span class="billing-label" id="wf-label-yr">Annual</span>
+      <span class="save-badge-mk" id="wf-save-badge">Save 42%</span>
+    </div>
+    <div style="font-size:11px;color:var(--td);" id="billing-sub">Billed annually — cancel any time</div>
+  </div>
+
+  <!-- Three-tier grid -->
+  <div class="plans-grid-3">
+
+    <!-- FREE -->
+    <div class="plan-card-3">
+      <div class="plan-name-3">Free</div>
+      <div class="plan-price-3"><sup>£</sup>0<sub>/mo</sub></div>
+      <div class="plan-period-3">Forever free · no credit card needed</div>
+      <button class="plan-cta-3 cta-free-3" onclick="show('s-signup')">Get started free</button>
+      <div class="trust-line-3">No card required</div>
+      <div class="plan-divider"></div>
+      <div class="feat-section-label">Included</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>1 campaign</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>100 prospects</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Step 1 sequences only</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Manual sending</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Default personality only</div>
+      <div class="feat-section-label">Not included</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>AI draft generation</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>Multi-step sequences</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>Auto-scheduling</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>Activity reports</div>
+    </div>
+
+    <!-- PRO LIGHT — FEATURED -->
+    <div class="plan-card-3 featured">
+      <div class="most-popular-badge">★ Most popular</div>
+      <div class="plan-name-3">Pro Light</div>
+      <div class="plan-price-3" id="wf-prolight-price"><sup>£</sup><span class="digit-window" id="wf-digit-0"><span class="digit-reel" id="wf-reel-0"></span></span><sub>/mo</sub></div>
+      <div class="plan-period-3" id="wf-prolight-period">£84 billed annually</div>
+      <button class="plan-cta-3 cta-prolight-3" onclick="show('s-checkout-pl')">Start free trial →</button>
+      <div class="trust-line-3">30-day Pro Light trial · no card needed</div>
+      <div class="plan-divider"></div>
+      <div class="feat-section-label">Everything in Free, plus</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>5 campaigns</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>1,000 prospects</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Unlimited AI draft generation</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Full sequences (Steps 1–6)</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Auto-scheduling</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>All 4 personality packs</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Activity report + PDF export</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>Priority support</div>
+      <div class="plan-feat-3"><span class="cross">✗</span>Multiple connected accounts</div>
+    </div>
+
+    <!-- PRO PLUS — ANCHOR -->
+    <div class="plan-card-3 anchor">
+      <div class="plan-name-3">Pro Plus</div>
+      <div class="plan-price-3" id="wf-proplus-price"><sup>£</sup><span class="digit-window" id="wf-digit-1"><span class="digit-reel" id="wf-reel-1"></span></span><sub>/mo</sub></div>
+      <div class="plan-period-3" id="wf-proplus-period">£228 billed annually</div>
+      <button class="plan-cta-3 cta-proplus-3" onclick="show('s-checkout-pp')">Get Pro Plus →</button>
+      <div class="trust-line-3">Upgrade any time from Pro Light</div>
+      <div class="plan-divider"></div>
+      <div class="feat-section-label">Everything in Pro Light, plus</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Unlimited campaigns</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>10,000 prospects</div>
+      <div class="plan-feat-3"><span class="tick">✓</span>Priority support</div>
+      <div class="plan-feat-3"><span class="future">soon</span>Multiple connected accounts</div>
+      <div class="plan-feat-3"><span class="future">soon</span>API access</div>
+    </div>
+
+  </div>
+
+  <!-- Referral note -->
+  <div class="referral-note">
+    🤝 <strong>Free extension:</strong> Invite a friend to Pulse. and unlock 200 prospects + a 2nd campaign on your Free account — no payment needed. Available once.
+  </div>
+
+  <!-- Trust line -->
+  <div style="text-align:center;font-size:11px;color:var(--td);margin-bottom:48px;">
+    All plans include Gmail OAuth, CSV import, campaign management, and the full dashboard. Cancel any time.
+  </div>
+</div>
+
+<!-- CHECKOUT — PRO LIGHT -->
+<div class="sc" id="s-checkout-pl">
+  <div style="max-width:440px;margin:0 auto;text-align:center;">
+    <div style="font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:6px;">Start your Pro Light trial</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:24px;line-height:1.6;">30 days free, no credit card needed. At the end of your trial you can convert to Pro Light or drop to Free — your data stays either way.</p>
+    <div style="padding:16px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:20px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:600;">Pro Light trial</span>
+        <span style="font-size:13px;font-weight:700;font-family:var(--of);color:var(--green);">Free for 30 days</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+        <span style="font-size:12px;color:var(--td);">Then</span>
+        <span style="font-size:13px;font-weight:700;font-family:var(--of);" id="pl-then-price">£7/month (annual)</span>
+      </div>
+      <div style="font-size:11px;color:var(--td);margin-top:8px;">No card required to start. We'll ask when your trial ends.</div>
+    </div>
+    <button class="plan-cta-3 cta-prolight-3" onclick="show('s-signup')">Start free trial →</button>
+    <button onclick="show('s-plans')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:12px;display:block;width:100%;">← Back to plans</button>
+  </div>
+</div>
+
+<!-- CHECKOUT — PRO PLUS -->
+<div class="sc" id="s-checkout-pp">
+  <div style="max-width:440px;margin:0 auto;text-align:center;">
+    <div style="font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:6px;">Get Pro Plus</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:24px;line-height:1.6;">No trial — Pro Plus starts immediately. Cancel any time.</p>
+    <div style="padding:16px;background:var(--s);border:1px solid var(--b);border-radius:12px;margin-bottom:20px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span style="font-size:13px;font-weight:600;">Pro Plus</span>
+        <span style="font-size:13px;font-weight:700;font-family:var(--of);" id="pp-then-price">£19/month (annual)</span>
+      </div>
+      <div style="font-size:11px;color:var(--td);margin-top:4px;">Billed as £228/year. Switch to monthly (£29/month) any time.</div>
+    </div>
+    <button class="plan-cta-3 cta-proplus-3" style="background:var(--s2);border:1px solid var(--b2);" onclick="toast('→','Redirecting to Stripe checkout…','tc')">Continue to payment →</button>
+    <button onclick="show('s-plans')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:12px;display:block;width:100%;">← Back to plans</button>
+  </div>
+</div>
+
+<!-- SUCCESS -->
+<div class="sc" id="s-success">
+  <div style="max-width:420px;margin:0 auto;text-align:center;padding:48px 0;">
+    <div style="width:56px;height:56px;border-radius:50%;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);display:flex;align-items:center;justify-content:center;margin:0 auto 20px;">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+    </div>
+    <div style="font-family:var(--of);font-size:24px;font-weight:800;margin-bottom:8px;">You're on Pro Light.</div>
+    <p style="font-size:14px;color:var(--tm);margin-bottom:24px;line-height:1.6;">Your 30-day trial has started. Explore everything — AI drafts, full sequences, all personality packs.</p>
+    <button class="plan-cta-3 cta-prolight-3" onclick="window.location.href='dashboard-home.html'">Go to dashboard →</button>
+  </div>
+</div>
+
+<!-- SIGNUP (placeholder) -->
+<div class="sc" id="s-signup">
+  <div style="max-width:380px;margin:0 auto;text-align:center;padding:48px 0;">
+    <div style="font-family:var(--of);font-size:22px;font-weight:800;margin-bottom:8px;">Create your account</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:24px;">Connect Gmail to get started.</p>
+    <button class="plan-cta-3 cta-prolight-3" onclick="show('s-success')">Continue with Google →</button>
+    <button onclick="show('s-plans')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:12px;display:block;width:100%;">← Back to plans</button>
+  </div>
+</div>
+
+</div><!-- end .pg -->
+
+<!-- State switcher -->
+<div class="pbar">
+  <span>State:</span>
+  <button style="color:#ff1493" onclick="show('s-plans')">Plans (3-tier)</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#ff9d42" onclick="show('s-checkout-pl')">Checkout — Pro Light</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#8b5cf6" onclick="show('s-checkout-pp')">Checkout — Pro Plus</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s-success')">Success / trial started</button>
+</div>
+
+<div class="tz" id="tz"></div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function setBillingMode(isAnnual) {
+  const lmo = document.getElementById('wf-label-mo');
+  const lyr = document.getElementById('wf-label-yr');
+  const sub = document.getElementById('billing-sub');
+  const plPeriod = document.getElementById('wf-prolight-period');
+  const ppPeriod = document.getElementById('wf-proplus-period');
+  const plThen = document.getElementById('pl-then-price');
+  const ppThen = document.getElementById('pp-then-price');
+  const badge = document.getElementById('wf-save-badge');
+
+  if (isAnnual) {
+    lmo.style.opacity = '0.5'; lyr.style.opacity = '1';
+    sub.textContent = 'Billed annually — cancel any time';
+    if (plPeriod) plPeriod.textContent = '£84 billed annually';
+    if (ppPeriod) ppPeriod.textContent = '£228 billed annually';
+    if (plThen) plThen.textContent = '£7/month (annual)';
+    if (ppThen) ppThen.textContent = '£19/month (annual)';
+    if (badge) { badge.style.display = 'inline-block'; }
+  } else {
+    lmo.style.opacity = '1'; lyr.style.opacity = '0.5';
+    sub.textContent = 'Billed monthly — cancel any time';
+    if (plPeriod) plPeriod.textContent = 'Billed monthly';
+    if (ppPeriod) ppPeriod.textContent = 'Billed monthly';
+    if (plThen) plThen.textContent = '£12/month';
+    if (ppThen) ppThen.textContent = '£29/month';
+    if (badge) badge.style.display = 'none';
+  }
+}
+
+function toast(icon, text, cls) {
+  const zone = document.getElementById('tz');
+  const el = document.createElement('div');
+  el.className = 'tst ' + (cls || 'tc');
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+</script>
+<script>
+/* ── PRICING ODOMETER (wireframe — scoped to wf- prefixed IDs) ── */
+(function () {
+  const DIGITS = '0123456789';
+  const EASING = 'cubic-bezier(0.45, 0, 0.15, 1)';
+  const DURATION = 676;
+  const STAGGER = 45;
+
+  const priceDigits = document.getElementById('wf-pro-price-digits');
+  const proPeriod   = document.getElementById('wf-pro-period');
+  if (!priceDigits) return;
+
+  let digitH = 0;
+  let slots = [];
+
+  function measureDigitH() {
+    const probe = document.createElement('span');
+    probe.style.cssText = 'position:absolute;visibility:hidden;font-family:Outfit,sans-serif;font-size:56px;font-weight:900;line-height:1;';
+    probe.textContent = '0';
+    document.body.appendChild(probe);
+    const h = probe.getBoundingClientRect().height;
+    document.body.removeChild(probe);
+    return Math.ceil(h);
+  }
+
+  function buildReels(str) {
+    if (!digitH) digitH = measureDigitH();
+    priceDigits.innerHTML = '';
+    slots = [];
+    for (const ch of str) {
+      if (DIGITS.includes(ch)) {
+        const idx = DIGITS.indexOf(ch);
+        const win = document.createElement('div');
+        win.className = 'digit-window';
+        win.style.height = digitH + 'px';
+        win.style.overflow = 'hidden';
+        const reel = document.createElement('div');
+        reel.className = 'digit-reel';
+        reel.style.transition = 'none';
+        reel.style.transform = `translateY(-${idx * digitH}px)`;
+        for (const d of DIGITS) {
+          const s = document.createElement('span');
+          s.textContent = d;
+          s.style.height = digitH + 'px';
+          s.style.lineHeight = digitH + 'px';
+          reel.appendChild(s);
+        }
+        win.appendChild(reel);
+        priceDigits.appendChild(win);
+        slots.push({ type: 'digit', win, reel, pos: idx });
+      } else {
+        const s = document.createElement('span');
+        s.className = 'price-static-mk';
+        s.textContent = ch;
+        priceDigits.appendChild(s);
+        slots.push({ type: 'static', el: s });
+      }
+    }
+  }
+
+  function setPrice(str) {
+    if (!digitH) digitH = measureDigitH();
+    const newDigits = [...str].filter(c => DIGITS.includes(c));
+    const currentSlots = slots.filter(s => s.type === 'digit');
+    if (newDigits.length !== currentSlots.length) {
+      buildReels(str);
+      requestAnimationFrame(() => {
+        slots.filter(s => s.type === 'digit').forEach((slot, i) => {
+          const target = DIGITS.indexOf(newDigits[i]);
+          const above = target > 0 ? target - 1 : 9;
+          slot.reel.style.transition = 'none';
+          slot.reel.style.transform = `translateY(-${above * digitH}px)`;
+          slot.reel.getBoundingClientRect();
+          setTimeout(() => {
+            slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
+            slot.reel.style.transform = `translateY(-${target * digitH}px)`;
+            slot.pos = target;
+          }, i * STAGGER);
+        });
+      });
+      return;
+    }
+    let di = 0;
+    slots.forEach((slot) => {
+      if (slot.type !== 'digit') return;
+      const target = DIGITS.indexOf(newDigits[di]);
+      const i = di++;
+      setTimeout(() => {
+        slot.reel.style.transition = `transform ${DURATION}ms ${EASING}`;
+        slot.reel.style.transform = `translateY(-${target * digitH}px)`;
+        slot.pos = target;
+      }, i * STAGGER);
+    });
+  }
+
+  function updateLeadingZero() {
+    const digitSlots = slots.filter(s => s.type === 'digit');
+    if (!digitSlots.length) return;
+    const first = digitSlots[0];
+    const isZero = first.pos === 0;
+    first.win.style.transition = 'width 0.3s ease, opacity 0.3s ease';
+    first.win.style.opacity = isZero ? '0' : '1';
+    first.win.style.width = isZero ? '0' : '';
+    first.win.style.overflow = 'hidden';
+  }
+
+  buildReels('12');
+  updateLeadingZero();
+
+  const toggle      = document.getElementById('wf-billing-toggle');
+  const billMonthly = document.getElementById('wf-bill-monthly');
+  const billAnnual  = document.getElementById('wf-bill-annual');
+  const proDesc     = document.getElementById('wf-pro-desc');
+  const proSaving   = document.getElementById('wf-pro-saving');
+  if (!toggle) return;
+
+  toggle.addEventListener('change', () => {
+    const isAnnual = toggle.checked;
+    billMonthly.classList.toggle('active', !isAnnual);
+    billAnnual.classList.toggle('active', isAnnual);
+    if (isAnnual) {
+      setPrice('07');
+      setTimeout(updateLeadingZero, 50);
+      proPeriod.textContent = '/mo';
+      proDesc.textContent = '£84 billed annually.';
+      proSaving.textContent = 'You save £60 a year \u2014 that\'s 42% off';
+      proSaving.classList.add('visible');
+    } else {
+      setPrice('12');
+      setTimeout(updateLeadingZero, 50);
+      proPeriod.textContent = '/month';
+      proDesc.textContent = 'Billed monthly. Cancel any time.';
+      proSaving.classList.remove('visible');
+    }
+  });
+})();
+</script>
+</body>
+</html>
