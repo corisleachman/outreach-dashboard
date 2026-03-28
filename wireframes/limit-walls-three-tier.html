@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Limit Walls (Three-Tier)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   RESET & TOKENS
+══════════════════════════════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;
+  --s:rgba(255,255,255,0.04);
+  --s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);
+  --b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);--rd:rgba(255,76,76,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;overflow-x:hidden;}
+
+/* ══════════════════════════════════════════
+   AMBIENT ORBS
+══════════════════════════════════════════ */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:50px;}
+
+/* ══════════════════════════════════════════
+   HOME ICON
+══════════════════════════════════════════ */
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+
+/* ══════════════════════════════════════════
+   TOPBAR
+══════════════════════════════════════════ */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-right:16px;flex-shrink:0;text-decoration:none;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb a{color:var(--tm);text-decoration:none;transition:color 0.15s;}
+.breadcrumb a:hover{color:var(--t);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   SIDEBAR
+══════════════════════════════════════════ */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;
+  padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;
+  color:rgba(255,255,255,0.55);position:relative;background:transparent;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;flex-shrink:0;}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity 0.15s,visibility 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+
+/* ══════════════════════════════════════════
+   LAYOUT
+══════════════════════════════════════════ */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;
+  position:relative;z-index:1;min-width:0;}
+
+/* ══════════════════════════════════════════
+   CAMPAIGN HEADER (sticky)
+══════════════════════════════════════════ */
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);
+  background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);
+  position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;
+  gap:8px;flex-wrap:wrap;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.stats-strip{display:flex;gap:0;margin-bottom:0;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.sn{font-family:var(--of);font-size:20px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sn.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sn.green{color:var(--green);}
+.sn.cyan{color:var(--cyan);}
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;
+  color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;
+  padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* ══════════════════════════════════════════
+   TAB CONTENT
+══════════════════════════════════════════ */
+.tab-content{flex:1;padding:24px 32px;}
+.tc{display:none;}
+.tc.on{display:block;}
+
+/* ══════════════════════════════════════════
+   SEARCH BAR
+══════════════════════════════════════════ */
+.search-bar{display:flex;align-items:center;background:var(--s);
+  border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:16px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;
+  padding:11px 10px;font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:15px;}
+
+/* ══════════════════════════════════════════
+   PROSPECT CARDS (Review tab)
+══════════════════════════════════════════ */
+.pcard{background:var(--s);border:1px solid var(--b);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;transition:border-color 0.15s;}
+.pcard:hover{border-color:var(--b2);}
+.pcard-row{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;}
+.pav{width:36px;height:36px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.pav.teal{background:var(--cd);border-color:rgba(0,212,255,0.2);color:var(--cyan);}
+.pinfo{flex:1;min-width:0;}
+.pname{font-size:14px;font-weight:600;color:var(--t);margin-bottom:2px;}
+.psub{font-size:12px;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pactions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.ibtn{width:28px;height:28px;border-radius:6px;background:transparent;
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.ibtn:hover{border-color:var(--td);background:var(--s2);}
+.ibtn.approve{background:var(--gd);border-color:rgba(100,220,120,0.3);}
+.ibtn.approve svg{color:var(--green);}
+.ibtn.detail{border-color:rgba(0,212,255,0.3);color:var(--cyan);}
+.ibtn.detail:hover{background:var(--cd);}
+.li-btn{width:28px;height:28px;border-radius:6px;background:rgba(10,102,194,0.12);
+  border:1px solid rgba(10,102,194,0.25);display:flex;align-items:center;
+  justify-content:center;text-decoration:none;flex-shrink:0;transition:all 0.15s;}
+.li-btn:hover{background:rgba(10,102,194,0.25);}
+
+/* ══════════════════════════════════════════
+   GENERIC TABLE ROWS
+══════════════════════════════════════════ */
+.trow{display:flex;align-items:center;gap:12px;padding:12px 18px;
+  border-bottom:1px solid var(--b);transition:background 0.15s;}
+.trow:last-child{border-bottom:none;}
+.trow:hover{background:var(--s2);}
+.tav{width:32px;height:32px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.15);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.tav.c{background:var(--cd);border-color:rgba(0,212,255,0.15);color:var(--cyan);}
+.tav.g{background:var(--gd);border-color:rgba(100,220,120,0.15);color:var(--green);}
+.tav.a{background:var(--ad);border-color:rgba(255,157,66,0.15);color:var(--amber);}
+.tav.r{background:var(--rd);border-color:rgba(255,76,76,0.15);color:var(--red);}
+.tinfo{flex:1;min-width:0;}
+.tname{font-size:13px;font-weight:500;color:var(--t);}
+.tsub{font-size:12px;color:var(--td);margin-top:2px;}
+.tright{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   DRAFT ROWS
+══════════════════════════════════════════ */
+.drow{display:flex;align-items:center;gap:12px;padding:14px 18px;
+  border-bottom:1px solid var(--b);transition:background 0.15s;cursor:pointer;}
+.drow:last-child{border-bottom:none;}
+.drow:hover{background:var(--s2);}
+.dav{width:34px;height:34px;border-radius:50%;background:var(--cd);
+  border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;
+  color:var(--cyan);flex-shrink:0;}
+.dinfo{flex:1;min-width:0;}
+.dname{font-size:13px;font-weight:500;color:var(--t);margin-bottom:3px;}
+.dsubject{font-size:12px;color:var(--tm);white-space:nowrap;overflow:hidden;
+  text-overflow:ellipsis;max-width:480px;}
+
+/* ══════════════════════════════════════════
+   BUTTONS
+══════════════════════════════════════════ */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 18px;border-radius:8px;font-family:var(--of);font-size:12px;
+  font-weight:700;cursor:pointer;border:none;transition:all 0.2s;
+  text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bc{background:var(--cd);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.bc:hover{background:rgba(0,212,255,0.14);}
+.bsm{padding:6px 12px;font-size:11px;}
+
+/* ══════════════════════════════════════════
+   BADGES
+══════════════════════════════════════════ */
+.bdg{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.07em;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.bdg-g{background:var(--gd);color:var(--green);border:1px solid rgba(100,220,120,0.25);}
+.bdg-c{background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.bdg-a{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.bdg-n{background:var(--s2);color:var(--tm);border:1px solid var(--b2);}
+
+/* ══════════════════════════════════════════
+   STATUS SELECT
+══════════════════════════════════════════ */
+.ssel{background:var(--s2);border:1px solid var(--b2);border-radius:6px;
+  padding:5px 8px;font-family:var(--sf);font-size:11px;color:var(--t);
+  cursor:pointer;outline:none;max-width:220px;}
+
+/* ══════════════════════════════════════════
+   FILTER PILLS (LinkedIn tab)
+══════════════════════════════════════════ */
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.fpill{padding:6px 14px;border-radius:20px;border:1px solid var(--b2);
+  background:var(--s);font-family:var(--of);font-size:11px;font-weight:600;
+  color:var(--tm);cursor:pointer;transition:all 0.15s;}
+.fpill:hover{color:var(--t);}
+.fpill.on{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* ══════════════════════════════════════════
+   BOUNCE TAB
+══════════════════════════════════════════ */
+.bounce-banner{display:flex;align-items:flex-start;gap:12px;
+  background:var(--ad);border:1px solid rgba(255,157,66,0.2);
+  border-radius:10px;padding:14px 18px;margin-bottom:16px;}
+.bb-icon{font-size:18px;flex-shrink:0;}
+.bb-title{font-family:var(--of);font-size:13px;font-weight:700;
+  color:var(--amber);margin-bottom:3px;}
+.bb-sub{font-size:12px;color:var(--amber);opacity:0.8;line-height:1.5;}
+.grp-hdr{padding:9px 18px;background:rgba(255,255,255,0.025);
+  border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+
+/* ══════════════════════════════════════════
+   EMPTY STATE
+══════════════════════════════════════════ */
+.empty-tab{display:flex;flex-direction:column;align-items:center;
+  justify-content:center;padding:72px 20px;text-align:center;}
+.et-icon{font-size:32px;margin-bottom:14px;opacity:0.4;}
+.et-title{font-family:var(--of);font-size:16px;font-weight:700;
+  color:var(--t);margin-bottom:6px;}
+.et-sub{font-size:13px;color:var(--tm);line-height:1.6;max-width:280px;}
+
+/* ══════════════════════════════════════════
+   PROSPECT DETAIL DRAWER
+══════════════════════════════════════════ */
+#pd-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(3px);z-index:800;display:none;}
+#pd-panel{position:fixed;top:var(--th);right:0;bottom:0;width:480px;
+  max-width:calc(100vw - var(--sw));background:#130a20;
+  border-left:1px solid var(--b2);z-index:801;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
+#pd-backdrop.open{display:block;}
+#pd-panel.open{transform:translateX(0);}
+.pd-hdr{padding:18px 20px;border-bottom:1px solid var(--b);
+  display:flex;align-items:flex-start;gap:12px;flex-shrink:0;}
+.pd-av{width:40px;height:40px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:13px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.pd-av.t{background:var(--cd);border-color:rgba(0,212,255,0.2);color:var(--cyan);}
+.pd-name{font-family:var(--of);font-size:16px;font-weight:700;
+  color:var(--t);margin-bottom:3px;}
+.pd-role{font-size:12px;color:var(--tm);}
+.pd-close{margin-left:auto;width:28px;height:28px;border-radius:6px;
+  background:transparent;border:1px solid var(--b2);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;
+  color:var(--tm);font-size:14px;flex-shrink:0;transition:all 0.15s;line-height:1;}
+.pd-close:hover{color:var(--t);}
+.pd-body{flex:1;overflow-y:auto;padding:18px 20px;}
+.pd-body::-webkit-scrollbar{width:3px;}
+.pd-body::-webkit-scrollbar-thumb{background:var(--b2);}
+.pd-sec-label{font-family:var(--of);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--td);
+  margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--b);}
+.pd-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.pd-field{background:rgba(255,255,255,0.03);border:1px solid var(--b);
+  border-radius:7px;padding:11px 13px;}
+.pd-field.span2{grid-column:span 2;}
+.pd-fl{font-size:9px;font-family:var(--of);font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:5px;
+  display:flex;align-items:center;justify-content:space-between;}
+.pd-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:6px;padding:8px 10px;font-family:var(--sf);font-size:13px;
+  color:var(--t);outline:none;transition:border-color 0.2s,box-shadow 0.2s;}
+.pd-input:focus{border-color:var(--cyan);}
+.pd-fv{font-size:13px;color:var(--t);}
+.pd-fv a{color:var(--cyan);text-decoration:none;}
+.pd-about{font-size:12px;color:var(--tm);line-height:1.7;
+  background:rgba(255,255,255,0.03);border:1px solid var(--b);
+  border-radius:7px;padding:11px 13px;margin-bottom:20px;}
+.gen-badge{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;
+  padding:3px 8px;border-radius:4px;cursor:pointer;white-space:nowrap;transition:all 0.2s;}
+.gen-badge.empty{background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.2);color:var(--amber);}
+.gen-badge.done{background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);cursor:default;}
+.pd-ftr{padding:14px 20px;border-top:1px solid var(--b);
+  display:flex;gap:8px;justify-content:space-between;
+  align-items:center;flex-shrink:0;}
+.pd-skip{font-size:12px;color:var(--td);cursor:pointer;transition:color 0.15s;}
+.pd-skip:hover{color:var(--tm);}
+
+/* ══════════════════════════════════════════
+   SEND DRAWER
+══════════════════════════════════════════ */
+#sd-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.5);
+  backdrop-filter:blur(4px);z-index:800;display:none;}
+#sd-panel{position:fixed;top:var(--th);right:0;bottom:0;width:520px;
+  max-width:calc(100vw - var(--sw));background:#130a20;
+  border-left:1px solid var(--b2);z-index:801;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
+#sd-backdrop.open{display:block;}
+#sd-panel.open{transform:translateX(0);}
+.sd-hdr{padding:20px 24px;border-bottom:1px solid var(--b);
+  display:flex;align-items:flex-start;gap:12px;}
+.sd-title{font-family:var(--of);font-size:17px;font-weight:700;color:var(--t);margin-bottom:3px;}
+.sd-sub{font-size:12px;color:var(--cyan);}
+.sd-close{margin-left:auto;width:28px;height:28px;border-radius:6px;
+  background:transparent;border:1px solid var(--b2);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;
+  color:var(--tm);font-size:16px;flex-shrink:0;line-height:1;}
+.sd-close:hover{color:var(--t);}
+.sd-body{flex:1;overflow-y:auto;padding:20px 24px;}
+.sd-body::-webkit-scrollbar{width:3px;}
+.sd-body::-webkit-scrollbar-thumb{background:var(--b2);}
+.sd-fld{margin-bottom:16px;}
+.sd-label{font-size:10px;font-family:var(--of);font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:6px;display:block;}
+.sd-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:7px;padding:10px 13px;font-family:var(--sf);font-size:13px;
+  color:var(--t);outline:none;transition:border-color 0.2s;}
+.sd-input:focus{border-color:var(--cyan);}
+textarea.sd-input{resize:none;line-height:1.7;min-height:140px;}
+.sd-confirm{background:var(--gd);border:1px solid rgba(100,220,120,0.2);
+  border-radius:8px;padding:10px 13px;font-size:12px;color:var(--green);
+  line-height:1.5;margin-bottom:14px;display:none;}
+.sd-ftr{padding:16px 24px;border-top:1px solid var(--b);
+  display:flex;gap:8px;justify-content:flex-end;}
+
+/* ══════════════════════════════════════════
+   LINKEDIN CONFIG MODAL
+══════════════════════════════════════════ */
+/* Sequence drawer */
+#seq-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);
+  z-index:700;display:none;backdrop-filter:blur(2px);}
+#seq-overlay.open{display:block;}
+#seq-drawer{position:fixed;top:var(--th);right:0;bottom:0;width:520px;
+  background:#0f0a1a;border-left:1px solid var(--b2);
+  box-shadow:-24px 0 64px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;z-index:701;
+  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0.28s;
+  visibility:hidden;}
+#seq-drawer.open{transform:translateX(0);visibility:visible;transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0s;}
+.seq-hdr{padding:16px 18px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.seq-title{font-family:var(--of);font-size:14px;font-weight:700;color:var(--t);
+  display:flex;align-items:center;gap:8px;}
+.seq-title-sub{font-size:11px;font-weight:400;color:var(--td);margin-left:2px;}
+.seq-close{cursor:pointer;color:var(--tm);font-size:16px;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;transition:color 0.15s,background 0.15s;}
+.seq-close:hover{color:var(--t);background:var(--s2);}
+.seq-body{padding:16px 18px;overflow-y:auto;display:flex;flex-direction:column;gap:0;flex:1;}
+/* Step rows */
+.seq-step{display:flex;gap:12px;position:relative;}
+.seq-step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:28px;}
+.seq-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;flex-shrink:0;}
+.seq-step-num.s1{background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.35);color:var(--pink);}
+.seq-step-num.sn{background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.seq-connector{width:1px;background:var(--b2);flex:1;min-height:10px;margin:3px 0;}
+.seq-add-row{display:flex;align-items:center;gap:12px;padding:4px 0 8px;}
+.seq-add-line{width:1px;background:var(--b2);height:24px;flex-shrink:0;margin-left:13px;}
+/* Step card */
+.seq-step-body{flex:1;padding-bottom:12px;}
+.seq-card{background:var(--s);border:1px solid var(--b2);border-radius:10px;overflow:hidden;
+  transition:border-color 0.15s;}
+.seq-card.expanded{border-color:rgba(255,255,255,0.12);}
+.seq-card-hdr{padding:10px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;
+  user-select:none;}
+.seq-card-hdr:hover{background:rgba(255,255,255,0.03);}
+.seq-card-tags{display:flex;align-items:center;gap:4px;flex:1;flex-wrap:wrap;}
+.seq-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.07em;padding:2px 6px;border-radius:4px;}
+.seq-badge.type{background:rgba(255,20,147,0.12);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.seq-badge.tone{background:rgba(0,212,255,0.09);color:var(--cyan);border:1px solid rgba(0,212,255,0.18);}
+.seq-delay-txt{font-family:var(--of);font-size:10px;color:var(--td);}
+.seq-card-chevron{color:var(--td);font-size:10px;transition:transform 0.2s;flex-shrink:0;margin-left:auto;}
+.seq-card.expanded .seq-card-chevron{transform:rotate(180deg);}
+.seq-card-del{color:var(--td);cursor:pointer;padding:7px 8px;border-radius:4px;
+  transition:color 0.15s,background 0.15s;flex-shrink:0;line-height:1;}
+.seq-card-del:hover{color:#ff4d6d;background:rgba(255,77,109,0.1);}
+/* Confirm delete inline */
+.seq-del-confirm{display:none;padding:9px 12px;background:rgba(255,77,109,0.07);
+  border-top:1px solid rgba(255,77,109,0.15);align-items:center;
+  justify-content:space-between;gap:8px;}
+.seq-del-confirm.show{display:flex;}
+.seq-del-msg{font-size:12px;color:#ff4d6d;}
+.seq-del-btns{display:flex;gap:6px;}
+/* Editor */
+.seq-editor{padding:12px;border-top:1px solid var(--b);display:none;
+  flex-direction:column;gap:10px;}
+.seq-card.expanded .seq-editor{display:flex;}
+.seq-field-lbl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--td);margin-bottom:4px;}
+/* Type + tone chip selectors */
+.seq-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.seq-chip{font-family:var(--of);font-size:11px;font-weight:600;padding:4px 9px;border-radius:6px;
+  border:1px solid var(--b2);color:var(--tm);background:var(--s2);cursor:pointer;
+  transition:all 0.15s;user-select:none;}
+.seq-chip:hover{border-color:var(--td);color:var(--t);}
+.seq-chip.sel-type{background:rgba(255,20,147,0.12);color:var(--pink);border-color:rgba(255,20,147,0.35);}
+.seq-chip.sel-tone{background:rgba(0,212,255,0.1);color:var(--cyan);border-color:rgba(0,212,255,0.3);}
+/* Inputs */
+.seq-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:7px;
+  padding:8px 10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;
+  outline:none;transition:border-color 0.15s;box-sizing:border-box;resize:none;}
+.seq-input:focus{border-color:rgba(255,20,147,0.4);}
+.seq-input::placeholder{color:var(--td);}
+/* Delay row */
+.seq-delay-row{display:flex;align-items:center;gap:8px;}
+.seq-delay-input{width:52px;background:var(--s2);border:1px solid var(--b2);border-radius:7px;
+  padding:7px 8px;color:var(--t);font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;text-align:center;transition:border-color 0.15s;}
+.seq-delay-input:focus{border-color:rgba(255,20,147,0.4);}
+.seq-delay-unit{font-size:13px;color:var(--tm);}
+/* Thread toggle — matches wizard pattern */
+.seq-toggle-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--b);}
+.seq-toggle-info .seq-toggle-lbl{font-size:13px;color:var(--t);font-weight:500;}
+.seq-toggle-info .seq-toggle-sub{font-size:11px;color:var(--td);margin-top:2px;}
+.seq-tog{width:40px;height:22px;background:var(--s2);border:1px solid var(--b2);
+  border-radius:11px;position:relative;cursor:pointer;transition:all 0.25s;flex-shrink:0;}
+.seq-tog.on{background:var(--pink);border-color:var(--pink);box-shadow:0 0 10px rgba(255,20,147,0.35);}
+.seq-tog::after{content:'';position:absolute;width:16px;height:16px;background:white;
+  border-radius:50%;top:2px;left:2px;transition:all 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.seq-tog.on::after{left:calc(100% - 18px);}
+/* Subject reveal (appears when thread toggle is off) */
+.seq-subject-reveal{overflow:hidden;max-height:0;opacity:0;margin-top:0;
+  transition:max-height 0.3s ease,opacity 0.25s ease,margin 0.25s ease;}
+.seq-subject-reveal.open{max-height:60px;opacity:1;margin-top:10px;}
+/* Attachment */
+.seq-attach{border:1px dashed var(--b2);border-radius:8px;padding:9px 12px;
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;}
+.seq-attach:hover{border-color:var(--tm);background:rgba(255,255,255,0.03);}
+.seq-attach-lbl{font-size:12px;color:var(--tm);}
+.seq-attach-sub{font-size:11px;color:var(--td);}
+/* Add follow-up */
+.seq-add-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tm);
+  border:1px dashed var(--b2);border-radius:8px;padding:7px 12px;
+  background:transparent;cursor:pointer;transition:all 0.15s;font-family:var(--of);width:100%;}
+.seq-add-btn:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,20,147,0.06);}
+/* Footer */
+.seq-ftr{padding:12px 18px;border-top:1px solid var(--b);display:flex;
+  align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0;}
+
+#li-backdrop{position:fixed;inset:0;background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(4px);z-index:800;display:none;
+  align-items:center;justify-content:center;}
+#li-backdrop.open{display:flex;}
+#li-modal{width:520px;max-width:calc(100vw - 40px);background:#130a20;
+  border:1px solid var(--b2);border-radius:14px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.6);}
+.li-hdr{padding:20px 24px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;}
+.li-title{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);
+  display:flex;align-items:center;gap:8px;}
+.li-close{cursor:pointer;color:var(--tm);font-size:16px;line-height:1;
+  padding:2px 6px;transition:color 0.15s;}
+.li-close:hover{color:var(--t);}
+.li-body{padding:20px 24px;}
+.li-ftr{padding:14px 24px;border-top:1px solid var(--b);
+  display:flex;gap:8px;justify-content:flex-end;}
+
+/* LI copy confirmation */
+#li-copied{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+  background:rgba(0,212,255,0.12);border:1px solid rgba(0,212,255,0.3);
+  border-radius:8px;padding:10px 18px;font-family:var(--of);font-size:13px;
+  font-weight:600;color:var(--cyan);white-space:nowrap;
+  opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:999;display:none;}
+#li-copied.show{display:block;opacity:1;}
+
+/* ══════════════════════════════════════════
+   TOAST
+══════════════════════════════════════════ */
+#tz{position:fixed;bottom:90px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:3px solid var(--cyan);}
+.tst.tp{border-left:3px solid var(--pink);}
+.tst.tg{border-left:3px solid var(--green);}
+.tst.ta{border-left:3px solid var(--amber);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════════
+   DEV PBAR
+══════════════════════════════════════════ */
+.pbar{position:fixed;bottom:20px;left:calc(var(--sw) + 16px);z-index:999;
+  background:rgba(13,9,20,0.92);border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;padding:6px 12px;display:flex;gap:8px;align-items:center;
+  font-family:var(--of);font-size:11px;color:rgba(255,255,255,0.35);
+  backdrop-filter:blur(10px);}
+.pbar button{background:none;border:none;font-family:var(--of);font-size:11px;
+  font-weight:700;cursor:pointer;padding:0;}
+
+/* ══════════════════════════════════════════
+   CARD WRAPPER (for grouped rows)
+══════════════════════════════════════════ */
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;
+  overflow:hidden;margin-bottom:12px;}
+</style>
+<style>
+.sc { display: none; }
+.sc.on { display: block; }
+.wall-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.65);
+  backdrop-filter: blur(4px);
+  z-index: 100;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+}
+.wall-card {
+  background: #1a0f2e;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  padding: 28px;
+  max-width: 420px;
+  width: 100%;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+.wall-icon {
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px; font-size: 20px;
+}
+.wall-title {
+  font-family: var(--of);
+  font-size: 18px; font-weight: 800;
+  margin-bottom: 6px;
+}
+.wall-sub {
+  font-size: 13px; color: var(--tm);
+  line-height: 1.6; margin-bottom: 16px;
+}
+.usage-bar-wrap { margin-bottom: 16px; }
+.usage-bar {
+  height: 6px; background: var(--s2);
+  border-radius: 100px; overflow: hidden;
+  margin-bottom: 4px;
+}
+.usage-fill {
+  height: 100%;
+  border-radius: 100px;
+  background: linear-gradient(90deg, var(--pink), var(--cyan));
+  transition: width 0.4s;
+}
+.usage-fill.warn { background: linear-gradient(90deg, #ff9d42, #ff1493); }
+.usage-fill.full { background: var(--red); }
+.usage-label { font-size: 11px; color: var(--td); display: flex; justify-content: space-between; }
+.referral-path {
+  padding: 14px;
+  background: rgba(100,220,120,0.06);
+  border: 1px solid rgba(100,220,120,0.18);
+  border-radius: 10px;
+  margin-top: 12px;
+  font-size: 12px;
+  color: rgba(200,255,210,0.85);
+  line-height: 1.6;
+}
+.referral-path-title {
+  font-family: var(--of);
+  font-size: 12px; font-weight: 700;
+  color: #64dc78; margin-bottom: 4px;
+}
+.desire-panel-inline {
+  margin-top: 8px;
+  padding: 14px;
+  background: var(--s);
+  border: 1px solid var(--b2);
+  border-left: 3px solid var(--pink);
+  border-radius: 0 10px 10px 0;
+}
+.desire-panel-inline.cyan { border-left-color: var(--cyan); }
+.desire-title { font-family: var(--of); font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.desire-body { font-size: 12px; color: var(--tm); line-height: 1.5; margin-bottom: 10px; }
+.desire-actions { display: flex; gap: 8px; align-items: center; }
+.locked-btn-inline {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 100px;
+  background: var(--s); border: 1px solid var(--b2);
+  font-size: 13px; color: var(--td); cursor: pointer;
+  font-family: var(--of); font-weight: 600;
+}
+/* Simulate app shell */
+.app-shell {
+  display: flex; flex-direction: column; min-height: 100vh;
+  background: var(--bg);
+}
+.app-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 20px; height: 48px;
+  border-bottom: 1px solid var(--b);
+  background: rgba(13,9,20,0.95);
+}
+.app-content {
+  flex: 1; padding: 24px 20px;
+  position: relative;
+}
+.plan-badge-inline {
+  padding: 3px 10px; border-radius: 100px;
+  font-family: var(--of); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.badge-free-sm { background: var(--s2); color: var(--tm); border: 1px solid var(--b2); }
+.badge-trial-sm { background: rgba(255,157,66,0.1); color: var(--amber); border: 1px solid rgba(255,157,66,0.25); }
+.badge-prolight-sm { background: rgba(255,20,147,0.1); color: var(--pink); border: 1px solid rgba(255,20,147,0.25); }
+.soft-nudge-banner {
+  padding: 10px 16px;
+  background: rgba(255,157,66,0.07);
+  border: 1px solid rgba(255,157,66,0.2);
+  border-radius: 10px;
+  margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  font-size: 12px; color: rgba(255,200,120,0.85);
+}
+</style>
+</head>
+<body style="margin:0;background:var(--bg,#0d0914);">
+<a href="../hub.html" style="position:fixed;top:14px;left:14px;font-size:11px;color:var(--td,#444456);text-decoration:none;z-index:999;">← Hub</a>
+
+<!-- ══════════════════════════════════
+     1. FREE — PROSPECT SOFT NUDGE (80/100)
+══════════════════════════════════ -->
+<div class="sc on" id="s-free-soft">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content">
+      <div class="soft-nudge-banner">
+        <span>You're getting close to your Free limit — <strong>20 prospects remaining.</strong></span>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-primary btn-sm" onclick="show('s-plans-modal')">See Pro Light →</button>
+          <button class="btn btn-ghost btn-sm" onclick="this.closest('.soft-nudge-banner').style.display='none'">Dismiss</button>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Prospect list content here…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     2. FREE — PROSPECT HARD WALL (100/100)
+══════════════════════════════════ -->
+<div class="sc" id="s-free-hard">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content">
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Prospect list content here…</div>
+    </div>
+  </div>
+  <!-- Wall overlay -->
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);">📋</div>
+      <div class="wall-title">You've built a real pipeline.</div>
+      <div class="wall-sub">100 prospects is your Free limit. Upgrade to Pro Light to keep going — 1,000 prospects and 5 campaigns, all for £7/month.</div>
+      <div class="usage-bar-wrap">
+        <div class="usage-bar"><div class="usage-fill full" style="width:100%;"></div></div>
+        <div class="usage-label"><span>100 / 100 prospects</span><span style="color:var(--red);">Limit reached</span></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="show('s-plans-modal')">Start free trial →</button>
+      <div class="referral-path">
+        <div class="referral-path-title">🤝 Not ready to upgrade?</div>
+        Invite one person to Pulse. and unlock 200 prospects + a 2nd campaign on your Free account — no payment needed. Available once.
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;justify-content:center;border-color:rgba(100,220,120,0.3);color:#64dc78;" onclick="show('s-referral-extend')">Invite a friend →</button>
+        <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--td);">Or <button style="background:none;border:none;color:var(--td);cursor:pointer;font-size:11px;text-decoration:underline;" onclick="show('s-paid-extend')">extend for £2</button> (one-time, no subscription)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     3. FREE — CAMPAIGN WALL (trying to create 2nd campaign)
+══════════════════════════════════ -->
+<div class="sc" id="s-free-campaign">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content">
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Campaign list content here…</div>
+    </div>
+  </div>
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);">🗂</div>
+      <div class="wall-title">One campaign on Free.</div>
+      <div class="wall-sub">Free accounts include 1 campaign. Upgrade to Pro Light for 5 campaigns and 1,000 prospects — enough to run serious outreach.</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="show('s-plans-modal')">Start free trial →</button>
+      <div class="referral-path" style="margin-top:12px;">
+        <div class="referral-path-title">🤝 Not ready to upgrade?</div>
+        Invite one person to Pulse. and unlock 200 prospects + a 2nd campaign on your Free account — no payment needed. Available once.
+        <button class="btn btn-ghost btn-sm" style="margin-top:8px;width:100%;justify-content:center;border-color:rgba(100,220,120,0.3);color:#64dc78;" onclick="show('s-referral-extend')">Invite a friend →</button>
+        <div style="text-align:center;margin-top:6px;font-size:11px;color:var(--td);">Or <button style="background:none;border:none;color:var(--td);cursor:pointer;font-size:11px;text-decoration:underline;" onclick="show('s-paid-extend')">extend for £2</button></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     4. FREE — AI DRAFT DESIRE TRIGGER
+══════════════════════════════════ -->
+<div class="sc" id="s-free-ai">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content">
+      <div style="font-size:12px;color:var(--tm);margin-bottom:12px;">Message editor</div>
+      <div style="display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;flex-direction:column;">
+        <div style="display:flex;gap:8px;">
+          <button class="btn btn-ghost btn-sm">Write manually</button>
+          <div class="locked-btn-inline" onclick="document.getElementById('ai-desire-panel').style.display=document.getElementById('ai-desire-panel').style.display==='none'?'block':'none'">
+            <span>🔒</span> Generate with AI
+          </div>
+        </div>
+        <div id="ai-desire-panel" class="desire-panel-inline" style="display:none;width:100%;box-sizing:border-box;">
+          <div class="desire-title">AI drafts are a Pro Light feature.</div>
+          <div class="desire-body">Write your first message in seconds — personalised to each prospect, in your tone of voice.</div>
+          <div class="desire-actions">
+            <button class="btn btn-primary btn-sm" onclick="show('s-plans-modal')">Unlock with Pro Light →</button>
+            <button class="btn btn-ghost btn-sm" onclick="document.getElementById('ai-desire-panel').style.display='none'">Maybe later</button>
+          </div>
+        </div>
+      </div>
+      <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px;font-size:13px;color:var(--td);min-height:120px;">Message body text area…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     5. PRO LIGHT — PROSPECT SOFT NUDGE (800/1000)
+══════════════════════════════════ -->
+<div class="sc" id="s-pl-soft">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-prolight-sm">Pro Light</div>
+    </div>
+    <div class="app-content">
+      <div class="soft-nudge-banner" style="background:rgba(139,92,246,0.06);border-color:rgba(139,92,246,0.2);color:rgba(200,180,255,0.85);">
+        <span>You've used 800 of your 1,000 prospect limit — <strong>200 remaining.</strong></span>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn btn-ghost btn-sm" style="border-color:rgba(139,92,246,0.3);color:#a78bfa;" onclick="show('s-proplus-modal')">See Pro Plus →</button>
+          <button class="btn btn-ghost btn-sm" onclick="this.closest('.soft-nudge-banner').style.display='none'">Dismiss</button>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Prospect list content here…</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     6. PRO LIGHT — PROSPECT HARD WALL (1000/1000)
+══════════════════════════════════ -->
+<div class="sc" id="s-pl-hard">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-prolight-sm">Pro Light</div>
+    </div>
+    <div class="app-content">
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Prospect list content here…</div>
+    </div>
+  </div>
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);">📊</div>
+      <div class="wall-title">Your pipeline is at scale.</div>
+      <div class="wall-sub">1,000 prospects is your Pro Light limit. Upgrade to Pro Plus for 10,000 prospects and unlimited campaigns.</div>
+      <div class="usage-bar-wrap">
+        <div class="usage-bar"><div class="usage-fill full" style="width:100%;background:linear-gradient(90deg,#8b5cf6,#06b6d4);"></div></div>
+        <div class="usage-label"><span>1,000 / 1,000 prospects</span><span style="color:#a78bfa;">Pro Light limit</span></div>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);" onclick="show('s-proplus-modal')">Upgrade to Pro Plus →</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px;" onclick="document.querySelector('.wall-overlay').style.display='none'">Stay on Pro Light</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     7. PRO LIGHT — CAMPAIGN WALL (5/5)
+══════════════════════════════════ -->
+<div class="sc" id="s-pl-campaign">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-prolight-sm">Pro Light</div>
+    </div>
+    <div class="app-content">
+      <div style="font-size:13px;color:var(--td);text-align:center;padding:40px;">Campaign list content here…</div>
+    </div>
+  </div>
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);">🗂</div>
+      <div class="wall-title">5 campaigns — Pro Light is full.</div>
+      <div class="wall-sub">Upgrade to Pro Plus for unlimited campaigns and 10,000 prospects.</div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;background:linear-gradient(135deg,#8b5cf6,#06b6d4);" onclick="show('s-proplus-modal')">Upgrade to Pro Plus →</button>
+      <button class="btn btn-ghost btn-sm" style="width:100%;justify-content:center;margin-top:8px;" onclick="document.querySelector('.wall-overlay').style.display='none'">Stay on Pro Light</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     8. REFERRAL EXTENSION FLOW
+══════════════════════════════════ -->
+<div class="sc" id="s-referral-extend">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content">
+    </div>
+  </div>
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(100,220,120,0.1);border:1px solid rgba(100,220,120,0.2);">🤝</div>
+      <div class="wall-title">Invite a friend, get more room.</div>
+      <div class="wall-sub">Share your referral link. When your friend sends their first campaign, you both get an instant unlock — no payment needed.</div>
+      <div style="padding:12px 14px;background:rgba(100,220,120,0.06);border:1px solid rgba(100,220,120,0.18);border-radius:10px;margin-bottom:16px;">
+        <div style="font-size:11px;color:#64dc78;font-weight:700;font-family:var(--of);margin-bottom:6px;">You both get:</div>
+        <div style="font-size:12px;color:rgba(200,255,210,0.85);line-height:1.7;">
+          ✓ You: 200 prospects + 2nd campaign unlocked (one-time)<br>
+          ✓ Them: full 30-day Pro Light trial
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:16px;">
+        <input style="flex:1;background:var(--s);border:1px solid var(--b2);border-radius:8px;padding:8px 12px;font-size:12px;color:var(--t);font-family:'DM Mono',monospace;" value="pulse-outreach.co.uk/r/coris42" readonly>
+        <button class="btn btn-ghost btn-sm" onclick="toast('✓','Link copied','tc')">Copy</button>
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="toast('→','Opening share sheet…','tc')">Share link →</button>
+      <button onclick="show('s-free-hard')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:10px;display:block;width:100%;text-align:center;">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     9. PAID EXTENSION (£2 fallback)
+══════════════════════════════════ -->
+<div class="sc" id="s-paid-extend">
+  <div class="app-shell">
+    <div class="app-topbar">
+      <div style="font-family:var(--of);font-weight:800;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Pulse.</div>
+      <div class="plan-badge-inline badge-free-sm">Free</div>
+    </div>
+    <div class="app-content"></div>
+  </div>
+  <div class="wall-overlay">
+    <div class="wall-card">
+      <div class="wall-icon" style="background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);">⚡</div>
+      <div class="wall-title">Extend your Free account once.</div>
+      <div class="wall-sub">A one-time £2 unlock — no subscription. Available once per account.</div>
+      <div style="padding:12px 14px;background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.15);border-radius:10px;margin-bottom:16px;font-size:12px;color:var(--tm);line-height:1.7;">
+        ✓ 200 prospects (up from 100)<br>
+        ✓ 2nd campaign unlocked<br>
+        ✓ Yours to keep, no recurring charges
+      </div>
+      <button class="btn btn-primary" style="width:100%;justify-content:center;padding:12px;" onclick="toast('→','Redirecting to Stripe…','tc')">Pay £2 and unlock →</button>
+      <div style="text-align:center;margin-top:10px;font-size:11px;color:var(--td);">Secured by Stripe · One payment, no subscription</div>
+      <button onclick="show('s-free-hard')" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;margin-top:8px;display:block;width:100%;text-align:center;">← Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- PLACEHOLDER MODALS referenced by CTAs above -->
+<div class="wall-overlay" id="s-plans-modal" style="display:none;" onclick="document.getElementById('s-plans-modal').style.display='none'">
+  <div class="wall-card" style="text-align:center;">
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;">See full pricing</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:16px;">→ See <code>pricing-three-tier.html</code> for the full plans page</p>
+    <button class="btn btn-ghost btn-sm" onclick="window.location.href='pricing-three-tier.html'">Go to pricing page →</button>
+    <button onclick="document.getElementById('s-plans-modal').style.display='none'" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;display:block;width:100%;text-align:center;margin-top:8px;">Close</button>
+  </div>
+</div>
+<div class="wall-overlay" id="s-proplus-modal" style="display:none;" onclick="document.getElementById('s-proplus-modal').style.display='none'">
+  <div class="wall-card" style="text-align:center;">
+    <div style="font-family:var(--of);font-size:18px;font-weight:800;margin-bottom:8px;">Upgrade to Pro Plus</div>
+    <p style="font-size:13px;color:var(--tm);margin-bottom:16px;">→ See <code>pricing-three-tier.html</code> for full plans comparison</p>
+    <button class="btn btn-ghost btn-sm" onclick="window.location.href='pricing-three-tier.html'">Go to pricing page →</button>
+    <button onclick="document.getElementById('s-proplus-modal').style.display='none'" style="background:none;border:none;font-size:12px;color:var(--td);cursor:pointer;display:block;width:100%;text-align:center;margin-top:8px;">Close</button>
+  </div>
+</div>
+
+<!-- State switcher -->
+<div class="pbar" style="position:fixed;bottom:0;left:0;right:0;flex-wrap:wrap;">
+  <span>Free →</span>
+  <button onclick="show('s-free-soft')">Prospect soft nudge</button>
+  <span style="opacity:.3">·</span>
+  <button onclick="show('s-free-hard')">Prospect hard wall</button>
+  <span style="opacity:.3">·</span>
+  <button onclick="show('s-free-campaign')">Campaign wall</button>
+  <span style="opacity:.3">·</span>
+  <button onclick="show('s-free-ai')">AI draft desire trigger</button>
+  <span style="opacity:.3;margin:0 4px;">|</span>
+  <span>Pro Light →</span>
+  <button style="color:#a78bfa" onclick="show('s-pl-soft')">Prospect soft nudge</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#a78bfa" onclick="show('s-pl-hard')">Prospect hard wall</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#a78bfa" onclick="show('s-pl-campaign')">Campaign wall</button>
+  <span style="opacity:.3;margin:0 4px;">|</span>
+  <span>Extension →</span>
+  <button style="color:#64dc78" onclick="show('s-referral-extend')">Referral path</button>
+  <span style="opacity:.3">·</span>
+  <button style="color:#64dc78" onclick="show('s-paid-extend')">£2 paid path</button>
+</div>
+
+<div style="height:60px;"></div>
+<div class="tz" id="tz" style="position:fixed;bottom:60px;left:50%;transform:translateX(-50%);z-index:9999;"></div>
+
+<script>
+function show(id) {
+  document.querySelectorAll('.sc').forEach(s => s.classList.remove('on'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('on');
+}
+function toast(icon, text, cls) {
+  const zone = document.getElementById('tz');
+  const el = document.createElement('div');
+  el.className = 'tst ' + (cls || 'tc');
+  el.innerHTML = `<span>${icon}</span><span>${text}</span>`;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transition = 'opacity 0.3s'; setTimeout(() => el.remove(), 300); }, 3000);
+}
+</script>
+</body>
+</html>
