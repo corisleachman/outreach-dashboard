@@ -223,7 +223,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
       <span class="nav-tip">Campaigns</span>
     </div>
     <!-- Settings — pinned to bottom -->
-    <a class="nav-item" href="settings-account.html" style="margin-top:auto;">
+    <a class="nav-item" href="settings-v2.html" style="margin-top:auto;">
       <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
       <span class="nav-tip">Settings</span>
     </a>
@@ -332,8 +332,8 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         <div class="campaign-progress"><div class="campaign-progress-fill" style="width:100%"></div></div>
         <div class="action-strip">
           <button class="action-pill" onclick="event.stopPropagation();window.location.href='prospect-import.html'" style="margin-right:auto;">+ Add prospects</button>
-          <button class="action-pill has-items" onclick="event.stopPropagation();toast('→','Opening follow-up queue','t-pink')"><span class="ap-count">5</span> Follow-ups due</button>
-          <button class="action-pill has-replies" onclick="event.stopPropagation();toast('→','Opening conversations','t-cyan')"><span class="ap-count">1</span> New reply</button>
+          <button class="action-pill has-items" onclick="event.stopPropagation();sessionStorage.setItem('pulse-goto-tab','followup');window.location.href='campaign-view-v3.html'"><span class="ap-count">5</span> Follow-ups due</button>
+          <button class="action-pill has-replies" onclick="event.stopPropagation();sessionStorage.setItem('pulse-goto-tab','conversations');window.location.href='campaign-view-v3.html'"><span class="ap-count">1</span> New reply</button>
           <button class="action-pill" onclick="window.location.href='campaign-view-v3.html'">View campaign →</button>
         </div>
       </div>
