@@ -237,7 +237,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
 .t-pink{background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.3);color:var(--pink);}
 .t-green{background:rgba(100,220,120,0.15);border:1px solid rgba(100,220,120,0.3);color:var(--green);}
 </style>
-<!-- cache:2026-03-29 09:50:17 -->
+<!-- cache:2026-03-29 10:05:58 -->
 </head>
 <body>
 <div class="orb o1"></div>
@@ -395,12 +395,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
       <div class="plan-tier featured">Pro Light</div>
       <div class="plan-price-wrap">
         <div class="plan-currency" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">£</div>
-        <div class="plan-price-int featured">
-          <div class="digit-window" id="pl-price-window">
-            <div class="digit-reel" id="pl-price-reel">
-              <span>12</span>
-            </div>
-          </div>
+        <div class="plan-price-int featured" id="pl-price-display">12</div>
         </div>
         <div class="plan-period">/mo</div>
       </div>
@@ -423,12 +418,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
       <div class="plan-tier">Pro Plus</div>
       <div class="plan-price-wrap">
         <div class="plan-currency">£</div>
-        <div class="plan-price-int">
-          <div class="digit-window" id="pp-price-window">
-            <div class="digit-reel" id="pp-price-reel">
-              <span>29</span>
-            </div>
-          </div>
+        <div class="plan-price-int" id="pp-price-display">29</div>
         </div>
         <div class="plan-period">/mo</div>
       </div>
@@ -598,15 +588,20 @@ function setBilling(type) { billing = type; updatePrices(); }
 
 function updatePrices() {
   const isAnnual = billing === 'annual';
+
+  // Update price numbers — simple and reliable
+  const plDisplay = document.getElementById('pl-price-display');
+  const ppDisplay = document.getElementById('pp-price-display');
+  if (plDisplay) plDisplay.textContent = isAnnual ? '7' : '12';
+  if (ppDisplay) ppDisplay.textContent = isAnnual ? '19' : '29';
+
   // Update billing notes
   const plNote = document.getElementById('pl-billing-note');
   if (plNote) plNote.textContent = isAnnual ? 'billed annually · £84/year' : 'billed monthly';
   const ppNote = document.getElementById('pp-billing-note');
   if (ppNote) ppNote.textContent = isAnnual ? 'billed annually · £228/year' : 'billed monthly';
-  // Animate prices — pass window ID not reel ID
-  animatePrice('pl-price-window', isAnnual ? '7' : '12');
-  animatePrice('pp-price-window', isAnnual ? '19' : '29');
-  // Update toggle visual state
+
+  // Update toggle visual
   const track = document.getElementById('toggle-track');
   if (track) {
     if (isAnnual) track.classList.add('annual');
@@ -618,72 +613,7 @@ function updatePrices() {
   if (lblYr) lblYr.classList.toggle('active', isAnnual);
 }
 
-function animatePrice(windowId, newVal) {
-  // Rebuild the digit window fresh each call — prevents stale reel issues
-  const windowEl = document.getElementById(windowId);
-  if (!windowEl) return;
-  const digitH = 52;
-  const digits = '0123456789';
-
-  if (newVal.length === 1) {
-    // Single digit — animated reel
-    const reelId = windowId.replace('-window', '-reel');
-    // Rebuild reel to ensure it exists and is clean
-    windowEl.style.height = digitH + 'px';
-    windowEl.style.overflow = 'hidden';
-    windowEl.style.display = 'inline-block';
-    let reel = document.getElementById(reelId);
-    if (!reel) {
-      reel = document.createElement('div');
-      reel.className = 'digit-reel';
-      reel.id = reelId;
-      windowEl.innerHTML = '';
-      windowEl.appendChild(reel);
-    }
-    const idx = digits.indexOf(newVal);
-    reel.style.transition = 'none';
-    reel.style.transform = 'translateY(0)';
-    reel.innerHTML = '';
-    for (const d of digits) {
-      const s = document.createElement('span');
-      s.textContent = d;
-      reel.appendChild(s);
-    }
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        reel.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
-        reel.style.transform = `translateY(-${idx * digitH}px)`;
-      });
-    });
-  } else {
-    // Two-digit number — slide the whole value in from below
-    windowEl.style.height = digitH + 'px';
-    windowEl.style.overflow = 'hidden';
-    windowEl.style.display = 'inline-block';
-    const incoming = document.createElement('span');
-    incoming.style.cssText = `font-family:var(--of);font-size:52px;font-weight:900;
-      letter-spacing:-0.03em;display:block;transform:translateY(${digitH}px);
-      transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);`;
-    incoming.textContent = newVal;
-    // Slide out old content
-    const old = windowEl.firstChild;
-    if (old && old.style) {
-      old.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1)';
-      old.style.transform = `translateY(-${digitH}px)`;
-    }
-    windowEl.appendChild(incoming);
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        incoming.style.transform = 'translateY(0)';
-      });
-    });
-    // Clean up old element after animation
-    setTimeout(() => {
-      while (windowEl.children.length > 1) windowEl.removeChild(windowEl.firstChild);
-      windowEl.firstChild.style.transition = 'none';
-    }, 400);
-  }
-}
+// animation deferred — prices update via updatePrices()
 
 // ── BILLING TOGGLE (Pro Plus upgrade page) ────────────────────────────────
 let billingPlus = 'annual';
@@ -731,8 +661,8 @@ function openCheckout(tier) {
   show('s-checkout');
 }
 
-// Init
-updatePrices();
+// Init — run after DOM ready
+document.addEventListener("DOMContentLoaded", function() { updatePrices(); });
 </script>
 </body>
 </html>
