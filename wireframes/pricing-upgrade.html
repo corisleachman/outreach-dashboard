@@ -270,6 +270,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
     <div class="wall-ctas">
       <button class="btn-plan btn-plan-primary" onclick="show('s-plans')">Continue with Pro Light →</button>
       <button class="btn-plan btn-plan-ghost" onclick="show('s-wall')">Stay on Free</button>
+      <button class="btn-plan btn-plan-ghost" style="font-size:12px;padding:10px;" onclick="document.getElementById('not-ready-section').scrollIntoView({behavior:'smooth'})">Not ready to upgrade?</button>
     </div>
     <div class="feature-tease">
       <div class="tease-card"><div class="tease-val">5</div><div class="tease-lbl">campaigns</div></div>
@@ -279,7 +280,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
   </div>
 
   <!-- Referral extension — secondary option -->
-  <div style="margin-top:28px;">
+  <div id="not-ready-section" style="margin-top:28px;">
     <div style="text-align:center;font-size:12px;color:var(--td);margin-bottom:16px;font-family:var(--of);font-weight:600;letter-spacing:0.04em;text-transform:uppercase;">Not ready to upgrade?</div>
     <div class="referral-panel">
       <div class="referral-panel-title">Invite one person. Extend for free.</div>
@@ -299,7 +300,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
         Invite a friend →
       </button>
       <div class="referral-or">or</div>
-      <button class="btn-extend-paid" onclick="toast('→','One-time £2 extension — redirecting to checkout','t-cyan')">Extend for £2 instead</button>
+      <button class="btn-plan btn-plan-primary" style="display:inline-flex;align-items:center;gap:8px;padding:10px 24px;font-size:13px;width:auto;" onclick="toast('→','One-time £2 extension — redirecting to checkout','t-cyan')">Extend for £2 →</button>
     </div>
   </div>
 </div>
@@ -357,7 +358,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
 
   <div class="billing-toggle-wrap">
     <span class="toggle-label active" id="lbl-mo" onclick="setBilling('monthly')">Monthly</span>
-    <div class="toggle-track annual" id="toggle-track" onclick="toggleBilling()">
+    <div class="toggle-track" id="toggle-track" onclick="toggleBilling()">
       <div class="toggle-thumb"></div>
     </div>
     <span class="toggle-label active" id="lbl-yr" onclick="setBilling('annual')">Annual</span>
@@ -396,7 +397,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
         <div class="plan-price-int featured">
           <div class="digit-window" id="pl-price-window">
             <div class="digit-reel" id="pl-price-reel">
-              <span>7</span>
+              <span>12</span>
             </div>
           </div>
         </div>
@@ -424,7 +425,7 @@ html,body{min-height:100vh;background:var(--bg);color:var(--t);font-family:var(-
         <div class="plan-price-int">
           <div class="digit-window" id="pp-price-window">
             <div class="digit-reel" id="pp-price-reel">
-              <span>19</span>
+              <span>29</span>
             </div>
           </div>
         </div>
@@ -583,7 +584,7 @@ function toast(icon, text, cls) {
 }
 
 // ── BILLING TOGGLE (Free → plans page) ──────────────────────────────────
-let billing = 'annual';
+let billing = 'monthly';
 
 function toggleBilling() {
   billing = billing === 'annual' ? 'monthly' : 'annual';
@@ -596,45 +597,91 @@ function setBilling(type) { billing = type; updatePrices(); }
 
 function updatePrices() {
   const isAnnual = billing === 'annual';
-  // Pro Light
+  // Update billing notes
   const plNote = document.getElementById('pl-billing-note');
   if (plNote) plNote.textContent = isAnnual ? 'billed annually · £84/year' : 'billed monthly';
-  // Pro Plus
   const ppNote = document.getElementById('pp-billing-note');
   if (ppNote) ppNote.textContent = isAnnual ? 'billed annually · £228/year' : 'billed monthly';
-  // Animate digits
-  animatePrice('pl-price-reel', isAnnual ? '7' : '12');
-  animatePrice('pp-price-reel', isAnnual ? '19' : '29');
+  // Animate prices — pass window ID not reel ID
+  animatePrice('pl-price-window', isAnnual ? '7' : '12');
+  animatePrice('pp-price-window', isAnnual ? '19' : '29');
+  // Update toggle visual state
+  const track = document.getElementById('toggle-track');
+  if (track) {
+    if (isAnnual) track.classList.add('annual');
+    else track.classList.remove('annual');
+  }
+  const lblMo = document.getElementById('lbl-mo');
+  const lblYr = document.getElementById('lbl-yr');
+  if (lblMo) lblMo.classList.toggle('active', !isAnnual);
+  if (lblYr) lblYr.classList.toggle('active', isAnnual);
 }
 
-function animatePrice(reelId, newVal) {
-  const reel = document.getElementById(reelId);
-  if (!reel) return;
-  const digits = '0123456789';
-  const targetDigit = newVal.slice(-1);
-  const idx = digits.indexOf(targetDigit);
-  if (idx === -1) return;
+function animatePrice(windowId, newVal) {
+  // Rebuild the digit window fresh each call — prevents stale reel issues
+  const windowEl = document.getElementById(windowId);
+  if (!windowEl) return;
   const digitH = 52;
-  reel.style.transition = 'none';
-  reel.style.transform = 'translateY(0)';
-  reel.innerHTML = '';
-  for (const d of digits) {
-    const s = document.createElement('span');
-    s.textContent = d;
-    reel.appendChild(s);
-  }
-  // Also handle two-digit prices like 12, 29, 19
-  const window_el = document.getElementById(reelId.replace('-reel','-window'));
-  if (window_el && newVal.length > 1) {
-    window_el.innerHTML = `<span style="font-family:var(--of);font-size:52px;font-weight:900;letter-spacing:-0.03em;">${newVal}</span>`;
-    return;
-  }
-  requestAnimationFrame(() => {
+  const digits = '0123456789';
+
+  if (newVal.length === 1) {
+    // Single digit — animated reel
+    const reelId = windowId.replace('-window', '-reel');
+    // Rebuild reel to ensure it exists and is clean
+    windowEl.style.height = digitH + 'px';
+    windowEl.style.overflow = 'hidden';
+    windowEl.style.display = 'inline-block';
+    let reel = document.getElementById(reelId);
+    if (!reel) {
+      reel = document.createElement('div');
+      reel.className = 'digit-reel';
+      reel.id = reelId;
+      windowEl.innerHTML = '';
+      windowEl.appendChild(reel);
+    }
+    const idx = digits.indexOf(newVal);
+    reel.style.transition = 'none';
+    reel.style.transform = 'translateY(0)';
+    reel.innerHTML = '';
+    for (const d of digits) {
+      const s = document.createElement('span');
+      s.textContent = d;
+      reel.appendChild(s);
+    }
     requestAnimationFrame(() => {
-      reel.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
-      reel.style.transform = `translateY(-${idx * digitH}px)`;
+      requestAnimationFrame(() => {
+        reel.style.transition = 'transform 0.45s cubic-bezier(0.4,0,0.2,1)';
+        reel.style.transform = `translateY(-${idx * digitH}px)`;
+      });
     });
-  });
+  } else {
+    // Two-digit number — slide the whole value in from below
+    windowEl.style.height = digitH + 'px';
+    windowEl.style.overflow = 'hidden';
+    windowEl.style.display = 'inline-block';
+    const incoming = document.createElement('span');
+    incoming.style.cssText = `font-family:var(--of);font-size:52px;font-weight:900;
+      letter-spacing:-0.03em;display:block;transform:translateY(${digitH}px);
+      transition:transform 0.35s cubic-bezier(0.4,0,0.2,1);`;
+    incoming.textContent = newVal;
+    // Slide out old content
+    const old = windowEl.firstChild;
+    if (old && old.style) {
+      old.style.transition = 'transform 0.35s cubic-bezier(0.4,0,0.2,1)';
+      old.style.transform = `translateY(-${digitH}px)`;
+    }
+    windowEl.appendChild(incoming);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        incoming.style.transform = 'translateY(0)';
+      });
+    });
+    // Clean up old element after animation
+    setTimeout(() => {
+      while (windowEl.children.length > 1) windowEl.removeChild(windowEl.firstChild);
+      windowEl.firstChild.style.transition = 'none';
+    }, 400);
+  }
 }
 
 // ── BILLING TOGGLE (Pro Plus upgrade page) ────────────────────────────────
