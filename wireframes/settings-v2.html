@@ -240,6 +240,10 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
     box-shadow:0 24px 80px rgba(0,0,0,0.6);}
   .modal-overlay.open .modal-box{transform:translateY(0);}
 
+
+  .plan-option-card { cursor:pointer; transition:all 0.15s; }
+  .plan-option-card.selected { border-color:rgba(255,20,147,0.5) !important; background:rgba(255,20,147,0.08) !important; }
+
 </style>
 </head>
 <body>
@@ -850,12 +854,19 @@ function selectPack(el) {
   el.classList.add('sel');
 }
 
+let currentBillingState = 'pro-light';
+
 function setBillingState(state, el) {
   document.querySelectorAll('.state-btn').forEach(b => b.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById('billing-pro').style.display = state === 'pro' ? 'block' : 'none';
-  document.getElementById('billing-trial').style.display = state === 'trial' ? 'block' : 'none';
-  document.getElementById('billing-free').style.display = state === 'free' ? 'block' : 'none';
+  if (el) el.classList.add('active');
+  ['billing-pro-light','billing-pro-plus','billing-trial','billing-free','billing-pro'].forEach(id => {
+    const d = document.getElementById(id);
+    if (d) d.style.display = 'none';
+  });
+  const map = {'pro-light':'billing-pro-light','pro':'billing-pro-light','pro-plus':'billing-pro-plus','trial':'billing-trial','free':'billing-free'};
+  const target = document.getElementById(map[state] || ('billing-' + state));
+  if (target) target.style.display = 'block';
+  currentBillingState = state;
 }
 
 function applyPreset(start, end, bg, el) {
@@ -1146,7 +1157,7 @@ function toast(icon, text, cls) {
       <div style="display:flex;flex-direction:column;gap:8px;">
 
         <!-- Pro Light -->
-        <div id="cycle-pro-light" onclick="selectCycle('pro-light')"
+        <div id="plan-opt-pl" class="plan-option-card" onclick="selectCycle('pro-light')"
           style="padding:14px;border-radius:12px;border:1px solid rgba(255,20,147,0.3);cursor:pointer;transition:all 0.15s;background:rgba(255,20,147,0.06);">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
@@ -1161,7 +1172,7 @@ function toast(icon, text, cls) {
         </div>
 
         <!-- Pro Plus -->
-        <div id="cycle-pro-plus" onclick="selectCycle('pro-plus')"
+        <div id="plan-opt-pp" class="plan-option-card" onclick="selectCycle('pro-plus')"
           style="padding:14px;border-radius:12px;border:1px solid var(--b2);cursor:pointer;transition:all 0.15s;background:var(--s);">
           <div style="display:flex;justify-content:space-between;align-items:center;">
             <div>
@@ -1175,8 +1186,17 @@ function toast(icon, text, cls) {
           </div>
         </div>
 
+        <!-- Downgrade Pro Plus → Pro Light (only shown when on Pro Plus) -->
+        <div id="downgrade-to-pl-row" style="display:none;padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:var(--s);align-items:center;justify-content:space-between;gap:12px;">
+          <div>
+            <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Move to Pro Light</div>
+            <div style="font-size:12px;color:var(--td);line-height:1.5;">5 campaigns · 1,000 prospects. Data above Pro Light limits will be preserved but locked.</div>
+          </div>
+          <button class="btn btn-ghost btn-sm" style="flex-shrink:0;color:var(--td);" onclick="closeChangePlanModal();openDowngradeModal('pro-light')">Downgrade</button>
+        </div>
+
         <!-- Move to Free -->
-        <div style="padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:var(--s);display:flex;align-items:center;justify-content:space-between;gap:12px;">
+        <div id="downgrade-to-free-row" style="padding:12px 14px;border-radius:12px;border:1px solid var(--b);background:var(--s);display:flex;align-items:center;justify-content:space-between;gap:12px;">
           <div>
             <div style="font-size:13px;font-weight:500;margin-bottom:2px;">Move to Free</div>
             <div style="font-size:12px;color:var(--td);line-height:1.5;">1 campaign · 100 prospects. Data above your Free limits will be preserved but locked.</div>
@@ -1334,13 +1354,39 @@ function toast(icon, text, cls) {
     box-shadow:0 24px 80px rgba(0,0,0,0.6);}
   .modal-overlay.open .modal-box{transform:translateY(0);}
 
+
+  .plan-option-card { cursor:pointer; transition:all 0.15s; }
+  .plan-option-card.selected { border-color:rgba(255,20,147,0.5) !important; background:rgba(255,20,147,0.08) !important; }
+
 </style>
 
 <script>
 // ── CHANGE PLAN MODAL ──
 let selectedCycle = 'pro-light';
 function openChangePlanModal() {
-  selectCycle('annual');
+  // Adapt modal title and preselected option to current billing state
+  const titles = {
+    'pro-light': 'Change your plan',
+    'pro':       'Change your plan',
+    'pro-plus':  'Change your plan',
+    'trial':     'Convert your trial',
+    'free':      'Upgrade your plan'
+  };
+  const el = document.getElementById('change-plan-modal-title');
+  if (el) el.textContent = titles[currentBillingState] || 'Change your plan';
+
+  // Pre-highlight correct current tier card
+  document.querySelectorAll('.plan-option-card').forEach(c => c.classList.remove('selected'));
+  const map = {'pro-light':'plan-opt-pl','pro':'plan-opt-pl','pro-plus':'plan-opt-pp','free':'plan-opt-free','trial':'plan-opt-pl'};
+  const current = document.getElementById(map[currentBillingState]);
+  if (current) current.classList.add('selected');
+
+  // Show/hide downgrade options based on current state
+  const downgradeFree = document.getElementById('downgrade-to-free-row');
+  const downgradePL = document.getElementById('downgrade-to-pl-row');
+  if (downgradeFree) downgradeFree.style.display = currentBillingState === 'free' ? 'none' : 'flex';
+  if (downgradePL) downgradePL.style.display = currentBillingState === 'pro-plus' ? 'flex' : 'none';
+
   document.getElementById('change-plan-modal').classList.add('open');
 }
 function closeChangePlanModal() {
@@ -1658,6 +1704,10 @@ function closeCheckoutModal() {
 
 <style>
 @keyframes spin { to { transform: rotate(360deg); } }
+
+  .plan-option-card { cursor:pointer; transition:all 0.15s; }
+  .plan-option-card.selected { border-color:rgba(255,20,147,0.5) !important; background:rgba(255,20,147,0.08) !important; }
+
 </style>
 
 <script>
