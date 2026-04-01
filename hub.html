@@ -105,7 +105,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
       <div style="padding:8px 16px;border-radius:100px;background:rgba(100,220,120,0.12);border:1px solid rgba(100,220,120,0.25);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#64dc78;">✓ 45 signed off</div>
       <div style="padding:8px 16px;border-radius:100px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#00d4ff;">🔍 4 awaiting sign-off</div>
       <div style="padding:8px 16px;border-radius:100px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:rgba(255,255,255,0.5);">📋 19 built not reviewed</div>
-      <div style="padding:8px 16px;border-radius:100px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#ff9d42;">⚡ Implementation starts April 2026</div>
+      <div style="padding:8px 16px;border-radius:100px;background:rgba(255,157,66,0.1);border:1px solid rgba(255,157,66,0.25);font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:#ff9d42;">⚡ Phases 2.1–2.12 complete</div>
     </div>
   </div>
 
@@ -155,7 +155,7 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
   <div class="section">
     <div class="section-header">
       <div class="section-label">Pricing strategy</div>
-      <div class="section-meta">Under consideration — not yet decided</div>
+      <div class="section-meta">Three-tier model locked · implementation staged</div>
     </div>
 
     <style>
@@ -213,14 +213,14 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
       .question-list li::before { content: "?"; margin-right: 10px; color: #ff9d42; font-weight: 700; font-family: var(--of,'Outfit',sans-serif); }
     </style>
 
-    <div class="pricing-status-pill" style="background:rgba(100,220,120,0.1);border-color:rgba(100,220,120,0.25);color:var(--green,#64dc78);">✅ Decisions locked — wireframes updated</div>
+    <div class="pricing-status-pill" style="background:rgba(100,220,120,0.1);border-color:rgba(100,220,120,0.25);color:var(--green,#64dc78);">✅ Three-tier pricing locked</div>
     <div style="margin-bottom:20px;padding:12px 16px;background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.12);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.65);line-height:1.7;">
-      <strong style="color:var(--text,#f0f0ee);font-family:var(--of,'Outfit',sans-serif);">Design principle:</strong> Every pricing and conversion decision is grounded in market evidence and historical SaaS research — not opinion. The question is always: <em>what has the market demonstrated works?</em><br>
-      Key evidence bases: peak-end rule (Kahneman), loss aversion 2× coefficient (Kahneman & Tversky), compromise effect (Huber et al. 1982), Dropbox referral data, Stripe checkout friction research.
+      <strong style="color:var(--text,#f0f0ee);font-family:var(--of,'Outfit',sans-serif);">Pricing is locked:</strong> Pulse. now uses a three-tier model — Free, Pro Light, and Pro Plus.<br>
+      Limits, trial rules, and upgrade-path logic are decided. Pricing foundations, plan gating, and billing-state groundwork are already implemented. Full Stripe rollout, webhook/product wiring, and the complete monetisation UX continue in later phases.
     </div>
 
     <!-- Proposed model -->
-    <div style="font-family:var(--of,'Outfit',sans-serif);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim,#666);margin-bottom:10px;">Proposed three-tier model</div>
+    <div style="font-family:var(--of,'Outfit',sans-serif);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim,#666);margin-bottom:10px;">Locked three-tier model</div>
     <table class="tier-table">
       <thead>
         <tr>
@@ -253,62 +253,19 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
     </table>
 
     <!-- What changes -->
-    <div style="font-family:var(--of,'Outfit',sans-serif);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim,#666);margin:20px 0 10px;">Areas that would need to change</div>
+    <div style="font-family:var(--of,'Outfit',sans-serif);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim,#666);margin:20px 0 10px;">Implementation status</div>
 
     <div class="impact-area">
-      <div class="impact-area-title">1 · Tier limits</div>
-      <div class="impact-area-desc">New limits needed for campaigns, prospects, AI drafts, and sequences at each of three tiers. Currently only two tiers are defined. <strong>This is the most important decision — everything else flows from it.</strong></div>
+      <div class="impact-area-title">Implemented already</div>
+      <div class="impact-area-desc">Three-tier model decided. Gating foundations, plan enum updates, billing-state groundwork, and upgrade-path logic are already in place.</div>
     </div>
     <div class="impact-area">
-      <div class="impact-area-title">2 · Pricing page</div>
-      <div class="impact-area-desc">3-column plans page with "Most popular" badge on Pro Light. Pro Plus priced as an anchor. Animated toggle already built — needs a third column added. New checkout states for each paid tier.</div>
+      <div class="impact-area-title">Still pending</div>
+      <div class="impact-area-desc">Full Stripe checkout rollout, webhook/product wiring, and the complete monetisation UX are still scheduled for later monetisation phases.</div>
     </div>
-    <div class="impact-area">
-      <div class="impact-area-title">3 · Limit walls — all 9 surfaces</div>
-      <div class="impact-area-desc">Every wall currently offers Free → Pro. With three tiers, each wall must know the user's current tier and offer the correct next step up. Free users see "upgrade to Pro Light." Pro Light users hitting their higher limits see "upgrade to Pro Plus."<br><br>Affected walls: prospect soft nudge (80), prospect hard wall (100), campaign limit, AI drafts, auto-scheduling, sequence steps 2+, bulk send, personality packs, follow-up tab actions.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">4 · Settings — Plan & Billing</div>
-      <div class="impact-area-desc">Currently 3 billing states (Free / Pro Light trial / Pro). Needs 4 states: Free / Pro Light trial / Pro Light paid / Pro Plus paid. Change Plan modal needs to handle all four upgrade and downgrade directions.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">5 · Upgrade moments spec</div>
-      <div class="impact-area-desc">The entire spec is written for a two-tier world. The tier gating summary table needs rewriting to show what each upgrade moment type shows to each of the three tiers. Trial lifecycle (Type 4) applies to Pro Light trial — does Pro Plus also get a trial?</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">6 · Supabase schema</div>
-      <div class="impact-area-desc">The tier enum in the users table needs a new value: <code>pro_plus</code>. Small migration, but RLS policies and TypeScript types reference tier values throughout.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">7 · Stripe</div>
-      <div class="impact-area-desc">Currently 2 price IDs (Pro annual + monthly). Three tiers = 4 price IDs. New products in Stripe dashboard, new env vars, webhook handler updated to map each to the correct tier.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">8 · Feature gating logic</div>
-      <div class="impact-area-desc">Every tier check in the codebase changes from binary (free / not-free) to three-way logic. Features unlocked at Pro Light stay unlocked at Pro Plus. Features exclusive to Pro Plus need new gating.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">9 · Copy throughout the product</div>
-      <div class="impact-area-desc">"Pro feature" → "Pro Light feature" or "Pro Light & Pro Plus feature". Trial banners, upgrade CTAs, settings labels, invoice descriptions. Phase 2.12 microcopy system makes this straightforward — all copy is in JSON config.</div>
-    </div>
-    <div class="impact-area">
-      <div class="impact-area-title">10 · Wireframes</div>
-      <div class="impact-area-desc">6 wireframes need updating: pricing-upgrade.html (3 columns), upgrade-moments.html (tier-aware CTAs), settings-v2.html (Pro Plus billing state), campaign-view-v3.html (locked labels), outreach-wizard-v3.html (trial copy), dashboard-home.html (plan badge).</div>
-    </div>
-
-    <!-- Open questions -->
-    <div style="font-family:var(--of,'Outfit',sans-serif);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-dim,#666);margin:20px 0 10px;">Questions to answer before speccing</div>
-    <ul class="question-list">
-      <li>What are the actual limits at each tier? (campaigns, prospects, AI drafts/month) — this drives everything</li>
-      <li>Does Pro Plus have a trial, or is it only reachable by upgrading from Pro Light?</li>
-      <li>Can users go Free → Pro Plus directly, skipping Pro Light?</li>
-      <li>What features are Pro Plus exclusive that aren't in Pro Light? (If nothing compelling, the anchor effect fails)</li>
-      <li>What are the actual price points? The spread needs to make Pro Light feel like a bargain vs Pro Plus</li>
-      <li>Downgrade rules: if a Pro Plus user downgrades to Pro Light, what happens to data above Pro Light limits?</li>
-    </ul>
 
     <div style="margin-top:16px;padding:12px 14px;background:rgba(255,20,147,0.05);border:1px solid rgba(255,20,147,0.15);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;">
-      <strong style="color:var(--text,#f0f0ee);">Estimated effort once decisions are made:</strong> ~25–40 hours engineering. Full detail in <code>.planning/PRICING-THREE-TIER-IMPACT.md</code> in the app repo.
+      <strong style="color:var(--text,#f0f0ee);">Pricing decisions are locked:</strong> implementation continues in later monetisation phases. Full detail lives in <code>.planning/PRICING-THREE-TIER-IMPACT.md</code> in the app repo.
     </div>
   </div><!-- end pricing strategy section -->
 
@@ -436,9 +393,9 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         <div class="phase-num">2.9</div>
         <div class="phase-info">
           <div class="phase-name">Sequence builder</div>
-          <div class="phase-desc">Multi-step sequences, reply detection, auto-scheduling. Spec locked.</div>
+          <div class="phase-desc">Multi-step sequence builder implemented with reply detection and auto-scheduling.</div>
         </div>
-        <div class="phase-badge badge-locked">🔒 Builds April</div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
       </div>
     </div>
 
@@ -449,34 +406,38 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
         <div class="phase-num">2.10</div>
         <div class="phase-info">
           <div class="phase-name">Activation loop</div>
-          <div class="phase-desc">Onboarding wizard — first campaign sent in under 5 minutes. Spec locked.</div>
+          <div class="phase-desc">Pricing foundations, gating, billing states, AI access rules, and activation groundwork implemented.</div>
         </div>
-        <div class="phase-badge badge-locked">🔒 Builds April</div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
       </div>
       <div class="phase-row">
         <div class="phase-num">2.11</div>
         <div class="phase-info">
           <div class="phase-name">Personality packs</div>
-          <div class="phase-desc">4 predefined tones — global default + per-message override. Spec locked.</div>
+          <div class="phase-desc">Four predefined writing styles implemented with global default plus per-message and per-step override.</div>
         </div>
-        <div class="phase-badge badge-locked">🔒 Builds April</div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
       </div>
       <div class="phase-row">
         <div class="phase-num">2.12</div>
         <div class="phase-info">
           <div class="phase-name">UX microcopy system</div>
-          <div class="phase-desc">2.12a infrastructure ✓ merged. 2.12b component integration + 2.12c testing — April.</div>
+          <div class="phase-desc">Infrastructure, component integration, and testing/polish completed across 2.12a, 2.12b, and 2.12c.</div>
         </div>
-        <div class="phase-badge badge-partial">◑ 2.12a done</div>
+        <div class="phase-badge badge-complete">✓ Complete</div>
       </div>
       <div class="phase-row">
         <div class="phase-num">2.13</div>
         <div class="phase-info">
           <div class="phase-name">Emotional design + momentum engine</div>
-          <div class="phase-desc">Milestones, momentum prompts, celebration states. Spec locked.</div>
+          <div class="phase-desc">Planning next: subtle completion signals, momentum prompts, and calm progress feedback without gamification.</div>
         </div>
-        <div class="phase-badge badge-locked">🔒 Builds April</div>
+        <div class="phase-badge badge-planning">▶️ Next phase</div>
       </div>
+    </div>
+
+    <div style="margin-top:16px;padding:12px 14px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.6;">
+      <strong style="color:var(--text,#f0f0ee);">Visual note:</strong> the full pink/cyan brand application pass is intentionally deferred to a later dedicated re-skin phase, so current app screenshots may still reflect the earlier visual theme.
     </div>
 
     <!-- LAYER 4 -->
@@ -849,4 +810,3 @@ document.getElementById('footer-txt').textContent =
 </script>
 </body>
 </html>
-
