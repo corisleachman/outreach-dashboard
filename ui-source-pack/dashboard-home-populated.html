@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Dashboard (Populated — 2 campaigns)</title>
+
+<style>
+/* ── Dashboard-specific styles (supplement to pulse-foundation.css) ── */
+
+/* Greeting */
+.greeting      { font-family: var(--of); font-size: 28px; font-weight: 800; letter-spacing: -0.02em; color: var(--t); margin-bottom: 4px; }
+.greeting-sub  { font-size: 14px; color: var(--tm); margin-bottom: 28px; }
+
+/* ── EMPTY STATE ── */
+.empty-hero    { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 32px 40px 40px; }
+.empty-glyph   { width: 64px; height: 64px; border-radius: 16px; background: var(--pd); border: 1px solid rgba(255,20,147,0.2); display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; font-size: 28px; }
+.empty-title   { font-family: var(--of); font-size: 24px; font-weight: 700; letter-spacing: -0.02em; color: var(--t); margin-bottom: 10px; }
+.empty-body    { font-size: 14px; color: var(--tm); line-height: 1.7; max-width: 380px; margin: 0 auto 32px; }
+.empty-steps   { display: flex; gap: 8px; margin-bottom: 36px; flex-wrap: wrap; justify-content: center; }
+.empty-step    { display: flex; align-items: center; gap: 8px; background: var(--s); border: 1px solid var(--b); border-radius: 8px; padding: 8px 14px; font-size: 12px; color: var(--tm); }
+.step-num      { width: 18px; height: 18px; border-radius: 50%; background: var(--gr); display: flex; align-items: center; justify-content: center; font-family: var(--of); font-size: 9px; font-weight: 700; color: white; flex-shrink: 0; }
+
+/* ── POPULATED STATE ── */
+.page-header   { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 28px; }
+.page-title    { font-family: var(--of); font-size: 26px; font-weight: 800; letter-spacing: -0.02em; color: var(--t); margin-bottom: 3px; }
+.page-sub      { font-size: 13px; color: var(--tm); }
+
+/* Stat row */
+.stat-row          { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 32px; }
+.stat-card         { background: var(--s); border: 1px solid var(--b); border-radius: 10px; padding: 16px 18px; }
+.stat-card-label   { font-size: 10px; font-family: var(--of); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--td); margin-bottom: 8px; }
+.stat-card-val     { font-family: var(--of); font-size: 28px; font-weight: 800; color: var(--t); line-height: 1; }
+.stat-card-val.pink{ background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-card-sub     { font-size: 11px; color: var(--td); margin-top: 4px; }
+
+/* Campaigns section */
+.campaigns-header  { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.campaigns-label   { font-family: var(--of); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--td); }
+
+/* Campaign card */
+.campaign-card     { background: var(--s); border: 1px solid var(--b); border-radius: 12px; padding: 20px 22px; margin-bottom: 10px; cursor: pointer; transition: all 0.2s; }
+.campaign-card:hover{ background: var(--s2); border-color: var(--b2); }
+.campaign-card-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.campaign-name     { font-family: var(--of); font-size: 16px; font-weight: 700; color: var(--t); margin-bottom: 3px; }
+.campaign-meta     { font-size: 12px; color: var(--td); }
+
+/* Status badge */
+.status-badge      { font-family: var(--of); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; padding: 3px 10px; border-radius: 20px; }
+.sb-active         { background: var(--gd); color: var(--green); border: 1px solid rgba(100,220,120,0.25); }
+.sb-paused         { background: var(--s2); color: var(--tm); border: 1px solid var(--b2); }
+
+/* Campaign stats strip */
+.campaign-stats    { display: flex; gap: 24px; }
+.c-stat-val        { font-family: var(--of); font-size: 20px; font-weight: 700; color: var(--t); line-height: 1; }
+.c-stat-val.accent { color: var(--cyan); }
+.c-stat-val.pink   { color: var(--pink); }
+.c-stat-label      { font-size: 11px; color: var(--td); margin-top: 3px; }
+
+/* Progress bar */
+.campaign-progress      { height: 2px; background: var(--s2); border-radius: 1px; margin-top: 16px; overflow: hidden; }
+.campaign-progress-fill { height: 100%; background: var(--gr); border-radius: 1px; }
+
+/* Toggle */
+.tgl-wrap  { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.tgl       { width: 38px; height: 22px; border-radius: 11px; border: none; cursor: pointer; position: relative; transition: background 0.2s; flex-shrink: 0; }
+.tgl.on    { background: var(--green); box-shadow: 0 0 8px rgba(100,220,120,0.35); }
+.tgl.off   { background: var(--s2); }
+.tgl::after{ content: ''; position: absolute; width: 16px; height: 16px; background: white; border-radius: 50%; top: 3px; transition: left 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.3); }
+.tgl.on::after { left: 19px; }
+.tgl.off::after{ left: 3px; }
+.tgl-label { font-family: var(--of); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.07em; }
+.tgl.on  ~ .tgl-label { color: var(--green); }
+.tgl.off ~ .tgl-label { color: var(--tm); }
+
+/* Kebab */
+.kebab-wrap  { position: relative; flex-shrink: 0; margin-left: 12px; display: flex; align-items: center; }
+.kebab-btn   { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--b2); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; color: var(--tm); transition: all 0.15s; }
+.kebab-btn:hover { background: var(--s2); color: var(--t); }
+.kebab-menu  { position: absolute; top: calc(100% + 6px); right: 0; min-width: 140px; background: #1a0f2e; border: 1px solid var(--b2); border-radius: 8px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); z-index: 200; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(-4px); transition: opacity 0.15s, transform 0.15s; }
+.kebab-menu.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+.kebab-item  { padding: 10px 14px; font-size: 13px; color: var(--tm); cursor: pointer; transition: all 0.1s; display: flex; align-items: center; gap: 8px; }
+.kebab-item:hover { background: var(--s2); color: var(--t); }
+.kebab-item.danger { color: #ff4c4c; }
+.kebab-item.danger:hover { background: rgba(255,76,76,0.08); color: #ff4c4c; }
+.kebab-divider { height: 1px; background: var(--b); margin: 2px 0; }
+
+/* Action strip */
+.action-strip { display: flex; align-items: center; gap: 6px; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--b); }
+.action-pill  { display: flex; align-items: center; gap: 5px; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--b2); background: transparent; font-family: var(--of); font-size: 11px; font-weight: 600; color: var(--tm); cursor: pointer; transition: all 0.15s; }
+.action-pill:hover { color: var(--t); border-color: var(--td); }
+.action-pill.has-items  { color: var(--amber); border-color: rgba(255,157,66,0.25); background: var(--ad); }
+.action-pill.has-replies{ color: var(--cyan);  border-color: rgba(0,212,255,0.25);   background: var(--cd); }
+.ap-count { font-family: var(--of); font-size: 10px; font-weight: 800; }
+
+/* Buttons */
+.btn        { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 20px; border-radius: 100px; font-family: var(--of); font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: all 0.2s; white-space: nowrap; }
+.btn-primary  { background: var(--gr); color: white; box-shadow: 0 0 24px rgba(255,20,147,0.2); }
+.btn-primary:hover { opacity: 0.88; }
+.btn-secondary{ background: var(--s); border: 1px solid var(--b2); color: var(--tm); }
+.btn-secondary:hover { color: var(--t); border-color: var(--td); }
+.btn-sm { padding: 7px 16px; font-size: 12px; }
+
+/* Page layout */
+.main-content { padding: 36px 40px; position: relative; z-index: 1; }
+
+/* Modal */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); backdrop-filter: blur(6px); z-index: 500; display: flex; align-items: center; justify-content: center; opacity: 0; pointer-events: none; transition: opacity 0.2s; }
+.modal-overlay.open { opacity: 1; pointer-events: all; }
+.modal-box    { background: #1a0f2e; border: 1px solid var(--b2); border-radius: 14px; padding: 30px; width: 460px; max-width: calc(100vw - 48px); transform: translateY(12px); transition: transform 0.25s; box-shadow: 0 24px 80px rgba(0,0,0,0.6); }
+.modal-overlay.open .modal-box { transform: translateY(0); }
+.modal-title  { font-family: var(--of); font-size: 20px; font-weight: 700; color: var(--t); margin-bottom: 6px; }
+.modal-sub    { font-size: 13px; color: var(--tm); line-height: 1.6; margin-bottom: 22px; }
+.modal-field  { margin-bottom: 16px; }
+.modal-label  { font-size: 11px; font-family: var(--of); font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--td); margin-bottom: 6px; display: block; }
+.modal-input  { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--b2); border-radius: 8px; padding: 11px 14px; font-family: var(--sf); font-size: 14px; color: var(--t); outline: none; transition: border-color 0.2s; }
+.modal-input:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(0,212,255,0.08); }
+.modal-input::placeholder { color: var(--td); }
+.modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 22px; }
+
+/* Toast */
+#toast-zone { position: fixed; bottom: 24px; right: 24px; z-index: 900; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+.toast { background: rgba(20,10,35,0.95); border: 1px solid var(--b2); border-radius: 10px; padding: 13px 16px; font-size: 13px; color: var(--t); display: flex; align-items: center; gap: 10px; max-width: 300px; box-shadow: 0 8px 32px rgba(0,0,0,0.5); animation: tIn 0.3s ease; pointer-events: all; backdrop-filter: blur(12px); }
+.toast.t-pink { border-left: 2px solid var(--pink); }
+.toast.t-cyan { border-left: 2px solid var(--cyan); }
+@keyframes tIn { from { opacity:0; transform:translateX(14px); } to { opacity:1; transform:translateX(0); } }
+
+/* Sidebar — this page uses the wireframe's nav-item pattern, NOT the source-pack si pattern */
+.nav-item { width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.15s; border: 1px solid transparent; text-decoration: none; color: var(--tm); position: relative; background: transparent; }
+.nav-item:hover { background: var(--s2); border-color: var(--b2); color: var(--t); }
+.nav-item.active { background: var(--pd); border-color: rgba(255,20,147,0.25); color: var(--pink); }
+.nav-item svg { display: block; }
+.nav-tip { position: absolute; left: calc(100% + 10px); background: rgba(20,10,35,0.97); color: var(--t); border: 1px solid var(--b2); border-radius: 6px; padding: 5px 10px; font-family: var(--of); font-size: 11px; font-weight: 600; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity 0.15s; z-index: 300; }
+.nav-item:hover .nav-tip { opacity: 1; }
+.sidebar-bottom { margin-top: auto; }
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div><header class="topbar">
+  <a href="../hub.html" class="logo" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;">Pulse.</a>
+  <div class="topbar-right">
+    <span class="plan-badge" style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--tm);">Free</span>
+    <div style="width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;">CL</div>
+  </div>
+</header><aside class="sidebar" style="position:fixed;top:56px;left:0;bottom:0;width:56px;background:rgba(13,9,20,0.7);border-right:1px solid var(--b);padding:14px 0;display:flex;flex-direction:column;align-items:center;z-index:90;gap:4px;">
+  <a class="nav-item" href="../wireframes/summary-v2.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="nav-tip">Summary</span>
+  </a>
+  <div class="nav-item active">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="nav-tip">Campaigns</span>
+  </div>
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="../wireframes/settings-v2.html">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span class="nav-tip">Settings</span>
+    </a>
+  </div>
+</aside><div class="app-shell"><main class="main"><div class="main-content">
+
+  <div class="page-header">
+    <div>
+      <div class="page-title">Good morning, Coris.</div>
+      <div class="page-sub">Your outreach is running. Here's where things stand.</div>
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openModal()">+ New campaign</button>
+  </div>
+
+  <!-- Stat row — 4 summary cards -->
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="stat-card-label">Active campaigns</div>
+      <div class="stat-card-val">2</div>
+      <div class="stat-card-sub">1 paused</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Prospects</div>
+      <div class="stat-card-val">47</div>
+      <div class="stat-card-sub">of 100 on free tier</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Sent this week</div>
+      <div class="stat-card-val pink">14</div>
+      <div class="stat-card-sub">↑ 3 from last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-label">Active replies</div>
+      <div class="stat-card-val">3</div>
+      <div class="stat-card-sub">2 meetings booked</div>
+    </div>
+  </div>
+
+  <div class="campaigns-header">
+    <div class="campaigns-label">Your campaigns</div>
+  </div>
+
+  <!-- Campaign 1 — Active -->
+  <div class="campaign-card">
+    <div class="campaign-card-top">
+      <div style="flex:1;min-width:0;">
+        <div class="campaign-name">Agency founders — Q1</div>
+        <div class="campaign-meta">8 prospects · Started Mar 12 · 2-step sequence</div>
+      </div>
+      <div class="tgl-wrap" onclick="event.stopPropagation()">
+        <button class="tgl on" id="tgl-1" onclick="toggleCampaign('tgl-1','lbl-1')"></button>
+        <span class="tgl-label" id="lbl-1">Active</span>
+      </div>
+      <div class="kebab-wrap" onclick="event.stopPropagation()">
+        <button class="kebab-btn" id="kbtn-1" onclick="toggleKebab('kmenu-1','kbtn-1')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="2.5" r="1.2" fill="currentColor"/>
+            <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+            <circle cx="7" cy="11.5" r="1.2" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="kebab-menu" id="kmenu-1">
+          <div class="kebab-item">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5l2 2L4 10H2v-2l6.5-6.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Rename
+          </div>
+          <div class="kebab-item">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M2 3v7a1 1 0 001 1h6a1 1 0 001-1V3M4 3V2h4v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Archive
+          </div>
+          <div class="kebab-divider"></div>
+          <div class="kebab-item danger">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M4 3V2h4v1M5 5v4M7 5v4M2 3l.7 7a1 1 0 001 .9h4.6a1 1 0 001-.9L10 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Delete
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="campaign-stats">
+      <div class="c-stat"><div class="c-stat-val">8</div><div class="c-stat-label">Prospects</div></div>
+      <div class="c-stat"><div class="c-stat-val accent">8</div><div class="c-stat-label">Sent</div></div>
+      <div class="c-stat"><div class="c-stat-val">1</div><div class="c-stat-label">Replies</div></div>
+      <div class="c-stat"><div class="c-stat-val pink">5</div><div class="c-stat-label">Follow-ups due</div></div>
+    </div>
+    <div class="campaign-progress"><div class="campaign-progress-fill" style="width:100%"></div></div>
+    <div class="action-strip">
+      <button class="action-pill" style="margin-right:auto;" onclick="event.stopPropagation()">+ Add prospects</button>
+      <button class="action-pill has-items" onclick="event.stopPropagation()"><span class="ap-count">5</span> Follow-ups due</button>
+      <button class="action-pill has-replies" onclick="event.stopPropagation()"><span class="ap-count">1</span> New reply</button>
+      <button class="action-pill">View campaign →</button>
+    </div>
+  </div>
+
+  <!-- Campaign 2 — Paused -->
+  <div class="campaign-card" style="opacity:0.82;">
+    <div class="campaign-card-top">
+      <div style="flex:1;min-width:0;">
+        <div class="campaign-name">Fractional CFO — Q1</div>
+        <div class="campaign-meta">39 prospects · Started Feb 28 · 3-step sequence</div>
+      </div>
+      <div class="tgl-wrap" onclick="event.stopPropagation()">
+        <button class="tgl off" id="tgl-2" onclick="toggleCampaign('tgl-2','lbl-2')"></button>
+        <span class="tgl-label" id="lbl-2">Paused</span>
+      </div>
+      <div class="kebab-wrap" onclick="event.stopPropagation()">
+        <button class="kebab-btn" id="kbtn-2" onclick="toggleKebab('kmenu-2','kbtn-2')">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <circle cx="7" cy="2.5" r="1.2" fill="currentColor"/>
+            <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+            <circle cx="7" cy="11.5" r="1.2" fill="currentColor"/>
+          </svg>
+        </button>
+        <div class="kebab-menu" id="kmenu-2">
+          <div class="kebab-item">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8.5 1.5l2 2L4 10H2v-2l6.5-6.5z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/></svg>
+            Rename
+          </div>
+          <div class="kebab-item">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M2 3v7a1 1 0 001 1h6a1 1 0 001-1V3M4 3V2h4v1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Archive
+          </div>
+          <div class="kebab-divider"></div>
+          <div class="kebab-item danger">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M1 3h10M4 3V2h4v1M5 5v4M7 5v4M2 3l.7 7a1 1 0 001 .9h4.6a1 1 0 001-.9L10 3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Delete
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="campaign-stats">
+      <div class="c-stat"><div class="c-stat-val">39</div><div class="c-stat-label">Prospects</div></div>
+      <div class="c-stat"><div class="c-stat-val">31</div><div class="c-stat-label">Sent</div></div>
+      <div class="c-stat"><div class="c-stat-val accent">4</div><div class="c-stat-label">Replies</div></div>
+      <div class="c-stat"><div class="c-stat-val pink">2</div><div class="c-stat-label">Meetings</div></div>
+    </div>
+    <div class="campaign-progress"><div class="campaign-progress-fill" style="width:79%"></div></div>
+    <div class="action-strip">
+      <button class="action-pill" style="margin-right:auto;" onclick="event.stopPropagation()">+ Add prospects</button>
+      <button class="action-pill">View campaign →</button>
+    </div>
+  </div>
+
+</div></main></div><div class="modal-overlay" id="modal" onclick="if(event.target===this)closeModal()">
+  <div class="modal-box">
+    <div class="modal-title">Name your campaign</div>
+    <p class="modal-sub">Give it a name that describes who you're reaching out to. You can always rename it later.</p>
+    <div class="modal-field">
+      <label class="modal-label">Campaign name</label>
+      <input class="modal-input" id="campaign-name-input" placeholder="e.g. Agency founders — Q2" autofocus>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-secondary btn-sm" onclick="closeModal()">Cancel</button>
+      <button class="btn btn-primary btn-sm" onclick="closeModal()">Continue →</button>
+    </div>
+  </div>
+</div>
+<div id="toast-zone"></div><script>
+function openModal() {
+  document.getElementById('modal').classList.add('open');
+  setTimeout(() => document.getElementById('campaign-name-input')?.focus(), 50);
+}
+function closeModal() {
+  document.getElementById('modal').classList.remove('open');
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+function toggleKebab(menuId, btnId) {
+  document.querySelectorAll('.kebab-menu.open').forEach(m => { if (m.id !== menuId) m.classList.remove('open'); });
+  document.querySelectorAll('.kebab-btn.open').forEach(b => { if (b.id !== btnId) b.classList.remove('open'); });
+  document.getElementById(menuId)?.classList.toggle('open');
+  document.getElementById(btnId)?.classList.toggle('open');
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.kebab-wrap')) {
+    document.querySelectorAll('.kebab-menu.open').forEach(m => m.classList.remove('open'));
+    document.querySelectorAll('.kebab-btn.open').forEach(b => b.classList.remove('open'));
+  }
+});
+function toggleCampaign(tglId, lblId) {
+  const tgl = document.getElementById(tglId);
+  const lbl = document.getElementById(lblId);
+  if (!tgl || !lbl) return;
+  tgl.classList.toggle('on');
+  tgl.classList.toggle('off');
+  lbl.textContent = tgl.classList.contains('on') ? 'Active' : 'Paused';
+}
+</script>
+</body>
+</html>
