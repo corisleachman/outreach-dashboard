@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Campaign Shell</title>
+<style>
+/* Campaign-specific shell styles only */
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div>
+<div class="orb orb-cyan"></div>
+<header class="topbar">
+  <a href="#" class="logo">Pulse<span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">.</span></a>
+  <nav class="breadcrumb"><span class="breadcrumb-sep">·</span><span class="breadcrumb-current">Agency founders — Q1</span></nav>
+  <div class="topbar-right">
+    <span class="plan-badge pro-light">Pro Light</span>
+    <div class="avatar">CL</div>
+  </div>
+</header>
+<aside class="sidebar">
+  <a href="#" class="si" title="Today"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="3" width="14" height="12" rx="2" stroke="currentColor" stroke-width="1.4"/><path d="M1 7h14M5 1v4M11 1v4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><span class="si-tip">Today</span></svg></a>
+  <a href="#" class="si active" title="Campaigns"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="1" y="1" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="1" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/><rect x="1" y="9" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/><rect x="9" y="9" width="6" height="6" rx="1.2" stroke="currentColor" stroke-width="1.4"/><span class="si-tip">Campaigns</span></svg></a>
+  <a href="#" class="si si-bottom" title="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.4"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><span class="si-tip">Settings</span></svg></a>
+</aside>
+<div class="app-shell">
+  <main class="main">
+
+    <!-- CAMPAIGN HEADER (sticky) -->
+    <div class="campaign-header">
+      <div class="ch-top">
+        <div>
+          <div class="ch-name">Agency founders — Q1</div>
+          <div class="ch-meta">
+            <span>47 prospects</span>
+            <span class="ch-sep">·</span>
+            <span>Active</span>
+            <span class="ch-sep">·</span>
+            <span>Last sent 2 days ago</span>
+          </div>
+        </div>
+        <div class="ch-actions">
+          <button class="btn btn-ghost btn-sm">⋮ More</button>
+          <button class="btn btn-primary btn-sm">+ Add prospects</button>
+        </div>
+      </div>
+
+      <!-- Stats strip -->
+      <div class="stats-strip">
+        <div class="stat-item">
+          <div class="stat-num pink">47</div>
+          <div class="stat-label">Prospects</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num">12</div>
+          <div class="stat-label">Emailed</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num green">3</div>
+          <div class="stat-label">Replies</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num cyan">5</div>
+          <div class="stat-label">Follow-ups due</div>
+        </div>
+      </div>
+
+      <!-- Tab bar -->
+      <nav class="tab-bar">
+        <div class="tab active">Review <span class="tab-count">12</span></div>
+        <div class="tab">Drafts <span class="tab-count">8</span></div>
+        <div class="tab">LinkedIn</div>
+        <div class="tab">Sent <span class="tab-count">12</span></div>
+        <div class="tab">Follow-up <span class="tab-count">5</span></div>
+        <div class="tab">Nurture <span class="tab-count">3</span></div>
+        <div class="tab">Conversations <span class="tab-count">3</span></div>
+        <div class="tab">Bounced</div>
+      </nav>
+    </div>
+
+    <!-- TAB CONTENT — inject view here -->
+    <div class="tab-content">
+      <!-- INJECT TAB VIEW HERE (see view-tab-*.html files) -->
+    </div>
+
+  </main>
+</div>
+<div class="toast-zone" id="toast-zone"></div>
+</body>
+</html>
