@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Motion Test Page</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;
+  --s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+
+/* ── Heartbeat canvas — fixed, behind everything ── */
+#pulse-canvas{position:fixed;inset:0;z-index:0;pointer-events:none;}
+
+/* ── Layout ── */
+.page{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:48px 32px;}
+
+/* ── Header ── */
+.logo{font-family:var(--of);font-size:24px;font-weight:900;letter-spacing:-0.03em;margin-bottom:4px;}
+.logo-dot{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--cyan);margin-bottom:32px;}
+
+/* ── Section headings ── */
+.section{margin-bottom:48px;}
+.section-title{font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.12em;color:var(--td);margin-bottom:4px;padding-bottom:10px;border-bottom:1px solid var(--b);}
+.section-desc{font-size:12px;color:var(--tm);margin-bottom:20px;line-height:1.6;margin-top:8px;}
+
+/* ── Card component ── */
+.card{
+  background:rgba(13,9,20,0.35);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border:1px solid var(--b);
+  border-radius:16px;padding:20px 22px;
+  transition:border-color 200ms,box-shadow 200ms;
+}
+.card:hover{border-color:var(--b2);box-shadow:0 8px 32px rgba(0,0,0,0.3);}
+.card-title{font-family:var(--of);font-size:14px;font-weight:700;margin-bottom:4px;}
+.card-sub{font-size:12px;color:var(--td);}
+
+/* ── Scan demo cards ── */
+.scan-cards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:16px;}
+.scan-card{padding:18px;border-radius:12px;background:var(--s);border:1px solid var(--b);}
+.scan-card-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;margin-bottom:6px;}
+.scan-card-label.pink{color:var(--pink);}
+.scan-card-label.cyan{color:var(--cyan);}
+.scan-card-label.amber{color:var(--amber);}
+.scan-card-name{font-size:13px;font-weight:500;margin-bottom:2px;}
+.scan-card-meta{font-size:11px;color:var(--td);}
+
+/* ── Button ── */
+.btn-primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px 28px;border-radius:100px;
+  background:var(--gr);color:white;
+  font-family:var(--of);font-size:14px;font-weight:700;
+  border:none;cursor:pointer;
+  box-shadow:0 0 32px rgba(255,20,147,0.2);
+  transition:opacity 200ms,box-shadow 200ms;
+  position:relative;overflow:hidden;
+}
+.btn-primary:hover{opacity:0.88;box-shadow:0 0 48px rgba(255,20,147,0.3);}
+.btn-primary:active{transform:scale(0.97);}
+
+.btn-ghost{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:10px 18px;border-radius:100px;
+  background:transparent;border:1px solid var(--b2);
+  color:var(--tm);font-family:var(--of);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all 200ms;
+}
+.btn-ghost:hover{border-color:rgba(255,255,255,0.25);color:var(--t);}
+
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+
+/* ── Badges ── */
+.badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.07em;padding:3px 9px;border-radius:100px;white-space:nowrap;}
+.badge-green{background:rgba(100,220,120,0.1);color:var(--green);border:1px solid rgba(100,220,120,0.25);}
+.badge-amber{background:rgba(255,157,66,0.1);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.badge-cyan{background:rgba(0,212,255,0.08);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.badge-pink{background:rgba(255,20,147,0.1);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+
+/* ── Prospect row (for collapse demo) ── */
+.prospect-list{border-radius:12px;overflow:hidden;border:1px solid var(--b);background:var(--s);}
+.p-row{display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--b);}
+.p-row:last-child{border-bottom:none;}
+.p-av{width:32px;height:32px;border-radius:50%;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;color:var(--pink);flex-shrink:0;}
+.p-info{flex:1;min-width:0;}
+.p-name{font-size:13px;font-weight:500;margin-bottom:1px;}
+.p-sub{font-size:11px;color:var(--td);}
+
+/* ── Modal ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.65);backdrop-filter:blur(6px);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 200ms;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal-box{background:#14091f;border:1px solid var(--b2);border-radius:16px;padding:28px;width:420px;max-width:calc(100vw - 48px);box-shadow:0 24px 80px rgba(0,0,0,0.6);transform:translateY(12px);transition:transform 350ms cubic-bezier(0.22,0.68,0,1.2);}
+.modal-overlay.open .modal-box{transform:translateY(0);}
+.modal-title{font-family:var(--of);font-size:17px;font-weight:800;margin-bottom:14px;}
+.modal-body{font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:20px;}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;}
+
+/* ── Toast zone ── */
+#toast-zone{position:fixed;bottom:24px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+
+/* ── Status badge (results) ── */
+.result-panel{margin-top:16px;padding:12px 16px;background:rgba(100,220,120,0.06);border:1px solid rgba(100,220,120,0.15);border-radius:8px;font-size:12px;color:var(--green);font-family:var(--of);font-weight:600;display:none;}
+.result-panel.show{display:block;}
+
+/* ── Scan instruction ── */
+.scan-note{font-size:11px;color:var(--td);font-family:'DM Mono',monospace;margin-top:12px;padding:8px 12px;background:var(--s);border-radius:6px;border:1px solid var(--b);}
+
+/* ── Divider ── */
+.divider{height:1px;background:var(--b);margin:40px 0;}
+</style>
+</head>
+<body>
+
+<!-- Heartbeat canvas — Effect 1 -->
+<canvas id="pulse-canvas"></canvas>
+
+<!-- Page content -->
+<div class="page">
+
+  <div class="logo">Pulse<span class="logo-dot">.</span></div>
+  <div class="page-label">Motion System — Test Page</div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 1: HEARTBEAT CANVAS
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">01 · Heartbeat canvas</div>
+    <div class="section-desc">
+      Radial gradient blobs pulse on an 8-second cardiac curve. Dashboard intensity: OPACITY_BASE 0.08, OPACITY_FLARE 0.12 (lower than the beta page so it never competes with data). Mouse parallax active — move your cursor around the page.
+    </div>
+    <div class="card">
+      <div class="card-title">Background is live ✓</div>
+      <div class="card-sub">The animated blob field behind this card is Effect 1. If you can see the soft pink and cyan glow shifting behind the page, the heartbeat canvas is working correctly.</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 2: SCAN EFFECT
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">02 · Scan effect — border flare</div>
+    <div class="section-desc">
+      An invisible scan line travels bottom→top every 8 seconds, synced to the heartbeat. When it passes within 60px of a card's centre, the border briefly flares. Pink = active campaign, cyan = new reply, amber = follow-ups due.
+    </div>
+
+    <div class="scan-cards">
+      <div class="scan-card" data-scan="pink">
+        <div class="scan-card-label pink">Active campaign</div>
+        <div class="scan-card-name">Agency founders — Q1</div>
+        <div class="scan-card-meta">47 prospects · 4 replies</div>
+      </div>
+      <div class="scan-card" data-scan="cyan">
+        <div class="scan-card-label cyan">New reply</div>
+        <div class="scan-card-name">Nat Sajal · Wagamama</div>
+        <div class="scan-card-meta">Replied 3 days ago</div>
+      </div>
+      <div class="scan-card" data-scan="amber">
+        <div class="scan-card-label amber">Follow-up due</div>
+        <div class="scan-card-name">Sarah Mitchell · Fold Studio</div>
+        <div class="scan-card-meta">5 days — no reply</div>
+      </div>
+    </div>
+
+    <div class="scan-note">
+      ⟳ Scan cycle: 8000ms · Trigger distance: 60px · LIT_MS: 280ms · FADE_MS: 1400ms<br>
+      Watch the card borders — each card flares its own colour as the invisible scan line passes.
+    </div>
+
+    <!-- Manual trigger for testing -->
+    <div style="margin-top:12px;">
+      <button class="btn-ghost" onclick="triggerAllScans()" style="font-size:12px;">
+        ↯ Trigger all scan flares now
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 3: BUTTON INTERACTIONS
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">03 · Button interactions — ink drop + pulse ring</div>
+    <div class="section-desc">
+      Hover over the primary button. Two effects fire simultaneously: (1) a radial ink bloom from the exact cursor entry point, (2) a ring that expands beyond the button border. The button never lifts — no translateY.
+    </div>
+
+    <div class="btn-row">
+      <div class="btn-ring-wrap">
+        <button class="btn-primary">Hover me → ink drop + ring</button>
+      </div>
+      <div class="btn-ring-wrap">
+        <button class="btn-primary" style="background:rgba(255,255,255,0.08);color:var(--t);" >Secondary primary</button>
+      </div>
+    </div>
+
+    <div style="margin-top:16px;font-size:11px;color:var(--td);font-family:'DM Mono',monospace;padding:8px 12px;background:var(--s);border-radius:6px;border:1px solid var(--b);">
+      Ink drop: DURATION 1800ms · MAX_SCALE 2.8× · peak opacity 0.22<br>
+      Pulse ring: scale 1.0→1.48 · duration 1.2s · peak opacity 0.44
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 4: UI INTERACTIONS
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">04 · UI interactions — modal, drawer, toasts</div>
+    <div class="section-desc">All UI show/hide behaviour from pulse-interactions.js.</div>
+
+    <div class="btn-row" style="margin-bottom:20px;">
+      <div class="btn-ring-wrap">
+        <button class="btn-primary" onclick="openModal('test-modal')">Open modal</button>
+      </div>
+      <button class="btn-ghost" onclick="showToast('First email sent to sarah.mitchell@foldstudio.com','green',4000)">Toast — green (send)</button>
+      <button class="btn-ghost" onclick="showToast('Follow-up due for Dan Kim','amber',4000)">Toast — amber</button>
+      <button class="btn-ghost" onclick="showToast('Reply received from Nat Sajal','cyan',4000)">Toast — cyan</button>
+      <button class="btn-ghost" onclick="showToast('Prospect deleted',
+        'pink', 4000, function(){ showToast(\'Restored\',\'green\') })">Toast + Undo</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 5: ROW COLLAPSE
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">05 · Row collapse — send / approve / skip</div>
+    <div class="section-desc">Clicking Send on a prospect row fades it to 40% opacity + 5px X offset, then collapses the height to 0. Toast fires in parallel.</div>
+
+    <div class="prospect-list" id="prospect-list">
+      <div class="p-row" id="row-sm">
+        <div class="p-av">SM</div>
+        <div class="p-info"><div class="p-name">Sarah Mitchell</div><div class="p-sub">Fold Studio · Head of Growth</div></div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="
+            collapseRow(document.getElementById('row-sm'));
+            showToast('First email sent to sarah.mitchell@foldstudio.com','green');
+          ">Send →</button>
+        </div>
+      </div>
+      <div class="p-row" id="row-dk">
+        <div class="p-av" style="background:rgba(0,212,255,0.08);border-color:rgba(0,212,255,0.2);color:var(--cyan);">DK</div>
+        <div class="p-info"><div class="p-name">Dan Kim</div><div class="p-sub">Studio North · Creative Director</div></div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="
+            collapseRow(document.getElementById('row-dk'));
+            showToast('First email sent to dan.kim@studionorth.com','green');
+          ">Send →</button>
+        </div>
+      </div>
+      <div class="p-row" id="row-ns">
+        <div class="p-av" style="background:rgba(100,220,120,0.08);border-color:rgba(100,220,120,0.2);color:var(--green);">NS</div>
+        <div class="p-info"><div class="p-name">Nat Sajal</div><div class="p-sub">Wagamama · Head of Marketing</div></div>
+        <div style="display:flex;gap:8px;flex-shrink:0;">
+          <button class="btn-ghost" style="font-size:12px;padding:6px 14px;" onclick="
+            collapseRow(document.getElementById('row-ns'));
+            showToast('First email sent to nat.sajal@wagamama.com','green');
+          ">Send →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       TEST 6: MILESTONE + MOMENTUM
+  ═══════════════════════════════════════════ -->
+  <div class="section">
+    <div class="section-title">06 · Milestone reveal + momentum prompt</div>
+    <div class="section-desc">Celebration Without Gamification. scale(0.96→1) + opacity, 400ms. No confetti — ever.</div>
+
+    <div class="btn-row">
+      <button class="btn-ghost" onclick="showMilestone('First campaign sent 🎉','Your outreach is live. Replies will appear when they arrive.','pink')">
+        Milestone — first campaign
+      </button>
+      <button class="btn-ghost" onclick="showMilestone('You got a reply','Nat Sajal from Wagamama replied to your message.','cyan')">
+        Milestone — first reply
+      </button>
+      <button class="btn-ghost" onclick="showMomentumPrompt('Your next follow-up is due for Sarah Mitchell.','Send follow-up', function(){ showToast('Follow-up sent','green') })">
+        Momentum prompt
+      </button>
+    </div>
+  </div>
+
+</div><!-- end .page -->
+
+<!-- Modal -->
+<div class="modal-overlay" id="test-modal">
+  <div class="modal-box">
+    <div class="modal-title">Modal — open and close</div>
+    <div class="modal-body">This modal uses the overlay + box pattern from pulse-interactions.js. Clicking the backdrop, pressing Escape, or clicking Close all dismiss it. The box slides up 12px on open.</div>
+    <div class="modal-footer">
+      <button class="btn-ghost" onclick="closeModal('test-modal')">Close</button>
+      <div class="btn-ring-wrap">
+        <button class="btn-primary" onclick="closeModal('test-modal');showToast('Action confirmed','green')">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Toast zone -->
+<div id="toast-zone"></div>
+
+<!-- Scripts — load in order -->
+<script src="pulse-motion.js"></script>
+<script src="pulse-interactions.js"></script>
+<script>
+  // Boot
+  document.addEventListener('DOMContentLoaded', () => {
+    initPulseMotion({
+      canvasId: 'pulse-canvas',
+      enableHeartbeat: true,
+      enableScan: true,
+      enableButtons: true,
+    });
+  });
+
+  // Manual scan trigger (for testing without waiting 8s)
+  function triggerAllScans() {
+    document.querySelectorAll('[data-scan]').forEach((el, i) => {
+      setTimeout(() => {
+        const colour = el.dataset.scan;
+        el.classList.remove('scan-lit-pink','scan-lit-cyan','scan-lit-amber','scan-fade');
+        void el.offsetWidth;
+        el.classList.add(`scan-lit-${colour}`);
+        setTimeout(() => {
+          el.classList.add('scan-fade');
+          el.classList.remove('scan-lit-pink','scan-lit-cyan','scan-lit-amber');
+          setTimeout(() => el.classList.remove('scan-fade'), 1450);
+        }, 280);
+      }, i * 180);
+    });
+  }
+</script>
+</body>
+</html>
