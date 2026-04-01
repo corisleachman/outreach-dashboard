@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Import Modal</title>
+<style>body{display:flex;align-items:center;justify-content:center;min-height:100vh;background:rgba(13,9,20,0.98);}</style>
+</head><body><div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+<div class="modal-box" style="width:520px;position:relative;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+    <div class="modal-title" style="margin-bottom:0;">Import prospects</div>
+    <div style="font-size:11px;color:var(--td);">Step 1 of 2</div>
+  </div>
+
+  <!-- Upload zone -->
+  <div style="border:2px dashed var(--b2);border-radius:12px;padding:40px 24px;text-align:center;margin-bottom:20px;cursor:pointer;transition:border-color 0.2s,background 0.2s;" onmouseover="this.style.borderColor='rgba(255,20,147,0.4)';this.style.background='rgba(255,20,147,0.03)'" onmouseout="this.style.borderColor='var(--b2)';this.style.background=''">
+    <div style="font-size:28px;margin-bottom:12px;opacity:0.5;">↑</div>
+    <div style="font-family:var(--of);font-size:14px;font-weight:700;margin-bottom:6px;">Drop your CSV here</div>
+    <div style="font-size:12px;color:var(--td);">or <span style="color:var(--pink);cursor:pointer;">browse files</span></div>
+    <div style="font-size:11px;color:var(--td);margin-top:8px;">.csv · .xlsx supported · Up to 5MB</div>
+  </div>
+
+  <!-- Column mapping (shown after file upload) -->
+  <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;padding:14px;margin-bottom:20px;">
+    <div style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:12px;">Map columns from your file</div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:var(--tm);">First name</span><select class="select" style="font-size:11px;min-width:140px;"><option>first_name ✓</option></select></div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:var(--tm);">Last name</span><select class="select" style="font-size:11px;min-width:140px;"><option>last_name ✓</option></select></div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:var(--tm);">Email</span><select class="select" style="font-size:11px;min-width:140px;"><option>email_address</option></select></div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:var(--tm);">Company</span><select class="select" style="font-size:11px;min-width:140px;"><option>company ✓</option></select></div><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:12px;color:var(--tm);">LinkedIn URL</span><select class="select" style="font-size:11px;min-width:140px;"><option>— skip —</option></select></div>
+  </div>
+
+  <div class="modal-footer">
+    <button class="btn btn-ghost">Cancel</button>
+    <button class="btn btn-primary">Import 24 prospects →</button>
+  </div>
+</div></body></html>
