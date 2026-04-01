@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Message/Send Drawer</title>
+<style>
+body{background:#1a0d2e;}
+.demo-bg{display:flex;justify-content:flex-end;min-height:100vh;padding-top:56px;}
+</style></head><body><div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+<header class="topbar"><a href="#" class="logo">Pulse<span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></a><div class="topbar-right"><span class="plan-badge pro-light">Pro Light</span><div class="avatar">CL</div></div></header>
+<div class="demo-bg">
+<div class="drawer open" style="transform:none;position:relative;top:auto;right:auto;bottom:auto;width:520px;max-width:100%;height:calc(100vh - 56px);">
+  <div class="drawer-header">
+    <div style="width:38px;height:38px;border-radius:50%;background:var(--pd);border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:13px;font-weight:700;color:var(--pink);flex-shrink:0;">SM</div>
+    <div>
+      <div class="drawer-title">Sarah Mitchell</div>
+      <div class="drawer-sub">sarah.mitchell@foldstudio.com</div>
+    </div>
+    <button class="drawer-close" style="margin-left:auto;">✕</button>
+  </div>
+  <div class="drawer-body">
+    <div class="field"><label class="input-label">Subject</label><input class="input" value="Something I thought you'd find useful…"></div>
+    <div class="field"><label class="input-label">Message</label>
+      <textarea class="input" style="min-height:180px;">Hi Sarah,
+
+I came across Fold Studio's recent work on the Monzo rebrand — genuinely impressive.
+
+I work with growth-stage brands on their outreach strategy, and I thought the approach you're taking around brand consistency would resonate with a few frameworks I've been developing.
+
+Would a 20-minute call be worthwhile? Happy to keep it brief.
+
+Best,
+Coris</textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:8px;padding:10px 0;border-top:1px solid var(--b);border-bottom:1px solid var(--b);margin-bottom:16px;">
+      <button class="btn btn-ghost btn-sm" style="gap:6px;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 9V3l4-2 4 2v6l-4 2-4-2z" stroke="currentColor" stroke-width="1.3"/><path d="M6 1v10" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>Attach file</button>
+      <span style="font-size:11px;color:var(--td);">No attachments</span>
+    </div>
+    <div class="notice notice-green" style="font-size:12px;">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;"><polyline points="1.5 7 5 10.5 12.5 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Draft synced to Gmail · Any edits here will update your Gmail draft before sending.
+    </div>
+  </div>
+  <div class="drawer-footer">
+    <button class="btn btn-ghost btn-sm">Discard</button>
+    <button class="btn btn-ghost btn-sm">Save draft</button>
+    <button class="btn btn-primary btn-sm">Send → sarah.mitchell@foldstudio.com</button>
+  </div>
+</div>
+</div></body></html>
