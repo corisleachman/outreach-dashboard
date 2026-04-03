@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Prospect detail modal</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<style>
+/* ── Page scaffold (demo only — not part of the modal component) ── */
+body { display:flex; align-items:center; justify-content:center; min-height:100vh; }
+.demo-bg { position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(6px); display:flex; align-items:center; justify-content:center; }
+
+/* ── MODAL OVERLAY ────────────────────────────────────────────────
+   In production: position:fixed; inset:0; opacity:0 by default,
+   transitions to opacity:1 when .open is added.
+   ──────────────────────────────────────────────────────────────── */
+.mo {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+.mo.open {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── MODAL BOX ────────────────────────────────────────────────────
+   Slides up 10px on open via translateY transition.
+   ──────────────────────────────────────────────────────────────── */
+.mb {
+  background: #150d26;
+  border: 1px solid var(--b2);
+  border-radius: 14px;
+  padding: 28px;
+  width: 540px;
+  max-width: calc(100vw - 40px);
+  transform: translateY(10px);
+  transition: transform 0.25s cubic-bezier(0.22, 0.68, 0, 1.2);
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+}
+.mo.open .mb {
+  transform: translateY(0);
+}
+
+/* ── MODAL HEADER ── */
+.mo-name {
+  font-family: var(--of);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 4px;
+}
+.mo-sub {
+  font-size: 12px;
+  color: var(--cyan);
+  margin-bottom: 20px;
+}
+
+/* ── DETAIL GRID (2-column field layout) ── */
+.det-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.det-field {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--b);
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+.det-lbl {
+  font-size: 10px;
+  font-family: var(--of);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--td);
+  margin-bottom: 4px;
+}
+.det-val {
+  font-size: 13px;
+  color: var(--t);
+}
+.det-val a {
+  color: var(--cyan);
+  text-decoration: none;
+}
+.det-val a:hover {
+  text-decoration: underline;
+}
+.det-val.status-pending {
+  color: var(--amber);
+}
+
+/* ── NOTES FIELD ── */
+.fld { margin-bottom: 4px; }
+.lbl {
+  font-size: 11px;
+  font-family: var(--of);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--td);
+  margin-bottom: 6px;
+  display: block;
+}
+.inp {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--b2);
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-family: var(--sf);
+  font-size: 13px;
+  color: var(--t);
+  outline: none;
+  transition: border-color 0.2s;
+  resize: none;
+}
+.inp:focus { border-color: var(--cyan); }
+.inp::placeholder { color: var(--td); }
+
+/* ── FOOTER ACTIONS ── */
+.mo-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:var(--of); font-weight:700; cursor:pointer; border:none; transition:all 0.2s; white-space:nowrap; border-radius:100px; }
+.bp  { padding:10px 20px; font-size:13px; background:var(--gr); color:white; box-shadow:0 0 24px rgba(255,20,147,0.2); }
+.bp:hover { opacity:0.88; }
+.bg_ { padding:10px 18px; font-size:13px; background:transparent; color:var(--tm); border:none; }
+.bg_:hover { color:var(--t); }
+.bsm { padding:7px 16px; font-size:12px; }
+
+/* ── DEMO CONTROLS ── */
+.demo-controls {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 10px;
+  z-index: 600;
+}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div>
+<div class="orb orb-cyan"></div>
+
+<!-- Demo backdrop so the modal is visible on page load -->
+<div style="position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(4px);z-index:1;"></div>
+
+<!-- ═══════════════════════════════════════════════════════════════════
+     PROSPECT DETAIL MODAL
+     ═══════════════════════════════════════════════════════════════════
+
+     TRIGGER: Clicking any prospect row in the post-import list (S4)
+              or from any prospect row in the Review tab.
+
+     OPEN:    Add class .open to #mo-detail
+     CLOSE:   Remove class .open (backdrop click, Escape, or Cancel btn)
+
+     ANIMATION:
+       - Overlay: opacity 0 → 1, 200ms ease
+       - Box: translateY(10px) → translateY(0), 250ms spring easing
+
+     DATA BINDING (live app):
+       - mo-name:    prospect.full_name
+       - mo-sub:     prospect.company + " · " + prospect.position
+       - d-email:    prospect.email
+       - d-co:       prospect.company
+       - d-position: prospect.position
+       - d-li:       prospect.linkedin_url (show "Not set" if null)
+       - d-status:   prospect.status (human-readable label)
+       - d-notes:    prospect.notes (textarea, editable)
+
+     SAVE:    PATCH /api/prospects/:id with { notes } (and any edited fields)
+              On success: close modal, show toast "Prospect updated"
+     ═══════════════════════════════════════════════════════════════════ -->
+
+<div class="mo open" id="mo-detail" onclick="if(event.target===this)closeModal()">
+  <div class="mb">
+
+    <!-- Header: name + company/role -->
+    <div class="mo-name" id="d-name">James Mitchell</div>
+    <div class="mo-sub"  id="d-company">North Agency · Head of Growth</div>
+
+    <!-- 2-column field grid -->
+    <div class="det-grid">
+      <div class="det-field">
+        <div class="det-lbl">Email</div>
+        <div class="det-val" id="d-email">james@northagency.com</div>
+      </div>
+      <div class="det-field">
+        <div class="det-lbl">Company</div>
+        <div class="det-val" id="d-co">North Agency</div>
+      </div>
+      <div class="det-field">
+        <div class="det-lbl">Position</div>
+        <div class="det-val" id="d-position">Head of Growth</div>
+      </div>
+      <div class="det-field">
+        <div class="det-lbl">LinkedIn</div>
+        <div class="det-val">
+          <a href="#" id="d-li">View profile →</a>
+        </div>
+      </div>
+      <div class="det-field">
+        <div class="det-lbl">Status</div>
+        <div class="det-val status-pending" id="d-status">Pending review</div>
+      </div>
+      <div class="det-field">
+        <div class="det-lbl">Website</div>
+        <div class="det-val" id="d-website">northagency.com</div>
+      </div>
+    </div>
+
+    <!-- Notes field (editable) -->
+    <div class="fld">
+      <label class="lbl" for="d-notes">Notes</label>
+      <textarea class="inp" id="d-notes" rows="3"
+        placeholder="Add any context about this prospect — mutual connections, recent news, reason to reach out…"></textarea>
+    </div>
+
+    <!-- Actions -->
+    <div class="mo-actions">
+      <button class="btn bg_ bsm" onclick="closeModal()">Close</button>
+      <button class="btn bp bsm" onclick="saveAndClose()">Save</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Demo controls -->
+<div class="demo-controls">
+  <button class="btn bp bsm" onclick="openWith('James Mitchell','North Agency · Head of Growth','james@northagency.com','North Agency','Head of Growth')">Open — James Mitchell</button>
+  <button class="btn bp bsm" onclick="openWith('Sarah Thompson','ConsultCo · Managing Director','sarah@consultco.co.uk','ConsultCo','Managing Director')">Open — Sarah Thompson</button>
+  <button class="btn bg_" onclick="closeModal()" style="border:1px solid var(--b2);">Close modal</button>
+</div>
+
+<!-- Toast -->
+<div id="tz" style="position:fixed;bottom:80px;right:24px;z-index:900;display:flex;flex-direction:column;gap:8px;pointer-events:none;"></div>
+
+<script>
+function openModal() {
+  document.getElementById('mo-detail').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('mo-detail').classList.remove('open');
+}
+
+function openWith(name, sub, email, company, position) {
+  document.getElementById('d-name').textContent     = name;
+  document.getElementById('d-company').textContent  = sub;
+  document.getElementById('d-email').textContent    = email;
+  document.getElementById('d-co').textContent       = company;
+  document.getElementById('d-position').textContent = position;
+  document.getElementById('d-notes').value          = '';
+  openModal();
+}
+
+function saveAndClose() {
+  closeModal();
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.style.cssText = 'background:rgba(13,9,20,0.97);border:1px solid var(--b2);border-left:2px solid var(--cyan);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:280px;backdrop-filter:blur(12px);pointer-events:all;';
+  e.innerHTML = '<span style="color:var(--cyan)">✓</span><span>Prospect updated</span>';
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(),300); }, 3000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+</script>
+</body>
+</html>
