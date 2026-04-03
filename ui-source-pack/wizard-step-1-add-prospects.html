@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Wizard — Step 1: Add prospects</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css"><style>
+/* ── Dashboard home + wizard page-specific styles ────────────────
+   Sourced from dashboard-home.html and outreach-wizard-v3.html
+   ──────────────────────────────────────────────────────────────── */
+
+/* Screens */
+.sc  { display:none; }
+.sc.on { display:block; }
+
+/* Dashboard empty state */
+.greeting     { font-family:var(--of); font-size:28px; font-weight:800; letter-spacing:-0.02em; margin-bottom:4px; }
+.greeting-sub { font-size:14px; color:var(--tm); margin-bottom:28px; }
+.empty-hero   { display:flex; flex-direction:column; align-items:center; text-align:center; padding:32px 40px 40px; }
+.empty-glyph  { width:64px; height:64px; border-radius:16px; background:var(--pd); border:1px solid rgba(255,20,147,0.2); display:flex; align-items:center; justify-content:center; margin:0 auto 24px; font-size:28px; }
+.empty-title  { font-family:var(--of); font-size:24px; font-weight:700; letter-spacing:-0.02em; margin-bottom:10px; }
+.empty-body   { font-size:14px; color:var(--tm); line-height:1.7; max-width:380px; margin:0 auto 32px; }
+.empty-steps  { display:flex; gap:8px; margin-bottom:36px; flex-wrap:wrap; justify-content:center; }
+.empty-step   { display:flex; align-items:center; gap:8px; background:var(--s); border:1px solid var(--b); border-radius:8px; padding:8px 14px; font-size:12px; color:var(--tm); }
+.step-num     { width:18px; height:18px; border-radius:50%; background:var(--gr); display:flex; align-items:center; justify-content:center; font-family:var(--of); font-size:9px; font-weight:700; color:white; flex-shrink:0; }
+
+/* Modal */
+.modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(6px); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.modal-overlay.open { opacity:1; pointer-events:all; }
+.modal-box    { background:#1a0f2e; border:1px solid var(--b2); border-radius:14px; padding:30px; width:460px; max-width:calc(100vw - 48px); transform:translateY(12px); transition:transform 0.25s cubic-bezier(0.22,0.68,0,1.2); box-shadow:0 24px 80px rgba(0,0,0,0.6); }
+.modal-overlay.open .modal-box { transform:translateY(0); }
+.modal-title  { font-family:var(--of); font-size:20px; font-weight:700; margin-bottom:6px; }
+.modal-sub    { font-size:13px; color:var(--tm); line-height:1.6; margin-bottom:22px; }
+.modal-field  { margin-bottom:16px; }
+.modal-label  { font-size:11px; font-family:var(--of); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:6px; display:block; }
+.modal-input  { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--b2); border-radius:8px; padding:11px 14px; font-family:var(--sf); font-size:14px; color:var(--t); outline:none; transition:border-color 0.2s; }
+.modal-input:focus { border-color:var(--cyan); box-shadow:0 0 0 3px rgba(0,212,255,0.08); }
+.modal-input::placeholder { color:var(--td); }
+.modal-actions { display:flex; gap:8px; justify-content:flex-end; margin-top:22px; }
+
+/* Wizard layout */
+.wizard-outer { display:flex; justify-content:center; padding:40px 24px 80px; min-height:calc(100vh - 56px); }
+.wizard-inner { width:100%; max-width:560px; }
+
+/* Progress bar */
+.progress-bar-wrap { display:flex; gap:6px; margin-bottom:28px; }
+.progress-segment  { flex:1; height:3px; border-radius:2px; background:var(--s2); }
+.progress-segment.active { background:var(--pink); }
+.progress-segment.done   { background:rgba(100,220,120,0.6); }
+
+/* Step header */
+.step-eyebrow { font-family:var(--of); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--pink); margin-bottom:8px; }
+.step-title   { font-family:var(--of); font-size:clamp(28px,5vw,48px); font-weight:900; letter-spacing:-0.03em; line-height:1.1; margin-bottom:10px; }
+.step-sub     { font-size:14px; color:var(--tm); line-height:1.7; margin-bottom:24px; max-width:480px; }
+
+/* Import tabs (Step 1) */
+.import-tabs { display:flex; gap:6px; margin-bottom:20px; flex-wrap:wrap; }
+.import-tab  { display:flex; align-items:center; gap:6px; padding:9px 16px; border-radius:8px; border:1px solid var(--b2); background:var(--s); font-family:var(--of); font-size:12px; font-weight:600; color:var(--tm); cursor:pointer; transition:all 0.15s; }
+.import-tab:hover { color:var(--t); border-color:var(--td); }
+.import-tab.active { background:var(--pd); border-color:rgba(255,20,147,0.3); color:var(--pink); }
+.import-tab-badge { font-size:10px; font-weight:700; padding:2px 6px; border-radius:4px; background:rgba(100,220,120,0.12); color:var(--green); margin-left:2px; }
+
+/* Inputs */
+.field { margin-bottom:16px; }
+.label { font-size:11px; font-family:var(--of); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:6px; display:block; }
+.input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--b2); border-radius:8px; padding:10px 13px; font-family:var(--sf); font-size:13px; color:var(--t); outline:none; transition:border-color 0.2s; }
+.input:focus { border-color:var(--cyan); }
+.input::placeholder { color:var(--td); }
+.input.tall { resize:none; min-height:160px; line-height:1.7; }
+
+/* Card */
+.card       { background:var(--s); border:1px solid var(--b); border-radius:12px; padding:18px 20px; margin-bottom:14px; }
+.card-title { font-family:var(--of); font-size:13px; font-weight:700; margin-bottom:12px; }
+
+/* Upload zone */
+.upload-zone { border:2px dashed var(--b2); border-radius:10px; padding:40px; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:16px; }
+.upload-zone:hover { border-color:var(--pink); background:var(--pd); }
+
+/* Column mapping */
+.map-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+.map-tbl th { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--td); padding:0 10px 10px; text-align:left; border-bottom:1px solid var(--b); }
+.map-tbl td { padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.04); }
+.map-tbl tr:last-child td { border-bottom:none; }
+.col-src   { color:var(--tm); font-family:"DM Mono",monospace; font-size:11px; }
+.col-arrow { color:var(--td); text-align:center; }
+.col-dest  { color:var(--cyan); }
+.col-skip  { color:var(--td); font-style:italic; }
+
+/* Prospects preview */
+.prospects-preview        { border-radius:10px; overflow:hidden; border:1px solid var(--b); background:var(--s); margin-bottom:12px; }
+.prospects-preview-header { padding:10px 14px; background:rgba(255,255,255,0.03); border-bottom:1px solid var(--b); display:flex; justify-content:space-between; font-size:12px; color:var(--tm); }
+.prospect-row-item { display:flex; align-items:center; gap:10px; padding:10px 14px; border-bottom:1px solid var(--b); }
+.prospect-row-item:last-child { border-bottom:none; }
+.prospect-av       { width:28px; height:28px; border-radius:50%; background:var(--pd); border:1px solid rgba(255,20,147,0.2); display:flex; align-items:center; justify-content:center; font-family:var(--of); font-size:9px; font-weight:700; color:var(--pink); flex-shrink:0; }
+.prospect-name-sm  { font-size:13px; font-weight:500; margin-bottom:1px; }
+.prospect-meta-sm  { font-size:11px; color:var(--td); }
+
+/* Hint box */
+.hint-box  { display:flex; align-items:flex-start; gap:8px; background:var(--cd); border:1px solid rgba(0,212,255,0.15); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--cyan); line-height:1.6; margin-bottom:14px; }
+.hint-icon { flex-shrink:0; font-style:normal; }
+.hint-map  { background:var(--ad); border:1px solid rgba(255,157,66,0.2); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--amber); margin-bottom:14px; }
+
+/* Selector bar (Step 2 type/tone) */
+.selector-bar   { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; padding:12px 14px; background:var(--s); border:1px solid var(--b); border-radius:10px; }
+.selector-group { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.selector-label { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); white-space:nowrap; }
+.selector-divider { width:1px; height:20px; background:var(--b2); flex-shrink:0; }
+.chip      { padding:5px 11px; border-radius:6px; border:1px solid var(--b2); background:var(--s2); font-family:var(--of); font-size:11px; font-weight:600; color:var(--tm); cursor:pointer; transition:all 0.15s; }
+.chip:hover { color:var(--t); border-color:var(--td); }
+.sel-type  { background:var(--pd); border-color:rgba(255,20,147,0.3); color:var(--pink); }
+.sel-tone  { background:var(--cd); border-color:rgba(0,212,255,0.25); color:var(--cyan); }
+.chip-grid { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.type-desc-line { font-size:12px; color:var(--td); margin-bottom:14px; font-style:italic; }
+
+/* Attachment zone */
+.attachment-zone   { width:100%; display:flex; align-items:center; gap:12px; border:1px dashed var(--b2); border-radius:8px; padding:12px 14px; cursor:pointer; background:transparent; transition:all 0.15s; text-align:left; }
+.attachment-zone:hover { border-color:var(--tm); background:var(--s2); }
+.attachment-icon   { font-size:18px; flex-shrink:0; }
+.attachment-label  { flex:1; display:flex; flex-direction:column; gap:2px; }
+.attachment-label strong { font-size:12px; color:var(--t); font-family:var(--of); font-weight:600; }
+.attachment-label span   { font-size:11px; color:var(--td); }
+.attachment-remove { width:20px; height:20px; border-radius:50%; border:none; background:var(--s2); color:var(--tm); font-size:11px; cursor:pointer; display:none; flex-shrink:0; }
+
+/* Delay slider */
+.delay-row { display:flex; align-items:center; gap:14px; }
+.delay-row input[type="range"] { flex:1; accent-color:var(--pink); }
+.delay-val { font-family:var(--of); font-size:14px; font-weight:700; color:var(--pink); min-width:60px; }
+
+/* Thread toggle */
+.toggle-row  { display:flex; align-items:flex-start; justify-content:space-between; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid var(--b); }
+.toggle-info { flex:1; }
+.toggle-label { font-size:13px; color:var(--t); font-weight:500; margin-bottom:2px; }
+.toggle-sub   { font-size:11px; color:var(--td); }
+.toggle { width:40px; height:22px; background:var(--pink); border:none; border-radius:11px; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; box-shadow:0 0 10px rgba(255,20,147,0.35); }
+.toggle.off { background:var(--s2); box-shadow:none; }
+.toggle::after { content:''; position:absolute; width:16px; height:16px; background:white; border-radius:50%; top:3px; left:21px; transition:left 0.2s; box-shadow:0 1px 3px rgba(0,0,0,0.3); }
+.toggle.off::after { left:3px; }
+.subject-reveal { display:none; padding-top:10px; }
+.subject-reveal.open { display:block; }
+
+/* Summary grid (Step 4) */
+.summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.summary-cell { background:var(--s); border:1px solid var(--b); border-radius:10px; padding:14px 16px; text-align:center; }
+.summary-cell-val { font-family:var(--of); font-size:28px; font-weight:900; background:var(--gr); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3px; }
+.summary-cell-label { font-size:11px; color:var(--td); }
+
+/* Dev guard */
+.dev-guard { font-size:11px; color:var(--td); text-align:center; padding:8px; margin-bottom:14px; background:var(--s); border-radius:6px; border:1px solid var(--b); }
+
+/* Campaign live (Screen 5) */
+.celebration-wrap { display:flex; flex-direction:column; align-items:center; text-align:center; padding:60px 24px; min-height:calc(100vh - 56px); justify-content:center; }
+.cel-icon  { font-size:56px; margin-bottom:24px; }
+.cel-title { font-family:var(--of); font-size:clamp(36px,6vw,52px); font-weight:900; letter-spacing:-0.03em; line-height:1.1; margin-bottom:14px; }
+.cel-sub   { font-size:15px; color:var(--tm); line-height:1.7; max-width:380px; margin:0 auto 32px; }
+.cel-stats { display:flex; gap:40px; justify-content:center; margin-bottom:36px; }
+.cel-stat-val   { font-family:var(--of); font-size:36px; font-weight:900; background:var(--gr); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:4px; }
+.cel-stat-label { font-size:12px; color:var(--td); }
+
+/* Buttons */
+.btn          { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:var(--of); font-weight:700; cursor:pointer; border:none; transition:all 0.2s; white-space:nowrap; border-radius:100px; }
+.btn-primary  { padding:10px 22px; font-size:13px; background:var(--gr); color:white; box-shadow:0 0 24px rgba(255,20,147,0.2); }
+.btn-primary:hover { opacity:0.88; }
+.btn-primary.btn-lg { padding:14px 32px; font-size:15px; }
+.btn-secondary{ padding:10px 18px; font-size:13px; background:var(--s); border:1px solid var(--b2); color:var(--tm); }
+.btn-secondary.btn-lg { padding:14px 28px; font-size:15px; }
+.btn-ghost    { padding:10px 18px; font-size:13px; background:transparent; border:1px solid var(--b2); color:var(--tm); }
+.btn-ghost:hover { color:var(--t); border-color:rgba(255,255,255,0.25); }
+.btn-cyan     { padding:10px 18px; font-size:13px; background:var(--cd); border:1px solid rgba(0,212,255,0.25); color:var(--cyan); }
+.btn-cyan:hover { background:rgba(0,212,255,0.14); }
+.btn-sm       { padding:7px 16px; font-size:12px; }
+.btn-danger   { padding:7px 16px; font-size:12px; background:rgba(255,76,76,0.12); border:1px solid rgba(255,76,76,0.25); color:#ff4c4c; }
+.btn-danger:hover { background:rgba(255,76,76,0.22); }
+.btn-danger:disabled { opacity:0.4; cursor:not-allowed; }
+
+/* Action row */
+.action-row { display:flex; align-items:center; gap:10px; padding-top:16px; margin-top:4px; }
+.spacer { flex:1; }
+
+/* Desire panel (pro upsell in wizard) */
+.desire-panel-wiz { display:none; position:absolute; right:0; top:calc(100% + 8px); width:280px; background:#1a0f2e; border:1px solid var(--b2); border-radius:12px; padding:16px; box-shadow:0 8px 32px rgba(0,0,0,0.5); z-index:100; }
+.desire-panel-wiz.open { display:block; }
+.dp-heading { font-family:var(--of); font-size:13px; font-weight:700; margin-bottom:6px; }
+.dp-body    { font-size:12px; color:var(--tm); line-height:1.6; margin-bottom:12px; }
+.dp-actions { display:flex; align-items:center; gap:10px; }
+
+/* Layout */
+.main-content { margin-left:56px; position:relative; z-index:1; }
+
+/* Switcher bar */
+.switcher { position:fixed; bottom:0; left:56px; right:0; background:rgba(13,9,20,0.95); border-top:1px solid var(--b); padding:10px 20px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; z-index:200; font-family:var(--of); font-size:11px; }
+.sw-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-right:4px; }
+.swb { background:none; border:1px solid transparent; font-family:var(--of); font-size:11px; font-weight:600; color:var(--td); cursor:pointer; padding:4px 10px; border-radius:6px; transition:all 0.15s; }
+.swb:hover { color:var(--tm); border-color:var(--b); }
+.swb.active { color:var(--pink); border-color:rgba(255,20,147,0.3); background:rgba(255,20,147,0.06); }
+
+/* Toast */
+#toast-zone { position:fixed; bottom:52px; right:24px; z-index:900; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.toast { background:rgba(13,9,20,0.97); border:1px solid var(--b2); border-radius:10px; padding:12px 15px; font-size:13px; color:var(--t); display:flex; align-items:center; gap:10px; max-width:300px; backdrop-filter:blur(12px); animation:tIn 0.3s ease; pointer-events:all; }
+.t-cyan { border-left:2px solid var(--cyan); }
+.t-green { border-left:2px solid var(--green); }
+@keyframes tIn { from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);} }
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div><header class="topbar">
+  <a href="../hub.html" class="logo" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;">Pulse.</a>
+  <div class="topbar-right">
+    <span style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--tm);">Free</span>
+    <div style="width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;">CL</div>
+  </div>
+</header><aside style="position:fixed;top:56px;left:0;bottom:0;width:56px;background:rgba(13,9,20,0.7);border-right:1px solid var(--b);backdrop-filter:blur(8px);padding:14px 0;display:flex;flex-direction:column;align-items:center;z-index:190;gap:4px;">
+  <a href="summary-v2.html" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);border:1px solid transparent;transition:all 0.15s;position:relative;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+  </a>
+  <a href="dashboard-home.html" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;background:var(--pd);border:1px solid rgba(255,20,147,0.25);color:var(--pink);">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+  </a>
+  <a href="settings-v2.html" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);margin-top:auto;border:1px solid transparent;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
+</aside>
+<div class="main-content">
+<div class="wizard-outer">
+  <div class="wizard-inner">
+
+    <div class="progress-bar-wrap">
+      <div class="progress-segment active"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+      <div class="progress-segment"></div>
+    </div>
+
+    <div class="step-eyebrow">Step 1 of 4</div>
+    <h1 class="step-title">Who do you want<br>to reach out to?</h1>
+    <p class="step-sub">Add the people you want to contact. You can start small — most campaigns begin with 5–10 prospects.</p>
+
+    <!-- Import method tabs -->
+    <div class="import-tabs">
+      <button class="import-tab active" onclick="switchTab(this,'paste')">
+        📋 Paste emails
+        <span class="import-tab-badge">Quickest</span>
+      </button>
+      <button class="import-tab" onclick="switchTab(this,'csv')">
+        📄 Upload CSV
+      </button>
+      <button class="import-tab" onclick="switchTab(this,'manual')">
+        ✏️ Add manually
+      </button>
+    </div>
+
+    <!-- PASTE EMAILS area -->
+    <div id="area-paste">
+      <div class="hint-box"><span class="hint-icon">💡</span><span>Paste one per line or comma-separated. We'll pick out the emails automatically.</span></div>
+      <div class="field">
+        <label class="label">Email addresses</label>
+        <textarea class="input tall" placeholder="james@northagency.com&#10;sarah@consultco.co.uk&#10;mike@scalehouse.io"></textarea>
+      </div>
+    </div>
+
+    <!-- UPLOAD CSV area -->
+    <div id="area-csv" style="display:none;">
+      <div class="hint-box"><span class="hint-icon">💡</span><span>Expects: name, email, company — linkedin_url and website are optional. Extra columns are ignored.</span></div>
+      <div id="csv-upload-zone" class="upload-zone" onclick="simulateCSV()">
+        <div style="font-size:32px;margin-bottom:10px;">📁</div>
+        <div style="font-size:14px;color:var(--tm);margin-bottom:6px;">Drop your CSV here, or click to choose a file</div>
+        <div style="font-size:12px;color:var(--td);">.csv · .xlsx — up to 5,000 rows</div>
+      </div>
+    </div>
+
+    <!-- COLUMN MAPPING (shown after CSV detected) -->
+    <div id="area-mapping" style="display:none;">
+      <div class="hint-map">⚠ We've auto-detected your columns. Check the mapping is correct before importing.</div>
+      <div class="card">
+        <div class="card-title">Map your columns <span style="font-weight:400;color:var(--td);font-size:12px;">— 8 prospects detected</span></div>
+        <table class="map-tbl">
+          <thead><tr><th style="width:45%">Your column</th><th style="width:10%"></th><th>Maps to</th></tr></thead>
+          <tbody>
+            <tr><td class="col-src">LinkedIn Name</td><td class="col-arrow">→</td><td class="col-dest">name</td></tr>
+            <tr><td class="col-src">Email Discovered</td><td class="col-arrow">→</td><td class="col-dest">email</td></tr>
+            <tr><td class="col-src">Organisation</td><td class="col-arrow">→</td><td class="col-dest">company</td></tr>
+            <tr><td class="col-src">Profile Link</td><td class="col-arrow">→</td><td class="col-dest">linkedin_url</td></tr>
+            <tr><td class="col-src">Organisation Website</td><td class="col-arrow">→</td><td class="col-dest">website</td></tr>
+            <tr><td class="col-src">Job Title</td><td class="col-arrow">→</td><td class="col-dest">position</td></tr>
+            <tr><td class="col-src">Connection Degree</td><td class="col-arrow">→</td><td class="col-skip">skip</td></tr>
+          </tbody>
+        </table>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px;">
+          <button class="btn btn-ghost btn-sm" onclick="document.getElementById('area-mapping').style.display='none';document.getElementById('area-csv').style.display='block'">← Re-upload</button>
+          <button class="btn btn-primary btn-sm" onclick="showProspectsLoaded()">Import 8 prospects →</button>
+        </div>
+      </div>
+      <p style="font-size:11px;color:var(--td);margin-top:8px;line-height:1.6;">In the live app, column dropdowns are dynamically populated from parsed CSV headers — not hardcoded.</p>
+    </div>
+
+    <!-- MANUAL ADD area -->
+    <div id="area-manual" style="display:none;">
+      <div class="card">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="field"><label class="label">First name</label><input class="input" placeholder="James"></div>
+          <div class="field"><label class="label">Last name</label><input class="input" placeholder="Mitchell"></div>
+          <div class="field"><label class="label">Email</label><input class="input" type="email" placeholder="james@northagency.com"></div>
+          <div class="field"><label class="label">Company</label><input class="input" placeholder="North Agency"></div>
+          <div class="field"><label class="label">Position</label><input class="input" placeholder="Head of Growth"></div>
+          <div class="field"><label class="label">LinkedIn URL</label><input class="input" placeholder="linkedin.com/in/…"></div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('✓ Prospect added — form cleared','t-green')">+ Add another</button>
+          <button class="btn btn-primary btn-sm" onclick="showProspectsLoaded()">Save &amp; continue →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- PROSPECTS LOADED confirmation -->
+    <div id="area-loaded" style="display:none;">
+      <div class="prospects-preview">
+        <div class="prospects-preview-header">
+          <span>8 prospects imported</span>
+          <span style="color:var(--cyan);font-family:var(--of);font-weight:600;">✓ Columns mapped</span>
+        </div>
+        <div class="prospect-row-item">
+          <div class="prospect-av">JM</div>
+          <div><div class="prospect-name-sm">James Mitchell</div><div class="prospect-meta-sm">james@northagency.com · North Agency</div></div>
+        </div>
+        <div class="prospect-row-item">
+          <div class="prospect-av">ST</div>
+          <div><div class="prospect-name-sm">Sarah Thompson</div><div class="prospect-meta-sm">sarah@consultco.co.uk · ConsultCo</div></div>
+        </div>
+        <div class="prospect-row-item">
+          <div class="prospect-av" style="color:var(--td);background:var(--s2);border-color:var(--b);">+6</div>
+          <div><div class="prospect-name-sm" style="color:var(--td);">6 more prospects</div></div>
+        </div>
+      </div>
+      <div class="hint-box"><span class="hint-icon">✓</span><span>Prospects ready. Next: write your first message.</span></div>
+    </div>
+
+    <div class="action-row">
+      <div class="spacer"></div>
+      <button class="btn btn-primary" onclick="switchState('s2')">Write first message →</button>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- State switcher -->
+<div class="switcher">
+  <span class="sw-label">Sub-state:</span>
+  <button class="swb active" id="swb-paste"   onclick="switchTab(this.previousElementSibling?.closest('.import-tabs')?.querySelector('[onclick*=paste]') || document.querySelector('.import-tab:first-child'), 'paste')">Paste emails</button>
+  <button class="swb"        id="swb-csv"     onclick="switchTabDirect('csv')">Upload CSV</button>
+  <button class="swb"        id="swb-mapping" onclick="showMapping()">Column mapping</button>
+  <button class="swb"        id="swb-manual"  onclick="switchTabDirect('manual')">Manual add</button>
+  <button class="swb"        id="swb-loaded"  onclick="showProspectsLoaded()">Prospects loaded</button>
+</div>
+<div id="toast-zone"></div>
+<script>
+function showToast(text, cls) {
+  const z = document.getElementById('toast-zone');
+  const e = document.createElement('div');
+  e.className = 'toast ' + (cls || 't-cyan');
+  e.innerHTML = text;
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity='0'; e.style.transition='opacity 0.3s'; setTimeout(()=>e.remove(), 300); }, 3200);
+}
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+<script>
+function switchTab(el, method) {
+  if (el) {
+    document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+  }
+  ['paste','csv','manual','mapping','loaded'].forEach(a =>
+    document.getElementById('area-' + a).style.display = 'none'
+  );
+  document.getElementById('area-' + method).style.display = 'block';
+  ['paste','csv','manual'].forEach(s => {
+    const b = document.getElementById('swb-' + s);
+    if (b) b.classList.toggle('active', s === method);
+  });
+}
+function switchTabDirect(method) {
+  switchTab(null, method);
+  document.getElementById('swb-' + method)?.classList.add('active');
+  ['paste','csv','manual'].filter(s=>s!==method).forEach(s =>
+    document.getElementById('swb-' + s)?.classList.remove('active')
+  );
+}
+function simulateCSV() {
+  const z = document.getElementById('csv-upload-zone');
+  z.innerHTML = '<div style="color:var(--cyan);font-size:20px;margin-bottom:8px;">✓</div><div style="color:var(--cyan);font-size:13px;">8 rows detected — checking columns…</div>';
+  setTimeout(() => showMapping(), 900);
+}
+function showMapping() {
+  ['paste','csv','manual','loaded'].forEach(a =>
+    document.getElementById('area-' + a).style.display = 'none'
+  );
+  document.getElementById('area-mapping').style.display = 'block';
+  document.querySelectorAll('.import-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.swb').forEach(b => b.classList.remove('active'));
+  document.getElementById('swb-mapping').classList.add('active');
+}
+function showProspectsLoaded() {
+  ['paste','csv','manual','mapping'].forEach(a =>
+    document.getElementById('area-' + a).style.display = 'none'
+  );
+  document.getElementById('area-loaded').style.display = 'block';
+  document.querySelectorAll('.swb').forEach(b => b.classList.remove('active'));
+  document.getElementById('swb-loaded').classList.add('active');
+}
+function switchState(s) {
+  showToast('→ Navigating to Step 2 — Write message', 't-cyan');
+}
+</script>
+</body>
+</html>
