@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Prospect import (all 5 states)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<style>
+/* ── Prospect import page-specific styles ─────────────────────────────────
+   Sourced directly from wireframes/prospect-import.html
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Screen switcher */
+.sc  { display:none; }
+.sc.on { display:block; }
+
+/* Page header */
+.ph  { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:24px; }
+.pt  { font-family:var(--of); font-size:24px; font-weight:800; letter-spacing:-0.02em; margin-bottom:3px; }
+.psub{ font-size:13px; color:var(--tm); }
+
+/* Import tabs (Paste / Upload CSV / Add manually) */
+.tabs { display:flex; border-bottom:1px solid var(--b); margin-bottom:22px; }
+.tab  { padding:11px 16px; font-size:12px; color:var(--tm); cursor:pointer; border-bottom:2px solid transparent; font-family:var(--of); font-weight:600; white-space:nowrap; transition:all 0.15s; }
+.tab:hover  { color:var(--t); }
+.tab.on     { color:var(--pink); border-bottom-color:var(--pink); }
+
+/* Hint banners */
+.hint   { border-radius:8px; padding:12px 14px; font-size:12px; line-height:1.6; margin-bottom:16px; }
+.hint-c { background:var(--cd); border:1px solid rgba(0,212,255,0.15); color:var(--cyan); }
+.hint-a { background:var(--ad); border:1px solid rgba(255,157,66,0.2); color:var(--amber); }
+
+/* Card */
+.card { background:var(--s); border:1px solid var(--b); border-radius:12px; padding:20px 22px; margin-bottom:12px; }
+
+/* Inputs */
+.inp { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--b2); border-radius:8px; padding:11px 14px; font-family:var(--sf); font-size:14px; color:var(--t); outline:none; transition:border-color 0.2s; }
+.inp:focus { border-color:var(--cyan); }
+.inp::placeholder { color:var(--td); }
+.lbl { font-size:11px; font-family:var(--of); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:6px; display:block; }
+.fld { margin-bottom:14px; }
+
+/* Upload zone */
+.upload-zone { border:2px dashed var(--b2); border-radius:12px; padding:60px 40px; text-align:center; cursor:pointer; transition:all 0.2s; margin-bottom:16px; }
+.upload-zone:hover, .upload-zone.drag { border-color:var(--pink); background:var(--pd); }
+.uz-icon  { font-size:40px; margin-bottom:12px; opacity:0.7; }
+.uz-title { font-family:var(--of); font-size:16px; font-weight:700; margin-bottom:6px; }
+.uz-sub   { font-size:13px; color:var(--tm); }
+.uz-formats { font-size:11px; color:var(--td); margin-top:10px; }
+
+/* Column mapping table */
+.map-tbl { width:100%; border-collapse:collapse; font-size:12px; }
+.map-tbl th { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--td); padding:0 10px 10px; text-align:left; border-bottom:1px solid var(--b); }
+.map-tbl td { padding:9px 10px; border-bottom:1px solid rgba(255,255,255,0.035); }
+.map-tbl tr:last-child td { border-bottom:none; }
+.col-src   { color:var(--tm); font-family:"DM Mono",monospace; font-size:11px; }
+.col-arrow { color:var(--td); text-align:center; }
+.col-dest  { color:var(--cyan); }
+.col-skip  { color:var(--td); font-style:italic; }
+
+/* Two-column form (manual add) */
+.two-col { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* Prospect rows (post-import list) */
+.pr { display:flex; align-items:center; gap:12px; padding:11px 18px; border-bottom:1px solid var(--b); cursor:pointer; transition:background 0.15s; }
+.pr:last-child { border-bottom:none; }
+.pr:hover { background:var(--s2); }
+.pav { width:32px; height:32px; border-radius:50%; background:var(--pd); border:1px solid rgba(255,20,147,0.2); display:flex; align-items:center; justify-content:center; font-family:var(--of); font-size:10px; font-weight:700; color:var(--pink); flex-shrink:0; }
+.pn  { font-size:13px; font-weight:500; }
+.pm  { font-size:11px; color:var(--td); margin-top:2px; }
+
+/* Prospect detail modal */
+.det-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+.det-field { background:rgba(255,255,255,0.03); border:1px solid var(--b); border-radius:8px; padding:12px 14px; }
+.det-lbl   { font-size:10px; font-family:var(--of); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:4px; }
+.det-val   { font-size:13px; color:var(--t); }
+.det-val a { color:var(--cyan); text-decoration:none; }
+
+/* Modal chrome */
+.mo { position:fixed; inset:0; background:rgba(0,0,0,0.72); backdrop-filter:blur(6px); z-index:500; display:flex; align-items:center; justify-content:center; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.mo.open { opacity:1; pointer-events:all; }
+.mb { background:#150d26; border:1px solid var(--b2); border-radius:14px; padding:28px; width:540px; max-width:calc(100vw - 40px); transform:translateY(10px); transition:transform 0.25s; box-shadow:0 24px 80px rgba(0,0,0,0.6); }
+.mo.open .mb { transform:translateY(0); }
+.mt   { font-family:var(--of); font-size:19px; font-weight:700; margin-bottom:4px; }
+.msub { font-size:12px; color:var(--cyan); margin-bottom:18px; }
+.ma   { display:flex; gap:8px; justify-content:flex-end; margin-top:16px; }
+
+/* Buttons */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:var(--of); font-size:13px; font-weight:700; cursor:pointer; border:none; transition:all 0.2s; white-space:nowrap; border-radius:100px; }
+.bp  { padding:10px 20px; background:var(--gr); color:white; box-shadow:0 0 24px rgba(255,20,147,0.2); }
+.bp:hover { opacity:0.88; }
+.bs  { padding:10px 18px; background:var(--s); border:1px solid var(--b2); color:var(--tm); }
+.bs:hover { color:var(--t); }
+.bg_ { padding:10px 18px; background:transparent; color:var(--tm); border:none; }
+.bg_:hover { color:var(--t); }
+.bsm { padding:7px 16px; font-size:12px; }
+
+/* Layout */
+.main-content { padding:36px 40px; max-width:860px; position:relative; z-index:1; }
+
+/* Sidebar (this page uses .si pattern) */
+.si { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; border:1px solid transparent; text-decoration:none; color:var(--tm); position:relative; background:transparent; }
+.si:hover { background:var(--s2); border-color:var(--b2); color:var(--t); }
+.si.on { background:var(--pd); border-color:rgba(255,20,147,0.25); color:var(--pink); }
+.si svg { display:block; opacity:0.7; transition:opacity 0.15s; }
+.si:hover svg, .si.on svg { opacity:1; }
+.si-tip { position:absolute; left:calc(100% + 10px); background:rgba(20,10,35,0.97); color:var(--t); border:1px solid var(--b2); border-radius:6px; padding:5px 10px; font-family:var(--of); font-size:11px; font-weight:600; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:300; }
+.si:hover .si-tip { opacity:1; }
+.si-bottom { margin-top:auto; }
+
+/* State switcher (bottom bar) */
+.switcher { position:fixed; bottom:0; left:56px; right:0; background:rgba(13,9,20,0.95); border-top:1px solid var(--b); padding:10px 20px; display:flex; align-items:center; gap:6px; flex-wrap:wrap; z-index:200; font-family:var(--of); font-size:11px; }
+.sw-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-right:4px; }
+.swb { background:none; border:1px solid transparent; font-family:var(--of); font-size:11px; font-weight:600; color:var(--td); cursor:pointer; padding:4px 10px; border-radius:6px; transition:all 0.15s; }
+.swb:hover { color:var(--tm); border-color:var(--b); }
+.swb.active { color:var(--pink); border-color:rgba(255,20,147,0.3); background:rgba(255,20,147,0.06); }
+
+/* Toast */
+#tz { position:fixed; bottom:52px; right:24px; z-index:900; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.tst { background:rgba(20,10,35,0.96); border:1px solid var(--b2); border-radius:10px; padding:12px 15px; font-size:13px; color:var(--t); display:flex; align-items:center; gap:10px; max-width:300px; backdrop-filter:blur(12px); animation:tIn 0.3s ease; pointer-events:all; }
+.tst.tc { border-left:2px solid var(--cyan); }
+.tst.tp { border-left:2px solid var(--pink); }
+@keyframes tIn { from{opacity:0;transform:translateX(12px);} to{opacity:1;transform:translateX(0);} }
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div>
+<div class="orb orb-cyan"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="../hub.html" class="logo" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;">Pulse.</a>
+  <div class="topbar-right">
+    <span class="plan-badge pro-light" style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);">Pro Light</span>
+    <div style="width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;">CL</div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<aside style="position:fixed;top:56px;left:0;bottom:0;width:56px;background:rgba(13,9,20,0.85);border-right:1px solid var(--b);backdrop-filter:blur(8px);padding:14px 0;display:flex;flex-direction:column;align-items:center;z-index:190;gap:4px;">
+  <a class="si on" href="dashboard-home.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <a class="si" href="summary-and-workflow.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="si-tip">Summary</span>
+  </a>
+  <div class="si-bottom">
+    <a class="si" href="settings-v2.html">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span class="si-tip">Settings</span>
+    </a>
+  </div>
+</aside>
+
+<!-- Main -->
+<div class="app-shell">
+  <main class="main">
+    <div class="main-content">
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATE S0 — PASTE EMAILS
+═══════════════════════════════════════════════════════════ -->
+<div id="s0" class="sc">
+  <div class="ph">
+    <div>
+      <div class="pt">Add prospects</div>
+      <div class="psub">Agency founders — Q2</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab on"  onclick="show('s0',this.closest('.tabs'))">Paste emails</div>
+    <div class="tab"     onclick="show('s1',this.closest('.tabs'))">Upload CSV</div>
+    <div class="tab"     onclick="show('s3',this.closest('.tabs'))">Add manually</div>
+  </div>
+  <div class="hint hint-c">💡 Paste one email per line, or comma-separated. We'll extract valid addresses automatically.</div>
+  <div class="card">
+    <div class="fld">
+      <label class="lbl">Email addresses</label>
+      <textarea class="inp" rows="8" placeholder="james@northagency.com&#10;sarah@consultco.co.uk&#10;mike@scalehouse.io&#10;&#10;Or comma-separated: james@northagency.com, sarah@consultco.co.uk"></textarea>
+    </div>
+    <div style="background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.1);border-radius:6px;padding:10px 12px;font-size:12px;color:var(--tm);margin-bottom:16px;line-height:1.6;">
+      Paste-only imports will have <strong style="color:var(--t)">email addresses only</strong> — no names or companies. You can fill those in later in the Review tab, or add them now by switching to Add manually.
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;">
+      <button class="btn bg_ bsm" onclick="switchState('s1')">Upload CSV instead</button>
+      <button class="btn bp bsm"  onclick="switchState('s4');toast('✓','6 emails detected and imported','tc')">Import emails →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATE S1 — UPLOAD CSV (default/landing state)
+═══════════════════════════════════════════════════════════ -->
+<div id="s1" class="sc on">
+  <div class="ph">
+    <div>
+      <div class="pt">Add prospects</div>
+      <div class="psub">Agency founders — Q2</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab"    onclick="switchState('s0')">Paste emails</div>
+    <div class="tab on">Upload CSV</div>
+    <div class="tab"    onclick="switchState('s3')">Add manually</div>
+  </div>
+  <div class="hint hint-c">💡 Expected columns: <strong>name, email, company</strong> — linkedin_url and website are optional. Extra columns are ignored and won't cause errors.</div>
+  <div class="upload-zone" id="uz"
+    onclick="startUpload()"
+    ondragover="this.classList.add('drag');event.preventDefault()"
+    ondragleave="this.classList.remove('drag')"
+    ondrop="this.classList.remove('drag');startUpload()">
+    <div class="uz-icon">📄</div>
+    <div class="uz-title">Drop your CSV here, or click to choose a file</div>
+    <div class="uz-sub">From LinkedIn Sales Navigator, Apollo, or any spreadsheet</div>
+    <div class="uz-formats">Accepted: .csv · .xlsx — up to 5,000 rows</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATE S2 — COLUMN MAPPING
+     (appears after CSV upload — columns are auto-detected,
+      user confirms or corrects the mapping before importing)
+═══════════════════════════════════════════════════════════ -->
+<div id="s2" class="sc">
+  <div class="ph">
+    <div>
+      <div class="pt">Map your columns</div>
+      <div class="psub">47 prospects detected — confirm the field mapping below.</div>
+    </div>
+  </div>
+  <div class="hint hint-a">⚠ We've auto-detected your columns. Check the mapping is correct before importing.</div>
+  <div class="card">
+    <table class="map-tbl">
+      <thead>
+        <tr>
+          <th style="width:45%">Your column</th>
+          <th style="width:10%"></th>
+          <th>Maps to</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td class="col-src">LinkedIn Name</td>       <td class="col-arrow">→</td><td class="col-dest">name</td></tr>
+        <tr><td class="col-src">Email Discovered</td>    <td class="col-arrow">→</td><td class="col-dest">email</td></tr>
+        <tr><td class="col-src">Organisation</td>        <td class="col-arrow">→</td><td class="col-dest">company</td></tr>
+        <tr><td class="col-src">Profile Link</td>        <td class="col-arrow">→</td><td class="col-dest">linkedin_url</td></tr>
+        <tr><td class="col-src">Organisation Website</td><td class="col-arrow">→</td><td class="col-dest">website</td></tr>
+        <tr><td class="col-src">Job Title</td>           <td class="col-arrow">→</td><td class="col-dest">position</td></tr>
+        <tr><td class="col-src">Connection Degree</td>   <td class="col-arrow">→</td><td class="col-skip">skip</td></tr>
+        <tr><td class="col-src">Premium</td>             <td class="col-arrow">→</td><td class="col-skip">skip</td></tr>
+      </tbody>
+    </table>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:16px;">
+      <button class="btn bg_ bsm" onclick="switchState('s1')">← Re-upload</button>
+      <button class="btn bp bsm"  onclick="switchState('s4');toast('✓','47 prospects imported','tc')">Import 47 prospects →</button>
+    </div>
+  </div>
+  <p style="font-size:11px;color:var(--td);margin-top:8px;line-height:1.6;">
+    In the live app, column dropdowns are populated dynamically from the parsed CSV headers — not hardcoded. The wireframe shows static labels as a representative example of a LinkedIn Sales Navigator export.
+  </p>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATE S3 — MANUAL ADD
+═══════════════════════════════════════════════════════════ -->
+<div id="s3" class="sc">
+  <div class="ph">
+    <div>
+      <div class="pt">Add prospect manually</div>
+      <div class="psub">Agency founders — Q2</div>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab"     onclick="switchState('s0')">Paste emails</div>
+    <div class="tab"     onclick="switchState('s1')">Upload CSV</div>
+    <div class="tab on">Add manually</div>
+  </div>
+  <div class="card">
+    <div class="two-col">
+      <div class="fld"><label class="lbl">First name</label><input class="inp" placeholder="James"></div>
+      <div class="fld"><label class="lbl">Last name</label><input class="inp" placeholder="Mitchell"></div>
+      <div class="fld"><label class="lbl">Email</label><input class="inp" type="email" placeholder="james@northagency.com"></div>
+      <div class="fld"><label class="lbl">Company</label><input class="inp" placeholder="North Agency"></div>
+      <div class="fld"><label class="lbl">Position</label><input class="inp" placeholder="Head of Growth"></div>
+      <div class="fld"><label class="lbl">LinkedIn URL</label><input class="inp" placeholder="linkedin.com/in/jamesmitchell"></div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:4px;">
+      <button class="btn bg_ bsm" onclick="toast('✓','Prospect added — form cleared','tc')">+ Add another</button>
+      <button class="btn bp bsm"  onclick="switchState('s4');toast('✓','1 prospect added','tc')">Save & continue →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════════
+     STATE S4 — POST-IMPORT LIST
+     (shown after any successful import — prospects
+      listed for quick review before going to campaign)
+═══════════════════════════════════════════════════════════ -->
+<div id="s4" class="sc">
+  <div class="ph">
+    <div>
+      <div class="pt">Prospects added</div>
+      <div class="psub">47 imported — review who you actually want to contact before anything is sent.</div>
+    </div>
+    <button class="btn bp bsm" onclick="toast('→','Going to Review tab','tc')">Go to Review →</button>
+  </div>
+  <div class="hint hint-a">💡 Every outreach list contains people you shouldn't contact. Take 30 seconds to look through before anything goes out.</div>
+  <div class="card" style="padding:0;overflow:hidden;">
+    <div style="padding:11px 18px;background:rgba(255,255,255,0.025);border-bottom:1px solid var(--b);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:12px;color:var(--tm);">47 prospects · Agency founders — Q2</span>
+      <input class="inp" style="width:180px;padding:5px 10px;font-size:12px;" placeholder="Search…">
+    </div>
+    <div class="pr" onclick="openDetail('JM','James Mitchell','james@northagency.com','North Agency','Head of Growth')">
+      <div class="pav">JM</div>
+      <div style="flex:1"><div class="pn">James Mitchell</div><div class="pm">james@northagency.com · North Agency</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('ST','Sarah Thompson','sarah@consultco.co.uk','ConsultCo','Managing Director')">
+      <div class="pav">ST</div>
+      <div style="flex:1"><div class="pn">Sarah Thompson</div><div class="pm">sarah@consultco.co.uk · ConsultCo</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('MP','Marcus Peters','marcus@ventures.io','Ventures Group','Founder')">
+      <div class="pav">MP</div>
+      <div style="flex:1"><div class="pn">Marcus Peters</div><div class="pm">marcus@ventures.io · Ventures Group</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" onclick="openDetail('HL','Helen Lau','helen@agency.co','The Agency Co','Partner')">
+      <div class="pav">HL</div>
+      <div style="flex:1"><div class="pn">Helen Lau</div><div class="pm">helen@agency.co · The Agency Co</div></div>
+      <span style="font-size:11px;color:var(--td);">→</span>
+    </div>
+    <div class="pr" style="cursor:default;">
+      <div class="pav" style="background:var(--s2);border-color:var(--b2);color:var(--tm);">+43</div>
+      <div style="flex:1"><div class="pn" style="color:var(--tm);">43 more prospects</div></div>
+    </div>
+  </div>
+</div>
+
+    </div><!-- end .main-content -->
+  </main>
+</div><!-- end .app-shell -->
+
+<!-- ═══════════════════════════════════════════════════════════
+     PROSPECT DETAIL MODAL
+     (opens when clicking any prospect row in S4)
+═══════════════════════════════════════════════════════════ -->
+<div class="mo" id="mo-detail" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="mb">
+    <div class="mt"   id="d-name">James Mitchell</div>
+    <div class="msub" id="d-company">North Agency · Head of Growth</div>
+    <div class="det-grid">
+      <div class="det-field"><div class="det-lbl">Email</div><div class="det-val" id="d-email">james@northagency.com</div></div>
+      <div class="det-field"><div class="det-lbl">Company</div><div class="det-val" id="d-co">North Agency</div></div>
+      <div class="det-field"><div class="det-lbl">LinkedIn</div><div class="det-val"><a href="#">View profile →</a></div></div>
+      <div class="det-field"><div class="det-lbl">Status</div><div class="det-val" style="color:var(--amber)">Pending review</div></div>
+    </div>
+    <div class="fld">
+      <label class="lbl">Notes</label>
+      <textarea class="inp" rows="3" style="min-height:0;" placeholder="Add any context about this prospect…"></textarea>
+    </div>
+    <div class="ma">
+      <button class="btn bg_ bsm" onclick="document.getElementById('mo-detail').classList.remove('open')">Close</button>
+      <button class="btn bp bsm"  onclick="document.getElementById('mo-detail').classList.remove('open');toast('✓','Prospect updated','tc')">Save</button>
+    </div>
+  </div>
+</div>
+
+<!-- State switcher -->
+<div class="switcher">
+  <span class="sw-label">State:</span>
+  <button class="swb" id="swb-s0" onclick="switchState('s0')">S0 — Paste emails</button>
+  <button class="swb active" id="swb-s1" onclick="switchState('s1')">S1 — Upload CSV</button>
+  <button class="swb" id="swb-s2" onclick="switchState('s2')">S2 — Column mapping</button>
+  <button class="swb" id="swb-s3" onclick="switchState('s3')">S3 — Manual add</button>
+  <button class="swb" id="swb-s4" onclick="switchState('s4')">S4 — Imported list</button>
+</div>
+
+<div id="tz"></div>
+
+<script>
+const STATES = ['s0','s1','s2','s3','s4'];
+
+function switchState(id) {
+  STATES.forEach(s => {
+    document.getElementById(s)?.classList.remove('on');
+    const btn = document.getElementById('swb-' + s);
+    if (btn) btn.classList.remove('active');
+  });
+  document.getElementById(id)?.classList.add('on');
+  const activeBtn = document.getElementById('swb-' + id);
+  if (activeBtn) activeBtn.classList.add('active');
+}
+
+function startUpload() {
+  const uz = document.getElementById('uz');
+  if (!uz) return;
+  uz.innerHTML = '<div style="color:var(--cyan);font-size:22px;margin-bottom:10px;">✓</div><div style="color:var(--cyan);font-size:13px;">47 rows detected — checking columns…</div>';
+  setTimeout(() => switchState('s2'), 900);
+}
+
+function openDetail(initials, name, email, company, position) {
+  document.getElementById('d-name').textContent    = name;
+  document.getElementById('d-company').textContent = company + ' · ' + position;
+  document.getElementById('d-email').textContent   = email;
+  document.getElementById('d-co').textContent      = company;
+  document.getElementById('mo-detail').classList.add('open');
+}
+
+function toast(icon, text, cls) {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + cls;
+  e.innerHTML = '<span>' + icon + '</span><span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => { e.style.opacity = '0'; e.style.transition = 'opacity 0.3s'; setTimeout(() => e.remove(), 300); }, 3000);
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    document.querySelectorAll('.mo.open').forEach(m => m.classList.remove('open'));
+  }
+});
+</script>
+</body>
+</html>
