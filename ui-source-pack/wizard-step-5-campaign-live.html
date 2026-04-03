@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Wizard — Campaign live!</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css"><style>
+.wizard-outer  { display:flex; justify-content:center; padding:40px 24px 80px; min-height:calc(100vh - 56px); margin-left:56px; }
+.wizard-inner  { width:100%; max-width:580px; }
+.progress-bar-wrap { display:flex; gap:6px; margin-bottom:28px; }
+.progress-segment  { flex:1; height:3px; border-radius:2px; background:var(--s2); }
+.progress-segment.active { background:var(--pink); }
+.progress-segment.done   { background:rgba(100,220,120,0.6); }
+.step-eyebrow { font-family:var(--of); font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.12em; color:var(--pink); margin-bottom:8px; }
+.step-title   { font-family:var(--of); font-size:clamp(28px,5vw,48px); font-weight:900; letter-spacing:-0.03em; line-height:1.1; margin-bottom:10px; }
+.step-sub     { font-size:14px; color:var(--tm); line-height:1.7; margin-bottom:24px; max-width:480px; }
+.card       { background:var(--s); border:1px solid var(--b); border-radius:12px; padding:18px 20px; margin-bottom:14px; }
+.card-title { font-family:var(--of); font-size:13px; font-weight:700; margin-bottom:12px; }
+.field { margin-bottom:14px; }
+.label { font-size:11px; font-family:var(--of); font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:6px; display:block; }
+.input { width:100%; background:rgba(255,255,255,0.05); border:1px solid var(--b2); border-radius:8px; padding:10px 13px; font-family:var(--sf); font-size:13px; color:var(--t); outline:none; transition:border-color 0.2s; }
+.input:focus { border-color:var(--cyan); }
+.input::placeholder { color:var(--td); }
+.input.tall { resize:none; min-height:160px; line-height:1.7; }
+.selector-bar   { display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:16px; padding:12px 14px; background:var(--s); border:1px solid var(--b); border-radius:10px; }
+.selector-group { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.selector-label { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); white-space:nowrap; }
+.selector-divider { width:1px; height:20px; background:var(--b2); flex-shrink:0; }
+.chip     { padding:5px 11px; border-radius:6px; border:1px solid var(--b2); background:var(--s2); font-family:var(--of); font-size:11px; font-weight:600; color:var(--tm); cursor:pointer; transition:all 0.15s; }
+.chip:hover { color:var(--t); border-color:var(--td); }
+.sel-type { background:var(--pd); border-color:rgba(255,20,147,0.3); color:var(--pink); }
+.sel-tone { background:var(--cd); border-color:rgba(0,212,255,0.25); color:var(--cyan); }
+.chip-grid { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; }
+.type-desc-line { font-size:12px; color:var(--td); margin-bottom:14px; font-style:italic; }
+.attachment-zone { width:100%; display:flex; align-items:center; gap:12px; border:1px dashed var(--b2); border-radius:8px; padding:12px 14px; cursor:pointer; background:transparent; transition:all 0.15s; text-align:left; }
+.attachment-zone:hover { border-color:var(--tm); background:var(--s2); }
+.attachment-icon  { font-size:18px; flex-shrink:0; }
+.attachment-label { flex:1; display:flex; flex-direction:column; gap:2px; }
+.attachment-label strong { font-size:12px; color:var(--t); font-family:var(--of); font-weight:600; }
+.attachment-label span { font-size:11px; color:var(--td); }
+.delay-row { display:flex; align-items:center; gap:14px; }
+.delay-row input[type="range"] { flex:1; accent-color:var(--pink); }
+.delay-val { font-family:var(--of); font-size:14px; font-weight:700; color:var(--pink); min-width:60px; }
+.toggle-row  { display:flex; align-items:flex-start; justify-content:space-between; padding-bottom:12px; margin-bottom:12px; border-bottom:1px solid var(--b); }
+.toggle-info { flex:1; }
+.toggle-label { font-size:13px; color:var(--t); font-weight:500; margin-bottom:2px; }
+.toggle-sub   { font-size:11px; color:var(--td); }
+.toggle { width:40px; height:22px; background:var(--pink); border:none; border-radius:11px; position:relative; cursor:pointer; transition:background 0.2s; flex-shrink:0; box-shadow:0 0 10px rgba(255,20,147,0.35); }
+.toggle.off { background:var(--s2); box-shadow:none; }
+.toggle::after { content:''; position:absolute; width:16px; height:16px; background:white; border-radius:50%; top:3px; left:21px; transition:left 0.2s; }
+.toggle.off::after { left:3px; }
+.subject-reveal { display:none; padding-top:10px; }
+.subject-reveal.open { display:block; }
+.hint-box { display:flex; align-items:flex-start; gap:8px; background:var(--cd); border:1px solid rgba(0,212,255,0.15); border-radius:8px; padding:10px 12px; font-size:12px; color:var(--cyan); line-height:1.6; margin-bottom:14px; }
+.summary-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:24px; }
+.summary-cell { background:var(--s); border:1px solid var(--b); border-radius:10px; padding:14px 16px; text-align:center; }
+.summary-cell-val { font-family:var(--of); font-size:28px; font-weight:900; background:var(--gr); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:3px; }
+.summary-cell-label { font-size:11px; color:var(--td); }
+.dev-guard { font-size:11px; color:var(--td); text-align:center; padding:8px; margin-bottom:14px; background:var(--s); border-radius:6px; border:1px solid var(--b); }
+.celebration-wrap { display:flex; flex-direction:column; align-items:center; text-align:center; padding:60px 24px; min-height:calc(100vh - 56px); justify-content:center; margin-left:56px; }
+.cel-icon  { font-size:56px; margin-bottom:24px; }
+.cel-title { font-family:var(--of); font-size:clamp(36px,6vw,52px); font-weight:900; letter-spacing:-0.03em; line-height:1.1; margin-bottom:14px; }
+.cel-sub   { font-size:15px; color:var(--tm); line-height:1.7; max-width:380px; margin:0 auto 32px; }
+.cel-stats { display:flex; gap:40px; justify-content:center; margin-bottom:36px; }
+.cel-stat-val { font-family:var(--of); font-size:36px; font-weight:900; background:var(--gr); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; margin-bottom:4px; }
+.cel-stat-label { font-size:12px; color:var(--td); }
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:var(--of); font-weight:700; cursor:pointer; border:none; transition:all 0.2s; white-space:nowrap; border-radius:100px; }
+.btn-primary  { padding:10px 22px; font-size:13px; background:var(--gr); color:white; box-shadow:0 0 24px rgba(255,20,147,0.2); }
+.btn-primary:hover { opacity:0.88; }
+.btn-primary.btn-lg { padding:14px 32px; font-size:15px; }
+.btn-secondary { padding:10px 18px; font-size:13px; background:var(--s); border:1px solid var(--b2); color:var(--tm); }
+.btn-secondary.btn-lg { padding:14px 28px; font-size:15px; }
+.btn-ghost { padding:10px 18px; font-size:13px; background:transparent; border:1px solid var(--b2); color:var(--tm); }
+.btn-ghost:hover { color:var(--t); border-color:rgba(255,255,255,0.25); }
+.btn-cyan  { padding:10px 18px; font-size:13px; background:var(--cd); border:1px solid rgba(0,212,255,0.25); color:var(--cyan); }
+.btn-cyan:hover { background:rgba(0,212,255,0.14); }
+.btn-sm { padding:7px 16px; font-size:12px; }
+.action-row { display:flex; align-items:center; gap:10px; padding-top:16px; margin-top:4px; }
+.spacer { flex:1; }
+#toast-zone { position:fixed; bottom:24px; right:24px; z-index:900; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+.toast { background:rgba(13,9,20,0.97); border:1px solid var(--b2); border-radius:10px; padding:12px 15px; font-size:13px; color:var(--t); display:flex; align-items:center; gap:10px; max-width:300px; backdrop-filter:blur(12px); animation:tIn 0.3s ease; pointer-events:all; }
+.t-cyan  { border-left:2px solid var(--cyan); }
+.t-green { border-left:2px solid var(--green); }
+@keyframes tIn { from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);} }
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div><header class="topbar">
+  <a href="../hub.html" class="logo" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;">Pulse.</a>
+  <div class="topbar-right">
+    <span style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:var(--s2);border:1px solid var(--b2);color:var(--tm);">Free</span>
+    <div style="width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;">CL</div>
+  </div>
+</header><aside style="position:fixed;top:56px;left:0;bottom:0;width:56px;background:rgba(13,9,20,0.7);border-right:1px solid var(--b);backdrop-filter:blur(8px);padding:14px 0;display:flex;flex-direction:column;align-items:center;z-index:190;gap:4px;">
+  <a href="dashboard-home.html" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;background:var(--pd);border:1px solid rgba(255,20,147,0.25);color:var(--pink);">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+  </a>
+  <a href="settings-v2.html" style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);margin-top:auto;border:1px solid transparent;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+  </a>
+</aside>
+<div class="celebration-wrap">
+  <div class="cel-icon">🎯</div>
+  <h1 class="cel-title">Your outreach<br>is live.</h1>
+  <p class="cel-sub">8 emails sent. Follow-ups will run automatically. You'll see everything in your dashboard.</p>
+  <div class="cel-stats">
+    <div class="cel-stat">
+      <div class="cel-stat-val">8</div>
+      <div class="cel-stat-label">Emails sent</div>
+    </div>
+    <div class="cel-stat">
+      <div class="cel-stat-val">1</div>
+      <div class="cel-stat-label">Campaign live</div>
+    </div>
+    <div class="cel-stat">
+      <div class="cel-stat-val">3d</div>
+      <div class="cel-stat-label">Next touch</div>
+    </div>
+  </div>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn btn-primary btn-lg"
+      onclick="window.location.href='wizard-step-1-add-prospects.html'">
+      Start another campaign
+    </button>
+    <button class="btn btn-secondary btn-lg"
+      onclick="window.location.href='dashboard-home-populated.html'">
+      Go to dashboard →
+    </button>
+  </div>
+  <div style="margin-top:24px;font-size:12px;color:var(--td);">You can close this now. Your outreach is moving.</div>
+</div>
+<div id="toast-zone"></div>
+<script>
+function showToast(text, cls) {
+  const z=document.getElementById('toast-zone'), e=document.createElement('div');
+  e.className='toast '+(cls||'t-cyan'); e.innerHTML=text; z.appendChild(e);
+  setTimeout(()=>{e.style.opacity='0';e.style.transition='opacity 0.3s';setTimeout(()=>e.remove(),300);},3000);
+}
+</script>
+</body>
+</html>
