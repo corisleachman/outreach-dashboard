@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Summary · This week</title>
+<style>
+/* ── Summary & workflow page-specific styles ── */
+/* All sourced directly from wireframes/summary-and-workflow.html */
+
+/* Page tabs (Today / This week) */
+.page-tabs { display:flex; gap:0; border-bottom:1px solid var(--b); margin-bottom:24px; }
+.ptab { padding:8px 20px; font-family:var(--of); font-size:13px; font-weight:600; color:var(--tm); cursor:pointer; border-bottom:2px solid transparent; transition:all 0.15s; }
+.ptab:hover { color:var(--t); }
+.ptab.on { color:var(--pink); border-bottom-color:var(--pink); }
+
+/* Today done-hero */
+.done-hero { text-align:center; padding:48px 24px; }
+.done-check { width:56px; height:56px; border-radius:50%; background:var(--gd); border:1px solid rgba(100,220,120,0.25); display:flex; align-items:center; justify-content:center; font-size:24px; color:var(--green); margin:0 auto 20px; }
+.done-title { font-family:var(--of); font-size:24px; font-weight:800; letter-spacing:-0.02em; margin-bottom:8px; }
+.done-sub { font-size:14px; color:var(--tm); line-height:1.7; max-width:360px; margin:0 auto 28px; }
+.done-stats { display:flex; gap:32px; justify-content:center; margin-bottom:28px; flex-wrap:wrap; }
+.done-stat { text-align:center; }
+.done-stat-num { font-family:var(--of); font-size:32px; font-weight:900; line-height:1; margin-bottom:4px; }
+.done-stat-lbl { font-size:12px; color:var(--td); }
+.done-quote { font-size:13px; color:var(--td); font-style:italic; max-width:360px; margin:0 auto 24px; line-height:1.7; }
+
+/* This week — stat grid */
+.stat-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin-bottom:20px; }
+.stat-card { background:var(--s); border:1px solid var(--b); border-radius:10px; padding:14px 16px; }
+.stat-lbl { font-size:10px; font-family:var(--of); font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:6px; }
+.stat-val { font-family:var(--of); font-size:28px; font-weight:900; color:var(--t); line-height:1; margin-bottom:3px; }
+.stat-val.pink { background:var(--gr); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.stat-val.green { color:var(--green); }
+.stat-val.cyan { color:var(--cyan); }
+.stat-delta { font-size:11px; color:var(--td); }
+.delta-up { color:var(--green); }
+.delta-same { color:var(--td); }
+
+/* Chart */
+.chart-section { background:var(--s); border:1px solid var(--b); border-radius:12px; padding:20px 22px; margin-bottom:20px; }
+.chart-title { font-family:var(--of); font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:0.08em; color:var(--td); margin-bottom:14px; }
+.chart-bars { display:flex; align-items:flex-end; gap:6px; height:80px; margin-bottom:6px; }
+.chart-bar { flex:1; border-radius:3px 3px 0 0; background:var(--s2); min-height:4px; transition:background 0.2s; }
+.chart-bar.today { background:var(--gr); }
+.chart-bar.has-data { background:rgba(255,20,147,0.3); }
+.chart-labels { display:flex; gap:6px; }
+.chart-label { flex:1; text-align:center; font-family:var(--of); font-size:10px; color:var(--td); }
+.chart-label.today { color:var(--pink); font-weight:700; }
+
+/* Activity feed */
+.sl { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--td); margin-bottom:10px; margin-top:20px; }
+.activity-row { display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--b); }
+.activity-row:last-child { border-bottom:none; }
+.act-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+.act-dot.pink { background:var(--pink); }
+.act-dot.cyan { background:var(--cyan); }
+.act-dot.green { background:var(--green); }
+.act-dot.amber { background:var(--amber); }
+.act-text { flex:1; font-size:13px; color:var(--tm); }
+.act-time { font-size:11px; color:var(--td); white-space:nowrap; }
+
+/* Streak card — kept structurally but streak content removed (brand: no gamification) */
+.streak-card { display:flex; align-items:flex-start; gap:14px; background:var(--s); border:1px solid var(--b); border-radius:10px; padding:14px 16px; margin-bottom:20px; }
+.streak-title { font-family:var(--of); font-size:14px; font-weight:700; margin-bottom:3px; }
+.streak-sub { font-size:12px; color:var(--tm); line-height:1.6; }
+
+/* Guided workflow A — step progress */
+.gw-shell { }
+.gw-progress { display:flex; align-items:center; margin-bottom:20px; }
+.gw-step { display:flex; flex-direction:column; align-items:center; gap:4px; }
+.gw-step-dot { width:28px; height:28px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--of); font-size:11px; font-weight:700; border:1.5px solid var(--b2); color:var(--tm); background:var(--s); flex-shrink:0; }
+.gw-step.done .gw-step-dot { background:var(--gd); border-color:rgba(100,220,120,0.3); color:var(--green); }
+.gw-step.active .gw-step-dot { background:var(--pd); border-color:rgba(255,20,147,0.3); color:var(--pink); }
+.gw-step-label { font-family:var(--of); font-size:10px; font-weight:600; color:var(--td); white-space:nowrap; }
+.gw-step.active .gw-step-label { color:var(--pink); }
+.gw-step.done .gw-step-label { color:var(--green); }
+.gw-connector { flex:1; height:1.5px; background:var(--b2); margin:0 4px; margin-bottom:14px; }
+.gw-connector.done { background:var(--green); }
+.gw-count { font-size:12px; color:var(--td); margin-bottom:16px; }
+
+/* Guided workflow A — task card */
+.gw-card { background:var(--s); border:1px solid var(--b); border-radius:12px; padding:22px 24px; }
+.gw-eyebrow { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--pink); margin-bottom:6px; }
+.gw-title { font-family:var(--of); font-size:20px; font-weight:800; letter-spacing:-0.02em; margin-bottom:6px; }
+.gw-sub { font-size:13px; color:var(--tm); line-height:1.6; margin-bottom:20px; }
+.gw-prospect { display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--b); }
+.gw-prospect:last-of-type { border-bottom:none; margin-bottom:8px; }
+.gw-pav { width:32px; height:32px; border-radius:50%; background:var(--pd); border:1px solid rgba(255,20,147,0.2); display:flex; align-items:center; justify-content:center; font-family:var(--of); font-size:10px; font-weight:700; color:var(--pink); flex-shrink:0; }
+.gw-pname { font-size:13px; font-weight:500; color:var(--t); margin-bottom:2px; }
+.gw-pmeta { font-size:11px; color:var(--td); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.gw-pactions { display:flex; gap:6px; flex-shrink:0; }
+.gw-actions { display:flex; align-items:center; justify-content:space-between; padding-top:16px; border-top:1px solid var(--b); margin-top:4px; }
+.gw-skip { font-size:13px; color:var(--td); cursor:pointer; transition:color 0.15s; }
+.gw-skip:hover { color:var(--tm); }
+
+/* Guided workflow B — right panel */
+.gw-panel-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.3); backdrop-filter:blur(4px); z-index:400; opacity:0; pointer-events:none; transition:opacity 0.2s; }
+.gw-panel-overlay.open { opacity:1; pointer-events:all; }
+.gw-panel { position:fixed; top:56px; right:0; bottom:0; width:360px; background:#120920; border-left:1px solid var(--b2); box-shadow:-24px 0 64px rgba(0,0,0,0.5); display:flex; flex-direction:column; z-index:401; transform:translateX(100%); transition:transform 0.28s cubic-bezier(0.4,0,0.2,1); }
+.gw-panel-overlay.open .gw-panel { transform:translateX(0); }
+.gw-panel-header { padding:18px 20px; border-bottom:1px solid var(--b); display:flex; align-items:center; justify-content:space-between; flex-shrink:0; }
+.gw-panel-title { font-family:var(--of); font-size:15px; font-weight:700; }
+.gw-panel-close { width:26px; height:26px; border-radius:6px; background:transparent; border:1px solid var(--b2); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--tm); font-size:14px; line-height:1; transition:all 0.15s; }
+.gw-panel-close:hover { color:var(--t); }
+.gw-panel-body { flex:1; overflow-y:auto; padding:16px 20px; }
+.gw-panel-footer { padding:14px 20px; border-top:1px solid var(--b); flex-shrink:0; }
+
+/* Task items in panel */
+.task-section-label { font-family:var(--of); font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:0.1em; color:var(--td); margin-bottom:8px; }
+.task-item { display:flex; align-items:center; gap:8px; padding:9px 0; border-bottom:1px solid var(--b); cursor:pointer; transition:background 0.1s; }
+.task-item:last-child { border-bottom:none; }
+.task-item:hover { background:rgba(255,255,255,0.02); border-radius:6px; padding-left:4px; }
+.task-tick { width:16px; height:16px; border-radius:50%; border:1.5px solid var(--b2); flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+.task-tick.done { background:var(--gd); border-color:rgba(100,220,120,0.3); }
+.task-label { flex:1; font-size:12px; color:var(--tm); line-height:1.4; }
+.task-label.done { text-decoration:line-through; color:var(--td); }
+.task-badge { font-family:var(--of); font-size:9px; font-weight:700; padding:2px 6px; border-radius:4px; flex-shrink:0; }
+.task-badge.pink { background:var(--pd); color:var(--pink); }
+.task-badge.amber { background:var(--ad); color:var(--amber); }
+.task-badge.green { background:var(--gd); color:var(--green); }
+.task-progress { margin-bottom:14px; }
+.task-prog-label { display:flex; justify-content:space-between; font-family:var(--of); font-size:10px; font-weight:600; color:var(--td); margin-bottom:5px; }
+.task-prog-bar { height:3px; background:var(--s2); border-radius:2px; overflow:hidden; }
+.task-prog-fill { height:100%; background:var(--gr); border-radius:2px; }
+
+/* Buttons used on this page */
+.btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; font-family:var(--of); font-weight:700; cursor:pointer; border:none; transition:all 0.2s; white-space:nowrap; border-radius:100px; }
+.bp { padding:10px 20px; font-size:13px; background:var(--gr); color:white; box-shadow:0 0 24px rgba(255,20,147,0.2); }
+.bp:hover { opacity:0.88; }
+.bs { padding:9px 18px; font-size:13px; background:transparent; border:1px solid var(--b2); color:var(--tm); }
+.bs:hover { border-color:rgba(255,255,255,0.25); color:var(--t); }
+.bsm { padding:6px 14px; font-size:12px; }
+
+/* Page layout */
+.main-content { padding:32px 40px; position:relative; z-index:1; }
+
+/* Sidebar (nav-item pattern from this wireframe) */
+.nav-item { width:36px; height:36px; border-radius:8px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s; border:1px solid transparent; text-decoration:none; color:var(--tm); position:relative; background:transparent; }
+.nav-item:hover { background:var(--s2); border-color:var(--b2); color:var(--t); }
+.nav-item.active { background:var(--pd); border-color:rgba(255,20,147,0.25); color:var(--pink); }
+.nav-item svg { display:block; }
+.nav-tip { position:absolute; left:calc(100% + 10px); background:rgba(20,10,35,0.97); color:var(--t); border:1px solid var(--b2); border-radius:6px; padding:5px 10px; font-family:var(--of); font-size:11px; font-weight:600; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity 0.15s; z-index:300; }
+.nav-item:hover .nav-tip { opacity:1; }
+.sidebar-bottom { margin-top:auto; }
+
+/* Toast */
+#toast-zone { position:fixed; bottom:24px; right:24px; z-index:900; display:flex; flex-direction:column; gap:8px; pointer-events:none; }
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div><header class="topbar">
+  <a href="../hub.html" class="logo" style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;">Pulse.</a>
+  <div class="topbar-right">
+    <span class="plan-badge" style="font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);">Pro Light</span>
+    <div style="width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;">CL</div>
+  </div>
+</header><aside style="position:fixed;top:56px;left:0;bottom:0;width:56px;background:rgba(13,9,20,0.85);border-right:1px solid var(--b);backdrop-filter:blur(8px);padding:14px 0;display:flex;flex-direction:column;align-items:center;z-index:190;gap:4px;">
+  <a class="nav-item" href="dashboard-home.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="nav-tip">Campaigns</span>
+  </a>
+  <a class="nav-item active" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="nav-tip">Summary</span>
+  </a>
+  <div class="sidebar-bottom">
+    <a class="nav-item" href="settings-v2.html">
+      <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      <span class="nav-tip">Settings</span>
+    </a>
+  </div>
+</aside><div class="app-shell"><main class="main"><div class="main-content">
+
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;">
+    <h1 style="font-family:var(--of);font-size:24px;font-weight:800;letter-spacing:-0.02em;">Summary</h1>
+  </div>
+
+  <div class="page-tabs">
+    <div class="ptab">Today</div>
+    <div class="ptab on">This week</div>
+  </div>
+
+  <div style="margin-bottom:6px;">
+    <h2 style="font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.02em;margin-bottom:3px;">This week</h2>
+    <p style="font-size:13px;color:var(--tm);">Monday 11 Mar — Sunday 17 Mar · 2026</p>
+  </div>
+
+  <!-- Stat grid -->
+  <div class="stat-grid" style="margin-top:20px;">
+    <div class="stat-card">
+      <div class="stat-lbl">Emails sent</div>
+      <div class="stat-val pink">14</div>
+      <div class="stat-delta delta-up">↑ 3 from last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Follow-ups done</div>
+      <div class="stat-val">9</div>
+      <div class="stat-delta delta-up">↑ 2 from last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Replies received</div>
+      <div class="stat-val green">3</div>
+      <div class="stat-delta delta-up">↑ 1 from last week</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-lbl">Meetings booked</div>
+      <div class="stat-val cyan">1</div>
+      <div class="stat-delta delta-same">Same as last week</div>
+    </div>
+  </div>
+
+  <!-- Bar chart — sends per day -->
+  <div class="chart-section">
+    <div class="chart-title">Sends per day</div>
+    <div class="chart-bars" id="week-chart"></div>
+    <div class="chart-labels">
+      <div class="chart-label">Mon</div>
+      <div class="chart-label">Tue</div>
+      <div class="chart-label">Wed</div>
+      <div class="chart-label today">Thu</div>
+      <div class="chart-label">Fri</div>
+      <div class="chart-label">Sat</div>
+      <div class="chart-label">Sun</div>
+    </div>
+  </div>
+
+  <!-- Activity feed -->
+  <div class="sl">Activity today</div>
+  <div style="background:var(--s);border:1px solid var(--b);border-radius:10px;padding:4px 16px;">
+    <div class="activity-row"><div class="act-dot green"></div><div class="act-text">Meeting booked with Helen Clarke</div><div class="act-time">2h ago</div></div>
+    <div class="activity-row"><div class="act-dot pink"></div><div class="act-text">4 drafts sent — Agency founders Q1</div><div class="act-time">3h ago</div></div>
+    <div class="activity-row"><div class="act-dot cyan"></div><div class="act-text">Sarah Thompson replied</div><div class="act-time">4h ago</div></div>
+    <div class="activity-row"><div class="act-dot amber"></div><div class="act-text">3 follow-ups sent — Fractional CFO Q1</div><div class="act-time">5h ago</div></div>
+  </div>
+
+</div></main></div><div id="toast-zone"></div>
+<script>
+function showToast(msg, colour) {
+  const zone = document.getElementById('toast-zone');
+  const el = document.createElement('div');
+  el.style.cssText = 'background:rgba(13,9,20,0.97);border:1px solid var(--b2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--t);display:flex;align-items:center;gap:10px;max-width:300px;backdrop-filter:blur(12px);pointer-events:all;border-left:3px solid var(--' + colour + ');animation:tIn 0.3s ease;';
+  el.innerHTML = msg;
+  zone.appendChild(el);
+  setTimeout(() => { el.style.opacity='0'; el.style.transition='opacity 0.3s'; setTimeout(()=>el.remove(),300); }, 3500);
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') { document.querySelectorAll('.gw-panel-overlay.open').forEach(el=>el.classList.remove('open')); }});
+</script>
+<style>@keyframes tIn{from{opacity:0;transform:translateX(12px);}to{opacity:1;transform:translateX(0);}}</style>
+<script>
+// Render bar chart from data
+(function() {
+  const data = [2, 4, 3, 4, 1, 0, 0]; // Mon-Sun sends
+  const todayIdx = 3; // Thursday
+  const max = Math.max(...data, 1);
+  const container = document.getElementById('week-chart');
+  data.forEach((val, i) => {
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar' + (i === todayIdx ? ' today' : (val > 0 ? ' has-data' : ''));
+    bar.style.height = Math.max((val / max) * 100, 5) + '%';
+    bar.title = val + ' sends';
+    container.appendChild(bar);
+  });
+})();
+</script>
+</body>
+</html>
