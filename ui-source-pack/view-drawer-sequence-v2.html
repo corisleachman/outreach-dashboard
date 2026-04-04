@@ -156,6 +156,27 @@
   cursor:pointer;
   position:relative;
 }
+
+/* Delete button in rail — hidden until step is hovered */
+.sm-rail-del{
+  opacity:0;
+  pointer-events:none;
+  width:22px;height:22px;border-radius:5px;
+  background:transparent;border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--td);transition:all 0.15s;flex-shrink:0;
+  margin-top:7px;
+  cursor:pointer;
+}
+.sm-step:hover .sm-rail-del{
+  opacity:1;
+  pointer-events:all;
+}
+.sm-rail-del:hover{
+  color:#ff4d6d;
+  background:rgba(255,77,109,0.1);
+  border-color:rgba(255,77,109,0.3);
+}
 /* Vertical connector between steps */
 .sm-step-spine{
   display:flex;
@@ -531,6 +552,12 @@
             <span class="sm-rail-badge tone" id="rbadge-tone-2">Light Touch</span>
           </div>
         </div>
+        <div class="sm-rail-del" title="Remove step"
+          onclick="event.stopPropagation();selectStep(2);showDelConfirm(2)">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+          </svg>
+        </div>
       </div>
 
       <!-- Step 3 -->
@@ -546,6 +573,12 @@
             <span class="sm-rail-badge type" id="rbadge-type-3">Check-in</span>
             <span class="sm-rail-badge tone" id="rbadge-tone-3">Direct &amp; Confident</span>
           </div>
+        </div>
+        <div class="sm-rail-del" title="Remove step"
+          onclick="event.stopPropagation();selectStep(3);showDelConfirm(3)">
+          <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+            <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+          </svg>
         </div>
       </div>
 
@@ -976,6 +1009,12 @@ function addStep() {
           <span class="sm-rail-badge type" id="rbadge-type-${uid}">Follow-up</span>
           <span class="sm-rail-badge tone" id="rbadge-tone-${uid}">Calm &amp; Commercial</span>
         </div>
+      </div>
+      <div class="sm-rail-del" title="Remove step"
+        onclick="event.stopPropagation();selectStep('${uid}');showDelConfirm('${uid}')">
+        <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+          <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+        </svg>
       </div>
     </div>`;
   addBtn.insertAdjacentHTML('beforebegin', railHTML);
