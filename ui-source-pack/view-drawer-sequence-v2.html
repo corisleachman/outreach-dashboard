@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Sequence Editor V2 (modal)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<style>
+/* ══════════════════════════════════════════
+   SEQUENCE EDITOR — V2 MODAL LAYOUT
+   Exploration: wider centred modal vs slide-in drawer
+   All data/interactions identical to view-drawer-sequence.html
+   Layout differs: 2-col (step rail left, editor right)
+   Coris: this is an exploration — not yet signed off
+══════════════════════════════════════════ */
+
+/* Shell */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;margin-right:16px;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;text-decoration:none;color:rgba(255,255,255,0.55);
+  border:1px solid transparent;transition:all 0.15s;position:relative;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;position:relative;z-index:1;}
+.demo-area{padding:40px;display:flex;flex-direction:column;align-items:flex-start;gap:16px;}
+.demo-note{font-size:13px;color:var(--tm);line-height:1.7;max-width:560px;}
+.demo-note strong{color:var(--t);}
+.demo-note code{font-family:'DM Mono',monospace;font-size:11px;background:var(--s2);
+  border:1px solid var(--b2);border-radius:4px;padding:1px 5px;color:var(--cyan);}
+.demo-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+  border-radius:100px;background:var(--gr);color:white;font-family:var(--of);
+  font-size:13px;font-weight:700;cursor:pointer;border:none;
+  box-shadow:0 0 28px rgba(255,20,147,0.25);}
+.demo-btn:hover{opacity:0.88;}
+
+/* ══ MODAL OVERLAY ══
+   Centred on screen, not sliding from side.
+   70vw × up to 85vh, horizontally + vertically centred.
+   Backdrop: rgba(0,0,0,0.65) + blur(8px) — deeper than the drawer version
+   because modal is the primary focus rather than a side layer. */
+#sm-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.65);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  z-index:600;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+}
+#sm-overlay.open{display:flex;}
+
+/* ══ MODAL BOX ══
+   70vw, min 640px, max 940px.
+   85vh tall so it fits comfortably without scroll on most screens.
+   Opens via scale(0.97)+opacity → scale(1)+opacity animation. */
+#sm-modal{
+  width:70vw;
+  min-width:640px;
+  max-width:940px;
+  height:min(85vh, 800px);
+  background:#0f0a1a;
+  border:1px solid var(--b2);
+  border-radius:20px;
+  box-shadow:0 32px 96px rgba(0,0,0,0.7), 0 0 0 1px rgba(255,255,255,0.04);
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  transform:scale(0.97);
+  opacity:0;
+  transition:transform 0.25s cubic-bezier(0.22,0.68,0,1.2), opacity 0.2s ease;
+}
+#sm-overlay.open #sm-modal{
+  transform:scale(1);
+  opacity:1;
+}
+
+/* Modal header */
+.sm-hdr{
+  padding:20px 28px;
+  border-bottom:1px solid var(--b);
+  display:flex;
+  align-items:center;
+  gap:14px;
+  flex-shrink:0;
+  background:rgba(255,255,255,0.02);
+}
+.sm-hdr-icon{
+  width:32px;height:32px;border-radius:8px;
+  background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--pink);flex-shrink:0;
+}
+.sm-title{font-family:var(--of);font-size:16px;font-weight:800;color:var(--t);letter-spacing:-0.01em;}
+.sm-title-sub{font-size:13px;color:var(--td);margin-left:2px;font-weight:400;}
+.sm-close{
+  margin-left:auto;width:30px;height:30px;border-radius:8px;
+  background:transparent;border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--tm);font-size:15px;transition:all 0.15s;
+  flex-shrink:0;line-height:1;
+}
+.sm-close:hover{color:var(--t);background:var(--s2);}
+
+/* ══ 2-COLUMN BODY ══
+   Left: step rail (fixed ~220px) — shows numbered step list
+   Right: editor panel (flex:1) — shows editor for the active step
+   Both columns scroll independently. */
+.sm-body{
+  display:flex;
+  flex:1;
+  min-height:0;
+  overflow:hidden;
+}
+
+/* Left column — step rail */
+.sm-rail{
+  width:220px;
+  flex-shrink:0;
+  border-right:1px solid var(--b);
+  padding:20px 0;
+  overflow-y:auto;
+  display:flex;
+  flex-direction:column;
+}
+.sm-rail::-webkit-scrollbar{width:3px;}
+.sm-rail::-webkit-scrollbar-thumb{background:var(--b2);}
+
+/* Step item in rail */
+.sm-step{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:0 16px;
+  cursor:pointer;
+  position:relative;
+}
+/* Vertical connector between steps */
+.sm-step-spine{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  flex-shrink:0;
+  width:36px;
+}
+.sm-step-num{
+  width:36px;height:36px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:12px;font-weight:700;
+  flex-shrink:0;transition:all 0.15s;
+}
+.sm-step-num.s1{
+  background:rgba(255,20,147,0.15);
+  border:1.5px solid rgba(255,20,147,0.4);
+  color:var(--pink);
+}
+.sm-step-num.sn{
+  background:var(--s2);
+  border:1.5px solid var(--b2);
+  color:var(--tm);
+}
+.sm-step-num.active{
+  background:rgba(255,20,147,0.12);
+  border-color:rgba(255,20,147,0.4);
+  color:var(--pink);
+  box-shadow:0 0 12px rgba(255,20,147,0.15);
+}
+.sm-connector{
+  width:1.5px;
+  background:var(--b2);
+  flex:1;
+  min-height:12px;
+  margin:3px 0;
+}
+/* Step info (right of number) */
+.sm-step-info{
+  flex:1;
+  padding:8px 0 12px;
+  min-width:0;
+}
+.sm-step-name{
+  font-family:var(--of);font-size:12px;font-weight:700;
+  color:var(--tm);margin-bottom:3px;
+  transition:color 0.15s;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.sm-step.active .sm-step-name{color:var(--t);}
+.sm-step-meta{font-size:11px;color:var(--td);line-height:1.4;}
+
+/* Step badges (type + tone) in rail */
+.sm-rail-badges{display:flex;gap:4px;flex-wrap:wrap;margin-top:4px;}
+.sm-rail-badge{
+  font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.06em;padding:2px 6px;border-radius:4px;
+}
+.sm-rail-badge.type{background:rgba(255,20,147,0.1);color:var(--pink);border:1px solid rgba(255,20,147,0.18);}
+.sm-rail-badge.tone{background:rgba(0,212,255,0.08);color:var(--cyan);border:1px solid rgba(0,212,255,0.16);}
+
+/* Selected step indicator (left border accent) */
+.sm-step::before{
+  content:'';
+  position:absolute;
+  left:0;top:8px;bottom:12px;
+  width:2px;border-radius:0 2px 2px 0;
+  background:var(--pink);
+  opacity:0;
+  transition:opacity 0.15s;
+}
+.sm-step.active::before{opacity:1;}
+
+/* Add step button in rail */
+.sm-add-step{
+  display:flex;align-items:center;gap:10px;
+  padding:12px 16px;
+  cursor:pointer;
+  color:var(--td);
+  font-family:var(--of);font-size:12px;font-weight:600;
+  transition:color 0.15s;
+  border:none;background:transparent;text-align:left;width:100%;
+  margin-top:4px;
+}
+.sm-add-step:hover{color:var(--pink);}
+.sm-add-icon{
+  width:36px;height:36px;border-radius:50%;
+  border:1.5px dashed var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+  transition:border-color 0.15s,background 0.15s;
+}
+.sm-add-step:hover .sm-add-icon{
+  border-color:rgba(255,20,147,0.4);
+  background:rgba(255,20,147,0.06);
+  color:var(--pink);
+}
+
+/* ══ RIGHT COLUMN — EDITOR PANEL ══ */
+.sm-editor{
+  flex:1;
+  overflow-y:auto;
+  padding:28px 32px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  min-width:0;
+}
+.sm-editor::-webkit-scrollbar{width:3px;}
+.sm-editor::-webkit-scrollbar-thumb{background:var(--b2);}
+
+/* No-step-selected empty state */
+.sm-editor-empty{
+  flex:1;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:48px 32px;
+  color:var(--td);gap:10px;
+}
+.sm-editor-empty svg{opacity:0.3;}
+.sm-editor-empty-title{font-family:var(--of);font-size:14px;font-weight:700;color:var(--tm);}
+.sm-editor-empty-sub{font-size:12px;line-height:1.6;max-width:240px;}
+
+/* Editor step header */
+.sm-ed-hdr{
+  display:flex;align-items:center;gap:10px;
+  margin-bottom:24px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--b);
+}
+.sm-ed-step-num{
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(255,20,147,0.12);
+  border:1.5px solid rgba(255,20,147,0.35);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:12px;font-weight:700;color:var(--pink);
+  flex-shrink:0;
+}
+.sm-ed-title{font-family:var(--of);font-size:15px;font-weight:800;color:var(--t);}
+.sm-ed-delay{font-size:12px;color:var(--td);margin-left:auto;}
+.sm-ed-del{
+  width:28px;height:28px;border-radius:6px;border:1px solid var(--b2);
+  background:transparent;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--td);transition:all 0.15s;flex-shrink:0;
+}
+.sm-ed-del:hover{color:#ff4d6d;background:rgba(255,77,109,0.1);border-color:rgba(255,77,109,0.3);}
+
+/* ── Editor sections ── */
+.sm-section{margin-bottom:24px;}
+.sm-field-lbl{
+  font-family:var(--of);font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.1em;color:var(--td);
+  margin-bottom:10px;
+}
+
+/* Chips — type + tone — bigger now there's space */
+.sm-chips{display:flex;gap:8px;flex-wrap:wrap;}
+.sm-chip{
+  font-family:var(--of);font-size:12px;font-weight:600;
+  padding:7px 14px;border-radius:8px;
+  border:1px solid var(--b2);color:var(--tm);background:var(--s2);
+  cursor:pointer;transition:all 0.15s;user-select:none;
+}
+.sm-chip:hover{border-color:var(--td);color:var(--t);}
+.sm-chip.sel-type{background:rgba(255,20,147,0.12);color:var(--pink);border-color:rgba(255,20,147,0.4);}
+.sm-chip.sel-tone{background:rgba(0,212,255,0.1);color:var(--cyan);border-color:rgba(0,212,255,0.35);}
+
+/* 2-col grid for type + tone side-by-side */
+.sm-type-tone{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;}
+@media(max-width:720px){.sm-type-tone{grid-template-columns:1fr;}}
+
+/* Delay row */
+.sm-delay-row{display:flex;align-items:center;gap:10px;margin-bottom:24px;}
+.sm-delay-label{font-family:var(--of);font-size:12px;color:var(--tm);}
+.sm-delay-input{
+  width:60px;background:var(--s2);border:1px solid var(--b2);border-radius:8px;
+  padding:9px 10px;color:var(--t);font-size:14px;font-family:'DM Mono',monospace;
+  outline:none;text-align:center;transition:border-color 0.15s;
+}
+.sm-delay-input:focus{border-color:rgba(255,20,147,0.4);}
+
+/* Text inputs */
+.sm-input{
+  width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:10px;padding:12px 14px;color:var(--t);
+  font-family:'DM Sans',sans-serif;font-size:14px;
+  outline:none;transition:border-color 0.2s;box-sizing:border-box;resize:none;
+  line-height:1.7;
+}
+.sm-input:focus{border-color:rgba(255,20,147,0.4);}
+.sm-input::placeholder{color:var(--td);}
+
+/* Thread toggle */
+.sm-toggle-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 16px;
+  background:var(--s);border:1px solid var(--b);border-radius:10px;
+  margin-bottom:16px;
+}
+.sm-toggle-info{}
+.sm-toggle-lbl{font-size:14px;color:var(--t);font-weight:500;margin-bottom:2px;}
+.sm-toggle-sub{font-size:12px;color:var(--td);}
+.sm-tog{
+  width:44px;height:24px;background:var(--s2);border:1px solid var(--b2);
+  border-radius:12px;position:relative;cursor:pointer;transition:all 0.25s;flex-shrink:0;
+}
+.sm-tog.on{background:var(--pink);border-color:var(--pink);box-shadow:0 0 12px rgba(255,20,147,0.35);}
+.sm-tog::after{
+  content:'';position:absolute;width:18px;height:18px;background:white;
+  border-radius:50%;top:2px;left:2px;transition:all 0.25s;
+  box-shadow:0 1px 4px rgba(0,0,0,0.3);
+}
+.sm-tog.on::after{left:calc(100% - 20px);}
+
+/* Subject reveal */
+.sm-subject-reveal{overflow:hidden;max-height:0;opacity:0;margin-top:0;
+  transition:max-height 0.3s ease,opacity 0.25s ease,margin 0.25s ease;}
+.sm-subject-reveal.open{max-height:80px;opacity:1;margin-top:0;}
+
+/* Attachment zone */
+.sm-attach{
+  border:1.5px dashed var(--b2);border-radius:10px;padding:14px 16px;
+  display:flex;align-items:center;gap:14px;cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;
+}
+.sm-attach:hover{border-color:var(--tm);background:rgba(255,255,255,0.03);}
+.sm-attach-icon{
+  width:36px;height:36px;border-radius:8px;background:var(--s2);
+  display:flex;align-items:center;justify-content:center;
+  color:var(--td);flex-shrink:0;
+}
+.sm-attach-lbl{font-size:13px;color:var(--tm);font-weight:500;margin-bottom:2px;}
+.sm-attach-sub{font-size:12px;color:var(--td);}
+
+/* Inline delete confirm */
+.sm-del-confirm{
+  display:none;padding:12px 16px;
+  background:rgba(255,77,109,0.07);border:1px solid rgba(255,77,109,0.15);
+  border-radius:10px;margin-bottom:20px;
+  align-items:center;justify-content:space-between;gap:12px;
+}
+.sm-del-confirm.show{display:flex;}
+.sm-del-msg{font-size:13px;color:#ff4d6d;}
+
+/* ══ MODAL FOOTER ══ */
+.sm-ftr{
+  padding:16px 28px;
+  border-top:1px solid var(--b);
+  display:flex;align-items:center;gap:10px;
+  flex-shrink:0;
+  background:rgba(255,255,255,0.02);
+}
+.sm-ftr-left{flex:1;font-size:12px;color:var(--td);}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  font-family:var(--of);font-weight:700;cursor:pointer;border:none;
+  transition:all 0.2s;white-space:nowrap;border-radius:100px;}
+.bp{padding:11px 24px;font-size:13px;background:var(--gr);color:white;
+  box-shadow:0 0 24px rgba(255,20,147,0.2);}
+.bp:hover{opacity:0.88;}
+.bs{padding:11px 20px;font-size:13px;background:var(--s);
+  border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bsm{padding:7px 14px;font-size:12px;}
+
+/* Toast */
+#tz{position:fixed;bottom:24px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 16px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:3px solid var(--cyan);}
+.tst.tg{border-left:3px solid var(--green);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="orb o1" style="position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;width:700px;height:700px;background:rgba(255,20,147,0.04);top:-250px;right:-200px;"></div>
+<div class="orb o2" style="position:fixed;border-radius:50%;filter:blur(140px);pointer-events:none;z-index:0;width:500px;height:500px;background:rgba(0,212,255,0.03);bottom:-150px;left:0;"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span>Campaigns</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
+  </div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<!-- Demo page -->
+<div class="layout">
+  <main class="main">
+    <div class="demo-area">
+      <div class="demo-note">
+        <strong>Sequence Editor — V2 exploration (centred modal)</strong><br>
+        Exploring a <code>70vw × 85vh</code> centred modal with a two-column layout:
+        step rail on the left, editor on the right. Click a step in the rail to edit it.
+        Same data and interactions as V1 — the structure is the only difference.
+      </div>
+      <button class="demo-btn" onclick="openModal()">
+        <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="8" y2="11"/></svg>
+        Edit sequence
+      </button>
+    </div>
+  </main>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════════
+     SEQUENCE EDITOR MODAL — V2
+     Centred modal, 70vw × 85vh, 2-column layout.
+     Left: step rail (220px) — numbered step list, click to switch
+     Right: editor panel — full editor for selected step
+══════════════════════════════════════════════════════════ -->
+<div id="sm-overlay" onclick="if(event.target===this)closeModal()">
+<div id="sm-modal">
+
+  <!-- ── Header ── -->
+  <div class="sm-hdr">
+    <div class="sm-hdr-icon">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="8" y2="11"/>
+      </svg>
+    </div>
+    <div>
+      <div class="sm-title">Edit sequence <span class="sm-title-sub">Agency founders Q1</span></div>
+    </div>
+    <div class="sm-close" onclick="closeModal()">✕</div>
+  </div>
+
+  <!-- ── 2-column body ── -->
+  <div class="sm-body">
+
+    <!-- LEFT: Step rail -->
+    <div class="sm-rail" id="sm-rail">
+
+      <!-- Step 1 — initial email -->
+      <div class="sm-step active" id="rail-1" onclick="selectStep(1)">
+        <div class="sm-step-spine">
+          <div class="sm-step-num s1" id="rnum-1">1</div>
+          <div class="sm-connector"></div>
+        </div>
+        <div class="sm-step-info">
+          <div class="sm-step-name" id="rname-1">Initial email</div>
+          <div class="sm-step-meta">Sends immediately</div>
+          <div class="sm-rail-badges">
+            <span class="sm-rail-badge type" id="rbadge-type-1">Value drop</span>
+            <span class="sm-rail-badge tone" id="rbadge-tone-1">Calm &amp; Commercial</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="sm-step" id="rail-2" onclick="selectStep(2)">
+        <div class="sm-step-spine">
+          <div class="sm-step-num sn" id="rnum-2">2</div>
+          <div class="sm-connector"></div>
+        </div>
+        <div class="sm-step-info">
+          <div class="sm-step-name" id="rname-2">Follow-up #1</div>
+          <div class="sm-step-meta">After 3 days · no reply</div>
+          <div class="sm-rail-badges">
+            <span class="sm-rail-badge type" id="rbadge-type-2">Follow-up</span>
+            <span class="sm-rail-badge tone" id="rbadge-tone-2">Light Touch</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="sm-step" id="rail-3" onclick="selectStep(3)">
+        <div class="sm-step-spine">
+          <div class="sm-step-num sn" id="rnum-3">3</div>
+          <!-- No connector after last step -->
+        </div>
+        <div class="sm-step-info">
+          <div class="sm-step-name" id="rname-3">Follow-up #2</div>
+          <div class="sm-step-meta">After 5 days · no reply</div>
+          <div class="sm-rail-badges">
+            <span class="sm-rail-badge type" id="rbadge-type-3">Check-in</span>
+            <span class="sm-rail-badge tone" id="rbadge-tone-3">Direct &amp; Confident</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Add step button -->
+      <button class="sm-add-step" onclick="addStep()" id="sm-add-btn">
+        <div class="sm-add-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="7" y1="1" x2="7" y2="13"/><line x1="1" y1="7" x2="13" y2="7"/>
+          </svg>
+        </div>
+        Add follow-up
+      </button>
+
+    </div><!-- /sm-rail -->
+
+
+    <!-- RIGHT: Editor panel -->
+    <div class="sm-editor" id="sm-editor">
+
+      <!-- Editor — Step 1 (shown by default) -->
+      <div id="ed-1" class="sm-ed-panel">
+
+        <div class="sm-ed-hdr">
+          <div class="sm-ed-step-num">1</div>
+          <div class="sm-ed-title">Initial email</div>
+          <div class="sm-ed-delay">Sends immediately</div>
+          <!-- No delete on step 1 -->
+        </div>
+
+        <!-- Type + tone in 2-col grid -->
+        <div class="sm-type-tone">
+          <div>
+            <div class="sm-field-lbl">Message type</div>
+            <div class="sm-chips">
+              <span class="sm-chip sel-type" onclick="pickChip(this,1,'type','Value drop')">Value drop</span>
+              <span class="sm-chip" onclick="pickChip(this,1,'type','Follow-up')">Follow-up</span>
+              <span class="sm-chip" onclick="pickChip(this,1,'type','Check-in')">Check-in</span>
+              <span class="sm-chip" onclick="pickChip(this,1,'type','Post-meeting')">Post-meeting</span>
+            </div>
+          </div>
+          <div>
+            <div class="sm-field-lbl">Tone</div>
+            <div class="sm-chips">
+              <span class="sm-chip sel-tone" onclick="pickChip(this,1,'tone','Calm &amp; Commercial')">Calm &amp; Commercial</span>
+              <span class="sm-chip" onclick="pickChip(this,1,'tone','Direct &amp; Confident')">Direct &amp; Confident</span>
+              <span class="sm-chip" onclick="pickChip(this,1,'tone','Light Touch')">Light Touch</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Subject line</div>
+          <input class="sm-input" type="text" value="Quick thought on {{company}}'s pipeline">
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Body copy</div>
+          <textarea class="sm-input" rows="6">Hi {{first_name}},
+
+Noticed you're scaling the team at {{company}} — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes?
+
+Best,</textarea>
+          <div style="margin-top:8px;font-size:12px;color:var(--td);">{{first_name}} and {{company}} are personalised automatically at send time.</div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Attachment</div>
+          <div class="sm-attach" onclick="toast('📎','File picker would open here','tc')">
+            <div class="sm-attach-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sm-attach-lbl">Add an attachment</div>
+              <div class="sm-attach-sub">PDF, Word, or image — optional</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ed-1 -->
+
+
+      <!-- Editor — Step 2 -->
+      <div id="ed-2" class="sm-ed-panel" style="display:none;">
+
+        <div class="sm-del-confirm" id="dc-2">
+          <span class="sm-del-msg">Remove this follow-up step?</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn bs bsm" onclick="hideDelConfirm(2)">Cancel</button>
+            <button class="btn bsm" onclick="removeStep(2)" style="background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+          </div>
+        </div>
+
+        <div class="sm-ed-hdr">
+          <div class="sm-ed-step-num" style="background:var(--s2);border-color:var(--b2);color:var(--tm);">2</div>
+          <div class="sm-ed-title">Follow-up #1</div>
+          <div class="sm-ed-delay">After 3 days · no reply</div>
+          <div class="sm-ed-del" onclick="showDelConfirm(2)" title="Remove this step">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="sm-delay-row">
+          <span class="sm-delay-label">Send after</span>
+          <input class="sm-delay-input" type="number" value="3" min="1" max="365" oninput="updateDelay(2,this.value)">
+          <span class="sm-delay-label">days with no reply</span>
+        </div>
+
+        <div class="sm-type-tone">
+          <div>
+            <div class="sm-field-lbl">Message type</div>
+            <div class="sm-chips">
+              <span class="sm-chip" onclick="pickChip(this,2,'type','Value drop')">Value drop</span>
+              <span class="sm-chip sel-type" onclick="pickChip(this,2,'type','Follow-up')">Follow-up</span>
+              <span class="sm-chip" onclick="pickChip(this,2,'type','Check-in')">Check-in</span>
+              <span class="sm-chip" onclick="pickChip(this,2,'type','Post-meeting')">Post-meeting</span>
+            </div>
+          </div>
+          <div>
+            <div class="sm-field-lbl">Tone</div>
+            <div class="sm-chips">
+              <span class="sm-chip" onclick="pickChip(this,2,'tone','Calm &amp; Commercial')">Calm &amp; Commercial</span>
+              <span class="sm-chip" onclick="pickChip(this,2,'tone','Direct &amp; Confident')">Direct &amp; Confident</span>
+              <span class="sm-chip sel-tone" onclick="pickChip(this,2,'tone','Light Touch')">Light Touch</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-toggle-row">
+            <div class="sm-toggle-info">
+              <div class="sm-toggle-lbl">Reply to original Gmail thread</div>
+              <div class="sm-toggle-sub">Keeps context — recommended for follow-ups</div>
+            </div>
+            <div class="sm-tog on" id="tog-2" onclick="toggleThread(this,'sr-2')"></div>
+          </div>
+          <div class="sm-subject-reveal" id="sr-2">
+            <input class="sm-input" placeholder="Enter a new subject line" style="margin-top:12px;">
+          </div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Body copy</div>
+          <textarea class="sm-input" rows="5">Hi {{first_name}},
+
+Just wanted to make sure this didn't get buried. Happy to keep it really brief if easier.
+
+Coris</textarea>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Attachment</div>
+          <div class="sm-attach" onclick="toast('📎','File picker would open here','tc')">
+            <div class="sm-attach-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sm-attach-lbl">Add an attachment</div>
+              <div class="sm-attach-sub">Optional — different from Step 1</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ed-2 -->
+
+
+      <!-- Editor — Step 3 -->
+      <div id="ed-3" class="sm-ed-panel" style="display:none;">
+
+        <div class="sm-del-confirm" id="dc-3">
+          <span class="sm-del-msg">Remove this follow-up step?</span>
+          <div style="display:flex;gap:8px;">
+            <button class="btn bs bsm" onclick="hideDelConfirm(3)">Cancel</button>
+            <button class="btn bsm" onclick="removeStep(3)" style="background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+          </div>
+        </div>
+
+        <div class="sm-ed-hdr">
+          <div class="sm-ed-step-num" style="background:var(--s2);border-color:var(--b2);color:var(--tm);">3</div>
+          <div class="sm-ed-title">Follow-up #2</div>
+          <div class="sm-ed-delay">After 5 days · no reply</div>
+          <div class="sm-ed-del" onclick="showDelConfirm(3)" title="Remove this step">
+            <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+              <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+            </svg>
+          </div>
+        </div>
+
+        <div class="sm-delay-row">
+          <span class="sm-delay-label">Send after</span>
+          <input class="sm-delay-input" type="number" value="5" min="1" max="365" oninput="updateDelay(3,this.value)">
+          <span class="sm-delay-label">days with no reply</span>
+        </div>
+
+        <div class="sm-type-tone">
+          <div>
+            <div class="sm-field-lbl">Message type</div>
+            <div class="sm-chips">
+              <span class="sm-chip" onclick="pickChip(this,3,'type','Value drop')">Value drop</span>
+              <span class="sm-chip" onclick="pickChip(this,3,'type','Follow-up')">Follow-up</span>
+              <span class="sm-chip sel-type" onclick="pickChip(this,3,'type','Check-in')">Check-in</span>
+              <span class="sm-chip" onclick="pickChip(this,3,'type','Post-meeting')">Post-meeting</span>
+            </div>
+          </div>
+          <div>
+            <div class="sm-field-lbl">Tone</div>
+            <div class="sm-chips">
+              <span class="sm-chip" onclick="pickChip(this,3,'tone','Calm &amp; Commercial')">Calm &amp; Commercial</span>
+              <span class="sm-chip sel-tone" onclick="pickChip(this,3,'tone','Direct &amp; Confident')">Direct &amp; Confident</span>
+              <span class="sm-chip" onclick="pickChip(this,3,'tone','Light Touch')">Light Touch</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-toggle-row">
+            <div class="sm-toggle-info">
+              <div class="sm-toggle-lbl">Reply to original Gmail thread</div>
+              <div class="sm-toggle-sub">Keeps context — recommended for follow-ups</div>
+            </div>
+            <div class="sm-tog on" id="tog-3" onclick="toggleThread(this,'sr-3')"></div>
+          </div>
+          <div class="sm-subject-reveal" id="sr-3">
+            <input class="sm-input" placeholder="Enter a new subject line" style="margin-top:12px;">
+          </div>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Body copy</div>
+          <textarea class="sm-input" rows="5">Hi {{first_name}},
+
+Last nudge from me — if the timing's off I'll leave you to it. If new business pipeline is on your agenda for the next quarter, happy to have a very quick call.
+
+Coris</textarea>
+        </div>
+
+        <div class="sm-section">
+          <div class="sm-field-lbl">Attachment</div>
+          <div class="sm-attach" onclick="toast('📎','File picker would open here','tc')">
+            <div class="sm-attach-icon">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+              </svg>
+            </div>
+            <div>
+              <div class="sm-attach-lbl">Add an attachment</div>
+              <div class="sm-attach-sub">Optional — different from previous step</div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /ed-3 -->
+
+    </div><!-- /sm-editor -->
+
+  </div><!-- /sm-body -->
+
+  <!-- ── Footer ── -->
+  <div class="sm-ftr">
+    <div class="sm-ftr-left">Nothing sends without your approval.</div>
+    <button class="btn bs" onclick="closeModal()">Cancel</button>
+    <button class="btn bp" onclick="saveModal()">Save changes</button>
+  </div>
+
+</div><!-- /sm-modal -->
+</div><!-- /sm-overlay -->
+
+<div id="tz"></div>
+
+<script>
+// ══ STATE ══════════════════════════════════════════
+let activeStep = 1;
+let stepCount = 3;
+
+// ══ OPEN / CLOSE ═══════════════════════════════════
+function openModal() {
+  document.getElementById('sm-overlay').classList.add('open');
+  selectStep(1);
+}
+function closeModal() {
+  document.getElementById('sm-overlay').classList.remove('open');
+}
+function saveModal() {
+  closeModal();
+  toast('✓', 'Sequence saved', 'tg');
+}
+
+// ══ STEP SELECTION ═════════════════════════════════
+function selectStep(n) {
+  // Update rail
+  document.querySelectorAll('.sm-step').forEach(s => s.classList.remove('active'));
+  const railStep = document.getElementById('rail-' + n);
+  if (railStep) railStep.classList.add('active');
+
+  // Update editor panels
+  document.querySelectorAll('.sm-ed-panel').forEach(p => p.style.display = 'none');
+  const edPanel = document.getElementById('ed-' + n);
+  if (edPanel) edPanel.style.display = 'block';
+
+  // Scroll editor to top
+  const editor = document.getElementById('sm-editor');
+  if (editor) editor.scrollTop = 0;
+
+  activeStep = n;
+}
+
+// ══ CHIP SELECTION ═════════════════════════════════
+// Updates: chip highlight in editor, badge in rail
+function pickChip(el, stepNum, group, label) {
+  const container = el.closest('.sm-chips');
+  container.querySelectorAll('.sm-chip').forEach(c => {
+    c.classList.remove('sel-type', 'sel-tone');
+  });
+  el.classList.add(group === 'type' ? 'sel-type' : 'sel-tone');
+  // Update rail badge
+  const badge = document.getElementById('rbadge-' + group + '-' + stepNum);
+  if (badge) badge.innerHTML = el.innerHTML;
+}
+
+// ══ THREAD TOGGLE ══════════════════════════════════
+function toggleThread(togEl, revealId) {
+  togEl.classList.toggle('on');
+  const reveal = document.getElementById(revealId);
+  if (reveal) {
+    if (!togEl.classList.contains('on')) {
+      reveal.classList.add('open');
+    } else {
+      reveal.classList.remove('open');
+    }
+  }
+}
+
+// ══ DELAY UPDATE ═══════════════════════════════════
+function updateDelay(stepNum, val) {
+  const meta = document.querySelector('#rail-' + stepNum + ' .sm-step-meta');
+  if (meta) meta.textContent = 'After ' + val + ' day' + (val == 1 ? '' : 's') + ' · no reply';
+  const hdr = document.querySelector('#ed-' + stepNum + ' .sm-ed-delay');
+  if (hdr) hdr.textContent = 'After ' + val + ' day' + (val == 1 ? '' : 's') + ' · no reply';
+}
+
+// ══ DELETE CONFIRM ═════════════════════════════════
+function showDelConfirm(n) {
+  document.getElementById('dc-' + n).classList.add('show');
+}
+function hideDelConfirm(n) {
+  document.getElementById('dc-' + n).classList.remove('show');
+}
+
+// ══ REMOVE STEP ════════════════════════════════════
+function removeStep(n) {
+  // Remove rail item + editor panel
+  const railStep = document.getElementById('rail-' + n);
+  const edPanel  = document.getElementById('ed-' + n);
+  if (railStep) railStep.remove();
+  if (edPanel)  edPanel.remove();
+  stepCount--;
+
+  // Renumber remaining steps
+  renumberSteps();
+
+  // Show add button if under max
+  if (stepCount < 6) {
+    const addBtn = document.getElementById('sm-add-btn');
+    if (addBtn) addBtn.style.display = 'flex';
+  }
+
+  // Select step 1 if deleted step was active
+  if (activeStep === n || activeStep > stepCount) {
+    selectStep(Math.min(activeStep - 1, stepCount) || 1);
+  } else {
+    selectStep(activeStep);
+  }
+
+  toast('→', 'Step removed', 'tc');
+}
+
+function renumberSteps() {
+  const railSteps = document.querySelectorAll('.sm-step');
+  railSteps.forEach((step, i) => {
+    const n = i + 1;
+    const numEl = step.querySelector('.sm-step-num');
+    if (numEl) numEl.textContent = n;
+    const edHdrNum = document.querySelector('#ed-' + step.id.replace('rail-','') + ' .sm-ed-step-num');
+    if (edHdrNum) edHdrNum.textContent = n;
+  });
+  // Update connectors — hide after last step
+  const railSpines = document.querySelectorAll('.sm-step .sm-connector');
+  railSpines.forEach((c, i) => {
+    c.style.display = i < railSpines.length - 1 ? '' : 'none';
+  });
+}
+
+// ══ ADD STEP ═══════════════════════════════════════
+function addStep() {
+  if (stepCount >= 6) {
+    toast('—', 'Maximum 6 steps in a sequence', 'tc');
+    return;
+  }
+  stepCount++;
+  const n = stepCount;
+  const uid = 'new' + Date.now();
+
+  // Build rail entry
+  const rail = document.getElementById('sm-rail');
+  const addBtn = document.getElementById('sm-add-btn');
+
+  // Show connector on previously last step
+  const lastConnector = rail.querySelector('.sm-step:last-of-type .sm-connector');
+  if (lastConnector) lastConnector.style.display = '';
+
+  const railHTML = `
+    <div class="sm-step" id="rail-${uid}" onclick="selectStep('${uid}')">
+      <div class="sm-step-spine">
+        <div class="sm-step-num sn" id="rnum-${uid}">${n}</div>
+        <div class="sm-connector" style="display:none;"></div>
+      </div>
+      <div class="sm-step-info">
+        <div class="sm-step-name" id="rname-${uid}">Follow-up #${n-1}</div>
+        <div class="sm-step-meta">After 5 days · no reply</div>
+        <div class="sm-rail-badges">
+          <span class="sm-rail-badge type" id="rbadge-type-${uid}">Follow-up</span>
+          <span class="sm-rail-badge tone" id="rbadge-tone-${uid}">Calm &amp; Commercial</span>
+        </div>
+      </div>
+    </div>`;
+  addBtn.insertAdjacentHTML('beforebegin', railHTML);
+
+  // Build editor panel
+  const editorEl = document.getElementById('sm-editor');
+  const edHTML = `
+    <div id="ed-${uid}" class="sm-ed-panel" style="display:none;">
+      <div class="sm-del-confirm" id="dc-${uid}">
+        <span class="sm-del-msg">Remove this follow-up step?</span>
+        <div style="display:flex;gap:8px;">
+          <button class="btn bs bsm" onclick="hideDelConfirm('${uid}')">Cancel</button>
+          <button class="btn bsm" onclick="removeStep('${uid}')" style="background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+        </div>
+      </div>
+      <div class="sm-ed-hdr">
+        <div class="sm-ed-step-num" style="background:var(--s2);border-color:var(--b2);color:var(--tm);">${n}</div>
+        <div class="sm-ed-title">Follow-up #${n-1}</div>
+        <div class="sm-ed-delay">After 5 days · no reply</div>
+        <div class="sm-ed-del" onclick="showDelConfirm('${uid}')" title="Remove this step">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/></svg>
+        </div>
+      </div>
+      <div class="sm-delay-row">
+        <span class="sm-delay-label">Send after</span>
+        <input class="sm-delay-input" type="number" value="5" min="1" max="365" oninput="updateDelay('${uid}',this.value)">
+        <span class="sm-delay-label">days with no reply</span>
+      </div>
+      <div class="sm-type-tone">
+        <div>
+          <div class="sm-field-lbl">Message type</div>
+          <div class="sm-chips">
+            <span class="sm-chip" onclick="pickChip(this,'${uid}','type','Value drop')">Value drop</span>
+            <span class="sm-chip sel-type" onclick="pickChip(this,'${uid}','type','Follow-up')">Follow-up</span>
+            <span class="sm-chip" onclick="pickChip(this,'${uid}','type','Check-in')">Check-in</span>
+            <span class="sm-chip" onclick="pickChip(this,'${uid}','type','Post-meeting')">Post-meeting</span>
+          </div>
+        </div>
+        <div>
+          <div class="sm-field-lbl">Tone</div>
+          <div class="sm-chips">
+            <span class="sm-chip sel-tone" onclick="pickChip(this,'${uid}','tone','Calm &amp; Commercial')">Calm &amp; Commercial</span>
+            <span class="sm-chip" onclick="pickChip(this,'${uid}','tone','Direct &amp; Confident')">Direct &amp; Confident</span>
+            <span class="sm-chip" onclick="pickChip(this,'${uid}','tone','Light Touch')">Light Touch</span>
+          </div>
+        </div>
+      </div>
+      <div class="sm-section">
+        <div class="sm-toggle-row">
+          <div class="sm-toggle-info">
+            <div class="sm-toggle-lbl">Reply to original Gmail thread</div>
+            <div class="sm-toggle-sub">Keeps context — recommended for follow-ups</div>
+          </div>
+          <div class="sm-tog on" id="tog-${uid}" onclick="toggleThread(this,'sr-${uid}')"></div>
+        </div>
+        <div class="sm-subject-reveal" id="sr-${uid}">
+          <input class="sm-input" placeholder="Enter a new subject line" style="margin-top:12px;">
+        </div>
+      </div>
+      <div class="sm-section">
+        <div class="sm-field-lbl">Body copy</div>
+        <textarea class="sm-input" rows="5" placeholder="Write your follow-up message…"></textarea>
+      </div>
+      <div class="sm-section">
+        <div class="sm-field-lbl">Attachment</div>
+        <div class="sm-attach" onclick="toast('📎','File picker would open here','tc')">
+          <div class="sm-attach-icon">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/></svg>
+          </div>
+          <div>
+            <div class="sm-attach-lbl">Add an attachment</div>
+            <div class="sm-attach-sub">Optional — different from previous step</div>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  editorEl.insertAdjacentHTML('beforeend', edHTML);
+
+  if (stepCount >= 6) addBtn.style.display = 'none';
+
+  // Switch to new step
+  selectStep(uid);
+}
+
+// ══ TOAST ══════════════════════════════════════════
+function toast(icon, text, cls) {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + (cls || 'tc');
+  e.innerHTML = '<span>' + icon + '</span><span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => {
+    e.style.opacity = '0'; e.style.transition = 'opacity 0.3s';
+    setTimeout(() => e.remove(), 300);
+  }, 3200);
+}
+
+// Escape closes
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// Open on load for demo
+document.addEventListener('DOMContentLoaded', () => {
+  openModal();
+});
+</script>
+</body>
+</html>
