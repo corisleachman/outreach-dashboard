@@ -1,70 +1,898 @@
 <!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Sequence Drawer (source pack)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="pulse-foundation.css">
-<title>Pulse. — Sequence Step Editor Drawer</title>
-<style>body{background:#1a0d2e;}.demo-bg{display:flex;justify-content:flex-end;min-height:100vh;padding-top:56px;}</style>
-</head><body><div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
-<header class="topbar"><a href="#" class="logo">Pulse<span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">.</span></a><div class="topbar-right"><span class="plan-badge pro-light">Pro Light</span><div class="avatar">CL</div></div></header>
-<div class="demo-bg">
-<div class="drawer open" style="transform:none;position:relative;top:auto;right:auto;bottom:auto;width:520px;max-width:100%;height:calc(100vh - 56px);">
-  <div class="drawer-header">
-    <div><div class="drawer-title">Sequence — Agency founders Q1</div><div style="font-size:11px;color:var(--td);">2 steps · Nothing sends without your approval</div></div>
-    <button class="drawer-close" style="margin-left:auto;">✕</button>
+<style>
+/* ══════════════════════════════════════════
+   ALL CSS SOURCED VERBATIM FROM campaign-view-v3.html
+   These rules are additive to pulse-foundation.css.
+   Codex: copy seq-* rules into SequenceDrawer.module.css
+══════════════════════════════════════════ */
+
+/* Topbar & sidebar tokens (minimal — shell already in pulse-foundation.css) */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;margin-right:16px;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;text-decoration:none;color:rgba(255,255,255,0.55);
+  border:1px solid transparent;transition:all 0.15s;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+
+/* ══ SEQUENCE DRAWER ══
+   position: fixed · top: 56px (--th) · right: 0 · bottom: 0
+   width: 520px · background: #0f0a1a
+   Slides in from right: translateX(100%) → translateX(0)
+   z-index: 701 · overlay z-index: 700
+   ═════════════════════════════════════════ */
+#seq-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.35);
+  z-index:700;display:none;backdrop-filter:blur(2px);}
+#seq-overlay.open{display:block;}
+#seq-drawer{position:fixed;top:var(--th);right:0;bottom:0;width:520px;
+  background:#0f0a1a;border-left:1px solid var(--b2);
+  box-shadow:-24px 0 64px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;z-index:701;
+  transform:translateX(100%);
+  transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0.28s;
+  visibility:hidden;}
+#seq-drawer.open{transform:translateX(0);visibility:visible;
+  transition:transform 0.28s cubic-bezier(0.4,0,0.2,1),visibility 0s linear 0s;}
+
+/* Header */
+.seq-hdr{padding:16px 18px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;}
+.seq-title{font-family:var(--of);font-size:14px;font-weight:700;color:var(--t);
+  display:flex;align-items:center;gap:8px;}
+.seq-title-sub{font-size:11px;font-weight:400;color:var(--td);margin-left:2px;}
+.seq-close{cursor:pointer;color:var(--tm);font-size:16px;
+  width:28px;height:28px;display:flex;align-items:center;justify-content:center;
+  border-radius:6px;transition:color 0.15s,background 0.15s;}
+.seq-close:hover{color:var(--t);background:var(--s2);}
+
+/* Body (scrollable) */
+.seq-body{padding:16px 18px;overflow-y:auto;display:flex;flex-direction:column;gap:0;flex:1;}
+.seq-body::-webkit-scrollbar{width:3px;}
+.seq-body::-webkit-scrollbar-thumb{background:var(--b2);}
+
+/* Step rows (number + connector + card) */
+.seq-step{display:flex;gap:12px;position:relative;}
+.seq-step-left{display:flex;flex-direction:column;align-items:center;flex-shrink:0;width:28px;}
+.seq-step-num{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;flex-shrink:0;}
+.seq-step-num.s1{background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.35);color:var(--pink);}
+.seq-step-num.sn{background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.seq-connector{width:1px;background:var(--b2);flex:1;min-height:10px;margin:3px 0;}
+.seq-step-body{flex:1;padding-bottom:12px;}
+
+/* Step card */
+.seq-card{background:var(--s);border:1px solid var(--b2);border-radius:10px;overflow:hidden;
+  transition:border-color 0.15s;}
+.seq-card.expanded{border-color:rgba(255,255,255,0.12);}
+
+/* Collapsed header row — click to expand */
+.seq-card-hdr{padding:10px 12px;display:flex;align-items:center;gap:7px;cursor:pointer;
+  user-select:none;}
+.seq-card-hdr:hover{background:rgba(255,255,255,0.03);}
+.seq-card-tags{display:flex;align-items:center;gap:4px;flex:1;flex-wrap:wrap;}
+
+/* Type / tone badges (collapsed state) */
+.seq-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.07em;padding:2px 6px;border-radius:4px;}
+.seq-badge.type{background:rgba(255,20,147,0.12);color:var(--pink);border:1px solid rgba(255,20,147,0.2);}
+.seq-badge.tone{background:rgba(0,212,255,0.09);color:var(--cyan);border:1px solid rgba(0,212,255,0.18);}
+.seq-delay-txt{font-family:var(--of);font-size:10px;color:var(--td);margin-left:auto;}
+.seq-card-chevron{color:var(--td);font-size:10px;transition:transform 0.2s;flex-shrink:0;margin-left:0;}
+.seq-card.expanded .seq-card-chevron{transform:rotate(180deg);}
+.seq-card-del{color:var(--td);cursor:pointer;padding:7px 8px;border-radius:4px;
+  transition:color 0.15s,background 0.15s;flex-shrink:0;line-height:1;}
+.seq-card-del:hover{color:#ff4d6d;background:rgba(255,77,109,0.1);}
+
+/* Inline delete confirm (appears inside card header area) */
+.seq-del-confirm{display:none;padding:9px 12px;background:rgba(255,77,109,0.07);
+  border-top:1px solid rgba(255,77,109,0.15);align-items:center;
+  justify-content:space-between;gap:8px;}
+.seq-del-confirm.show{display:flex;}
+.seq-del-msg{font-size:12px;color:#ff4d6d;}
+.seq-del-btns{display:flex;gap:6px;}
+
+/* Expanded editor (hidden by default, shown when .expanded on .seq-card) */
+.seq-editor{padding:12px;border-top:1px solid var(--b);display:none;
+  flex-direction:column;gap:12px;}
+.seq-card.expanded .seq-editor{display:flex;}
+
+/* Field labels */
+.seq-field-lbl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--td);margin-bottom:6px;}
+
+/* Message type + tone chip selectors */
+.seq-chips{display:flex;gap:5px;flex-wrap:wrap;}
+.seq-chip{font-family:var(--of);font-size:11px;font-weight:600;padding:5px 10px;border-radius:6px;
+  border:1px solid var(--b2);color:var(--tm);background:var(--s2);cursor:pointer;
+  transition:all 0.15s;user-select:none;}
+.seq-chip:hover{border-color:var(--td);color:var(--t);}
+.seq-chip.sel-type{background:rgba(255,20,147,0.12);color:var(--pink);border-color:rgba(255,20,147,0.35);}
+.seq-chip.sel-tone{background:rgba(0,212,255,0.1);color:var(--cyan);border-color:rgba(0,212,255,0.3);}
+
+/* Text inputs + textarea */
+.seq-input{width:100%;background:var(--s2);border:1px solid var(--b2);border-radius:7px;
+  padding:8px 10px;color:var(--t);font-family:'DM Sans',sans-serif;font-size:13px;
+  outline:none;transition:border-color 0.15s;box-sizing:border-box;resize:none;line-height:1.6;}
+.seq-input:focus{border-color:rgba(255,20,147,0.4);}
+.seq-input::placeholder{color:var(--td);}
+
+/* Delay row (number input + "days" label) */
+.seq-delay-row{display:flex;align-items:center;gap:8px;}
+.seq-delay-input{width:52px;background:var(--s2);border:1px solid var(--b2);border-radius:7px;
+  padding:7px 8px;color:var(--t);font-size:13px;font-family:'DM Sans',sans-serif;
+  outline:none;text-align:center;transition:border-color 0.15s;}
+.seq-delay-input:focus{border-color:rgba(255,20,147,0.4);}
+.seq-delay-unit{font-size:13px;color:var(--tm);}
+
+/* Thread toggle + subject-line reveal */
+.seq-toggle-row{display:flex;align-items:center;justify-content:space-between;
+  padding:10px 0;border-bottom:1px solid var(--b);}
+.seq-toggle-info .seq-toggle-lbl{font-size:13px;color:var(--t);font-weight:500;}
+.seq-toggle-info .seq-toggle-sub{font-size:11px;color:var(--td);margin-top:2px;}
+.seq-tog{width:40px;height:22px;background:var(--s2);border:1px solid var(--b2);
+  border-radius:11px;position:relative;cursor:pointer;transition:all 0.25s;flex-shrink:0;}
+.seq-tog.on{background:var(--pink);border-color:var(--pink);box-shadow:0 0 10px rgba(255,20,147,0.35);}
+.seq-tog::after{content:'';position:absolute;width:16px;height:16px;background:white;
+  border-radius:50%;top:2px;left:2px;transition:all 0.25s;box-shadow:0 1px 4px rgba(0,0,0,0.3);}
+.seq-tog.on::after{left:calc(100% - 18px);}
+/* Subject-line field slides in when thread toggle is turned OFF */
+.seq-subject-reveal{overflow:hidden;max-height:0;opacity:0;margin-top:0;
+  transition:max-height 0.3s ease,opacity 0.25s ease,margin 0.25s ease;}
+.seq-subject-reveal.open{max-height:60px;opacity:1;margin-top:10px;}
+
+/* Attachment zone */
+.seq-attach{border:1px dashed var(--b2);border-radius:8px;padding:9px 12px;
+  display:flex;align-items:center;gap:9px;cursor:pointer;
+  transition:border-color 0.15s,background 0.15s;}
+.seq-attach:hover{border-color:var(--tm);background:rgba(255,255,255,0.03);}
+.seq-attach-lbl{font-size:12px;color:var(--tm);}
+.seq-attach-sub{font-size:11px;color:var(--td);}
+
+/* Add follow-up button */
+.seq-add-row{display:flex;align-items:center;gap:12px;padding:4px 0 8px;}
+.seq-add-line{width:1px;background:var(--b2);height:24px;flex-shrink:0;margin-left:13px;}
+.seq-add-btn{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tm);
+  border:1px dashed var(--b2);border-radius:8px;padding:7px 12px;
+  background:transparent;cursor:pointer;transition:all 0.15s;font-family:var(--of);width:100%;}
+.seq-add-btn:hover{border-color:var(--pink);color:var(--pink);background:rgba(255,20,147,0.06);}
+
+/* Footer */
+.seq-ftr{padding:12px 18px;border-top:1px solid var(--b);display:flex;
+  align-items:center;justify-content:flex-end;gap:8px;flex-shrink:0;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 18px;border-radius:8px;font-family:var(--of);font-size:12px;
+  font-weight:700;cursor:pointer;border:none;transition:all 0.2s;
+  text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;box-shadow:0 6px 18px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bsm{padding:6px 12px;font-size:11px;}
+
+/* Toast */
+#tz{position:fixed;bottom:24px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:3px solid var(--cyan);}
+.tst.tg{border-left:3px solid var(--green);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* Demo layout — not part of the component */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;
+  position:relative;z-index:1;min-width:0;}
+.demo-note{padding:40px 40px 0;font-size:13px;color:var(--tm);line-height:1.7;}
+.demo-note strong{color:var(--t);}
+.demo-btn{margin:20px 40px 0;display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:8px;background:var(--gr);color:white;
+  font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;
+  box-shadow:0 0 24px rgba(255,20,147,0.2);}
+.demo-btn:hover{opacity:0.88;}
+</style>
+</head>
+<body>
+<div class="orb o1" style="position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;"></div>
+<div class="orb o2" style="position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:50px;"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span>Campaigns</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
   </div>
-  <div class="drawer-body" style="display:flex;flex-direction:column;gap:0;">
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
 
-    <!-- Step 1 -->
-    <div style="display:flex;gap:12px;margin-bottom:4px;">
-      <div style="display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;">
-        <div style="width:28px;height:28px;border-radius:50%;background:rgba(255,20,147,0.15);border:1px solid rgba(255,20,147,0.35);color:var(--pink);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;">1</div>
-        <div style="width:1px;background:var(--b2);flex:1;margin:3px 0;min-height:16px;"></div>
-      </div>
-      <div style="flex:1;padding-bottom:12px;">
-        <div style="background:var(--s);border:1px solid var(--b2);border-radius:10px;overflow:hidden;">
-          <div style="padding:10px 12px;display:flex;align-items:center;gap:6px;">
-            <span class="badge badge-pink" style="font-size:10px;">Value drop</span>
-            <span class="badge badge-cyan" style="font-size:10px;">Calm &amp; Commercial</span>
-            <span style="font-size:10px;color:var(--td);margin-left:auto;">Send immediately</span>
-          </div>
-          <div style="padding:10px 12px;border-top:1px solid var(--b);display:flex;flex-direction:column;gap:8px;">
-            <div><label class="input-label">Subject</label><input class="input" style="font-size:12px;" value="Something I thought you'd find useful…"></div>
-            <div><label class="input-label">Message</label><textarea class="input" style="font-size:12px;min-height:80px;">Hi [first_name], I came across [company]'s recent work and thought this might be relevant…</textarea></div>
-          </div>
-        </div>
-      </div>
+<!-- Sidebar -->
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si" href="#" style="position:relative;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="si-tip">Summary</span>
+  </a>
+  <a class="si on" href="#" style="position:relative;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <a class="si si-bottom" href="#" style="position:relative;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<!-- Main page (demo context) -->
+<div class="layout">
+  <main class="main">
+    <div class="demo-note">
+      <strong>Sequence Drawer — source pack component</strong><br>
+      This is the right-side drawer that opens when a user clicks "Edit sequence"
+      on the campaign header. Click the button below to see the drawer open.
+      All interactions work: expand/collapse steps, chip selection updates badges,
+      toggle switches reveal subject fields, delete steps, add new steps.
     </div>
-
-    <!-- Step 2 -->
-    <div style="display:flex;gap:12px;">
-      <div style="display:flex;flex-direction:column;align-items:center;width:28px;flex-shrink:0;">
-        <div style="width:28px;height:28px;border-radius:50%;background:var(--s2);border:1px solid var(--b2);color:var(--tm);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;">2</div>
-      </div>
-      <div style="flex:1;padding-bottom:12px;">
-        <div style="background:var(--s);border:1px solid var(--b2);border-radius:10px;overflow:hidden;">
-          <div style="padding:10px 12px;display:flex;align-items:center;gap:6px;">
-            <span class="badge badge-neutral" style="font-size:10px;">Follow-up</span>
-            <span class="badge badge-neutral" style="font-size:10px;">Light Touch Relational</span>
-            <span style="font-size:10px;color:var(--td);margin-left:auto;">After 5 days · no reply</span>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Add step -->
-    <button style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--tm);border:1px dashed var(--b2);border-radius:8px;padding:8px 12px;background:transparent;cursor:pointer;font-family:var(--of);width:100%;margin-left:40px;width:calc(100% - 40px);">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M6 1v10M1 6h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      Add follow-up step
+    <button class="demo-btn" onclick="openSequence()">
+      <svg width="13" height="13" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="8" y2="11"/></svg>
+      Edit sequence
     </button>
-
-    <div class="notice notice-amber" style="margin-top:16px;font-size:12px;">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style="flex-shrink:0;"><circle cx="7" cy="7" r="6" stroke="currentColor" stroke-width="1.4"/><path d="M7 4.5v3.5l2 1" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
-      Follow-ups stop automatically if the prospect replies at any point.
-    </div>
-  </div>
-  <div class="drawer-footer">
-    <button class="btn btn-ghost btn-sm">Cancel</button>
-    <button class="btn btn-primary btn-sm">Save sequence</button>
-  </div>
+  </main>
 </div>
-</div></body></html>
+
+
+<!-- ══════════════════════════════════════════════════════════════════
+     SEQUENCE DRAWER OVERLAY + PANEL
+     Codex: render as a portal to document.body.
+     Both #seq-overlay and #seq-drawer receive class .open simultaneously.
+
+     OPEN:  openSequence() — always resets to collapsed state
+     CLOSE: closeSeq() — backdrop click, ✕ button, Escape key
+
+     ANIMATION:
+       translateX(100%) → translateX(0)
+       duration: 280ms · easing: cubic-bezier(0.4,0,0.2,1)
+       visibility toggled to prevent tab-focus when offscreen
+
+     COMPONENT STRUCTURE:
+       seq-hdr   — title bar with campaign name + close button
+       seq-body  — scrollable step list
+         seq-step × N — step number + connector + step card
+           seq-card    — collapsed: shows type/tone badges + delay
+                         expanded: shows full editor (type chips, tone
+                         chips, delay, thread toggle, subject, body, attachment)
+       seq-add-row     — "+ Add follow-up" button
+       seq-ftr         — Cancel + Save changes buttons
+
+     DATA SHAPE per step:
+       { type: 'value_drop'|'follow_up'|'check_in'|'post_meeting'
+         tone: 'calm'|'direct'|'light'
+         delay: number (days) — null for step 1 (sends immediately)
+         subject: string
+         body: string
+         thread: boolean (reply to previous thread, default true)
+         attachment: File|null }
+
+     STEP 1 special case:
+       - No delete button (cannot remove initial email)
+       - No delay field (sends immediately)
+       - Number circle uses .s1 class (pink) not .sn (muted)
+══════════════════════════════════════════════════════════════════ -->
+<div id="seq-overlay" onclick="closeSeq()"></div>
+
+<div id="seq-drawer">
+
+  <!-- Header -->
+  <div class="seq-hdr">
+    <div class="seq-title">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <line x1="1" y1="3" x2="13" y2="3"/><line x1="1" y1="7" x2="13" y2="7"/><line x1="1" y1="11" x2="8" y2="11"/>
+      </svg>
+      Edit sequence
+      <span class="seq-title-sub">Agency founders Q1</span>
+    </div>
+    <span class="seq-close" onclick="closeSeq()">✕</span>
+  </div>
+
+  <!-- Body -->
+  <div class="seq-body">
+
+    <!-- ══ STEP 1 — Initial email ══
+         Note: Step 1 has NO delete button and NO delay field.
+         Number circle is .s1 (pink). Collapsed by default on open. -->
+    <div class="seq-step" id="step1row">
+      <div class="seq-step-left">
+        <div class="seq-step-num s1" id="num1">1</div>
+        <div class="seq-connector"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc1">
+
+          <!-- Collapsed header — click to expand -->
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc1')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc1-type-badge">Value drop</span>
+              <span class="seq-badge tone" id="sc1-tone-badge">Calm &amp; Commercial</span>
+              <span class="seq-delay-txt">Initial email</span>
+            </div>
+            <!-- No delete icon on Step 1 -->
+            <span class="seq-card-chevron">▼</span>
+          </div>
+
+          <!-- Expanded editor (hidden until .expanded on .seq-card) -->
+          <div class="seq-editor">
+
+            <!-- Message type chips -->
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc1" data-group="type">
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc1','type')">Value drop</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Follow-up</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','type')">Post-meeting</span>
+              </div>
+            </div>
+
+            <!-- Tone chips -->
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc1" data-group="tone">
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc1','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc1','tone')">Light Touch</span>
+              </div>
+            </div>
+
+            <!-- Subject line -->
+            <div>
+              <div class="seq-field-lbl">Subject line</div>
+              <input class="seq-input" type="text" value="Quick thought on {{company}}'s pipeline">
+            </div>
+
+            <!-- Body copy -->
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="5">Hi {{first_name}},
+
+Noticed you're scaling the team at {{company}} — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount. Worth 15 minutes?
+
+Best,</textarea>
+            </div>
+
+            <!-- Attachment -->
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach" onclick="toast('📎','File picker would open here','tc')">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+                </svg>
+                <div>
+                  <div class="seq-attach-lbl">Add attachment</div>
+                  <div class="seq-attach-sub">PDF, Word, or image — optional</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /seq-editor -->
+        </div><!-- /seq-card -->
+      </div><!-- /seq-step-body -->
+    </div><!-- /step1row -->
+
+
+    <!-- ══ STEP 2 — Follow-up ══
+         Note: Steps 2+ have a delete button (trash icon) and a delay field. -->
+    <div class="seq-step" id="step2row">
+      <div class="seq-step-left">
+        <div class="seq-step-num sn" id="num2">2</div>
+        <div class="seq-connector"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc2">
+
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc2')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc2-type-badge">Follow-up</span>
+              <span class="seq-badge tone" id="sc2-tone-badge">Light Touch</span>
+              <span class="seq-delay-txt">3 days after step 1</span>
+            </div>
+            <!-- Delete icon (steps 2+) -->
+            <span class="seq-card-del" title="Remove step"
+              onclick="event.stopPropagation();showDelConfirm('dc2')">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+              </svg>
+            </span>
+            <span class="seq-card-chevron">▼</span>
+          </div>
+
+          <!-- Inline delete confirm -->
+          <div class="seq-del-confirm" id="dc2">
+            <span class="seq-del-msg">Remove this follow-up?</span>
+            <div class="seq-del-btns">
+              <button class="btn bs bsm" onclick="hideDelConfirm('dc2')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+              <button class="btn bsm" onclick="removeStep('step2row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+            </div>
+          </div>
+
+          <div class="seq-editor">
+
+            <!-- Delay (steps 2+ only) -->
+            <div>
+              <div class="seq-field-lbl">Delay after previous step</div>
+              <div class="seq-delay-row">
+                <input class="seq-delay-input" type="number" value="3" min="1" max="365">
+                <span class="seq-delay-unit">days</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc2" data-group="type">
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Value drop</span>
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc2','type')">Follow-up</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','type')">Post-meeting</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc2" data-group="tone">
+                <span class="seq-chip" onclick="pickChip(this,'sc2','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc2','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc2','tone')">Light Touch</span>
+              </div>
+            </div>
+
+            <!-- Thread toggle — ON = reply to existing thread (default) -->
+            <div>
+              <div class="seq-toggle-row">
+                <div class="seq-toggle-info">
+                  <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
+                  <div class="seq-toggle-sub">Keeps context — recommended</div>
+                </div>
+                <div class="seq-tog on" id="tog2" onclick="seqToggleThread(this,'sr2')"></div>
+              </div>
+              <!-- Subject reveal: visible when toggle is OFF (separate thread) -->
+              <div class="seq-subject-reveal" id="sr2">
+                <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="4">Hi {{first_name}},
+
+Just wanted to make sure this didn't get buried. Happy to keep it really brief if easier.
+
+Coris</textarea>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach" onclick="toast('📎','File picker would open here','tc')">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+                </svg>
+                <div>
+                  <div class="seq-attach-lbl">Add attachment</div>
+                  <div class="seq-attach-sub">Optional — different from Step 1</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /seq-editor -->
+        </div><!-- /seq-card -->
+      </div><!-- /seq-step-body -->
+    </div><!-- /step2row -->
+
+
+    <!-- ══ STEP 3 ══ -->
+    <div class="seq-step" id="step3row">
+      <div class="seq-step-left">
+        <div class="seq-step-num sn" id="num3">3</div>
+        <!-- Last step: connector hidden (no step below) -->
+        <div class="seq-connector" id="conn3" style="display:none;"></div>
+      </div>
+      <div class="seq-step-body">
+        <div class="seq-card" id="sc3">
+
+          <div class="seq-card-hdr" onclick="toggleSeqCard('sc3')">
+            <div class="seq-card-tags">
+              <span class="seq-badge type" id="sc3-type-badge">Check-in</span>
+              <span class="seq-badge tone" id="sc3-tone-badge">Direct &amp; Confident</span>
+              <span class="seq-delay-txt">5 days after step 2</span>
+            </div>
+            <span class="seq-card-del" title="Remove step"
+              onclick="event.stopPropagation();showDelConfirm('dc3')">
+              <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+                <path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/>
+              </svg>
+            </span>
+            <span class="seq-card-chevron">▼</span>
+          </div>
+
+          <div class="seq-del-confirm" id="dc3">
+            <span class="seq-del-msg">Remove this follow-up?</span>
+            <div class="seq-del-btns">
+              <button class="btn bs bsm" onclick="hideDelConfirm('dc3')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+              <button class="btn bsm" onclick="removeStep('step3row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+            </div>
+          </div>
+
+          <div class="seq-editor">
+
+            <div>
+              <div class="seq-field-lbl">Delay after previous step</div>
+              <div class="seq-delay-row">
+                <input class="seq-delay-input" type="number" value="5" min="1" max="365">
+                <span class="seq-delay-unit">days</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Message type</div>
+              <div class="seq-chips" data-card="sc3" data-group="type">
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Value drop</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Follow-up</span>
+                <span class="seq-chip sel-type" onclick="pickChip(this,'sc3','type')">Check-in</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','type')">Post-meeting</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Tone</div>
+              <div class="seq-chips" data-card="sc3" data-group="tone">
+                <span class="seq-chip" onclick="pickChip(this,'sc3','tone')">Calm &amp; Commercial</span>
+                <span class="seq-chip sel-tone" onclick="pickChip(this,'sc3','tone')">Direct &amp; Confident</span>
+                <span class="seq-chip" onclick="pickChip(this,'sc3','tone')">Light Touch</span>
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-toggle-row">
+                <div class="seq-toggle-info">
+                  <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
+                  <div class="seq-toggle-sub">Keeps context — recommended</div>
+                </div>
+                <div class="seq-tog on" id="tog3" onclick="seqToggleThread(this,'sr3')"></div>
+              </div>
+              <div class="seq-subject-reveal" id="sr3">
+                <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
+              </div>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Body copy</div>
+              <textarea class="seq-input" rows="4">Hi {{first_name}},
+
+Last nudge from me — if the timing's off I'll leave you to it. If new business pipeline is on your agenda for the next quarter, happy to have a very quick call.
+
+Coris</textarea>
+            </div>
+
+            <div>
+              <div class="seq-field-lbl">Attachment</div>
+              <div class="seq-attach" onclick="toast('📎','File picker would open here','tc')">
+                <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+                  <path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/>
+                </svg>
+                <div>
+                  <div class="seq-attach-lbl">Add attachment</div>
+                  <div class="seq-attach-sub">Optional — different from previous step</div>
+                </div>
+              </div>
+            </div>
+
+          </div><!-- /seq-editor -->
+        </div><!-- /seq-card -->
+      </div><!-- /seq-step-body -->
+    </div><!-- /step3row -->
+
+
+    <!-- Add follow-up step button -->
+    <div class="seq-add-row" id="seq-add-row">
+      <div class="seq-add-line"></div>
+      <div style="flex:1;">
+        <button class="seq-add-btn" onclick="addFollowUp()">
+          <svg width="11" height="11" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <line x1="6" y1="1" x2="6" y2="11"/><line x1="1" y1="6" x2="11" y2="6"/>
+          </svg>
+          Add follow-up
+        </button>
+      </div>
+    </div>
+
+  </div><!-- /seq-body -->
+
+  <!-- Footer -->
+  <div class="seq-ftr">
+    <button class="btn bs bsm" onclick="closeSeq()">Cancel</button>
+    <button class="btn bp bsm" onclick="saveSeq()">Save changes</button>
+  </div>
+
+</div><!-- /seq-drawer -->
+
+
+<div id="tz"></div>
+
+
+<script>
+// ══ SEQUENCE DRAWER INTERACTIONS ══════════════════════════════════
+// All functions sourced verbatim from campaign-view-v3.js
+
+function openSequence() {
+  // Always open clean — collapse all, scroll to top, reset toggles
+  document.querySelectorAll('#seq-drawer .seq-card').forEach(c => c.classList.remove('expanded'));
+  document.querySelectorAll('#seq-drawer .seq-del-confirm').forEach(d => d.classList.remove('show'));
+  document.querySelectorAll('#seq-drawer .seq-subject-reveal').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('#seq-drawer .seq-tog').forEach(t => {
+    if (!t.classList.contains('on')) t.classList.add('on');
+  });
+  const body = document.querySelector('#seq-drawer .seq-body');
+  if (body) body.scrollTop = 0;
+  document.getElementById('seq-overlay').classList.add('open');
+  document.getElementById('seq-drawer').classList.add('open');
+}
+
+function closeSeq() {
+  document.getElementById('seq-overlay').classList.remove('open');
+  document.getElementById('seq-drawer').classList.remove('open');
+}
+
+// Toggle expand/collapse on a step card
+function toggleSeqCard(id) {
+  const card = document.getElementById(id);
+  const wasExpanded = card.classList.contains('expanded');
+  card.classList.toggle('expanded');
+  if (!wasExpanded) {
+    setTimeout(() => {
+      const stepRow = card.closest('.seq-step');
+      const body = document.querySelector('#seq-drawer .seq-body');
+      if (stepRow && body) {
+        body.scrollTo({ top: stepRow.offsetTop - body.offsetTop - 12, behavior: 'smooth' });
+      }
+    }, 30);
+  }
+}
+
+function showDelConfirm(dcId) {
+  document.getElementById(dcId).classList.add('show');
+}
+function hideDelConfirm(dcId) {
+  document.getElementById(dcId).classList.remove('show');
+}
+
+function removeStep(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const h = row.offsetHeight;
+  row.style.overflow = 'hidden';
+  row.style.height = h + 'px';
+  row.style.transition = 'height 0.3s ease, opacity 0.25s ease, margin 0.3s ease';
+  requestAnimationFrame(() => {
+    row.style.opacity = '0';
+    row.style.height = '0';
+    row.style.marginBottom = '0';
+  });
+  setTimeout(() => {
+    row.remove();
+    if (seqStepCount > 1) seqStepCount--;
+    renumberSteps();
+    const addRow = document.getElementById('seq-add-row');
+    if (addRow) addRow.style.display = 'flex';
+    updateLastConnector();
+  }, 320);
+}
+
+function renumberSteps() {
+  const body = document.querySelector('#seq-drawer .seq-body');
+  const rows = Array.from(body.querySelectorAll('.seq-step'));
+  rows.forEach((row, i) => {
+    const numEl = row.querySelector('.seq-step-num');
+    if (numEl) numEl.textContent = i + 1;
+  });
+}
+
+function updateLastConnector() {
+  const body = document.querySelector('#seq-drawer .seq-body');
+  const connectors = Array.from(body.querySelectorAll('.seq-connector'));
+  connectors.forEach((c, i) => {
+    c.style.display = (i < connectors.length - 1) ? '' : 'none';
+  });
+}
+
+// Thread toggle: ON = reply to thread (no subject shown)
+//                OFF = new thread (subject field revealed)
+function seqToggleThread(togEl, revealId) {
+  togEl.classList.toggle('on');
+  const reveal = document.getElementById(revealId);
+  if (reveal) {
+    if (!togEl.classList.contains('on')) {
+      reveal.classList.add('open');
+    } else {
+      reveal.classList.remove('open');
+    }
+  }
+}
+
+// Chip selection: clicking a chip deselects siblings, selects itself,
+// and updates the badge shown in the collapsed card header
+function pickChip(el, cardId, group) {
+  const container = el.closest('.seq-chips');
+  container.querySelectorAll('.seq-chip').forEach(c => {
+    c.classList.remove('sel-type', 'sel-tone');
+  });
+  el.classList.add(group === 'type' ? 'sel-type' : 'sel-tone');
+  const badge = document.getElementById(cardId + '-' + group + '-badge');
+  if (badge) badge.textContent = el.textContent;
+}
+
+let seqStepCount = 3;
+
+function addFollowUp() {
+  const body = document.querySelector('#seq-drawer .seq-body');
+  const currentSteps = body.querySelectorAll('.seq-step').length;
+  if (currentSteps >= 6) {
+    toast('—', 'Maximum 6 steps in a sequence', 'tc');
+    return;
+  }
+  seqStepCount = currentSteps + 1;
+  const n = seqStepCount;
+  const uid = 's' + Date.now();
+  const addRow = document.getElementById('seq-add-row');
+  updateLastConnector();
+  const stepHTML = `
+  <div class="seq-step" id="step${uid}row" style="opacity:0;transform:translateY(6px);transition:opacity 0.25s,transform 0.25s;">
+    <div class="seq-step-left">
+      <div class="seq-step-num sn" id="num${uid}">${n}</div>
+      <div class="seq-connector" style="display:none;"></div>
+    </div>
+    <div class="seq-step-body">
+      <div class="seq-card" id="sc${uid}">
+        <div class="seq-card-hdr" onclick="toggleSeqCard('sc${uid}')">
+          <div class="seq-card-tags">
+            <span class="seq-badge type" id="sc${uid}-type-badge">Follow-up</span>
+            <span class="seq-badge tone" id="sc${uid}-tone-badge">Calm &amp; Commercial</span>
+            <span class="seq-delay-txt">5 days after step ${n-1}</span>
+          </div>
+          <span class="seq-card-del" title="Remove step" onclick="event.stopPropagation();showDelConfirm('dc${uid}')">
+            <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 4h10M5 4V3h4v1M11 4l-.8 8H3.8L3 4"/></svg>
+          </span>
+          <span class="seq-card-chevron">▼</span>
+        </div>
+        <div class="seq-del-confirm" id="dc${uid}">
+          <span class="seq-del-msg">Remove this follow-up?</span>
+          <div class="seq-del-btns">
+            <button class="btn bs bsm" onclick="hideDelConfirm('dc${uid}')" style="font-size:11px;padding:4px 10px;">Cancel</button>
+            <button class="btn bsm" onclick="removeStep('step${uid}row')" style="font-size:11px;padding:4px 10px;background:rgba(255,77,109,0.15);border:1px solid rgba(255,77,109,0.3);color:#ff4d6d;">Remove</button>
+          </div>
+        </div>
+        <div class="seq-editor">
+          <div>
+            <div class="seq-field-lbl">Delay after previous step</div>
+            <div class="seq-delay-row">
+              <input class="seq-delay-input" type="number" value="5" min="1" max="365">
+              <span class="seq-delay-unit">days</span>
+            </div>
+          </div>
+          <div>
+            <div class="seq-field-lbl">Message type</div>
+            <div class="seq-chips" data-card="sc${uid}" data-group="type">
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Value drop</span>
+              <span class="seq-chip sel-type" onclick="pickChip(this,'sc${uid}','type')">Follow-up</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Check-in</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','type')">Post-meeting</span>
+            </div>
+          </div>
+          <div>
+            <div class="seq-field-lbl">Tone</div>
+            <div class="seq-chips" data-card="sc${uid}" data-group="tone">
+              <span class="seq-chip sel-tone" onclick="pickChip(this,'sc${uid}','tone')">Calm &amp; Commercial</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','tone')">Direct &amp; Confident</span>
+              <span class="seq-chip" onclick="pickChip(this,'sc${uid}','tone')">Light Touch</span>
+            </div>
+          </div>
+          <div>
+            <div class="seq-toggle-row">
+              <div class="seq-toggle-info">
+                <div class="seq-toggle-lbl">Reply to original Gmail thread</div>
+                <div class="seq-toggle-sub">Keeps context — recommended</div>
+              </div>
+              <div class="seq-tog on" id="tog${uid}" onclick="seqToggleThread(this,'sr${uid}')"></div>
+            </div>
+            <div class="seq-subject-reveal" id="sr${uid}">
+              <input class="seq-input" placeholder="Enter a new subject line" style="margin-top:0;">
+            </div>
+          </div>
+          <div>
+            <div class="seq-field-lbl">Body copy</div>
+            <textarea class="seq-input" rows="4" placeholder="Write your follow-up message…"></textarea>
+          </div>
+          <div>
+            <div class="seq-field-lbl">Attachment</div>
+            <div class="seq-attach" onclick="toast('📎','File picker would open here','tc')">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><path d="M13.5 8.5l-6 6a4 4 0 01-5.66-5.66l7-7a2.5 2.5 0 013.54 3.54l-7 7a1 1 0 01-1.42-1.42l6-6"/></svg>
+              <div><div class="seq-attach-lbl">Add attachment</div><div class="seq-attach-sub">Optional — different from previous step</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+  addRow.insertAdjacentHTML('beforebegin', stepHTML);
+  requestAnimationFrame(() => {
+    const newRow = document.getElementById(`step${uid}row`);
+    if (newRow) { newRow.style.opacity='1'; newRow.style.transform='translateY(0)'; }
+  });
+  setTimeout(() => {
+    toggleSeqCard(`sc${uid}`);
+    const newRow = document.getElementById(`step${uid}row`);
+    if (newRow) newRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 60);
+  if (currentSteps + 1 >= 6) addRow.style.display = 'none';
+  updateLastConnector();
+}
+
+function saveSeq() {
+  closeSeq();
+  toast('✓', 'Sequence saved', 'tg');
+}
+
+function toast(icon, text, cls) {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + (cls || 'tc');
+  e.innerHTML = '<span>' + icon + '</span><span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => {
+    e.style.opacity = '0'; e.style.transition = 'opacity 0.3s';
+    setTimeout(() => e.remove(), 300);
+  }, 3200);
+}
+
+// Escape closes drawer
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeSeq();
+});
+
+// Open on load for the source pack demo
+document.addEventListener('DOMContentLoaded', () => {
+  openSequence();
+  // Auto-expand step 1 to show the full editor on load
+  setTimeout(() => toggleSeqCard('sc1'), 100);
+});
+</script>
+</body>
+</html>
