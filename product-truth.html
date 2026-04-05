@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulse. — Product Truth</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);--rd:rgba(255,76,76,0.10);
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;line-height:1.6;}
+
+/* Ambient orbs */
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.05);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.04);bottom:-100px;left:-50px;}
+
+/* Layout */
+.page{position:relative;z-index:1;max-width:720px;margin:0 auto;padding:64px 32px 120px;}
+
+/* Back link */
+.back{display:inline-flex;align-items:center;gap:6px;font-family:var(--of);font-size:11px;
+  font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);
+  text-decoration:none;margin-bottom:48px;transition:color 0.15s;}
+.back:hover{color:var(--tm);}
+
+/* Page header */
+.page-eyebrow{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.15em;color:var(--pink);margin-bottom:10px;}
+.page-title{font-family:var(--of);font-size:42px;font-weight:900;letter-spacing:-0.03em;
+  line-height:1.05;margin-bottom:12px;}
+.page-title span{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.page-sub{font-size:15px;color:var(--tm);line-height:1.7;max-width:520px;margin-bottom:56px;}
+
+/* Sections */
+.section{margin-bottom:40px;}
+.section-title{font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.12em;color:var(--td);margin-bottom:16px;padding-bottom:10px;
+  border-bottom:1px solid var(--b);}
+
+/* Text blocks */
+.lead{font-size:17px;color:var(--t);line-height:1.7;margin-bottom:16px;font-weight:500;}
+p{font-size:15px;color:var(--tm);line-height:1.8;margin-bottom:16px;}
+p:last-child{margin-bottom:0;}
+
+/* Lists */
+ul,ol{padding-left:0;list-style:none;display:flex;flex-direction:column;gap:8px;}
+li{font-size:14px;color:var(--tm);line-height:1.6;display:flex;align-items:flex-start;gap:10px;}
+li::before{content:'·';color:var(--pink);font-weight:700;flex-shrink:0;margin-top:1px;}
+
+/* Core loop — numbered */
+.loop{display:flex;flex-direction:column;gap:0;}
+.loop-item{display:flex;align-items:flex-start;gap:14px;padding:14px 0;
+  border-bottom:1px solid var(--b);}
+.loop-item:last-child{border-bottom:none;}
+.loop-num{width:28px;height:28px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.loop-text{font-size:15px;color:var(--t);font-weight:500;padding-top:4px;}
+
+/* Primary promise — callout */
+.promise{
+  background:var(--pd);border:1px solid rgba(255,20,147,0.2);border-radius:14px;
+  padding:24px 28px;margin-bottom:0;
+}
+.promise-quote{
+  font-family:var(--of);font-size:20px;font-weight:800;letter-spacing:-0.01em;
+  color:var(--t);line-height:1.4;margin-bottom:8px;
+}
+.promise-quote span{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.promise-sub{font-size:13px;color:var(--tm);line-height:1.6;}
+
+/* Key actions — pill list */
+.actions{display:flex;flex-wrap:wrap;gap:8px;}
+.action-pill{
+  font-family:var(--of);font-size:12px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.06em;padding:7px 14px;border-radius:100px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--t);
+}
+.action-pill.primary{
+  background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);
+}
+
+/* Design principles */
+.principles{display:flex;flex-direction:column;gap:12px;}
+.principle{
+  background:var(--s);border:1px solid var(--b);border-radius:12px;padding:18px 20px;
+}
+.principle-num{
+  font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:4px;
+}
+.principle-title{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);margin-bottom:4px;}
+.principle-desc{font-size:13px;color:var(--tm);line-height:1.6;}
+
+/* Truth blocks — for review/sequence/override truths */
+.truth{
+  background:var(--s);border:1px solid var(--b);border-radius:12px;
+  padding:20px 22px;margin-bottom:12px;
+}
+.truth-title{font-family:var(--of);font-size:14px;font-weight:700;color:var(--t);margin-bottom:14px;}
+.truth-cols{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.truth-col-label{font-size:10px;font-family:var(--of);font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;margin-bottom:8px;}
+.truth-col-label.is{color:var(--green);}
+.truth-col-label.not{color:var(--red);}
+.truth-col ul{gap:6px;}
+.truth-col li{font-size:13px;}
+.truth-col li.is::before{color:var(--green);}
+.truth-col li.not::before{content:'✕';color:var(--red);}
+
+/* Red flags */
+.flags{display:flex;flex-direction:column;gap:8px;}
+.flag{
+  display:flex;align-items:flex-start;gap:12px;
+  background:var(--rd);border:1px solid rgba(255,76,76,0.15);
+  border-radius:8px;padding:12px 14px;
+}
+.flag-icon{color:var(--red);font-size:13px;flex-shrink:0;margin-top:1px;}
+.flag-text{font-size:13px;color:var(--t);line-height:1.5;}
+
+/* North star — closing callout */
+.north-star{
+  background:linear-gradient(135deg,rgba(255,20,147,0.08),rgba(0,212,255,0.06));
+  border:1px solid rgba(255,255,255,0.08);border-radius:16px;
+  padding:32px 36px;text-align:center;margin-top:48px;
+}
+.north-star-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.15em;color:var(--td);margin-bottom:14px;}
+.north-star-quote{
+  font-family:var(--of);font-size:24px;font-weight:900;letter-spacing:-0.02em;
+  line-height:1.3;color:var(--t);
+}
+.north-star-quote em{
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;font-style:normal;
+}
+
+/* Divider */
+.divider{height:1px;background:var(--b);margin:40px 0;}
+
+/* Footer */
+.footer{margin-top:64px;text-align:center;font-size:11px;color:var(--td);}
+.footer a{color:var(--td);text-decoration:none;}
+.footer a:hover{color:var(--tm);}
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<div class="page">
+
+  <a href="hub.html" class="back">
+    <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M7.5 2L3.5 6l4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    Back to hub
+  </a>
+
+  <div class="page-eyebrow">Product truth</div>
+  <h1 class="page-title">Pulse<span>.</span></h1>
+  <p class="page-sub">One page. Everything that matters. If the product drifts from this, it's wrong.</p>
+
+
+  <!-- ── WHAT PULSE IS ── -->
+  <div class="section">
+    <div class="section-title">What Pulse is</div>
+    <p class="lead">Pulse helps you reach out to people consistently and turn that into replies.</p>
+    <p>It removes friction between having a list, sending messages, and following up.</p>
+  </div>
+
+
+  <!-- ── WHAT PULSE IS NOT ── -->
+  <div class="section">
+    <div class="section-title">What Pulse is not</div>
+    <ul>
+      <li>A CRM</li>
+      <li>A pipeline manager</li>
+      <li>A data warehouse</li>
+      <li>A complex automation builder</li>
+    </ul>
+    <p style="margin-top:16px;font-size:13px;color:var(--td);">If it starts behaving like one, it's drifting.</p>
+  </div>
+
+
+  <!-- ── CORE USER LOOP ── -->
+  <div class="section">
+    <div class="section-title">The core user loop</div>
+    <div class="loop">
+      <div class="loop-item"><div class="loop-num">1</div><div class="loop-text">Add people</div></div>
+      <div class="loop-item"><div class="loop-num">2</div><div class="loop-text">Write message</div></div>
+      <div class="loop-item"><div class="loop-num">3</div><div class="loop-text">Sanity check</div></div>
+      <div class="loop-item"><div class="loop-num">4</div><div class="loop-text">Send</div></div>
+      <div class="loop-item"><div class="loop-num">5</div><div class="loop-text">Follow up</div></div>
+      <div class="loop-item"><div class="loop-num">6</div><div class="loop-text">Respond</div></div>
+    </div>
+    <p style="margin-top:16px;font-size:13px;color:var(--td);">Everything in the product must support this loop.</p>
+  </div>
+
+
+  <!-- ── PRIMARY PROMISE ── -->
+  <div class="section">
+    <div class="section-title">The primary promise</div>
+    <div class="promise">
+      <div class="promise-quote"><span>"I can go from a list of people to messages being sent in minutes."</span></div>
+      <div class="promise-sub">If anything slows that down, it's a problem.</div>
+    </div>
+  </div>
+
+
+  <!-- ── MOST IMPORTANT ACTIONS ── -->
+  <div class="section">
+    <div class="section-title">The most important actions</div>
+    <div class="actions">
+      <span class="action-pill primary">Create campaign</span>
+      <span class="action-pill primary">Import prospects</span>
+      <span class="action-pill primary">Write message</span>
+      <span class="action-pill primary">Approve</span>
+      <span class="action-pill primary">Send</span>
+    </div>
+    <p style="margin-top:14px;font-size:13px;color:var(--td);">Everything else is secondary.</p>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ── DESIGN PRINCIPLES ── -->
+  <div class="section">
+    <div class="section-title">Design principles</div>
+    <div class="principles">
+
+      <div class="principle">
+        <div class="principle-num">Principle 1</div>
+        <div class="principle-title">Speed over ceremony</div>
+        <div class="principle-desc">Users should move fast when they're confident.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">Principle 2</div>
+        <div class="principle-title">Safety without friction</div>
+        <div class="principle-desc">We provide confidence, not obstacles.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">Principle 3</div>
+        <div class="principle-title">Defaults do the work</div>
+        <div class="principle-desc">The system should make decisions for the user where possible.</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">Principle 4</div>
+        <div class="principle-title">One clear action per screen</div>
+        <div class="principle-desc">Every surface answers: "What do I do here?"</div>
+      </div>
+
+      <div class="principle">
+        <div class="principle-num">Principle 5</div>
+        <div class="principle-title">Advanced features stay out of the way</div>
+        <div class="principle-desc">Power exists, but never blocks the core flow.</div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ── COMPONENT TRUTHS ── -->
+  <div class="section">
+    <div class="section-title">Component truths</div>
+
+    <div class="truth">
+      <div class="truth-title">Review tab</div>
+      <div class="truth-cols">
+        <div class="truth-col">
+          <div class="truth-col-label is">Is</div>
+          <ul><li class="is">A confidence check before sending</li></ul>
+        </div>
+        <div class="truth-col">
+          <div class="truth-col-label not">Is not</div>
+          <ul><li class="not">A mandatory processing step</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="truth">
+      <div class="truth-title">Sequence editor</div>
+      <div class="truth-cols">
+        <div class="truth-col">
+          <div class="truth-col-label is">Is</div>
+          <ul><li class="is">Defines the default behaviour</li></ul>
+        </div>
+        <div class="truth-col">
+          <div class="truth-col-label not">Is not</div>
+          <ul><li class="not">The main workflow</li></ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="truth">
+      <div class="truth-title">Override system</div>
+      <div class="truth-cols">
+        <div class="truth-col">
+          <div class="truth-col-label is">Exists to</div>
+          <ul><li class="is">Improve edge cases for specific prospects</li></ul>
+        </div>
+        <div class="truth-col">
+          <div class="truth-col-label not">Must never</div>
+          <ul>
+            <li class="not">Slow down the default flow</li>
+            <li class="not">Confuse the main experience</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+
+  <div class="divider"></div>
+
+
+  <!-- ── RED FLAGS ── -->
+  <div class="section">
+    <div class="section-title">Red flags — watch these</div>
+    <div class="flags">
+      <div class="flag"><div class="flag-icon">⚑</div><div class="flag-text">Users hesitate before sending</div></div>
+      <div class="flag"><div class="flag-icon">⚑</div><div class="flag-text">Too many decisions before action</div></div>
+      <div class="flag"><div class="flag-icon">⚑</div><div class="flag-text">UI explaining itself too much</div></div>
+      <div class="flag"><div class="flag-icon">⚑</div><div class="flag-text">Features solving rare cases first</div></div>
+      <div class="flag"><div class="flag-icon">⚑</div><div class="flag-text">"One more option" creeping into core flows</div></div>
+    </div>
+  </div>
+
+
+  <!-- ── NORTH STAR ── -->
+  <div class="north-star">
+    <div class="north-star-label">The north star</div>
+    <div class="north-star-quote"><em>"This feels simple. I just get my outreach done."</em></div>
+  </div>
+
+  <div class="footer">
+    <a href="hub.html">← Back to hub</a>
+  </div>
+
+</div>
+</body>
+</html>
