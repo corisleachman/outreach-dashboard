@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Today (Exploration B: Weighted queue)</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:"Outfit",sans-serif;--sf:"DM Sans",sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:0;}
+
+/* Shell */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.94);
+  border-bottom:1px solid var(--b);backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  text-decoration:none;margin-right:16px;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);
+  border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;
+  padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:rgba(255,255,255,0.45);border:1px solid transparent;transition:all 0.15s;position:relative;}
+.si:hover{background:var(--s2);border-color:var(--b2);color:var(--t);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;
+  padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;
+  pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.si-bottom{margin-top:auto;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;padding:28px 40px;position:relative;z-index:1;max-width:760px;}
+.page-title{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:2px;}
+.page-date{font-size:13px;color:var(--td);margin-bottom:20px;}
+.tab-row{display:flex;gap:0;border-bottom:1px solid var(--b);margin-bottom:28px;}
+.tab{padding:9px 18px;font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);
+  cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;background:none;border-top:none;
+  border-left:none;border-right:none;}
+.tab:hover{color:var(--t);}
+.tab.active{color:var(--pink);border-bottom-color:var(--pink);}
+.slabel{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.12em;color:var(--td);margin-bottom:12px;}
+
+/* ── EXPLORATION B: WEIGHTED QUEUE ───────────────────────────────────────
+   No separate block. The queue IS the hierarchy.
+   
+   .qi-primary — the top/most urgent item. Larger, gradient border,
+                 has a CTA button embedded. More padding, bigger text.
+   .qi-secondary — all other items. Same layout but visually quieter:
+                   reduced opacity on sub-text, smaller icon, tighter padding.
+   ──────────────────────────────────────────────────────────────────────── */
+
+/* Shared queue container */
+.queue{display:flex;flex-direction:column;gap:8px;margin-bottom:32px;}
+
+/* PRIMARY item — the dominant first card */
+.qi-primary{
+  display:flex;align-items:center;gap:16px;
+  padding:20px 20px;border-radius:14px;
+  background:rgba(0,212,255,0.06);
+  border:1px solid rgba(0,212,255,0.25);
+  text-decoration:none;color:var(--t);
+  transition:all 0.15s;cursor:pointer;
+  position:relative;
+}
+.qi-primary:hover{background:rgba(0,212,255,0.10);border-color:rgba(0,212,255,0.4);}
+.qi-primary-icon{
+  width:40px;height:40px;border-radius:10px;
+  background:var(--cd);border:1px solid rgba(0,212,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.qi-primary-body{flex:1;min-width:0;}
+.qi-primary-eyebrow{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--cyan);margin-bottom:4px;}
+.qi-primary-title{font-family:var(--of);font-size:16px;font-weight:800;
+  letter-spacing:-0.01em;color:var(--t);margin-bottom:3px;}
+.qi-primary-sub{font-size:13px;color:var(--tm);}
+.qi-primary-cta{
+  flex-shrink:0;padding:9px 18px;border-radius:100px;
+  background:var(--cyan);color:#0d0914;border:none;
+  font-family:var(--of);font-size:12px;font-weight:700;
+  cursor:pointer;white-space:nowrap;
+  box-shadow:0 0 20px rgba(0,212,255,0.2);
+  transition:opacity 0.2s;
+}
+.qi-primary-cta:hover{opacity:0.85;}
+
+/* SECONDARY items — quieter, same structure but smaller */
+.qi{display:flex;align-items:center;gap:12px;padding:13px 16px;border-radius:10px;
+  background:var(--s);border:1px solid var(--b);text-decoration:none;
+  color:var(--t);transition:all 0.15s;cursor:pointer;}
+.qi:hover{background:var(--s2);border-color:var(--b2);}
+.qi-ico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0;}
+.qi-ico.p{background:rgba(255,20,147,0.08);}
+.qi-ico.a{background:var(--ad);}
+.qi-ico.g{background:var(--gd);}
+.qi-body{flex:1;min-width:0;}
+.qi-title{font-size:13px;font-weight:500;color:var(--t);margin-bottom:2px;}
+.qi-sub{font-size:11px;color:var(--td);}
+.qi-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.06em;padding:2px 7px;border-radius:20px;flex-shrink:0;}
+.qi-badge.p{background:var(--pd);color:var(--pink);}
+.qi-badge.a{background:var(--ad);color:var(--amber);}
+.qi-badge.g{background:var(--gd);color:var(--green);}
+.qi-arrow{color:var(--td);font-size:13px;flex-shrink:0;}
+
+/* Activity feed */
+.feed{display:flex;flex-direction:column;gap:0;background:var(--s);border:1px solid var(--b);border-radius:10px;overflow:hidden;}
+.feed-item{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border-bottom:1px solid var(--b);}
+.feed-item:last-child{border-bottom:none;}
+.feed-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0;}
+.feed-dot.c{background:var(--cyan);}
+.feed-dot.p{background:var(--pink);}
+.feed-dot.g{background:var(--green);}
+.feed-text{font-size:13px;color:var(--tm);margin-bottom:2px;}
+.feed-time{font-size:11px;color:var(--td);}
+.ann{margin-top:32px;background:rgba(255,255,255,0.02);border:1px solid var(--b);
+  border-radius:10px;padding:16px 18px;}
+.ann-title{font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
+.ann-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--td);
+  line-height:1.6;margin-bottom:6px;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:6px;}
+.switcher{position:fixed;bottom:0;left:var(--sw);right:0;background:rgba(13,9,20,0.95);
+  border-top:1px solid var(--b);padding:10px 20px;display:flex;align-items:center;gap:8px;
+  font-family:var(--of);font-size:11px;color:var(--td);z-index:200;}
+.swb{background:none;border:1px solid transparent;font-family:var(--of);font-size:11px;
+  font-weight:600;color:var(--td);cursor:pointer;padding:4px 10px;border-radius:6px;transition:all 0.15s;}
+.swb:hover{color:var(--tm);border-color:var(--b);}
+.swb.active{color:var(--pink);border-color:rgba(255,20,147,0.3);background:rgba(255,20,147,0.06);}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro trial · 18 days left</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <a class="si on" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si" href="dashboard-home.html"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<div class="layout">
+<main class="main">
+
+  <div class="page-title">Good morning, Coris.</div>
+  <div class="page-date">Monday, 17 March 2026</div>
+
+  <div class="tab-row">
+    <button class="tab active">Today</button>
+    <button class="tab">This week</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       EXPLORATION B — WEIGHTED QUEUE
+       
+       No separate block. The queue itself IS the hierarchy.
+       The most urgent item is physically larger and more prominent.
+       Items below it are the same information, visually quieter.
+       
+       Key difference from A:
+         A = separate block + unchanged queue below it
+         B = one unified queue, top item visually dominant
+       
+       Use the switcher to compare:
+         - Replies state: replies are top priority
+         - Drafts state: replies handled, drafts now most urgent
+  ══════════════════════════════════════════════════════════ -->
+
+  <div class="slabel">Today</div>
+
+  <!-- STATE: replies most urgent -->
+  <div id="q-replies" class="queue">
+
+    <!-- DOMINANT first item -->
+    <a class="qi-primary" href="#">
+      <div class="qi-primary-icon">💬</div>
+      <div class="qi-primary-body">
+        <div class="qi-primary-eyebrow">Reply received</div>
+        <div class="qi-primary-title">2 replies waiting for you</div>
+        <div class="qi-primary-sub">Sarah Mitchell · Dan Kim — replied overnight</div>
+      </div>
+      <button class="qi-primary-cta" onclick="event.preventDefault()">View replies →</button>
+    </a>
+
+    <!-- Quieter secondary items -->
+    <a class="qi" href="#">
+      <div class="qi-ico p">📋</div>
+      <div class="qi-body"><div class="qi-title">4 follow-ups due today</div><div class="qi-sub">Agency founders Q1 · Fractional CFO Q1</div></div>
+      <span class="qi-badge p">4</span><span class="qi-arrow">→</span>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico p">✉️</div>
+      <div class="qi-body"><div class="qi-title">3 new drafts ready to send</div><div class="qi-sub">Sequence step 2 fired overnight</div></div>
+      <span class="qi-badge p">3</span><span class="qi-arrow">→</span>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico a">🌱</div>
+      <div class="qi-body"><div class="qi-title">1 prospect to re-contact today</div><div class="qi-sub">Marcus Peters — re-contact date set for today</div></div>
+      <span class="qi-badge a">Due</span><span class="qi-arrow">→</span>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico g">👤</div>
+      <div class="qi-body"><div class="qi-title">8 new prospects to review</div><div class="qi-sub">Fractional CFO Q1 — imported yesterday</div></div>
+      <span class="qi-badge g">8</span><span class="qi-arrow">→</span>
+    </a>
+  </div>
+
+  <!-- STATE: replies handled, drafts now most urgent -->
+  <div id="q-drafts" class="queue" style="display:none;">
+    <!-- DOMINANT first item — now drafts (pink/gradient) -->
+    <a class="qi-primary" href="#" style="background:rgba(255,20,147,0.07);border-color:rgba(255,20,147,0.25);">
+      <div class="qi-primary-icon" style="background:var(--pd);border-color:rgba(255,20,147,0.25);">✉️</div>
+      <div class="qi-primary-body">
+        <div class="qi-primary-eyebrow" style="color:var(--pink);">Ready to send</div>
+        <div class="qi-primary-title">3 drafts are ready to send</div>
+        <div class="qi-primary-sub">Sequence step 2 fired overnight — review before sending</div>
+      </div>
+      <button class="qi-primary-cta" style="background:var(--gr);color:white;box-shadow:0 0 20px rgba(255,20,147,0.2);" onclick="event.preventDefault()">Review drafts →</button>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico p">📋</div>
+      <div class="qi-body"><div class="qi-title">4 follow-ups due today</div><div class="qi-sub">Agency founders Q1 · Fractional CFO Q1</div></div>
+      <span class="qi-badge p">4</span><span class="qi-arrow">→</span>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico a">🌱</div>
+      <div class="qi-body"><div class="qi-title">1 prospect to re-contact today</div><div class="qi-sub">Marcus Peters</div></div>
+      <span class="qi-badge a">Due</span><span class="qi-arrow">→</span>
+    </a>
+    <a class="qi" href="#">
+      <div class="qi-ico g">👤</div>
+      <div class="qi-body"><div class="qi-title">8 new prospects to review</div><div class="qi-sub">Fractional CFO Q1</div></div>
+      <span class="qi-badge g">8</span><span class="qi-arrow">→</span>
+    </a>
+  </div>
+
+  <div class="slabel" style="margin-top:4px;">Activity today</div>
+  <div class="feed">
+    <div class="feed-item"><div class="feed-dot c"></div><div><div class="feed-text">Sarah Mitchell replied — Agency founders Q1</div><div class="feed-time">2 hours ago</div></div></div>
+    <div class="feed-item"><div class="feed-dot p"></div><div><div class="feed-text">Sequence step 2 fired — 3 drafts created for Agency founders Q1</div><div class="feed-time">3 hours ago</div></div></div>
+    <div class="feed-item"><div class="feed-dot c"></div><div><div class="feed-text">Dan Kim replied — Fractional CFO Q1</div><div class="feed-time">5 hours ago</div></div></div>
+    <div class="feed-item"><div class="feed-dot g"></div><div><div class="feed-text">8 prospects imported — Fractional CFO Q1</div><div class="feed-time">Yesterday, 6:42pm</div></div></div>
+  </div>
+
+  <div class="ann">
+    <div class="ann-title">Exploration B — design notes</div>
+    <div class="ann-item"><div class="ann-dot"></div>No separate action block. The queue itself carries the hierarchy. The dominant card is just the first queue item, resized and reweighted.</div>
+    <div class="ann-item"><div class="ann-dot"></div>The colour of the dominant card changes with context: cyan for replies, pink for drafts. The CTA button inside it is appropriate to the action.</div>
+    <div class="ann-item"><div class="ann-dot"></div>Secondary items use the original .qi pattern — no visual change, just smaller relative to the top card. Nothing removed.</div>
+    <div class="ann-item"><div class="ann-dot"></div>This approach keeps the page as a single unified surface — no conceptual separation between "the important thing" and "the rest".</div>
+    <div class="ann-item"><div class="ann-dot"></div>Use the switcher to see how the top card changes when the most urgent item changes priority.</div>
+  </div>
+
+</main>
+</div>
+
+<div class="switcher">
+  <span>State:</span>
+  <button class="swb active" onclick="setState('replies',this)">Replies most urgent</button>
+  <button class="swb" onclick="setState('drafts',this)">Replies handled — drafts most urgent</button>
+</div>
+
+<script>
+function setState(state, btn) {
+  document.querySelectorAll('.swb').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('q-replies').style.display = state === 'replies' ? 'flex' : 'none';
+  document.getElementById('q-drafts').style.display  = state === 'drafts'  ? 'flex' : 'none';
+}
+</script>
+</body>
+</html>
