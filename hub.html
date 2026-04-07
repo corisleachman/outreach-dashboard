@@ -282,6 +282,175 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
   </div><!-- end pricing strategy section -->
 
 
+
+
+  <!-- ══ AI INTEGRATION OPPORTUNITIES ══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-label">AI integration opportunities</div>
+      <div class="section-meta">Captured April 2026 · for future scoping</div>
+    </div>
+
+    <style>
+      .ai-opp-grid { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+      .ai-opp-row {
+        display: flex; align-items: flex-start; gap: 14px;
+        padding: 14px 16px;
+        background: var(--surface, rgba(255,255,255,0.03));
+        border: 1px solid var(--border, rgba(255,255,255,0.07));
+        border-radius: 10px;
+        transition: border-color 0.15s;
+      }
+      .ai-opp-row:hover { border-color: var(--border-hover, rgba(255,255,255,0.15)); }
+      .ai-opp-rank {
+        font-family: 'DM Mono', monospace; font-size: 11px;
+        color: var(--text-dim, #666); min-width: 20px; padding-top: 2px; flex-shrink: 0;
+      }
+      .ai-opp-body { flex: 1; min-width: 0; }
+      .ai-opp-name {
+        font-family: var(--of, 'Outfit', sans-serif);
+        font-size: 13px; font-weight: 700; color: var(--text, #f0f0ee); margin-bottom: 4px;
+      }
+      .ai-opp-desc { font-size: 12px; color: var(--text-mid, #8a8a9a); line-height: 1.6; }
+      .ai-opp-meta { display: flex; gap: 8px; margin-top: 8px; flex-wrap: wrap; }
+      .ai-opp-tag {
+        font-family: var(--of, 'Outfit', sans-serif); font-size: 10px; font-weight: 700;
+        padding: 2px 9px; border-radius: 100px;
+      }
+      .tag-phase   { background: rgba(0,212,255,0.10); border: 1px solid rgba(0,212,255,0.2); color: #00d4ff; }
+      .tag-effort  { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: rgba(255,255,255,0.45); }
+      .tag-pro     { background: rgba(255,20,147,0.10); border: 1px solid rgba(255,20,147,0.2); color: #ff1493; }
+      .tag-planned { background: rgba(100,220,120,0.10); border: 1px solid rgba(100,220,120,0.2); color: #64dc78; }
+      .ai-stars { font-size: 11px; color: #ff9d42; flex-shrink: 0; padding-top: 2px; }
+      .ai-caution-block {
+        padding: 14px 16px; border-radius: 10px;
+        background: rgba(255,157,66,0.06); border: 1px solid rgba(255,157,66,0.18);
+        font-size: 12px; color: rgba(255,255,255,0.55); line-height: 1.7;
+      }
+      .ai-caution-title {
+        font-family: var(--of, 'Outfit', sans-serif); font-size: 12px; font-weight: 700;
+        color: #ff9d42; margin-bottom: 8px;
+      }
+      .ai-caution-list { margin: 0; padding: 0; list-style: none; }
+      .ai-caution-list li { padding: 3px 0; }
+      .ai-caution-list li::before { content: "✕"; margin-right: 9px; color: rgba(255,157,66,0.6); font-size: 10px; }
+    </style>
+
+    <div style="margin-bottom:16px;padding:12px 16px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.12);border-radius:10px;font-size:12px;color:rgba(255,255,255,0.6);line-height:1.7;">
+      <strong style="color:var(--text,#f0f0ee);font-family:var(--of,'Outfit',sans-serif);">Captured April 2026.</strong> These are AI integration opportunities identified for Pulse., ranked by value-to-effort ratio. Not all are specced — treat as a prioritised ideas log to draw from when planning future phases.
+    </div>
+
+    <div class="ai-opp-grid">
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">01</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Message generation</div>
+          <div class="ai-opp-desc">4 message types × 3 tones × 4 personality packs. Solves the blank-page problem without removing the user's voice. The right unit size — generates a draft, user edits and owns it.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-planned">✓ Phase 2.10 planned</span>
+            <span class="ai-opp-tag tag-pro">Pro feature</span>
+            <span class="ai-opp-tag tag-effort">Medium effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">02</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Reply interpretation + suggested next step</div>
+          <div class="ai-opp-desc">When a prospect replies, AI reads the reply and suggests how to respond: "This sounds like genuine interest but they're deflecting on timing. Suggested next step: offer a specific date 2 weeks out." Then drafts the response in one click. This is where most pipelines die — reply comes in and the user freezes. Highest-value moment in the whole workflow.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">Layer 4</span>
+            <span class="ai-opp-tag tag-pro">Pro feature</span>
+            <span class="ai-opp-tag tag-effort">Medium effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">03</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Draft quality check (pre-send)</div>
+          <div class="ai-opp-desc">Collapsible panel in the draft drawer. AI reviews the email before send: flags length, subject line quality, common cold email mistakes. Not a score (too gamified) — more like a pre-send advisory. "This email is 147 words. Cold outreach converts better under 80. Your subject line includes 'partnership' — historically low open rates." Low token cost, high perceived value.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">Layer 3</span>
+            <span class="ai-opp-tag tag-pro">Pro feature</span>
+            <span class="ai-opp-tag tag-effort">Low effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">04</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Subject line generator</div>
+          <div class="ai-opp-desc">Separate from body generation — subject lines are a distinct skill. A dedicated micro-button next to the subject field surfaces 3 options at once. User picks or uses it as a prompt to write their own. Very low token cost, direct impact on open rates. Treat as an add-on to Phase 2.10 rather than a standalone phase.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">2.10 add-on</span>
+            <span class="ai-opp-tag tag-pro">Pro feature</span>
+            <span class="ai-opp-tag tag-effort">Low effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">05</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">"Why this works" annotations on generated messages</div>
+          <div class="ai-opp-desc">One sentence surfaced alongside each generated draft explaining what the AI did: "Led with their pain point, not your offer. Check-in framing, not a chase." Teaches the user to get better over time. Very on-brand — empowers rather than replaces. Treat as a 2.10 add-on.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">2.10 add-on</span>
+            <span class="ai-opp-tag tag-effort">Low effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">06</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Prospect research enrichment</div>
+          <div class="ai-opp-desc">Sits in the Review tab, before drafting. User pastes a LinkedIn URL or company domain; AI surfaces what the company does, recent trigger events (funding, hiring, leadership change), and the angle most likely to land. Doesn't need to be real-time API enrichment — even a structured briefing prompt would add real value. Higher effort but high ceiling.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">Layer 5</span>
+            <span class="ai-opp-tag tag-pro">Pro feature</span>
+            <span class="ai-opp-tag tag-effort">High effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★★</div>
+      </div>
+
+      <div class="ai-opp-row">
+        <div class="ai-opp-rank">07</div>
+        <div class="ai-opp-body">
+          <div class="ai-opp-name">Campaign-level pattern detection</div>
+          <div class="ai-opp-desc">Once there's real send/reply data: "Your Direct & Confident tone is getting 2× the reply rate of Calm & Commercial for finance-sector prospects. Consider switching this campaign's default." Long game — the data model is already capturing what's needed (personality_pack_used, message type, reply status). Foundation is there; surface it when there's enough signal.</div>
+          <div class="ai-opp-meta">
+            <span class="ai-opp-tag tag-phase">Layer 5+</span>
+            <span class="ai-opp-tag tag-effort">Medium effort</span>
+          </div>
+        </div>
+        <div class="ai-stars">★★★</div>
+      </div>
+
+    </div>
+
+    <div class="ai-caution-block">
+      <div class="ai-caution-title">⚠ What to avoid</div>
+      <ul class="ai-caution-list">
+        <li><strong style="color:rgba(255,255,255,0.7);">AI auto-scheduling</strong> — feels clever, is mostly noise. Users want control over when things send.</li>
+        <li><strong style="color:rgba(255,255,255,0.7);">AI contact scoring / lead ranking</strong> — creates a black box. If AI decides who's worth pursuing, users stop thinking critically about their list. Cuts against intentional outreach.</li>
+        <li><strong style="color:rgba(255,255,255,0.7);">"Write my whole campaign" flows</strong> — removes the user's voice entirely. Pulse's positioning is that messages sound like you. AI does too much, that's gone.</li>
+      </ul>
+    </div>
+
+  </div><!-- end AI integration opportunities section -->
+
   <!-- ══ BUILD PHASES ══ -->
   <div class="section">
     <div class="section-header">
