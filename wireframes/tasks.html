@@ -1290,9 +1290,12 @@ const BREADCRUMBS = {
 };
 
 function showScreen(id, el) {
+  // Clean up any open kebab dropdowns
+  document.querySelectorAll('.kebab-dropdown').forEach(d => d.remove());
+
   SCREENS.forEach(s => {
-    const el = document.getElementById(s);
-    if (el) el.classList.remove('visible');
+    const sec = document.getElementById(s);
+    if (sec) sec.classList.remove('visible');
   });
   const target = document.getElementById(id);
   if (target) { target.classList.add('visible'); window.scrollTo({top:0,behavior:'smooth'}); }
@@ -1300,6 +1303,21 @@ function showScreen(id, el) {
   if (el) el.classList.add('active');
   const bc = document.getElementById('breadcrumb-label');
   if (bc) bc.textContent = BREADCRUMBS[id] || 'Tasks';
+
+  // Reset any collapsed task rows in the newly visible screen so state resets on revisit
+  if (target) {
+    target.querySelectorAll('.task-row').forEach(row => {
+      row.style.maxHeight = '';
+      row.style.overflow = '';
+      row.style.paddingTop = '';
+      row.style.paddingBottom = '';
+      row.style.marginBottom = '';
+      row.style.transition = '';
+      row.classList.remove('done');
+      const cb = row.querySelector('.task-check');
+      if (cb) { cb.classList.remove('checked'); cb.innerHTML = ''; }
+    });
+  }
 }
 
 function showToast(text, cls) {
@@ -1327,9 +1345,20 @@ function switchQueueTab(tab, el) {
 
 function completeTask(checkbox) {
   const row = checkbox.closest('.task-row');
+  if (row.classList.contains('done')) return;
   checkbox.classList.add('checked');
   checkbox.innerHTML = '<svg width="10" height="10" viewBox="0 0 10 10" fill="none"><polyline points="2 5 4 7 8 3" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   row.classList.add('done');
+  // Collapse row after the done fade so it doesn't leave blank space
+  row.style.maxHeight = row.scrollHeight + 'px';
+  row.style.overflow = 'hidden';
+  setTimeout(() => {
+    row.style.transition = 'max-height 0.35s ease, padding 0.35s ease, margin 0.35s ease';
+    row.style.maxHeight = '0';
+    row.style.paddingTop = '0';
+    row.style.paddingBottom = '0';
+    row.style.marginBottom = '0';
+  }, 900);
   showToast('Task done · Mark as undone', 't-green');
 }
 
