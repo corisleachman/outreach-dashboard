@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. — Task origination wireframe</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;
+  --s:rgba(255,255,255,0.04);
+  --s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);
+  --b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);--rd:rgba(255,76,76,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;overflow-x:hidden;}
+.orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;}
+.o1{width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;}
+.o2{width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:50px;}
+
+/* HOME ICON */
+.hi{position:fixed;top:12px;left:14px;z-index:9999;width:32px;height:32px;
+  background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;backdrop-filter:blur(8px);}
+.hi:hover{background:rgba(255,255,255,0.14);}
+
+/* TOPBAR */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);
+  background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);
+  backdrop-filter:blur(14px);z-index:200;
+  display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-right:16px;flex-shrink:0;text-decoration:none;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:var(--s2);border:1px solid var(--b2);color:var(--tm);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+
+/* SIDEBAR */
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);
+  background:rgba(13,9,20,0.7);border-right:1px solid var(--b);
+  display:flex;flex-direction:column;align-items:center;
+  padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;cursor:pointer;transition:all 0.15s;
+  border:1px solid transparent;text-decoration:none;
+  color:rgba(255,255,255,0.55);position:relative;background:transparent;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si svg{display:block;flex-shrink:0;}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);
+  border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;
+  white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;
+  transition:opacity 0.15s,visibility 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+
+/* TASK BUTTON IN SIDEBAR */
+.si.task-si{position:relative;}
+.task-badge{position:absolute;top:4px;right:4px;width:8px;height:8px;
+  border-radius:50%;background:var(--amber);border:2px solid var(--bg);}
+
+/* LAYOUT */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;
+  position:relative;z-index:1;min-width:0;}
+
+/* SCREEN SECTIONS */
+.screen{display:none;flex-direction:column;}
+.screen.on{display:flex;}
+
+/* CAMPAIGN HEADER (sticky) */
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);
+  background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);
+  position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;
+  color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;
+  white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;
+  padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* TAB CONTENT AREA */
+.tab-content{flex:1;padding:24px 32px;}
+
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:9px 18px;border-radius:8px;font-family:var(--of);font-size:12px;
+  font-weight:700;cursor:pointer;border:none;transition:all 0.2s;
+  text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bsm{padding:6px 12px;font-size:11px;}
+.ba{background:var(--ad);border:1px solid rgba(255,157,66,0.25);color:var(--amber);}
+
+/* PROSPECT CARDS (Review tab style) */
+.pcard{background:var(--s);border:1px solid var(--b);border-radius:12px;
+  margin-bottom:10px;overflow:hidden;transition:border-color 0.15s;}
+.pcard:hover{border-color:var(--b2);}
+.pcard-row{display:flex;align-items:center;gap:12px;padding:14px 18px;}
+.pav{width:36px;height:36px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.pav.teal{background:var(--cd);border-color:rgba(0,212,255,0.2);color:var(--cyan);}
+.pav.g{background:var(--gd);border-color:rgba(100,220,120,0.2);color:var(--green);}
+.pinfo{flex:1;min-width:0;}
+.pname{font-size:14px;font-weight:600;color:var(--t);margin-bottom:2px;}
+.psub{font-size:12px;color:var(--td);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pactions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+.ibtn{width:28px;height:28px;border-radius:6px;background:transparent;
+  border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;flex-shrink:0;}
+.ibtn:hover{border-color:var(--td);background:var(--s2);}
+.ibtn.approve{background:var(--gd);border-color:rgba(100,220,120,0.3);}
+.ibtn.approve svg{color:var(--green);}
+.ibtn.detail{border-color:rgba(0,212,255,0.3);color:var(--cyan);}
+.li-btn{width:28px;height:28px;border-radius:6px;background:rgba(10,102,194,0.12);
+  border:1px solid rgba(10,102,194,0.25);display:flex;align-items:center;
+  justify-content:center;text-decoration:none;flex-shrink:0;transition:all 0.15s;}
+
+/* GENERIC TABLE ROWS */
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+.trow{display:flex;align-items:center;gap:12px;padding:12px 18px;
+  border-bottom:1px solid var(--b);transition:background 0.15s;cursor:pointer;}
+.trow:last-child{border-bottom:none;}
+.trow:hover{background:var(--s2);}
+.tav{width:32px;height:32px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.15);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:10px;font-weight:700;
+  color:var(--pink);flex-shrink:0;}
+.tav.c{background:var(--cd);border-color:rgba(0,212,255,0.15);color:var(--cyan);}
+.tav.g{background:var(--gd);border-color:rgba(100,220,120,0.15);color:var(--green);}
+.tav.a{background:var(--ad);border-color:rgba(255,157,66,0.15);color:var(--amber);}
+.tinfo{flex:1;min-width:0;}
+.tname{font-size:13px;font-weight:500;color:var(--t);}
+.tsub{font-size:12px;color:var(--td);margin-top:2px;}
+.tright{display:flex;align-items:center;gap:8px;flex-shrink:0;}
+.bdg{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.07em;padding:3px 9px;border-radius:20px;white-space:nowrap;}
+.bdg-a{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.2);}
+.bdg-c{background:var(--cd);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);}
+.bdg-g{background:var(--gd);color:var(--green);border:1px solid rgba(100,220,120,0.2);}
+.bdg-n{background:var(--s2);color:var(--tm);border:1px solid var(--b2);}
+
+/* TASK CHIP — inline indicator on prospect rows */
+.task-chip{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;
+  border-radius:5px;font-family:var(--of);font-size:10px;font-weight:600;
+  background:rgba(255,157,66,0.12);border:1px solid rgba(255,157,66,0.25);color:var(--amber);}
+.task-chip.overdue{background:rgba(255,76,76,0.1);border-color:rgba(255,76,76,0.25);color:var(--red);}
+
+/* KEBAB BUTTON */
+.kbtn{width:26px;height:26px;border-radius:6px;background:transparent;
+  border:1px solid transparent;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;color:var(--td);font-size:14px;line-height:1;
+  flex-shrink:0;}
+.kbtn:hover{background:var(--s2);border-color:var(--b2);color:var(--tm);}
+
+/* KEBAB DROPDOWN */
+.kdrop{position:absolute;right:0;top:calc(100% + 4px);
+  background:#1a0f2e;border:1px solid var(--b2);border-radius:10px;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);z-index:500;min-width:170px;overflow:hidden;}
+.kdrop-item{display:flex;align-items:center;gap:9px;padding:9px 13px;
+  font-size:12px;color:var(--tm);cursor:pointer;transition:background 0.1s;}
+.kdrop-item:hover{background:var(--s2);color:var(--t);}
+.kdrop-item.highlight{color:var(--amber);}
+.kdrop-item.highlight:hover{background:rgba(255,157,66,0.08);}
+.kdrop-sep{height:1px;background:var(--b);margin:3px 0;}
+
+/* SEARCH BAR */
+.search-bar{display:flex;align-items:center;background:var(--s);
+  border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:16px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;
+  padding:11px 10px;font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:15px;}
+
+/* FILTER PILLS */
+.filter-pills{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+.fpill{padding:6px 14px;border-radius:20px;border:1px solid var(--b2);
+  background:var(--s);font-family:var(--of);font-size:11px;font-weight:600;
+  color:var(--tm);cursor:pointer;transition:all 0.15s;}
+.fpill.on{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* ANNOTATIONS */
+.ann{background:rgba(255,255,255,0.025);border:1px solid var(--b);
+  border-radius:10px;padding:16px 18px;margin-top:24px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--td);margin-bottom:10px;}
+.ann-item{font-size:12px;color:var(--tm);line-height:1.6;display:flex;gap:8px;margin-bottom:4px;}
+.ann-item:last-child{margin-bottom:0;}
+.ann-dot{width:4px;height:4px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:7px;}
+
+/* SCREEN LABEL */
+.screen-label{font-family:'DM Mono',monospace;font-size:10px;color:var(--td);
+  letter-spacing:0.06em;text-transform:uppercase;margin-bottom:6px;}
+.screen-title{font-family:var(--of);font-size:22px;font-weight:800;
+  letter-spacing:-0.02em;color:var(--t);margin-bottom:6px;}
+.screen-desc{font-size:13px;color:var(--tm);line-height:1.6;margin-bottom:24px;}
+
+/* MODAL OVERLAY */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.55);
+  backdrop-filter:blur(4px);z-index:800;display:none;
+  align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{width:480px;max-width:calc(100vw - 40px);background:#130a20;
+  border:1px solid var(--b2);border-radius:14px;
+  box-shadow:0 24px 64px rgba(0,0,0,0.6);overflow:hidden;}
+.modal-hdr{padding:20px 24px;border-bottom:1px solid var(--b);
+  display:flex;align-items:center;justify-content:space-between;}
+.modal-title{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);
+  display:flex;align-items:center;gap:8px;}
+.modal-close{cursor:pointer;color:var(--tm);font-size:18px;line-height:1;
+  width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;
+  transition:color 0.15s,background 0.15s;}
+.modal-close:hover{color:var(--t);background:var(--s2);}
+.modal-body{padding:20px 24px;}
+.modal-ftr{padding:14px 24px;border-top:1px solid var(--b);
+  display:flex;gap:8px;justify-content:flex-end;}
+
+/* FORM FIELDS */
+.fld{margin-bottom:16px;}
+.fld-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.1em;color:var(--td);margin-bottom:6px;display:block;}
+.fld-input{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:7px;padding:10px 13px;font-family:var(--sf);font-size:13px;
+  color:var(--t);outline:none;transition:border-color 0.2s;}
+.fld-input:focus{border-color:var(--cyan);}
+.fld-input::placeholder{color:var(--td);}
+.fld-input.prefilled{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2);color:var(--t);}
+.fld-input.prefilled-amber{background:rgba(255,157,66,0.05);border-color:rgba(255,157,66,0.2);}
+
+/* PROSPECT PREFILL BADGE */
+.prefill-badge{display:flex;align-items:center;gap:8px;
+  background:rgba(0,212,255,0.07);border:1px solid rgba(0,212,255,0.18);
+  border-radius:8px;padding:9px 12px;margin-bottom:16px;}
+.prefill-av{width:26px;height:26px;border-radius:50%;background:var(--cd);
+  border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:9px;font-weight:700;color:var(--cyan);}
+.prefill-name{font-size:12px;font-weight:500;color:var(--t);}
+.prefill-sub{font-size:11px;color:var(--td);}
+.prefill-clear{margin-left:auto;font-size:11px;color:var(--td);cursor:pointer;
+  padding:2px 6px;border-radius:4px;transition:color 0.15s;}
+.prefill-clear:hover{color:var(--tm);}
+
+/* TYPE PILLS */
+.type-pills{display:flex;gap:6px;flex-wrap:wrap;}
+.type-pill{display:flex;align-items:center;gap:5px;padding:7px 12px;
+  border-radius:8px;border:1px solid var(--b2);background:var(--s);
+  font-family:var(--of);font-size:11px;font-weight:600;color:var(--tm);
+  cursor:pointer;transition:all 0.15s;}
+.type-pill:hover{border-color:var(--td);color:var(--t);}
+.type-pill.active{border-color:rgba(255,157,66,0.4);background:rgba(255,157,66,0.1);color:var(--amber);}
+
+/* DATE INPUT ROW */
+.date-row{display:flex;align-items:center;gap:8px;}
+.date-badge{padding:7px 12px;border-radius:7px;font-family:var(--of);font-size:12px;
+  font-weight:600;cursor:pointer;border:1px solid var(--b2);background:var(--s);
+  color:var(--tm);transition:all 0.15s;}
+.date-badge:hover{border-color:var(--td);color:var(--t);}
+.date-badge.sel{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* PROSPECT SEARCH RESULTS */
+.psearch-results{background:#1a0f2e;border:1px solid var(--b2);border-radius:8px;
+  margin-top:4px;overflow:hidden;}
+.psearch-item{display:flex;align-items:center;gap:10px;padding:9px 13px;
+  cursor:pointer;transition:background 0.1s;border-bottom:1px solid var(--b);}
+.psearch-item:last-child{border-bottom:none;}
+.psearch-item:hover{background:var(--s2);}
+.psearch-av{width:26px;height:26px;border-radius:50%;background:var(--pd);
+  border:1px solid rgba(255,20,147,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:9px;font-weight:700;color:var(--pink);}
+.psearch-name{font-size:12px;font-weight:500;color:var(--t);}
+.psearch-sub{font-size:11px;color:var(--td);}
+.psearch-campaign{font-family:var(--of);font-size:10px;font-weight:600;
+  padding:1px 6px;border-radius:4px;background:var(--pd);color:var(--pink);
+  margin-left:auto;flex-shrink:0;}
+.psearch-none{padding:14px 13px;font-size:12px;color:var(--td);text-align:center;}
+
+/* SUMMARY PAGE TAB BAR */
+.sum-tab-row{display:flex;gap:0;border-bottom:1px solid var(--b);margin-bottom:28px;}
+.sum-tab{padding:10px 20px;font-family:var(--of);font-size:13px;font-weight:600;
+  color:var(--td);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;}
+.sum-tab:hover{color:var(--tm);}
+.sum-tab.on{color:var(--t);border-bottom-color:var(--pink);}
+.sum-tab .ct{font-size:10px;background:rgba(255,157,66,0.12);color:var(--amber);
+  padding:2px 7px;border-radius:100px;margin-left:5px;}
+
+/* QUEUE ITEMS (summary page style) */
+.qi{display:flex;align-items:center;gap:14px;background:var(--s);
+  border:1px solid var(--b);border-radius:10px;padding:14px 16px;
+  text-decoration:none;transition:all 0.15s;cursor:pointer;margin-bottom:8px;}
+.qi:hover{background:var(--s2);border-color:var(--b2);}
+.qi-ico{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;
+  justify-content:center;font-size:14px;flex-shrink:0;}
+.qi-ico.a{background:var(--ad);border:1px solid rgba(255,157,66,0.25);}
+.qi-body{flex:1;min-width:0;}
+.qi-title{font-family:var(--of);font-size:13px;font-weight:700;color:var(--t);margin-bottom:2px;}
+.qi-sub{font-size:12px;color:var(--tm);}
+.qi-badge{font-family:var(--of);font-size:11px;font-weight:700;
+  padding:3px 9px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
+.qi-badge.a{background:var(--ad);color:var(--amber);border:1px solid rgba(255,157,66,0.25);}
+.qi-arrow{color:var(--td);font-size:14px;flex-shrink:0;}
+.slabel{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.12em;color:var(--td);margin-bottom:10px;}
+
+/* DRAWER (right panel) */
+.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.45);
+  backdrop-filter:blur(3px);z-index:800;display:none;}
+.drawer-overlay.open{display:block;}
+.drawer-panel{position:fixed;top:var(--th);right:0;bottom:0;width:480px;
+  max-width:calc(100vw - var(--sw));background:#130a20;
+  border-left:1px solid var(--b2);z-index:801;
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);}
+.drawer-panel.open{transform:translateX(0);}
+.drawer-hdr{padding:18px 20px;border-bottom:1px solid var(--b);
+  display:flex;align-items:flex-start;gap:12px;flex-shrink:0;}
+.drawer-av{width:38px;height:38px;border-radius:50%;background:var(--gd);
+  border:1px solid rgba(100,220,120,0.2);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;
+  color:var(--green);flex-shrink:0;}
+.drawer-name{font-family:var(--of);font-size:15px;font-weight:700;color:var(--t);margin-bottom:2px;}
+.drawer-sub{font-size:12px;color:var(--tm);}
+.drawer-close{margin-left:auto;width:28px;height:28px;border-radius:6px;
+  background:transparent;border:1px solid var(--b2);display:flex;
+  align-items:center;justify-content:center;cursor:pointer;
+  color:var(--tm);font-size:14px;flex-shrink:0;transition:all 0.15s;line-height:1;}
+.drawer-close:hover{color:var(--t);}
+.drawer-body{flex:1;overflow-y:auto;padding:18px 20px;}
+.drawer-body::-webkit-scrollbar{width:3px;}
+.drawer-body::-webkit-scrollbar-thumb{background:var(--b2);}
+.drawer-sec-label{font-family:var(--of);font-size:9px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.12em;color:var(--td);
+  margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid var(--b);}
+.drawer-ftr{padding:14px 20px;border-top:1px solid var(--b);
+  display:flex;gap:8px;justify-content:flex-end;align-items:center;flex-shrink:0;}
+
+/* REPLY BUBBLE */
+.reply-bubble{background:rgba(255,255,255,0.04);border:1px solid var(--b);
+  border-radius:10px;padding:12px 14px;margin-bottom:16px;font-size:13px;
+  color:var(--tm);line-height:1.7;font-style:italic;}
+.reply-from{font-family:var(--of);font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:0.08em;color:var(--td);margin-bottom:7px;}
+
+/* TOAST */
+#tz{position:fixed;bottom:90px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:3px solid var(--cyan);}
+.tst.tg{border-left:3px solid var(--green);}
+.tst.ta{border-left:3px solid var(--amber);}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+/* WIREFRAME SWITCHER */
+.wfc{position:fixed;bottom:0;left:var(--sw);right:0;background:rgba(13,9,20,0.95);
+  backdrop-filter:blur(8px);border-top:1px solid var(--b);
+  padding:10px 20px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  z-index:200;font-size:11px;color:var(--td);font-family:var(--of);}
+.wfc-label{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;
+  color:var(--td);margin-right:4px;}
+.wfb{background:none;border:1px solid transparent;font-family:var(--of);font-size:11px;
+  font-weight:600;color:var(--td);cursor:pointer;padding:4px 10px;border-radius:6px;
+  transition:all 0.15s;}
+.wfb:hover{color:var(--tm);border-color:var(--b);}
+.wfb.on{color:var(--pink);border-color:rgba(255,20,147,0.3);background:rgba(255,20,147,0.06);}
+.wfb.sep{opacity:0.2;cursor:default;padding:0 2px;}
+
+/* SECTION GROUP HEADER */
+.grp-hdr{padding:9px 18px;background:rgba(255,255,255,0.025);
+  border-bottom:1px solid var(--b);font-family:var(--of);font-size:10px;
+  font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+
+/* NOTES FIELD */
+.notes-field{width:100%;background:rgba(255,255,255,0.05);border:1px solid var(--b2);
+  border-radius:7px;padding:10px 13px;font-family:var(--sf);font-size:13px;
+  color:var(--t);outline:none;resize:none;line-height:1.6;min-height:72px;
+  transition:border-color 0.2s;}
+.notes-field:focus{border-color:var(--cyan);}
+.notes-field::placeholder{color:var(--td);}
+</style>
+</head>
+<body>
+<div class="orb o1"></div><div class="orb o2"></div>
+
+<!-- HOME -->
+<a href="https://corisleachman.github.io/outreach-dashboard/hub.html" class="hi">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 6L7 1L13 6V13H9V9H5V13H1V6Z" stroke="rgba(255,255,255,0.7)" stroke-width="1.2" stroke-linejoin="round" fill="none"/></svg>
+</a>
+
+<!-- TOPBAR -->
+<header class="topbar">
+  <a href="#" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span id="bc-ctx" class="breadcrumb-current">Agency founders — Q1</span>
+  </div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a class="si" href="summary-v2.html">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="si-tip">Summary</span>
+  </a>
+  <a class="si on" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <!-- TASK SIDEBAR ICON with badge -->
+  <a class="si task-si" href="#" onclick="showScreen('s5');return false;" style="margin-top:4px;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="2" y="1" width="11" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M5 5h5M5 8h3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="5" cy="5" r="0.5" fill="currentColor"/></svg>
+    <div class="task-badge"></div>
+    <span class="si-tip">Tasks (3 due)</span>
+  </a>
+  <a class="si si-bottom" href="#">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<div class="layout">
+<main class="main">
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 1 · REVIEW TAB — kebab menu with "Set a task"
+════════════════════════════════════════════════════ -->
+<div id="s1" class="screen on">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span>3-step sequence</span></div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm">Edit sequence</button>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab on">Review <span class="tab-ct">8</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn <span class="tab-ct">47</span></div>
+      <div class="tab">Sent <span class="tab-ct">24</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">4</span></div>
+      <div class="tab">Nurture <span class="tab-ct">2</span></div>
+      <div class="tab">Conversations <span class="tab-ct">2</span></div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+    <div class="screen-label">Screen 1 of 7 — Review tab</div>
+    <div class="screen-title">Kebab menu → Set a task</div>
+    <div class="screen-desc">The Review tab's primary job is Contact / Later / Skip. Task creation is secondary — lives in the kebab menu to avoid cluttering the action row. Click ··· on any prospect to see the menu.</div>
+
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+      <div style="font-family:var(--of);font-size:15px;font-weight:700;">Prospect review</div>
+    </div>
+    <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
+
+    <!-- CARD 1 -->
+    <div class="pcard">
+      <div class="pcard-row">
+        <div class="pav">HS</div>
+        <div class="pinfo">
+          <div class="pname">Howard Sullivan</div>
+          <div class="psub">Founder & ECD · YouStudio – Experience Design Agency · Greater London</div>
+        </div>
+        <div class="pactions">
+          <a class="li-btn" href="#" onclick="return false;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+          </a>
+          <div class="ibtn" title="Skip">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg>
+          </div>
+          <div class="ibtn approve" title="Approve">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div style="position:relative;">
+            <div class="kbtn" onclick="toggleKebab('k1')" title="More">···</div>
+            <div class="kdrop" id="k1" style="display:none;">
+              <div class="kdrop-item" onclick="openTaskModal('hs','Howard Sullivan','YouStudio')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8.5 4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Set a task
+              </div>
+              <div class="kdrop-sep"></div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Skipped','tc')">Skip prospect</div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Opening notes','tc')">Add a note</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 2 -->
+    <div class="pcard">
+      <div class="pcard-row">
+        <div class="pav">MJ</div>
+        <div class="pinfo">
+          <div class="pname">Mark Jory</div>
+          <div class="psub">CEO · Latitude Agency · London, England</div>
+        </div>
+        <div class="pactions">
+          <a class="li-btn" href="#" onclick="return false;">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+          </a>
+          <div class="ibtn" title="Skip"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="ibtn approve" title="Approve"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div style="position:relative;">
+            <div class="kbtn" onclick="toggleKebab('k2')">···</div>
+            <div class="kdrop" id="k2" style="display:none;">
+              <div class="kdrop-item" onclick="openTaskModal('mj','Mark Jory','Latitude Agency')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8.5 4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Set a task
+              </div>
+              <div class="kdrop-sep"></div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Skipped','tc')">Skip prospect</div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Opening notes','tc')">Add a note</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CARD 3 — with existing task chip -->
+    <div class="pcard">
+      <div class="pcard-row">
+        <div class="pav teal">SC</div>
+        <div class="pinfo">
+          <div class="pname">Sophie Clarke <span class="task-chip" style="margin-left:6px;vertical-align:middle;">
+            <svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="0.5" y="0.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1"/><path d="M2 4l1.3 1.3L6 2.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            1 task
+          </span></div>
+          <div class="psub">Managing Director · Fold Studio · London</div>
+        </div>
+        <div class="pactions">
+          <a class="li-btn" href="#" onclick="return false;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+          <div class="ibtn" title="Skip"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="var(--tm)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+          <div class="ibtn approve" title="Approve"><svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="var(--green)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+          <div style="position:relative;">
+            <div class="kbtn" onclick="toggleKebab('k3')">···</div>
+            <div class="kdrop" id="k3" style="display:none;">
+              <div class="kdrop-item" onclick="openTaskModal('sc','Sophie Clarke','Fold Studio')">
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M4 6l1.5 1.5L8.5 4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Set a task
+              </div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Viewing tasks','tc')">View tasks (1)</div>
+              <div class="kdrop-sep"></div>
+              <div class="kdrop-item" onclick="closeKebab();toast('→ Skipped','tc')">Skip prospect</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Task creation in Review is deliberately secondary. The tab's primary job is Contact / Later / Skip. "Set a task" lives in the kebab to keep the action row clean.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Prospects with an existing task show a small amber chip next to their name — visible at a glance without taking up action row space.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Kebab also contains "View tasks (n)" if a task already exists — takes user to the task detail, not a new creation modal.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Same kebab pattern applies to Drafts and Sent tabs — no separate wireframe needed for those, behaviour is identical.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 2 · TASK CREATION MODAL — contextual (prospect pre-filled)
+════════════════════════════════════════════════════ -->
+<div id="s2" class="screen">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span>3-step sequence</span></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab on">Review <span class="tab-ct">8</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn <span class="tab-ct">47</span></div>
+      <div class="tab">Sent <span class="tab-ct">24</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">4</span></div>
+      <div class="tab">Nurture <span class="tab-ct">2</span></div>
+      <div class="tab">Conversations <span class="tab-ct">2</span></div>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="screen-label">Screen 2 of 7 — Task creation modal</div>
+    <div class="screen-title">Create task — prospect pre-filled</div>
+    <div class="screen-desc">Triggered from any campaign tab kebab menu. The prospect field is pre-filled and locked — no ambiguity about who the task is for.</div>
+
+    <!-- MODAL rendered inline for wireframe clarity -->
+    <div style="max-width:480px;background:#130a20;border:1px solid var(--b2);border-radius:14px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="var(--amber)" stroke-width="1.3"/><path d="M4 7l2 2 4-4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Set a task
+        </div>
+        <div class="modal-close" onclick="toast('Modal closed','tc')">✕</div>
+      </div>
+      <div class="modal-body">
+        <!-- Prospect pre-fill -->
+        <div class="prefill-badge">
+          <div class="prefill-av">HS</div>
+          <div>
+            <div class="prefill-name">Howard Sullivan</div>
+            <div class="prefill-sub">YouStudio · Agency founders Q1</div>
+          </div>
+          <div class="prefill-clear">Remove ✕</div>
+        </div>
+
+        <!-- Task type -->
+        <div class="fld">
+          <label class="fld-label">Task type</label>
+          <div class="type-pills">
+            <div class="type-pill active" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="1.5" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M0.5 3.5l4.5 3 4.5-3" stroke="currentColor" stroke-width="1.1"/></svg>
+              Email
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 4.5v3M3 2.5v.01M4.5 7.5V5.5c0-.6.4-1 1-1s1 .4 1 1v2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              LinkedIn
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1h8v6H6L4 9V7H1V1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+              Message
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="8" cy="5" r="1" fill="currentColor"/><circle cx="2" cy="5" r="1" fill="currentColor"/></svg>
+              Other
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="fld">
+          <label class="fld-label">Note <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <textarea class="notes-field" placeholder="What do you need to do, or remember?"></textarea>
+        </div>
+
+        <!-- Due date -->
+        <div class="fld">
+          <label class="fld-label">Due date</label>
+          <div class="date-row">
+            <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
+            <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
+            <div class="date-badge" onclick="selectDate(this)">Next week</div>
+            <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn bs bsm" onclick="toast('Modal closed','tc')">Cancel</button>
+        <button class="btn bp bsm" onclick="toast('Task set · Howard Sullivan · Tomorrow','tg')">Save task</button>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Prospect is pre-filled and shown as a badge, not an editable field. "Remove ✕" clears it but doesn't destroy the context — the modal stays open.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Task type defaults to Email. User picks the type most relevant to the action they're planning.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Due date defaults to Tomorrow. Quick-pick row covers 80% of cases without a date picker. "Pick date…" opens a calendar.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Note is optional. Many tasks will be self-explanatory from the type alone ("LinkedIn · Howard Sullivan").</div>
+      <div class="ann-item"><div class="ann-dot"></div>On save: modal closes, toast confirms ("Task set · Howard Sullivan · Tomorrow"), task chip appears on the prospect row.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 3 · LINKEDIN TAB — inline task button
+════════════════════════════════════════════════════ -->
+<div id="s3" class="screen">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span>3-step sequence</span></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">8</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab on">LinkedIn <span class="tab-ct">47</span></div>
+      <div class="tab">Sent <span class="tab-ct">24</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">4</span></div>
+      <div class="tab">Nurture <span class="tab-ct">2</span></div>
+      <div class="tab">Conversations <span class="tab-ct">2</span></div>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="screen-label">Screen 3 of 7 — LinkedIn tab</div>
+    <div class="screen-title">LinkedIn tab — inline task button</div>
+    <div class="screen-desc">The LinkedIn tab is where users track connection progress. A dedicated "Set LinkedIn task" button sits inline on each row — the most natural home for LinkedIn-specific tasks because that's already the user's focus.</div>
+
+    <div class="filter-pills">
+      <div class="fpill on">No connection</div>
+      <div class="fpill">Connection sent</div>
+      <div class="fpill">Connection accepted</div>
+      <div class="fpill">Unable to connect</div>
+      <div class="fpill">Chose not to connect</div>
+    </div>
+    <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
+
+    <div class="card">
+      <!-- ROW 1 — no task yet, button visible -->
+      <div class="trow">
+        <div class="tav">HS</div>
+        <div class="tinfo">
+          <div class="tname">Howard Sullivan</div>
+          <div class="tsub">YouStudio · Founder</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <button class="btn bs bsm" onclick="openTaskModal('hs','Howard Sullivan','YouStudio')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:5px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5v3M3 2v.01M4.5 8V5.5c0-.6.4-1 1-1s1 .4 1 1V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Set LI task
+          </button>
+          <a class="li-btn" href="#" onclick="return false;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+        </div>
+      </div>
+
+      <!-- ROW 2 — connection sent, task chip showing -->
+      <div class="trow">
+        <div class="tav">MJ</div>
+        <div class="tinfo">
+          <div class="tname">Mark Jory <span class="task-chip" style="margin-left:6px;vertical-align:middle;"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><rect x="0.5" y="0.5" width="7" height="7" rx="1" stroke="currentColor" stroke-width="1"/><path d="M2 4l1.3 1.3L6 2.5" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg> Follow up Mon</span></div>
+          <div class="tsub">Latitude Agency · CEO · Connection sent</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <button class="btn bs bsm" onclick="toast('→ Viewing task','tc')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);">View task</button>
+          <a class="li-btn" href="#" onclick="return false;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+        </div>
+      </div>
+
+      <!-- ROW 3 — connection accepted -->
+      <div class="trow">
+        <div class="tav teal">SC</div>
+        <div class="tinfo">
+          <div class="tname">Sophie Clarke</div>
+          <div class="tsub">Fold Studio · Managing Director · Connection accepted</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <button class="btn bs bsm" onclick="openTaskModal('sc','Sophie Clarke','Fold Studio')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:5px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5v3M3 2v.01M4.5 8V5.5c0-.6.4-1 1-1s1 .4 1 1V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Set LI task
+          </button>
+          <a class="li-btn" href="#" onclick="return false;"><svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg></a>
+        </div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>LinkedIn tab gets an inline "Set LI task" button rather than a kebab — this is the primary action users want to take here ("remind me to follow up once they accept").</div>
+      <div class="ann-item"><div class="ann-dot"></div>Task type pre-selects "LinkedIn" when opened from this tab. User can change it if needed.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Once a task exists, the button changes to "View task" — prevents duplicates and surfaces the existing task without extra navigation.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 4 · CONVERSATIONS DRAWER — inline task button
+════════════════════════════════════════════════════ -->
+<div id="s4" class="screen">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">8</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn <span class="tab-ct">47</span></div>
+      <div class="tab">Sent <span class="tab-ct">24</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">4</span></div>
+      <div class="tab">Nurture <span class="tab-ct">2</span></div>
+      <div class="tab on">Conversations <span class="tab-ct">2</span></div>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="screen-label">Screen 4 of 7 — Conversations tab</div>
+    <div class="screen-title">Prospect drawer — Set a task from a reply</div>
+    <div class="screen-desc">The highest-value task origination moment. A prospect has replied — the user needs to decide what happens next. "Set a task" lives in the drawer footer alongside the reply and resolve actions.</div>
+
+    <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
+    <div class="card">
+      <div class="trow" onclick="openConvDrawer()">
+        <div class="tav g">HC</div>
+        <div class="tinfo"><div class="tname">Helen Clarke</div><div class="tsub">"Really interested — can we do Thursday at 2pm?"</div></div>
+        <div class="tright"><span class="bdg bdg-g">Meeting booked</span><button class="btn bs bsm" onclick="event.stopPropagation();openConvDrawer()">View thread →</button></div>
+      </div>
+      <div class="trow" onclick="openConvDrawer()">
+        <div class="tav c">JM</div>
+        <div class="tinfo"><div class="tname">James Mitchell</div><div class="tsub">"Thanks for reaching out, let me have a look…"</div></div>
+        <div class="tright"><span class="bdg bdg-c">Replied</span><button class="btn bs bsm" onclick="event.stopPropagation();openConvDrawer()">View thread →</button></div>
+      </div>
+    </div>
+    <p style="font-size:12px;color:var(--td);margin-top:8px;">↑ Click either row to open the prospect drawer</p>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>"Set a task" sits in the drawer footer — primary action alongside "Reply" and "Resolve". This is the moment it matters most: a prospect has broken silence and the user needs to capture what happens next.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Prospect pre-fills automatically. Task type defaults to Email (most replies lead to an email response).</div>
+      <div class="ann-item"><div class="ann-dot"></div>The drawer shows the reply thread above the actions — user has context before setting the task.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 5 · SUMMARY PAGE — tasks in Today queue
+════════════════════════════════════════════════════ -->
+<div id="s5" class="screen">
+  <!-- Summary page has its own layout — no campaign header -->
+  <div class="tab-content" style="padding-top:32px;">
+    <div class="screen-label">Screen 5 of 7 — Summary / Today page</div>
+    <div class="screen-title">Tasks in the Today queue</div>
+    <div class="screen-desc">Tasks surface in the Today tab as a queue item — same pattern as replies, follow-ups, and drafts. They don't get their own tab. The amber badge signals overdue.</div>
+
+    <div style="font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;margin-bottom:4px;">Good morning, Coris.</div>
+    <div style="font-size:13px;color:var(--td);margin-bottom:24px;">Tuesday, 8 April 2026</div>
+
+    <div class="sum-tab-row">
+      <div class="sum-tab on">Today</div>
+      <div class="sum-tab">This week</div>
+    </div>
+
+    <div class="slabel">Needs your attention</div>
+
+    <!-- existing queue items -->
+    <div class="qi" style="border-color:rgba(0,212,255,0.15);">
+      <div class="qi-ico" style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);">💬</div>
+      <div class="qi-body"><div class="qi-title">2 replies received</div><div class="qi-sub">Sarah Mitchell · Dan Kim — replied overnight</div></div>
+      <span class="qi-badge" style="background:rgba(0,212,255,0.1);color:var(--cyan);border:1px solid rgba(0,212,255,0.2);">New</span>
+      <span class="qi-arrow">→</span>
+    </div>
+    <div class="qi" style="border-color:rgba(255,20,147,0.15);">
+      <div class="qi-ico" style="background:rgba(255,20,147,0.08);border:1px solid rgba(255,20,147,0.15);">📋</div>
+      <div class="qi-body"><div class="qi-title">4 follow-ups due today</div><div class="qi-sub">Agency founders Q1 · Fractional CFO Q1</div></div>
+      <span class="qi-badge" style="background:rgba(255,20,147,0.1);color:var(--pink);border:1px solid rgba(255,20,147,0.2);">4</span>
+      <span class="qi-arrow">→</span>
+    </div>
+
+    <!-- TASKS QUEUE ITEM — new addition -->
+    <div class="qi" style="border-color:rgba(255,157,66,0.25);background:rgba(255,157,66,0.04);" onclick="showScreen('s6')">
+      <div class="qi-ico a">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="var(--amber)" stroke-width="1.3"/><path d="M4 7l2.5 2.5L10 4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="qi-body">
+        <div class="qi-title">3 tasks due today <span style="font-family:var(--of);font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;background:rgba(255,76,76,0.12);color:var(--red);border:1px solid rgba(255,76,76,0.2);margin-left:6px;vertical-align:middle;">1 overdue</span></div>
+        <div class="qi-sub">Connect with Dan Kim · Follow up on proposal · Send intro email</div>
+      </div>
+      <span class="qi-badge a">3</span>
+      <span class="qi-arrow">→</span>
+    </div>
+
+    <div class="qi">
+      <div class="qi-ico" style="background:rgba(100,220,120,0.08);border:1px solid rgba(100,220,120,0.15);">🌱</div>
+      <div class="qi-body"><div class="qi-title">1 prospect to re-contact today</div><div class="qi-sub">Marcus Peters — re-contact date set for today</div></div>
+      <span class="qi-badge" style="background:rgba(255,157,66,0.1);color:var(--amber);border:1px solid rgba(255,157,66,0.2);">Due</span>
+      <span class="qi-arrow">→</span>
+    </div>
+
+    <!-- Global add task button -->
+    <div style="display:flex;justify-content:flex-end;margin-top:20px;">
+      <button class="btn bs bsm" onclick="showScreen('s7')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:7px;">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M5.5 1v9M1 5.5h9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        Add task
+      </button>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Tasks sit in the Today queue alongside replies and follow-ups — not a separate tab. Priority order: replies → follow-ups → tasks → nurture re-contacts → prospects to review.</div>
+      <div class="ann-item"><div class="ann-dot"></div>The amber colour matches the existing task system palette. Overdue tasks get a red sub-badge inside the queue item — visible at a glance without opening it.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Clicking the queue item links to the task queue (existing screen 2 in tasks.html). The number badge shows total open tasks for today.</div>
+      <div class="ann-item"><div class="ann-dot"></div>"Add task" button sits bottom-right of the Today pane — accessible but not dominant. This is the global origination point for tasks not tied to a specific campaign moment.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 6 · NURTURE TAB — prominent task button
+════════════════════════════════════════════════════ -->
+<div id="s6" class="screen">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span></div>
+      </div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">8</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn <span class="tab-ct">47</span></div>
+      <div class="tab">Sent <span class="tab-ct">24</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">4</span></div>
+      <div class="tab on">Nurture <span class="tab-ct">2</span></div>
+      <div class="tab">Conversations <span class="tab-ct">2</span></div>
+    </div>
+  </div>
+  <div class="tab-content">
+    <div class="screen-label">Screen 6 of 7 — Nurture tab</div>
+    <div class="screen-title">Nurture tab — task button alongside re-contact date</div>
+    <div class="screen-desc">Nurture is where parked prospects live. A re-contact date already exists — task creation is its natural sibling. The button sits inline on each row, more prominent than the kebab treatment in other tabs.</div>
+
+    <div style="font-size:12px;color:var(--tm);margin-bottom:16px;">Prospects parked for re-contact. We'll surface them when the time comes.</div>
+    <div class="search-bar"><span class="search-icon">⌕</span><input type="text" placeholder="Search name, role, or agency…"></div>
+
+    <div class="card">
+      <!-- ROW 1 — no task -->
+      <div class="trow">
+        <div class="tav">RB</div>
+        <div class="tinfo">
+          <div class="tname">Rachel Burns</div>
+          <div class="tsub">Closed — not a fit · Re-contact Jun 2026</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <span class="bdg bdg-n">Jun 2026</span>
+          <button class="btn bs bsm" onclick="openTaskModal('rb','Rachel Burns','Pitch Studio')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:5px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Set task
+          </button>
+        </div>
+      </div>
+
+      <!-- ROW 2 — has task, overdue -->
+      <div class="trow">
+        <div class="tav a">TH</div>
+        <div class="tinfo">
+          <div class="tname">Tom Harris <span class="task-chip overdue" style="margin-left:6px;vertical-align:middle;"><svg width="8" height="8" viewBox="0 0 8 8" fill="none"><circle cx="4" cy="4" r="3.5" stroke="currentColor" stroke-width="1"/><path d="M4 2v2.5l1.2 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg> Overdue</span></div>
+          <div class="tsub">Closed — no response · Re-contact Jul 2026</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <span class="bdg bdg-n">Jul 2026</span>
+          <button class="btn bs bsm" onclick="toast('→ Viewing task','ta')" style="color:var(--red);border-color:rgba(255,76,76,0.3);">View task</button>
+        </div>
+      </div>
+
+      <!-- ROW 3 — re-contact date due today -->
+      <div class="trow" style="background:rgba(100,220,120,0.03);border-left:2px solid rgba(100,220,120,0.3);">
+        <div class="tav g">MP</div>
+        <div class="tinfo">
+          <div class="tname">Marcus Peters</div>
+          <div class="tsub">On maternity / redirected · Re-contact today</div>
+        </div>
+        <div class="tright" style="gap:6px;">
+          <span class="bdg bdg-g">Due today</span>
+          <button class="btn bs bsm" onclick="openTaskModal('mp','Marcus Peters','Ventures.io')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:5px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Set task
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Nurture is where users plan future actions — task creation is a first-class action here, not buried in a kebab. "Set task" sits inline on every row.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Overdue tasks show a red chip and "View task" replaces "Set task" — same pattern as LinkedIn tab.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Rows where the re-contact date is today get a green left-border accent — consistent with the overdue amber treatment in the task queue.</div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════
+     SCREEN 7 · GLOBAL ADD TASK — no prospect context
+════════════════════════════════════════════════════ -->
+<div id="s7" class="screen">
+  <div class="tab-content" style="padding-top:32px;">
+    <div class="screen-label">Screen 7 of 7 — Global task creation</div>
+    <div class="screen-title">Add task — no prospect context</div>
+    <div class="screen-desc">Triggered from the "Add task" button on the Today page, or from the Tasks sidebar icon. No prospect pre-filled. The prospect field is searchable across all campaigns. If the person isn't in Pulse, a clear explanation — not a hidden dead end.</div>
+
+    <div style="max-width:480px;background:#130a20;border:1px solid var(--b2);border-radius:14px;overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,0.5);">
+      <div class="modal-hdr">
+        <div class="modal-title">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="var(--amber)" stroke-width="1.3"/><path d="M4 7l2 2 4-4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Add task
+        </div>
+        <div class="modal-close" onclick="toast('Modal closed','tc')">✕</div>
+      </div>
+      <div class="modal-body">
+
+        <!-- Prospect search — with results showing -->
+        <div class="fld">
+          <label class="fld-label">Who is this for? <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <input class="fld-input" type="text" placeholder="Search by name or company…" value="Sarah" oninput="toggleSearchResults(this.value)" id="global-search">
+          <!-- Search results dropdown -->
+          <div class="psearch-results" id="search-results">
+            <div class="psearch-item" onclick="selectProspect('sm','Sarah Mitchell','North Agency','Agency founders Q1')">
+              <div class="psearch-av">SM</div>
+              <div>
+                <div class="psearch-name">Sarah Mitchell</div>
+                <div class="psearch-sub">North Agency · Marketing Director</div>
+              </div>
+              <div class="psearch-campaign">Agency founders Q1</div>
+            </div>
+            <div class="psearch-item" onclick="selectProspect('st','Sarah Thompson','ConsultCo','Fractional CFO Q1')">
+              <div class="psearch-av">ST</div>
+              <div>
+                <div class="psearch-name">Sarah Thompson</div>
+                <div class="psearch-sub">ConsultCo · Head of Finance</div>
+              </div>
+              <div class="psearch-campaign">Fractional CFO Q1</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- No-match state (hidden by default, shown via annotation) -->
+        <div id="no-match-state" style="display:none;">
+          <div class="fld">
+            <label class="fld-label">Who is this for? <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+            <input class="fld-input" type="text" value="David Bloom">
+            <div class="psearch-results">
+              <div class="psearch-none">
+                No prospect found for "David Bloom"
+                <div style="margin-top:6px;font-size:11px;color:var(--td);line-height:1.5;">To set a task for someone new, add them to a campaign first. Or save this task without a prospect — you can link it later.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Task type -->
+        <div class="fld">
+          <label class="fld-label">Task type</label>
+          <div class="type-pills">
+            <div class="type-pill active" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="1.5" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M0.5 3.5l4.5 3 4.5-3" stroke="currentColor" stroke-width="1.1"/></svg>
+              Email
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5v3M3 2v.01M4.5 8V5.5c0-.6.4-1 1-1s1 .4 1 1V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+              LinkedIn
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1h8v6H6L4 9V7H1V1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg>
+              Message
+            </div>
+            <div class="type-pill" onclick="selectType(this)">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="8" cy="5" r="1" fill="currentColor"/><circle cx="2" cy="5" r="1" fill="currentColor"/></svg>
+              Other
+            </div>
+          </div>
+        </div>
+
+        <!-- Note -->
+        <div class="fld">
+          <label class="fld-label">Note <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+          <textarea class="notes-field" placeholder="What do you need to do, or remember?"></textarea>
+        </div>
+
+        <!-- Due date -->
+        <div class="fld" style="margin-bottom:0;">
+          <label class="fld-label">Due date</label>
+          <div class="date-row">
+            <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
+            <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
+            <div class="date-badge" onclick="selectDate(this)">Next week</div>
+            <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-ftr">
+        <button class="btn bs bsm" onclick="toast('Modal closed','tc')">Cancel</button>
+        <button class="btn bp bsm" onclick="toast('Task saved · No prospect linked','tg')">Save task</button>
+      </div>
+    </div>
+
+    <!-- No-match toggle for wireframe demo -->
+    <div style="margin-top:16px;display:flex;gap:8px;align-items:center;">
+      <button class="btn bs bsm" onclick="showNoMatch()" style="font-size:11px;">Preview: no match found →</button>
+      <button class="btn bs bsm" onclick="hideNoMatch()" style="font-size:11px;">Reset</button>
+    </div>
+
+    <div class="ann">
+      <div class="ann-title">Notes</div>
+      <div class="ann-item"><div class="ann-dot"></div>Prospect field is optional and searchable across all campaigns. Showing campaign name alongside each result prevents confusion when the same name appears in multiple lists.</div>
+      <div class="ann-item"><div class="ann-dot"></div>No-match state: honest, not a dead end. "Add them to a campaign first" directs the user to the right flow. "Save without a prospect" is the escape hatch — the task still gets created and can be linked later.</div>
+      <div class="ann-item"><div class="ann-dot"></div>This intentionally doesn't allow creating a new prospect from here. Prospect creation belongs in the campaign import flow — adding it here risks scope creep into CRM territory.</div>
+      <div class="ann-item"><div class="ann-dot"></div>Tasks without a prospect are valid and useful — "Research the Vodafone procurement process" doesn't need a named person.</div>
+    </div>
+  </div>
+</div>
+
+
+</main>
+</div><!-- /layout -->
+
+
+<!-- CONVERSATIONS DRAWER -->
+<div class="drawer-overlay" id="conv-overlay" onclick="closeConvDrawer()"></div>
+<div class="drawer-panel" id="conv-panel">
+  <div class="drawer-hdr">
+    <div class="drawer-av">JM</div>
+    <div>
+      <div class="drawer-name">James Mitchell</div>
+      <div class="drawer-sub">North Agency · Marketing Director</div>
+    </div>
+    <div class="drawer-close" onclick="closeConvDrawer()">✕</div>
+  </div>
+  <div class="drawer-body">
+    <div class="drawer-sec-label">Latest reply</div>
+    <div class="reply-bubble">
+      <div class="reply-from">James Mitchell · 2 hours ago</div>
+      "Thanks for reaching out, let me have a look at what you've put together. Can you send over a bit more on how you've worked with similar agencies? Happy to jump on a call if it makes sense."
+    </div>
+    <div class="drawer-sec-label">Thread</div>
+    <div style="font-size:12px;color:var(--td);font-style:italic;margin-bottom:4px;">Your email · 5 days ago</div>
+    <div style="font-size:12px;color:var(--tm);line-height:1.7;padding:10px 12px;background:var(--s);border:1px solid var(--b);border-radius:8px;margin-bottom:20px;">
+      "Hi James, quick thought on North Agency's pipeline..."
+    </div>
+    <div class="drawer-sec-label">Notes</div>
+    <textarea class="notes-field" placeholder="Add a note about this conversation…" style="margin-bottom:0;"></textarea>
+  </div>
+  <div class="drawer-ftr">
+    <button class="btn bs bsm" onclick="closeConvDrawer();toast('→ Marked resolved','tg')">Resolve</button>
+    <button class="btn bs bsm" onclick="closeConvDrawer();openTaskModal('jm','James Mitchell','North Agency')" style="color:var(--amber);border-color:rgba(255,157,66,0.3);gap:6px;">
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5l1.5 1.5L7 3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Set a task
+    </button>
+    <button class="btn bp bsm" onclick="closeConvDrawer();toast('→ Opening reply composer','tc')">Reply →</button>
+  </div>
+</div>
+
+<!-- TASK CREATION MODAL (triggered from various places) -->
+<div class="modal-overlay" id="task-modal">
+  <div class="modal">
+    <div class="modal-hdr">
+      <div class="modal-title">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="var(--amber)" stroke-width="1.3"/><path d="M4 7l2 2 4-4" stroke="var(--amber)" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Set a task
+      </div>
+      <div class="modal-close" onclick="closeTaskModal()">✕</div>
+    </div>
+    <div class="modal-body">
+      <div class="prefill-badge" id="modal-prefill">
+        <div class="prefill-av" id="modal-av">JM</div>
+        <div>
+          <div class="prefill-name" id="modal-name">James Mitchell</div>
+          <div class="prefill-sub" id="modal-sub">North Agency</div>
+        </div>
+        <div class="prefill-clear" onclick="clearPrefill()">Remove ✕</div>
+      </div>
+      <div class="fld">
+        <label class="fld-label">Task type</label>
+        <div class="type-pills">
+          <div class="type-pill active" onclick="selectType(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="1.5" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M0.5 3.5l4.5 3 4.5-3" stroke="currentColor" stroke-width="1.1"/></svg> Email</div>
+          <div class="type-pill" onclick="selectType(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="0.5" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M3 5v3M3 2v.01M4.5 8V5.5c0-.6.4-1 1-1s1 .4 1 1V8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg> LinkedIn</div>
+          <div class="type-pill" onclick="selectType(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 1h8v6H6L4 9V7H1V1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/></svg> Message</div>
+          <div class="type-pill" onclick="selectType(this)"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="1" fill="currentColor"/><circle cx="8" cy="5" r="1" fill="currentColor"/><circle cx="2" cy="5" r="1" fill="currentColor"/></svg> Other</div>
+        </div>
+      </div>
+      <div class="fld">
+        <label class="fld-label">Note <span style="color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">(optional)</span></label>
+        <textarea class="notes-field" placeholder="What do you need to do, or remember?"></textarea>
+      </div>
+      <div class="fld" style="margin-bottom:0;">
+        <label class="fld-label">Due date</label>
+        <div class="date-row">
+          <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
+          <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
+          <div class="date-badge" onclick="selectDate(this)">Next week</div>
+          <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-ftr">
+      <button class="btn bs bsm" onclick="closeTaskModal()">Cancel</button>
+      <button class="btn bp bsm" id="modal-save-btn" onclick="saveTask()">Save task</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="tz"></div>
+
+<!-- WIREFRAME SWITCHER -->
+<div class="wfc">
+  <span class="wfc-label">Screens</span>
+  <button class="wfb on" onclick="showScreen('s1',this)">1 · Review kebab</button>
+  <button class="wfb" onclick="showScreen('s2',this)">2 · Task modal (contextual)</button>
+  <span class="wfb sep">·</span>
+  <button class="wfb" onclick="showScreen('s3',this)">3 · LinkedIn tab</button>
+  <button class="wfb" onclick="showScreen('s4',this)">4 · Conversations drawer</button>
+  <button class="wfb" onclick="showScreen('s6',this)">5 · Nurture tab</button>
+  <span class="wfb sep">·</span>
+  <button class="wfb" onclick="showScreen('s5',this)">6 · Today queue</button>
+  <button class="wfb" onclick="showScreen('s7',this)">7 · Global add task</button>
+</div>
+
+<script>
+// ── SCREEN SWITCHING ──────────────────────────────
+function showScreen(id, btn) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('on'));
+  const s = document.getElementById(id);
+  if (s) { s.classList.add('on'); window.scrollTo({top:0,behavior:'smooth'}); }
+  document.querySelectorAll('.wfb').forEach(b => b.classList.remove('on'));
+  if (btn) btn.classList.add('on');
+  // update breadcrumb
+  const ctx = {
+    s1:'Agency founders — Q1 · Review',
+    s2:'Agency founders — Q1 · Review → Set task',
+    s3:'Agency founders — Q1 · LinkedIn',
+    s4:'Agency founders — Q1 · Conversations',
+    s5:'Summary · Today',
+    s6:'Agency founders — Q1 · Nurture',
+    s7:'Summary · Today → Add task'
+  };
+  const bc = document.getElementById('bc-ctx');
+  if (bc) bc.textContent = ctx[id] || 'Pulse.';
+}
+
+// ── KEBAB ──────────────────────────────────────────
+function toggleKebab(id) {
+  closeKebab();
+  const el = document.getElementById(id);
+  if (el) el.style.display = 'block';
+  setTimeout(() => document.addEventListener('click', closeKebab, {once:true}), 10);
+}
+function closeKebab() {
+  document.querySelectorAll('.kdrop').forEach(d => d.style.display = 'none');
+}
+
+// ── TASK MODAL ─────────────────────────────────────
+let currentProspect = null;
+function openTaskModal(id, name, company) {
+  closeKebab();
+  currentProspect = {id, name, company};
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  document.getElementById('modal-av').textContent = initials;
+  document.getElementById('modal-name').textContent = name;
+  document.getElementById('modal-sub').textContent = company;
+  document.getElementById('modal-prefill').style.display = 'flex';
+  document.getElementById('modal-save-btn').textContent = 'Save task';
+  document.getElementById('task-modal').classList.add('open');
+  // reset type pills
+  document.querySelectorAll('#task-modal .type-pill').forEach((p,i) => {
+    p.classList.toggle('active', i===0);
+  });
+  // reset date
+  document.querySelectorAll('#task-modal .date-badge').forEach((d,i) => {
+    d.classList.toggle('sel', i===0);
+  });
+}
+function closeTaskModal() {
+  document.getElementById('task-modal').classList.remove('open');
+}
+function clearPrefill() {
+  document.getElementById('modal-prefill').style.display = 'none';
+  currentProspect = null;
+}
+function saveTask() {
+  const name = currentProspect ? currentProspect.name : null;
+  const msg = name ? `Task set · ${name} · Tomorrow` : 'Task saved · No prospect linked';
+  closeTaskModal();
+  toast(msg, 'tg');
+}
+
+// ── CONVERSATIONS DRAWER ───────────────────────────
+function openConvDrawer() {
+  document.getElementById('conv-overlay').classList.add('open');
+  document.getElementById('conv-panel').classList.add('open');
+}
+function closeConvDrawer() {
+  document.getElementById('conv-overlay').classList.remove('open');
+  document.getElementById('conv-panel').classList.remove('open');
+}
+
+// ── TYPE PILLS ─────────────────────────────────────
+function selectType(el) {
+  el.closest('.type-pills').querySelectorAll('.type-pill').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ── DATE BADGES ────────────────────────────────────
+function selectDate(el) {
+  el.closest('.date-row').querySelectorAll('.date-badge').forEach(d => d.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+// ── GLOBAL SEARCH ──────────────────────────────────
+function toggleSearchResults(val) {
+  document.getElementById('search-results').style.display = val.length > 0 ? 'block' : 'none';
+}
+function selectProspect(id, name, company, campaign) {
+  const initials = name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);
+  const inp = document.getElementById('global-search');
+  if (inp) inp.value = name;
+  document.getElementById('search-results').style.display = 'none';
+  toast(`Prospect selected: ${name} · ${campaign}`, 'tc');
+}
+function showNoMatch() {
+  document.querySelector('#s7 .fld').style.display = 'none';
+  document.getElementById('no-match-state').style.display = 'block';
+}
+function hideNoMatch() {
+  document.querySelector('#s7 .fld').style.display = 'block';
+  document.getElementById('no-match-state').style.display = 'none';
+  const inp = document.getElementById('global-search');
+  if (inp) inp.value = '';
+  document.getElementById('search-results').style.display = 'none';
+}
+
+// ── TOAST ──────────────────────────────────────────
+function toast(text, cls) {
+  const tz = document.getElementById('tz');
+  const el = document.createElement('div');
+  el.className = 'tst ' + (cls||'tc');
+  el.textContent = text;
+  tz.appendChild(el);
+  setTimeout(() => {
+    el.style.opacity='0';el.style.transition='opacity 0.3s';
+    setTimeout(()=>el.remove(),300);
+  },3000);
+}
+
+// Close kebab on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.kbtn') && !e.target.closest('.kdrop')) closeKebab();
+});
+// Close task modal on overlay click
+document.getElementById('task-modal').addEventListener('click', e => {
+  if (e.target === document.getElementById('task-modal')) closeTaskModal();
+});
+</script>
+</body>
+</html>
