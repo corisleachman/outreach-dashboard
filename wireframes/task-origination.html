@@ -699,11 +699,30 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         <!-- Due date -->
         <div class="fld">
           <label class="fld-label">Due date</label>
-          <div class="date-row">
-            <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
-            <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
-            <div class="date-badge" onclick="selectDate(this)">Next week</div>
-            <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+          <div class="date-picker-wrap">
+            <div class="date-row">
+              <div class="date-badge sel" onclick="selectDate(this,'s2')">Tomorrow</div>
+              <div class="date-badge" onclick="selectDate(this,'s2')">In 2 days</div>
+              <div class="date-badge" onclick="selectDate(this,'s2')">Next week</div>
+              <div class="date-badge" onclick="selectDate(this,'s2')">Pick date…</div>
+            </div>
+            <div class="date-picker" id="dp-s2">
+              <div class="dp-nav">
+                <div class="dp-nav-btn" onclick="dpPrev('s2')">‹</div>
+                <div class="dp-month-label" id="dp-label-s2"></div>
+                <div class="dp-nav-btn" onclick="dpNext('s2')">›</div>
+              </div>
+              <div class="dp-weekdays">
+                <div class="dp-wd">Mo</div><div class="dp-wd">Tu</div><div class="dp-wd">We</div>
+                <div class="dp-wd">Th</div><div class="dp-wd">Fr</div><div class="dp-wd">Sa</div>
+                <div class="dp-wd">Su</div>
+              </div>
+              <div class="dp-days" id="dp-grid-s2"></div>
+              <div class="dp-confirm">
+                <button class="dp-confirm-btn" id="dp-ok-s2" disabled
+                  onclick="dpConfirm('s2')">Confirm date</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1113,11 +1132,30 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
         <!-- Due date -->
         <div class="fld" style="margin-bottom:0;">
           <label class="fld-label">Due date</label>
-          <div class="date-row">
-            <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
-            <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
-            <div class="date-badge" onclick="selectDate(this)">Next week</div>
-            <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+          <div class="date-picker-wrap">
+            <div class="date-row">
+              <div class="date-badge sel" onclick="selectDate(this,'s7')">Tomorrow</div>
+              <div class="date-badge" onclick="selectDate(this,'s7')">In 2 days</div>
+              <div class="date-badge" onclick="selectDate(this,'s7')">Next week</div>
+              <div class="date-badge" onclick="selectDate(this,'s7')">Pick date…</div>
+            </div>
+            <div class="date-picker" id="dp-s7">
+              <div class="dp-nav">
+                <div class="dp-nav-btn" onclick="dpPrev('s7')">‹</div>
+                <div class="dp-month-label" id="dp-label-s7"></div>
+                <div class="dp-nav-btn" onclick="dpNext('s7')">›</div>
+              </div>
+              <div class="dp-weekdays">
+                <div class="dp-wd">Mo</div><div class="dp-wd">Tu</div><div class="dp-wd">We</div>
+                <div class="dp-wd">Th</div><div class="dp-wd">Fr</div><div class="dp-wd">Sa</div>
+                <div class="dp-wd">Su</div>
+              </div>
+              <div class="dp-days" id="dp-grid-s7"></div>
+              <div class="dp-confirm">
+                <button class="dp-confirm-btn" id="dp-ok-s7" disabled
+                  onclick="dpConfirm('s7')">Confirm date</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1361,6 +1399,23 @@ function openTaskModal(id, name, company) {
 }
 function closeTaskModal() {
   document.getElementById('task-modal').classList.remove('open');
+  // Reset picker state
+  const saveBtn = document.getElementById('modal-save-btn');
+  if (saveBtn) delete saveBtn.dataset.dueDate;
+  if (dpState['modal']) dpState['modal'].selected = null;
+  // Reset "Pick date…" badge text in case it was changed
+  const dp = document.getElementById('dp-modal');
+  if (dp) {
+    dp.classList.remove('open');
+    const row = dp.closest('.date-picker-wrap')?.querySelector('.date-row');
+    if (row) {
+      const pickBtn = row.querySelectorAll('.date-badge')[3];
+      if (pickBtn && pickBtn.dataset.custom) {
+        pickBtn.textContent = 'Pick date…';
+        delete pickBtn.dataset.custom;
+      }
+    }
+  }
 }
 function clearPrefill() {
   document.getElementById('modal-prefill').style.display = 'none';
@@ -1368,7 +1423,21 @@ function clearPrefill() {
 }
 function saveTask() {
   const name = currentProspect ? currentProspect.name : null;
-  const msg = name ? `Task set · ${name} · Tomorrow` : 'Task saved · No prospect linked';
+  // Use selected date from modal picker if set, otherwise fall back to quick-pick badge
+  const saveBtn = document.getElementById('modal-save-btn');
+  let dueDate = 'Tomorrow';
+  if (saveBtn && saveBtn.dataset.dueDate) {
+    dueDate = saveBtn.dataset.dueDate;
+  } else {
+    // Read whichever quick-pick badge is currently selected
+    const selBadge = document.querySelector('#dp-modal')
+      ?.closest('.date-picker-wrap')
+      ?.querySelector('.date-badge.sel');
+    if (selBadge) dueDate = selBadge.textContent;
+  }
+  const msg = name
+    ? `Task set · ${name} · ${dueDate}`
+    : `Task saved · ${dueDate} · No prospect linked`;
   closeTaskModal();
   toast(msg, 'tg');
 }
