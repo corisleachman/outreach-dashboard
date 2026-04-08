@@ -109,6 +109,33 @@ html, body { background: var(--bg); color: var(--text); font-family: var(--sans)
     <div style="font-family:'Outfit',sans-serif;font-size:12px;font-weight:700;color:rgba(255,20,147,0.8);white-space:nowrap;">Read →</div>
   </a>
 
+  <!-- ═══ DOCS QUICK ACCESS ═══ -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:32px;">
+
+    <a href="SECURITY-CHECKLIST.md" style="display:flex;align-items:center;gap:14px;background:rgba(255,76,76,0.07);border:1px solid rgba(255,76,76,0.2);border-radius:12px;padding:14px 18px;text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(255,76,76,0.45)'" onmouseout="this.style.borderColor='rgba(255,76,76,0.2)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(255,76,76,0.12);border:1px solid rgba(255,76,76,0.25);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2a3 3 0 00-3 3v1H3v9h10V6h-2V5a3 3 0 00-3-3z" stroke="#ff4c4c" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#f4f4f2;margin-bottom:2px;">Security Checklist</div>
+        <div style="font-size:11px;color:#a8a8b8;line-height:1.4;">Auth, RLS, secrets, email abuse, GDPR. P0 items must clear before launch.</div>
+      </div>
+      <div style="font-size:12px;color:rgba(255,76,76,0.7);flex-shrink:0;">→</div>
+    </a>
+
+    <a href="PERFORMANCE-AUDIT.md" style="display:flex;align-items:center;gap:14px;background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:12px;padding:14px 18px;text-decoration:none;transition:border-color 0.2s;" onmouseover="this.style.borderColor='rgba(0,212,255,0.4)'" onmouseout="this.style.borderColor='rgba(0,212,255,0.15)'">
+      <div style="width:36px;height:36px;border-radius:8px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#00d4ff" stroke-width="1.4"/><path d="M8 5v3l2 2" stroke="#00d4ff" stroke-width="1.4" stroke-linecap="round"/></svg>
+      </div>
+      <div style="flex:1;min-width:0;">
+        <div style="font-family:'Outfit',sans-serif;font-size:13px;font-weight:700;color:#f4f4f2;margin-bottom:2px;">Performance Audit</div>
+        <div style="font-size:11px;color:#a8a8b8;line-height:1.4;">Bundle analysis, dead code, slow queries. Run after all phases are stable.</div>
+      </div>
+      <div style="font-size:12px;color:rgba(0,212,255,0.6);flex-shrink:0;">→</div>
+    </a>
+
+  </div>
+
   <div class="header">
     <div class="header-eyebrow">Development hub</div>
     <h1 class="header-title">Pulse<span>.</span></h1>
