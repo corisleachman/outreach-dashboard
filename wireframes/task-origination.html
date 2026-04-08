@@ -289,6 +289,58 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .date-badge:hover{border-color:var(--td);color:var(--t);}
 .date-badge.sel{background:rgba(255,20,147,0.1);border-color:rgba(255,20,147,0.3);color:var(--pink);}
 
+/* ── DATE PICKER POPOVER ──────────────────────────────────────────────────
+   Renders inline below the date-row when "Pick date…" is clicked.
+   Anchored to the .date-row's parent .fld via position:relative on .fld.
+   ────────────────────────────────────────────────────────────────────── */
+.date-picker-wrap{position:relative;}
+.date-picker{
+  position:absolute;
+  top:calc(100% + 8px);
+  left:0;
+  z-index:500;
+  background:#1a0f2e;
+  border:1px solid var(--b2);
+  border-radius:12px;
+  box-shadow:0 16px 48px rgba(0,0,0,0.6);
+  padding:14px;
+  width:252px;
+  display:none;
+  user-select:none;
+}
+.date-picker.open{display:block;}
+/* Month navigation header */
+.dp-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+.dp-nav-btn{width:26px;height:26px;border-radius:6px;border:1px solid var(--b2);
+  background:var(--s);cursor:pointer;display:flex;align-items:center;justify-content:center;
+  color:var(--tm);font-size:13px;transition:all 0.15s;}
+.dp-nav-btn:hover{background:var(--s2);color:var(--t);border-color:var(--td);}
+.dp-month-label{font-family:var(--of);font-size:13px;font-weight:700;color:var(--t);}
+/* Day-of-week headers */
+.dp-weekdays{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px;}
+.dp-wd{font-family:var(--of);font-size:9px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;color:var(--td);text-align:center;padding:3px 0;}
+/* Day grid */
+.dp-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;}
+.dp-day{width:32px;height:32px;border-radius:7px;display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:12px;font-weight:600;
+  cursor:pointer;color:var(--tm);transition:all 0.12s;}
+.dp-day:hover{background:var(--s2);color:var(--t);}
+.dp-day.today{color:var(--pink);font-weight:800;}
+.dp-day.selected{background:rgba(255,20,147,0.15);color:var(--pink);
+  border:1px solid rgba(255,20,147,0.4);}
+.dp-day.selected:hover{background:rgba(255,20,147,0.22);}
+.dp-day.past{opacity:0.28;pointer-events:none;}
+.dp-day.empty{pointer-events:none;}
+/* Confirm button */
+.dp-confirm{margin-top:10px;padding-top:10px;border-top:1px solid var(--b);
+  display:flex;justify-content:flex-end;}
+.dp-confirm-btn{padding:6px 14px;border-radius:100px;background:var(--gr);
+  color:white;border:none;font-family:var(--of);font-size:12px;font-weight:700;
+  cursor:pointer;transition:opacity 0.15s;}
+.dp-confirm-btn:hover{opacity:0.85;}
+.dp-confirm-btn:disabled{opacity:0.35;cursor:default;}
+
 /* PROSPECT SEARCH RESULTS */
 .psearch-results{background:#1a0f2e;border:1px solid var(--b2);border-radius:8px;
   margin-top:4px;overflow:hidden;}
@@ -1165,11 +1217,30 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
       </div>
       <div class="fld" style="margin-bottom:0;">
         <label class="fld-label">Due date</label>
+        <div class="date-picker-wrap">
         <div class="date-row">
-          <div class="date-badge sel" onclick="selectDate(this)">Tomorrow</div>
-          <div class="date-badge" onclick="selectDate(this)">In 2 days</div>
-          <div class="date-badge" onclick="selectDate(this)">Next week</div>
-          <div class="date-badge" onclick="selectDate(this)">Pick date…</div>
+          <div class="date-badge sel" onclick="selectDate(this,'modal')">Tomorrow</div>
+          <div class="date-badge" onclick="selectDate(this,'modal')">In 2 days</div>
+          <div class="date-badge" onclick="selectDate(this,'modal')">Next week</div>
+          <div class="date-badge" onclick="selectDate(this,'modal')">Pick date…</div>
+        </div>
+        <div class="date-picker" id="dp-modal">
+          <div class="dp-nav">
+            <div class="dp-nav-btn" onclick="dpPrev('modal')">‹</div>
+            <div class="dp-month-label" id="dp-label-modal"></div>
+            <div class="dp-nav-btn" onclick="dpNext('modal')">›</div>
+          </div>
+          <div class="dp-weekdays">
+            <div class="dp-wd">Mo</div><div class="dp-wd">Tu</div><div class="dp-wd">We</div>
+            <div class="dp-wd">Th</div><div class="dp-wd">Fr</div><div class="dp-wd">Sa</div>
+            <div class="dp-wd">Su</div>
+          </div>
+          <div class="dp-days" id="dp-grid-modal"></div>
+          <div class="dp-confirm">
+            <button class="dp-confirm-btn" id="dp-ok-modal" disabled
+              onclick="dpConfirm('modal')">Confirm date</button>
+          </div>
+        </div>
         </div>
       </div>
     </div>
@@ -1318,11 +1389,145 @@ function selectType(el) {
   el.classList.add('active');
 }
 
+// ── DATE PICKER ENGINE ─────────────────────────────
+// State: one object per picker instance (s2, s7, modal)
+const dpState = {};
+
+function dpInit(id) {
+  if (!dpState[id]) {
+    const now = new Date();
+    dpState[id] = {
+      year: now.getFullYear(),
+      month: now.getMonth(),
+      selected: null
+    };
+  }
+  dpRender(id);
+}
+
+const MONTHS = ['January','February','March','April','May','June',
+                'July','August','September','October','November','December'];
+const TODAY = new Date(); TODAY.setHours(0,0,0,0);
+
+function dpRender(id) {
+  const s = dpState[id];
+  const label = document.getElementById('dp-label-' + id);
+  const grid  = document.getElementById('dp-grid-' + id);
+  const okBtn = document.getElementById('dp-ok-' + id);
+  if (!label || !grid) return;
+
+  label.textContent = MONTHS[s.month] + ' ' + s.year;
+
+  // First day of this month (0=Sun … 6=Sat), shift to Mon=0
+  const first = new Date(s.year, s.month, 1).getDay();
+  const blanks = (first === 0) ? 6 : first - 1; // Mon-first offset
+  const daysInMonth = new Date(s.year, s.month + 1, 0).getDate();
+
+  let html = '';
+  // blank cells before day 1
+  for (let b = 0; b < blanks; b++) html += '<div class="dp-day empty"></div>';
+  // actual days
+  for (let d = 1; d <= daysInMonth; d++) {
+    const date = new Date(s.year, s.month, d);
+    const isPast = date < TODAY;
+    const isToday = date.getTime() === TODAY.getTime();
+    const isSel = s.selected && date.getTime() === s.selected.getTime();
+    let cls = 'dp-day';
+    if (isPast) cls += ' past';
+    if (isToday) cls += ' today';
+    if (isSel)  cls += ' selected';
+    html += `<div class="${cls}" onclick="dpPickDay('${id}',${s.year},${s.month},${d})">${d}</div>`;
+  }
+  grid.innerHTML = html;
+  if (okBtn) okBtn.disabled = !s.selected;
+}
+
+function dpPickDay(id, y, m, d) {
+  const date = new Date(y, m, d);
+  dpState[id].selected = date;
+  dpRender(id);
+  const okBtn = document.getElementById('dp-ok-' + id);
+  if (okBtn) okBtn.disabled = false;
+}
+
+function dpPrev(id) {
+  const s = dpState[id];
+  if (s.month === 0) { s.month = 11; s.year--; }
+  else s.month--;
+  dpRender(id);
+}
+function dpNext(id) {
+  const s = dpState[id];
+  if (s.month === 11) { s.month = 0; s.year++; }
+  else s.month++;
+  dpRender(id);
+}
+
+function dpConfirm(id) {
+  const s = dpState[id];
+  if (!s.selected) return;
+  const day = s.selected.getDate();
+  const mon = MONTHS[s.selected.getMonth()].slice(0,3);
+  const yr  = s.selected.getFullYear();
+  const label = `${day} ${mon} ${yr}`;
+
+  // Update the "Pick date…" badge text + keep it selected (pink)
+  const picker = document.getElementById('dp-' + id);
+  const row = picker.closest('.date-picker-wrap').querySelector('.date-row');
+  row.querySelectorAll('.date-badge').forEach(b => b.classList.remove('sel'));
+  const pickBtn = Array.from(row.querySelectorAll('.date-badge'))
+    .find(b => b.textContent.startsWith('Pick') || b.dataset.custom);
+  if (pickBtn) {
+    pickBtn.textContent = label;
+    pickBtn.dataset.custom = '1';
+    pickBtn.classList.add('sel');
+  }
+
+  // Also store on the modal save button for toast display
+  if (id === 'modal') {
+    const saveBtn = document.getElementById('modal-save-btn');
+    if (saveBtn) saveBtn.dataset.dueDate = label;
+  }
+
+  closeDp(id);
+}
+
+function closeDp(id) {
+  const el = document.getElementById('dp-' + id);
+  if (el) el.classList.remove('open');
+}
+
 // ── DATE BADGES ────────────────────────────────────
-function selectDate(el) {
+// id = which picker instance this badge belongs to ('s2', 's7', 'modal')
+function selectDate(el, id) {
   el.closest('.date-row').querySelectorAll('.date-badge').forEach(d => d.classList.remove('sel'));
   el.classList.add('sel');
+
+  const isPickDate = el.textContent.startsWith('Pick') || el.dataset.custom === '1';
+  if (isPickDate && !el.dataset.custom) {
+    // "Pick date…" — open the calendar
+    el.classList.remove('sel'); // will be re-selected on confirm
+    const dp = document.getElementById('dp-' + id);
+    if (!dp) return;
+    const isOpen = dp.classList.contains('open');
+    // Close all other pickers
+    document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
+    if (!isOpen) {
+      dpInit(id);
+      dp.classList.add('open');
+    }
+  } else {
+    // Quick-pick badge — close any open picker
+    document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
+  }
 }
+
+// Close picker on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.date-picker-wrap')) {
+    document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
+  }
+});
 
 // ── GLOBAL SEARCH ──────────────────────────────────
 function toggleSearchResults(val) {
