@@ -1508,13 +1508,15 @@ function dpRender(id) {
     if (isPast) cls += ' past';
     if (isToday) cls += ' today';
     if (isSel)  cls += ' selected';
-    html += `<div class="${cls}" onclick="dpPickDay('${id}',${s.year},${s.month},${d})">${d}</div>`;
+    html += `<div class="${cls}" onclick="dpPickDay('${id}',${s.year},${s.month},${d},event)">${d}</div>`;
   }
   grid.innerHTML = html;
   if (okBtn) okBtn.disabled = !s.selected;
 }
 
-function dpPickDay(id, y, m, d) {
+function dpPickDay(id, y, m, d, event) {
+  // Stop click from bubbling to the document outside-click handler
+  if (event) event.stopPropagation();
   const date = new Date(y, m, d);
   dpState[id].selected = date;
   dpRender(id);
@@ -1572,31 +1574,57 @@ function closeDp(id) {
 // ── DATE BADGES ────────────────────────────────────
 // id = which picker instance this badge belongs to ('s2', 's7', 'modal')
 function selectDate(el, id) {
-  el.closest('.date-row').querySelectorAll('.date-badge').forEach(d => d.classList.remove('sel'));
-  el.classList.add('sel');
+  // "Pick date…" badge OR a badge that already has a confirmed custom date
+  // — both should open the calendar picker.
+  const isDatePickerBadge = el.textContent.startsWith('Pick') || el.dataset.custom === '1';
 
-  const isPickDate = el.textContent.startsWith('Pick') || el.dataset.custom === '1';
-  if (isPickDate && !el.dataset.custom) {
-    // "Pick date…" — open the calendar
-    el.classList.remove('sel'); // will be re-selected on confirm
+  if (isDatePickerBadge) {
+    // Don't immediately mark as selected — confirm does that
+    // (Unless it's a custom date, in which case keep it selected while open)
+    if (!el.dataset.custom) {
+      el.closest('.date-row').querySelectorAll('.date-badge').forEach(d => d.classList.remove('sel'));
+    }
     const dp = document.getElementById('dp-' + id);
     if (!dp) return;
     const isOpen = dp.classList.contains('open');
-    // Close all other pickers
+    // Close all other pickers first
     document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
     if (!isOpen) {
-      dpInit(id);
+      // If re-opening after a confirmed date, restore that date in the picker state
+      if (el.dataset.custom && dpState[id]) {
+        // State already has the selected date from last confirm — just re-render
+        dpRender(id);
+      } else {
+        dpInit(id);
+      }
       dp.classList.add('open');
     }
   } else {
-    // Quick-pick badge — close any open picker
+    // Quick-pick badge (Tomorrow / In 2 days / Next week) — select immediately
+    el.closest('.date-row').querySelectorAll('.date-badge').forEach(d => d.classList.remove('sel'));
+    el.classList.add('sel');
+    // Clear any previously confirmed custom date from this picker
+    const row = el.closest('.date-row');
+    const customBadge = Array.from(row.querySelectorAll('.date-badge')).find(b => b.dataset.custom);
+    if (customBadge) {
+      customBadge.textContent = 'Pick date…';
+      delete customBadge.dataset.custom;
+    }
+    if (dpState[id]) dpState[id].selected = null;
+    // Close any open picker
     document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
+    // Clear stored date from modal save btn
+    if (id === 'modal') {
+      const saveBtn = document.getElementById('modal-save-btn');
+      if (saveBtn) delete saveBtn.dataset.dueDate;
+    }
   }
 }
 
-// Close picker on outside click
-document.addEventListener('click', e => {
-  if (!e.target.closest('.date-picker-wrap')) {
+// Close picker when clicking outside — use mousedown so stopPropagation
+// in dpPickDay fires first, preventing day-clicks from triggering this.
+document.addEventListener('mousedown', e => {
+  if (!e.target.closest('.date-picker-wrap') && !e.target.closest('.date-picker')) {
     document.querySelectorAll('.date-picker').forEach(p => p.classList.remove('open'));
   }
 });
