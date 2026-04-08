@@ -2,51 +2,515 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:ital,wght@0,400;0,500;1,400&family=DM+Mono&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="pulse-foundation.css">
 <title>Pulse. — Drafts Tab</title>
-</head><body><div class="orb orb-pink"></div><div class="orb orb-cyan"></div><header class="topbar">
-  <a href="#" class="logo">Pulse<span style="background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">.</span></a>
-  <nav class="breadcrumb"><span class="breadcrumb-sep">·</span><span class="breadcrumb-current">Agency founders — Q1</span></nav>
-  <div class="topbar-right"><span class="plan-badge pro-light">Pro Light</span><div class="avatar">CL</div></div>
-</header><aside class="sidebar">
-  <a href="#" class="si" title="Today"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><rect x="1" y="3" width="14" height="12" rx="2"/><path d="M1 7h14M5 1v4M11 1v4"/></svg><span class="si-tip">Today</span></a>
-  <a href="#" class="si active" title="Campaigns"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1" y="1" width="6" height="6" rx="1.2"/><rect x="9" y="1" width="6" height="6" rx="1.2"/><rect x="1" y="9" width="6" height="6" rx="1.2"/><rect x="9" y="9" width="6" height="6" rx="1.2"/></svg><span class="si-tip">Campaigns</span></a>
-  <a href="#" class="si si-bottom" title="Settings"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="8" cy="8" r="2.5"/><path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.42 1.42M11.53 11.53l1.42 1.42M3.05 12.95l1.42-1.42M11.53 4.47l1.42-1.42"/></svg><span class="si-tip">Settings</span></a>
+<style>
+/* Layout */
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+
+/* Shell tokens matching campaign-view-v3 */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;
+  background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;text-decoration:none;margin-right:16px;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:0.08em;padding:3px 9px;border-radius:20px;
+  background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;
+  justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+  text-decoration:none;color:rgba(255,255,255,0.55);border:1px solid transparent;
+  transition:all 0.15s;position:relative;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);
+  background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;
+  padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;
+  pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+
+/* Campaign header */
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);
+  background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);
+  position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.stats-strip{display:flex;gap:0;margin-bottom:0;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.sn{font-family:var(--of);font-size:20px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sn.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sn.green{color:var(--green);}
+.sn.cyan{color:var(--cyan);}
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);
+  cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;
+  display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+
+/* Tab content */
+.tab-content{flex:1;padding:24px 32px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;
+  border-radius:8px;font-family:var(--of);font-size:12px;font-weight:700;cursor:pointer;
+  border:none;transition:all 0.2s;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;box-shadow:0 6px 18px rgba(255,20,147,0.3);}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bsm{padding:6px 12px;font-size:11px;}
+
+/* ── DRAFT ROW
+   Person-first layout. Subject line is secondary metadata below the name.
+   No "Edit this prospect's sequence" in the row — that lives in the drawer only.
+   Actions: Edit · Send → · ⋮ (kebab)
+
+   Codex: map to DraftsTab.tsx → draft row item
+   ─────────────────────────────────────────── */
+.draft-row{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 18px;border-bottom:1px solid var(--b);
+  transition:background 0.15s;cursor:pointer;
+  position:relative;
+}
+.draft-row:last-child{border-bottom:none;}
+.draft-row:hover{background:rgba(255,255,255,0.03);}
+
+/* Avatar — cyan tint for Drafts (distinct from Review's pink tint) */
+.dav{width:36px;height:36px;border-radius:50%;
+  background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--of);font-size:11px;font-weight:700;
+  color:var(--cyan);flex-shrink:0;}
+
+/* Prospect info — name large, subject muted below */
+.dinfo{flex:1;min-width:0;}
+.dname{font-size:14px;font-weight:600;color:var(--t);margin-bottom:3px;}
+.dsubject{font-size:12px;color:var(--td);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:480px;}
+
+/* Row actions */
+.dactions{display:flex;align-items:center;gap:7px;flex-shrink:0;}
+
+/* ── KEBAB BUTTON
+   Three dots. Opens a small dropdown with 3 items.
+   Does NOT contain "Edit this prospect's sequence" — that is in the drawer.
+   ─────────────────────────────────────────── */
+.kebab-btn{
+  width:28px;height:28px;border-radius:6px;
+  background:transparent;border:1px solid var(--b2);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all 0.15s;flex-shrink:0;
+  color:var(--td);font-size:16px;line-height:1;
+  position:relative;
+}
+.kebab-btn:hover{border-color:var(--td);background:var(--s2);color:var(--tm);}
+
+/* ── KEBAB DROPDOWN
+   3 items only — all scoped to the pre-send state:
+     1. Skip prospect      — remove from drafts without sending → skipped state
+     2. Move back to review — return to Review tab, unapprove
+     3. Mark as do not contact — irreversible, requires confirm
+
+   NOT included: "Mark as bounced" (wrong lifecycle stage — bounce is post-send)
+   NOT included: "Edit this prospect's sequence" (lives in drawer, not row menu)
+   ─────────────────────────────────────────── */
+.kebab-menu{
+  position:absolute;right:0;top:calc(100% + 4px);
+  background:#1a0d2e;border:1px solid var(--b2);
+  border-radius:10px;padding:4px;
+  min-width:200px;z-index:300;
+  box-shadow:0 8px 32px rgba(0,0,0,0.5);
+  display:none;
+  flex-direction:column;gap:1px;
+}
+.kebab-menu.open{display:flex;}
+.km-item{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 12px;border-radius:7px;cursor:pointer;
+  font-size:13px;color:var(--tm);transition:all 0.12s;
+  border:none;background:transparent;text-align:left;width:100%;
+}
+.km-item:hover{background:rgba(255,255,255,0.06);color:var(--t);}
+.km-item.destructive{color:#ff4d6d;}
+.km-item.destructive:hover{background:rgba(255,77,109,0.1);color:#ff4d6d;}
+.km-icon{width:16px;flex-shrink:0;opacity:0.7;}
+
+/* Inline do-not-contact confirm — slides in below the row */
+.dnc-confirm{
+  display:none;padding:12px 18px;
+  background:rgba(255,77,109,0.07);border-top:1px solid rgba(255,77,109,0.15);
+  align-items:center;justify-content:space-between;gap:12px;
+}
+.dnc-confirm.show{display:flex;}
+.dnc-msg{font-size:12px;color:#ff4d6d;line-height:1.5;}
+.dnc-btns{display:flex;gap:6px;flex-shrink:0;}
+.dnc-cancel{padding:5px 12px;border-radius:6px;border:1px solid var(--b2);
+  background:transparent;color:var(--tm);font-family:var(--of);font-size:11px;
+  font-weight:700;cursor:pointer;}
+.dnc-cancel:hover{color:var(--t);}
+.dnc-confirm-btn{padding:5px 12px;border-radius:6px;
+  border:1px solid rgba(255,77,109,0.3);background:rgba(255,77,109,0.15);
+  color:#ff4d6d;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;}
+
+/* Card wrapper */
+.card{background:var(--s);border:1px solid var(--b);border-radius:12px;overflow:hidden;margin-bottom:12px;}
+
+/* Toast */
+#tz{position:fixed;bottom:24px;right:24px;z-index:900;
+  display:flex;flex-direction:column;gap:8px;pointer-events:none;}
+.tst{background:rgba(20,10,35,0.97);border:1px solid var(--b2);border-radius:10px;
+  padding:12px 15px;font-size:13px;color:var(--t);display:flex;align-items:center;
+  gap:10px;max-width:300px;backdrop-filter:blur(12px);animation:tIn 0.3s ease;}
+.tst.tc{border-left:3px solid var(--cyan);}
+.tst.tg{border-left:3px solid var(--green);}
+.tst.tr{border-left:3px solid #ff4d6d;}
+@keyframes tIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div class="orb o1" style="position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;width:600px;height:600px;background:rgba(255,20,147,0.04);top:-200px;right:-150px;"></div>
+<div class="orb o2" style="position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;z-index:0;width:400px;height:400px;background:rgba(0,212,255,0.03);bottom:-100px;left:0;"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span>Campaigns</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
+  </div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si" href="#" style="position:relative;"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on" href="#" style="position:relative;"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#" style="position:relative;"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
 </aside>
-<div class="app-shell"><main class="main"><div class="campaign-header">
-  <div class="ch-top">
-    <div>
-      <div class="ch-name">Agency founders — Q1</div>
-      <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span style="color:var(--green);">Active</span><span class="ch-sep">·</span><span>Gmail connected</span></div>
+
+<div class="layout">
+<main class="main">
+
+  <!-- Campaign header -->
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta">
+          <span>47 prospects</span><span class="ch-sep">·</span>
+          <span>Started 12 Mar 2026</span><span class="ch-sep">·</span>
+          <span>3-step sequence</span>
+        </div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm" style="gap:5px;">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3" x2="12" y2="3"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="11" x2="8" y2="11"/></svg>
+          Edit sequence
+        </button>
+        <button class="btn bs bsm">+ Add prospects</button>
+      </div>
     </div>
-    <div class="ch-actions">
-      <button class="btn btn-ghost btn-sm">Settings</button>
-      <button class="btn btn-primary btn-sm">+ Add prospects</button>
+    <div class="stats-strip">
+      <div class="stat-item"><div class="sn pink">15</div><div class="sl">Drafts ready</div></div>
+      <div class="stat-item"><div class="sn">2</div><div class="sl">Responded</div></div>
+      <div class="stat-item"><div class="sn green">8</div><div class="sl">Meetings set</div></div>
+      <div class="stat-item"><div class="sn">139</div><div class="sl">LinkedIn sent</div></div>
+      <div class="stat-item"><div class="sn cyan">0</div><div class="sl">LinkedIn due</div></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">563</span></div>
+      <div class="tab on">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn</div>
+      <div class="tab">Sent</div>
+      <div class="tab">Follow-up <span class="tab-ct">14</span></div>
+      <div class="tab">Nurture</div>
+      <div class="tab">Conversations</div>
+      <div class="tab">Bounced</div>
     </div>
   </div>
-  <div class="stats-strip">
-    <div class="stat-item"><div class="stat-num pink">47</div><div class="stat-label">Prospects</div></div>
-    <div class="stat-item"><div class="stat-num">23</div><div class="stat-label">Emailed</div></div>
-    <div class="stat-item"><div class="stat-num green">4</div><div class="stat-label">Replies</div></div>
-    <div class="stat-item"><div class="stat-num cyan">6</div><div class="stat-label">Follow-ups due</div></div>
-  </div><nav class="tab-bar"><div class="tab">Review <span class="tab-count">12</span></div><div class="tab active">Drafts <span class="tab-count">8</span></div><div class="tab">LinkedIn</div><div class="tab">Sent <span class="tab-count">23</span></div><div class="tab">Follow-up <span class="tab-count">6</span></div><div class="tab">Nurture</div><div class="tab">Conversations <span class="tab-count">4</span></div><div class="tab">Bounced</div></nav></div>
-<div class="tab-content">
-  <div style="display:flex;justify-content:flex-end;margin-bottom:16px;">
-    <button class="btn btn-primary btn-sm">Send all drafts</button>
-  </div>
-  <div class="card card-sm"><div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--b);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-  <div class="p-av">SM</div>
-  <div style="flex:1;min-width:0;"><div class="p-name">Sarah Mitchell</div><div style="font-size:12px;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;">Subject: Something I thought you'd find useful…</div></div>
-  <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm">Edit</button><button class="btn btn-primary btn-sm">Send →</button></div>
-</div><div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--b);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-  <div class="p-av">DK</div>
-  <div style="flex:1;min-width:0;"><div class="p-name">Dan Kim</div><div style="font-size:12px;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;">Subject: Quick intro — happy to keep it brief</div></div>
-  <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm">Edit</button><button class="btn btn-primary btn-sm">Send →</button></div>
-</div><div style="display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--b);cursor:pointer;transition:background 0.15s;" onmouseover="this.style.background='rgba(255,255,255,0.04)'" onmouseout="this.style.background=''">
-  <div class="p-av">NS</div>
-  <div style="flex:1;min-width:0;"><div class="p-name">Nat Sajal</div><div style="font-size:12px;color:var(--tm);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:400px;">Subject: Re: following up on my earlier note</div></div>
-  <div style="display:flex;gap:8px;"><button class="btn btn-ghost btn-sm">Edit</button><button class="btn btn-primary btn-sm">Send →</button></div>
-</div>
-  </div>
-</div></main></div></body></html>
+
+  <!-- ══════════════════════════════════════════════════════════════
+       DRAFTS TAB CONTENT
+       Codex: maps to DraftsTab.tsx
+       
+       LAYOUT DECISIONS:
+       - Row is person-first: name prominent, subject line is secondary
+         metadata below the name (muted, truncated) — NOT the centrepiece
+       - "Edit this prospect's sequence" does NOT appear in the row.
+         It lives inside the prospect drawer (same drawer as Review tab).
+       - Clicking the row opens the shared ProspectDetailDrawer, which
+         includes a "Current draft" section at the bottom.
+       
+       ROW ACTIONS (right side):
+         Edit   — opens draft editor for this one draft only
+         Send → — sends this draft, row fades out
+         ⋮      — kebab menu (see below)
+       
+       KEBAB MENU — 3 items only, all pre-send:
+         1. Skip prospect        → moves to skipped state, removes from queue
+         2. Move back to review  → unapproves, returns to Review tab
+         3. Mark as do not contact → irreversible, inline confirm required
+       
+       WHAT IS NOT IN THE KEBAB:
+         ✗ "Mark as bounced"  — wrong lifecycle stage (bounce = post-send)
+         ✗ "Edit this prospect's sequence" — lives in drawer, not row menu
+  ══════════════════════════════════════════════════════════════ -->
+  <div class="tab-content">
+
+    <!-- Bulk send -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+      <div style="font-size:13px;color:var(--tm);">15 drafts ready to send.</div>
+      <button class="btn bp bsm">Send all →</button>
+    </div>
+
+    <!-- Draft rows -->
+    <div class="card">
+
+      <!-- ── ROW 1: Sarah Mitchell ── -->
+      <div id="row-sm">
+        <div class="draft-row" onclick="openDrawer('sm')">
+          <div class="dav">SM</div>
+          <div class="dinfo">
+            <div class="dname">Sarah Mitchell</div>
+            <div class="dsubject">Something I thought you'd find useful…</div>
+          </div>
+          <div class="dactions" onclick="event.stopPropagation()">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft editor','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="sendRow('row-sm','sarah@foldstudio.co.uk')">Send →</button>
+            <div class="kebab-btn" onclick="toggleKebab('km-sm',this)" title="More options">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="3" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="11" r="1.2" fill="currentColor"/>
+              </svg>
+              <div class="kebab-menu" id="km-sm">
+                <button class="km-item" onclick="skipRow('row-sm','Sarah Mitchell')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2l12 12M14 2L2 14"/></svg>
+                  Skip prospect
+                </button>
+                <button class="km-item" onclick="backToReview('row-sm','Sarah Mitchell')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 4H4v6M4 4l8 8"/></svg>
+                  Move back to review
+                </button>
+                <button class="km-item destructive" onclick="showDNC('row-sm')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11v.5"/></svg>
+                  Mark as do not contact
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Inline DNC confirm -->
+        <div class="dnc-confirm" id="dnc-sm">
+          <div class="dnc-msg">This will permanently block all outreach to Sarah Mitchell. Cannot be undone.</div>
+          <div class="dnc-btns">
+            <button class="dnc-cancel" onclick="hideDNC('dnc-sm')">Cancel</button>
+            <button class="dnc-confirm-btn" onclick="confirmDNC('row-sm','Sarah Mitchell')">Mark as do not contact</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ROW 2: Dan Kim ── -->
+      <div id="row-dk">
+        <div class="draft-row" onclick="openDrawer('dk')">
+          <div class="dav">DK</div>
+          <div class="dinfo">
+            <div class="dname">Dan Kim</div>
+            <div class="dsubject">Quick intro — happy to keep it brief</div>
+          </div>
+          <div class="dactions" onclick="event.stopPropagation()">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft editor','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="sendRow('row-dk','dan@studionorth.co.uk')">Send →</button>
+            <div class="kebab-btn" onclick="toggleKebab('km-dk',this)" title="More options">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="3" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="11" r="1.2" fill="currentColor"/>
+              </svg>
+              <div class="kebab-menu" id="km-dk">
+                <button class="km-item" onclick="skipRow('row-dk','Dan Kim')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2l12 12M14 2L2 14"/></svg>
+                  Skip prospect
+                </button>
+                <button class="km-item" onclick="backToReview('row-dk','Dan Kim')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 4H4v6M4 4l8 8"/></svg>
+                  Move back to review
+                </button>
+                <button class="km-item destructive" onclick="showDNC('row-dk')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11v.5"/></svg>
+                  Mark as do not contact
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dnc-confirm" id="dnc-dk">
+          <div class="dnc-msg">This will permanently block all outreach to Dan Kim. Cannot be undone.</div>
+          <div class="dnc-btns">
+            <button class="dnc-cancel" onclick="hideDNC('dnc-dk')">Cancel</button>
+            <button class="dnc-confirm-btn" onclick="confirmDNC('row-dk','Dan Kim')">Mark as do not contact</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── ROW 3: Nat Sajal ── -->
+      <div id="row-ns">
+        <div class="draft-row" onclick="openDrawer('ns')">
+          <div class="dav">NS</div>
+          <div class="dinfo">
+            <div class="dname">Nat Sajal</div>
+            <div class="dsubject">Re: following up on my earlier note</div>
+          </div>
+          <div class="dactions" onclick="event.stopPropagation()">
+            <button class="btn bs bsm" onclick="toast('→','Opening draft editor','tc')">Edit</button>
+            <button class="btn bp bsm" onclick="sendRow('row-ns','nat@agency.io')">Send →</button>
+            <div class="kebab-btn" onclick="toggleKebab('km-ns',this)" title="More options">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="3" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="7" r="1.2" fill="currentColor"/>
+                <circle cx="7" cy="11" r="1.2" fill="currentColor"/>
+              </svg>
+              <div class="kebab-menu" id="km-ns">
+                <button class="km-item" onclick="skipRow('row-ns','Nat Sajal')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M2 2l12 12M14 2L2 14"/></svg>
+                  Skip prospect
+                </button>
+                <button class="km-item" onclick="backToReview('row-ns','Nat Sajal')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M10 4H4v6M4 4l8 8"/></svg>
+                  Move back to review
+                </button>
+                <button class="km-item destructive" onclick="showDNC('row-ns')">
+                  <svg class="km-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3M8 11v.5"/></svg>
+                  Mark as do not contact
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="dnc-confirm" id="dnc-ns">
+          <div class="dnc-msg">This will permanently block all outreach to Nat Sajal. Cannot be undone.</div>
+          <div class="dnc-btns">
+            <button class="dnc-cancel" onclick="hideDNC('dnc-ns')">Cancel</button>
+            <button class="dnc-confirm-btn" onclick="confirmDNC('row-ns','Nat Sajal')">Mark as do not contact</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /card -->
+  </div><!-- /tab-content -->
+</main>
+</div><!-- /layout -->
+
+<div id="tz"></div>
+
+<script>
+// ── Kebab ─────────────────────────────────────────────────────────
+let activeKebab = null;
+
+function toggleKebab(menuId, btn) {
+  const menu = document.getElementById(menuId);
+  const isOpen = menu.classList.contains('open');
+  closeAllKebabs();
+  if (!isOpen) {
+    menu.classList.add('open');
+    activeKebab = menu;
+  }
+}
+function closeAllKebabs() {
+  document.querySelectorAll('.kebab-menu.open').forEach(m => m.classList.remove('open'));
+  activeKebab = null;
+}
+document.addEventListener('click', e => {
+  if (!e.target.closest('.kebab-btn')) closeAllKebabs();
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeAllKebabs();
+});
+
+// ── Row actions ───────────────────────────────────────────────────
+function skipRow(rowId, name) {
+  closeAllKebabs();
+  collapseRow(rowId);
+  toast('→', name + ' skipped', 'tc');
+}
+
+function backToReview(rowId, name) {
+  closeAllKebabs();
+  collapseRow(rowId);
+  toast('↩', name + ' moved back to review', 'tc');
+}
+
+function showDNC(rowId) {
+  closeAllKebabs();
+  const dncId = 'dnc-' + rowId.replace('row-', '');
+  document.getElementById(dncId).classList.add('show');
+}
+function hideDNC(dncId) {
+  document.getElementById(dncId).classList.remove('show');
+}
+function confirmDNC(rowId, name) {
+  collapseRow(rowId);
+  toast('✕', name + ' marked as do not contact', 'tr');
+}
+
+function sendRow(rowId, email) {
+  collapseRow(rowId);
+  toast('✓', 'Sent to ' + email, 'tg');
+}
+
+function collapseRow(rowId) {
+  const row = document.getElementById(rowId);
+  if (!row) return;
+  const h = row.offsetHeight;
+  row.style.overflow = 'hidden';
+  row.style.height = h + 'px';
+  row.style.transition = 'height 0.3s ease, opacity 0.25s ease, margin 0.3s ease';
+  requestAnimationFrame(() => {
+    row.style.opacity = '0';
+    row.style.height = '0';
+    row.style.marginBottom = '0';
+  });
+  setTimeout(() => row.remove(), 320);
+}
+
+// ── Drawer placeholder ────────────────────────────────────────────
+function openDrawer(id) {
+  // In production: opens shared ProspectDetailDrawer (same as Review tab)
+  // which contains prospect info + "Edit this prospect's sequence" + Current draft section
+  toast('→', 'Prospect drawer opens here (shared with Review tab)', 'tc');
+}
+
+// ── Toast ─────────────────────────────────────────────────────────
+function toast(icon, text, cls) {
+  const z = document.getElementById('tz');
+  const e = document.createElement('div');
+  e.className = 'tst ' + (cls || 'tc');
+  e.innerHTML = '<span>' + icon + '</span><span>' + text + '</span>';
+  z.appendChild(e);
+  setTimeout(() => {
+    e.style.opacity = '0'; e.style.transition = 'opacity 0.3s';
+    setTimeout(() => e.remove(), 300);
+  }, 3200);
+}
+</script>
+</body>
+</html>
