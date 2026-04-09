@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. Handoff — Review Tab + Prospect Drawer</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+
+/* ============================================================
+   PULSE. HANDOFF FILE — Review Tab + Prospect Detail Drawer
+   ============================================================
+   PURPOSE
+   This file gives Codex a single, accurate reference for:
+     1. The Review tab row layout (prospect card)
+     2. The Prospect Detail Drawer (pd-panel)
+   It uses ONLY class names that exist in globals.css.
+   No new CSS classes are invented here.
+
+   HOW TO USE
+   ─ Section A: CSS ADDITIONS TO globals.css
+     Copy the block below into globals.css exactly as written.
+     These are the ONLY rules missing from the current globals.css.
+
+   ─ Section B: COMPONENT REFERENCE
+     The rendered HTML below shows the exact structure Codex
+     should replicate in ReviewTab.tsx and ProspectDetailModal.tsx.
+     Class names match what the .tsx files already use.
+   ============================================================ */
+
+
+/* ============================================================
+   SECTION A — CSS TO ADD TO globals.css
+   ============================================================
+   Paste this block at the end of globals.css.
+   All other Review Tab and Drawer styles already exist.
+
+   NOTE: The .pd-task-calendar-day rule in globals.css is missing
+   the `display: flex; align-items: center; justify-content: center`
+   needed to centre the day numbers. The existing rule handles
+   the rest. Only add what is listed below.
+   ============================================================ */
+
+/*
+ ADD TO globals.css — Review tab helper tooltip
+ (the ⓘ icon that explains what the Review tab is for)
+*/
+
+/* Already exists — NO NEW CSS NEEDED for the review tab row itself.
+   All .pcard, .pcard-row, .pav, .pname, .psub, .pactions, .ibtn,
+   .ibtn.approve, .ibtn.detail, .li-btn classes are in globals.css.
+
+   The pd-panel / prospect-detail-drawer and all pd-* classes
+   are also already in globals.css.
+
+   The ONLY things missing are listed below. */
+
+/* 1. Calendar day centering — fixes day numbers not centred in grid cells */
+.pd-task-calendar-day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 2. Calendar day: today highlight */
+.pd-task-calendar-day.today {
+  color: var(--pink);
+  font-weight: 800;
+}
+
+/* 3. Calendar day: past dates dimmed and non-interactive */
+.pd-task-calendar-day.past {
+  opacity: 0.28;
+  pointer-events: none;
+  cursor: default;
+}
+
+/* ============================================================
+   SECTION A — END OF CSS ADDITIONS
+   Everything below is component reference HTML only.
+   ============================================================ */
+
+
+/* ── Shell tokens (matches globals.css) ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg: #0d0914; --s: rgba(255,255,255,0.04); --s2: rgba(255,255,255,0.07);
+  --b: rgba(255,255,255,0.07); --b2: rgba(255,255,255,0.13);
+  --pink: #ff1493; --cyan: #00d4ff; --green: #64dc78; --amber: #ff9d42; --red: #ff4c4c;
+  --pd: rgba(255,20,147,0.10); --cd: rgba(0,212,255,0.08);
+  --gd: rgba(100,220,120,0.10); --ad: rgba(255,157,66,0.10); --rd: rgba(255,76,76,0.10);
+  --t: #f4f4f2; --tm: #a8a8b8; --td: #6b6b80;
+  --of: 'Outfit', sans-serif; --sf: 'DM Sans', sans-serif; --mono: 'DM Mono', monospace;
+  --gr: linear-gradient(135deg,#ff1493,#00d4ff);
+  --th: 56px; --sw: 56px;
+  --anim-quick: 120ms; --anim-standard: 180ms;
+}
+html, body { background: var(--bg); color: var(--t); font-family: var(--sf); min-height: 100vh; }
+
+/* ── Globals replicated locally for standalone rendering ── */
+.pcard { background: var(--s); border: 1px solid var(--b); border-radius: 12px; margin-bottom: 10px; overflow: hidden; transition: border-color 0.15s; }
+.pcard:hover { border-color: var(--b2); }
+.pcard-row { display: flex; align-items: center; gap: 12px; padding: 14px 18px; cursor: pointer; }
+.pav { width: 36px; height: 36px; border-radius: 50%; background: rgba(16,101,194,0.08); border: 1px solid #1065c2; display: flex; align-items: center; justify-content: center; font-family: var(--of); font-size: 11px; font-weight: 700; color: #1065c2; flex-shrink: 0; text-decoration: none; }
+.pinfo { flex: 1; min-width: 0; }
+.pname { font-size: 14px; font-weight: 600; color: var(--t); margin-bottom: 2px; }
+.psub { font-size: 12px; color: var(--td); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pactions { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+.ibtn { width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid var(--b2); display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: all 150ms; color: var(--tm); flex-shrink: 0; }
+.ibtn:hover { border-color: var(--td); background: var(--s2); color: var(--t); }
+.ibtn.approve { background: var(--gd); border-color: rgba(100,220,120,0.3); color: var(--green); }
+.ibtn.detail { border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.ibtn.detail:hover { background: var(--cd); }
+.li-btn { width: 28px; height: 28px; border-radius: 6px; background: rgba(10,102,194,0.12); border: 1px solid rgba(10,102,194,0.25); display: inline-flex; align-items: center; justify-content: center; text-decoration: none; flex-shrink: 0; transition: all 150ms; }
+.li-btn:hover { background: rgba(10,102,194,0.25); }
+.review-override-chip { display: inline-flex; align-items: center; gap: 6px; margin-bottom: 6px; padding: 5px 10px; border-radius: 8px; border: 1px solid rgba(255,20,147,0.22); background: rgba(255,20,147,0.08); color: var(--pink); font-size: 11px; font-weight: 600; cursor: pointer; transition: all 150ms; }
+.review-override-chip-dot { width: 6px; height: 6px; border-radius: 999px; background: currentColor; box-shadow: 0 0 10px rgba(255,20,147,0.35); }
+.review-task-chip { display: inline-flex; align-items: center; gap: 5px; padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(255,157,66,0.34); background: rgba(255,157,66,0.1); color: var(--amber); font-family: var(--of); font-size: 10px; font-weight: 700; cursor: pointer; }
+.review-name-row { display: flex; align-items: center; gap: 6px; min-width: 0; flex-wrap: wrap; }
+
+/* Prospect drawer */
+#pd-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,0.45); backdrop-filter: blur(3px); z-index: 800; display: none; }
+#pd-backdrop.open { display: block; }
+.prospect-detail-drawer, #pd-panel { position: fixed; top: var(--th); right: 0; bottom: 0; width: 480px; max-width: calc(100vw - var(--sw)); background: #130a20; border-left: 1px solid var(--b2); z-index: 801; display: flex; flex-direction: column; overflow: hidden; transform: translateX(100%); transition: transform 280ms cubic-bezier(0.4,0,0.2,1); }
+.prospect-detail-drawer.open, #pd-panel.open { transform: translateX(0); }
+.pd-hdr { padding: 18px 20px; border-bottom: 1px solid var(--b); display: flex; align-items: flex-start; gap: 12px; flex-shrink: 0; }
+.pd-av { width: 40px; height: 40px; border-radius: 50%; background: rgba(16,101,194,0.08); border: 1px solid #1065c2; display: flex; align-items: center; justify-content: center; font-family: var(--of); font-size: 13px; font-weight: 700; color: #1065c2; flex-shrink: 0; }
+.pd-name { font-family: var(--of); font-size: 16px; font-weight: 700; color: var(--t); margin-bottom: 3px; }
+.pd-role { font-size: 12px; color: var(--tm); }
+.pd-header-side { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.pd-close { width: 28px; height: 28px; border-radius: 6px; background: transparent; border: 1px solid var(--b2); display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--tm); font-size: 14px; line-height: 1; transition: all 150ms; }
+.pd-close:hover { color: var(--t); }
+.pd-override-pill { margin-bottom: 0; align-self: flex-end; }
+.pd-tabs { display: flex; align-items: center; gap: 28px; padding: 0 20px; border-bottom: 1px solid var(--b); }
+.pd-tab { display: inline-flex; align-items: center; gap: 8px; padding: 10px 0; border: 0; background: transparent; color: rgba(186,179,206,0.72); font-size: 13px; font-weight: 700; cursor: pointer; position: relative; transition: color 150ms; }
+.pd-tab:hover { color: rgba(255,255,255,0.88); }
+.pd-tab.active { color: var(--pink); }
+.pd-tab.active::after { content: ''; position: absolute; left: 0; right: 0; bottom: -1px; height: 3px; border-radius: 999px 999px 0 0; background: var(--pink); }
+.pd-tab-count { min-width: 18px; height: 18px; padding: 0 6px; border-radius: 999px; background: rgba(255,20,147,0.12); color: var(--amber); font-size: 10px; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; }
+.pd-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 20px; }
+.pd-body::-webkit-scrollbar { width: 3px; }
+.pd-body::-webkit-scrollbar-thumb { background: var(--b2); }
+.pd-sequence-actions { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; padding: 14px; border: 1px solid var(--b); border-radius: 10px; background: rgba(255,255,255,0.03); }
+.pd-sequence-sub { font-size: 12px; color: var(--tm); line-height: 1.6; }
+.pd-sequence-actions-row { display: flex; flex-wrap: wrap; gap: 8px; }
+.pd-sec-label { font-family: var(--of); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--td); margin-top: 20px; margin-bottom: 10px; padding-bottom: 7px; border-bottom: 1px solid var(--b); }
+.pd-sec-label:first-child { margin-top: 0; }
+.pd-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pd-field { background: rgba(255,255,255,0.03); border: 1px solid var(--b); border-radius: 7px; padding: 11px 13px; }
+.pd-field.span2 { grid-column: span 2; }
+.pd-fl { font-size: 9px; font-family: var(--of); font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--td); margin-bottom: 5px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.pd-input { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid var(--b2); border-radius: 6px; padding: 8px 10px; font-family: var(--sf); font-size: 13px; color: var(--t); outline: none; }
+.pd-input:focus { border-color: var(--cyan); }
+.pd-fv { font-size: 13px; color: var(--t); }
+.pd-fv a { color: var(--cyan); text-decoration: none; }
+.pd-about { font-size: 12px; color: var(--tm); line-height: 1.7; background: rgba(255,255,255,0.03); border: 1px solid var(--b); border-radius: 7px; padding: 11px 13px; }
+.pd-draft-card { display: flex; flex-direction: column; gap: 14px; padding: 14px; border: 1px solid var(--b); border-radius: 16px; background: rgba(255,255,255,0.025); margin-bottom: 16px; }
+.pd-draft-subject { font-size: 13px; font-weight: 700; color: var(--t); letter-spacing: 0.01em; }
+.pd-draft-body { white-space: pre-wrap; font-size: 13px; line-height: 1.65; color: var(--tm); }
+.pd-ftr { padding: 14px 20px; border-top: 1px solid var(--b); display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-shrink: 0; }
+.pd-skip { font-size: 12px; color: var(--td); cursor: pointer; background: transparent; border: none; transition: color 150ms; }
+.pd-skip:hover { color: var(--tm); }
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: 40px; padding: 0 18px; border-radius: 999px; font-family: var(--of); font-size: 13px; font-weight: 700; text-decoration: none; transition: opacity var(--anim-quick), border-color var(--anim-quick), color var(--anim-quick), background-color var(--anim-quick); border: none; cursor: pointer; }
+.btn-sm { min-height: 28px; padding: 0 14px; font-size: 12px; border-radius: 6px; }
+.btn-primary { background: var(--gr); color: #fff; }
+.btn-primary:hover { opacity: 0.9; }
+.btn-ghost { border: 1px solid var(--b2); color: var(--tm); background: transparent; }
+.btn-ghost:hover { color: var(--t); border-color: rgba(255,255,255,0.25); }
+.btn-cyan { background: var(--cd); border: 1px solid rgba(0,212,255,0.25); color: var(--cyan); }
+
+/* Handoff page chrome */
+.page { max-width: 900px; margin: 0 auto; padding: 48px 32px 120px; position: relative; z-index: 1; }
+.hf-label { font-family: var(--of); font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.14em; color: var(--td); margin-bottom: 10px; margin-top: 40px; padding-bottom: 8px; border-bottom: 1px solid var(--b); }
+.hf-label:first-child { margin-top: 0; }
+.hf-note { font-size: 12px; color: var(--tm); line-height: 1.7; margin-bottom: 16px; max-width: 600px; }
+.hf-note code { font-family: var(--mono); font-size: 11px; background: var(--s2); border: 1px solid var(--b2); border-radius: 4px; padding: 1px 5px; color: var(--cyan); }
+.orb { position: fixed; border-radius: 50%; filter: blur(120px); pointer-events: none; z-index: 0; }
+.o1 { width: 600px; height: 600px; background: rgba(255,20,147,0.04); top: -200px; right: -150px; }
+.o2 { width: 400px; height: 400px; background: rgba(0,212,255,0.03); bottom: -100px; left: 0; }
+
+/* Demo trigger button */
+.open-drawer-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 100px; background: var(--gr); color: white; font-family: var(--of); font-size: 13px; font-weight: 700; cursor: pointer; border: none; box-shadow: 0 0 24px rgba(255,20,147,0.2); margin-top: 12px; }
+.open-drawer-btn:hover { opacity: 0.88; }
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<div class="page">
+
+  <div class="hf-label">Pulse. Handoff — Review Tab + Prospect Detail Drawer</div>
+  <p class="hf-note">
+    This file is a reference for Codex. Every class used here exists in <code>globals.css</code>.
+    Section A at the top of this file contains the only CSS additions needed.
+    The rendered HTML below shows exact structure — match it precisely.
+  </p>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION B.1 — REVIEW TAB: PROSPECT CARD ROW
+       
+       Component: ReviewTab.tsx
+       Rendered by: the .map() over filteredProspects
+
+       KEY POINTS FOR CODEX:
+       • The row is a .pcard wrapping a .pcard-row
+       • .pcard-row gets onClick → opens the detail drawer
+         (sets detailProspect state)
+       • .pactions always has 4 icons, left to right:
+           1. .li-btn      — LinkedIn search (opens in new tab)
+           2. .ibtn        — Skip (×), stopPropagation
+           3. .ibtn.approve — Approve (✓), stopPropagation
+           4. .ibtn.detail  — Open detail drawer, stopPropagation
+       • .review-override-chip appears in .pinfo when the prospect
+         has a custom sequence override (overrideProspectIds.includes)
+       • .review-task-chip appears when taskCounts[prospect.id]?.open > 0
+       • Row collapse on approve/skip is handled by <MotionCollapse>
+         wrapping the .pcard — not by CSS alone
+  ═══════════════════════════════════════════════════════ -->
+
+  <div class="hf-label" style="margin-top:0;">B.1 — Review Tab: prospect card row</div>
+  <p class="hf-note">
+    Standard row: no override, no task. This is the most common state.
+    The <code>.pcard-row</code> click opens the prospect detail drawer.
+    Icon order is fixed: LI · Skip · Approve · Detail.
+  </p>
+
+  <!-- Standard row -->
+  <div class="pcard">
+    <div class="pcard-row">
+      <div class="pav">HS</div>
+      <div class="pinfo">
+        <div class="review-name-row">
+          <div class="pname">Howard Sullivan</div>
+        </div>
+        <div class="psub">Founder & Executive Creative Director · YouStudio</div>
+      </div>
+      <div class="pactions">
+        <!-- 1: LinkedIn -->
+        <a class="li-btn" href="#" target="_blank" onclick="event.stopPropagation()" title="Search on LinkedIn">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+        </a>
+        <!-- 2: Skip -->
+        <button class="ibtn" onclick="event.stopPropagation()" title="Skip prospect" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <!-- 3: Approve -->
+        <button class="ibtn approve" onclick="event.stopPropagation()" title="Approve to draft" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <!-- 4: Detail drawer -->
+        <button class="ibtn detail" onclick="event.stopPropagation();openDrawer()" title="View full details" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M4 1.5H1.5a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M6.5 1h4m0 0v4m0-4L5 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <p class="hf-note" style="margin-top:16px;">
+    With <code>.review-override-chip</code> (custom sequence active) and <code>.review-task-chip</code> (open tasks):
+  </p>
+
+  <!-- Row with override chip + task chip -->
+  <div class="pcard">
+    <div class="pcard-row">
+      <div class="pav">SC</div>
+      <div class="pinfo">
+        <div class="review-name-row">
+          <div class="pname">Sophie Clarke</div>
+          <!-- Override chip — shown when overrideProspectIds.includes(prospect.id) -->
+          <span class="review-override-chip" style="margin-bottom:0;">
+            <span class="review-override-chip-dot"></span>
+            Custom sequence
+          </span>
+          <!-- Task chip — shown when taskCounts[prospect.id]?.open > 0 -->
+          <button class="review-task-chip" type="button">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="0.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M2.5 4.5l1.5 1.5 2.5-2.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            2 tasks
+          </button>
+        </div>
+        <div class="psub">Managing Director · Fold Studio</div>
+      </div>
+      <div class="pactions">
+        <a class="li-btn" href="#" target="_blank" onclick="event.stopPropagation()">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="1" y="1" width="10" height="10" rx="2" fill="#0a66c2"/><path d="M3.5 5v3.5M3.5 3.5v.01M5.5 8.5V6c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5v2.5" stroke="white" stroke-width="1" stroke-linecap="round"/></svg>
+        </a>
+        <button class="ibtn" onclick="event.stopPropagation()" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 1.5l8 8M9.5 1.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="ibtn approve" onclick="event.stopPropagation()" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1.5 5.5l3 3 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button class="ibtn detail" onclick="event.stopPropagation();openDrawer()" type="button">
+          <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M4 1.5H1.5a1 1 0 00-1 1v7a1 1 0 001 1h7a1 1 0 001-1V7M6.5 1h4m0 0v4m0-4L5 6" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════
+       SECTION B.2 — PROSPECT DETAIL DRAWER
+       
+       Component: ProspectDetailModal.tsx (variant="drawer")
+       Rendered via: createPortal(drawerContent, document.body)
+       
+       KEY POINTS FOR CODEX:
+       • #pd-backdrop and #pd-panel are portalled to document.body
+       • Both get class "open" simultaneously to trigger the animation
+       • The drawer has two tabs: Details and Tasks
+       • In Details tab: sequence actions block sits ABOVE the field
+         sections, followed by field grid, about, notes
+       • In Tasks tab: task list + task composer
+       • draftSection prop adds a "Current draft" section between
+         sequence actions and the field sections (Drafts tab use)
+       • .pd-ftr has: skip button (left) + save/approve buttons (right)
+  ═══════════════════════════════════════════════════════ -->
+
+  <div class="hf-label">B.2 — Prospect Detail Drawer</div>
+  <p class="hf-note">
+    Click to open the drawer and see the full structure.
+    This is what <code>ProspectDetailModal</code> renders when <code>variant="drawer"</code>.
+  </p>
+  <button class="open-drawer-btn" onclick="openDrawer()">
+    Open detail drawer →
+  </button>
+
+</div><!-- /page -->
+
+
+<!-- ══════════════════════════════════════════════════════════
+     PROSPECT DETAIL DRAWER
+     Portalled to document.body in the real app via createPortal()
+     Both #pd-backdrop and #pd-panel must receive class "open" together.
+══════════════════════════════════════════════════════════ -->
+<div id="pd-backdrop" onclick="closeDrawer()"></div>
+
+<div id="pd-panel" class="prospect-detail-drawer">
+
+  <!-- Header: avatar · name/role · close button [· override pill] -->
+  <div class="pd-hdr">
+    <div class="pd-av">HS</div>
+    <div style="flex:1;min-width:0;">
+      <div class="pd-name">Howard Sullivan</div>
+      <div class="pd-role">Founder · YouStudio</div>
+    </div>
+    <!-- .pd-header-side: close button top, override pill below (if applicable) -->
+    <div class="pd-header-side">
+      <button class="pd-close" onclick="closeDrawer()" type="button" aria-label="Close drawer">✕</button>
+      <!-- Override pill — only rendered when hasCustomSequenceOverride=true -->
+      <div class="pd-sequence-header-row">
+        <span class="review-override-chip pd-override-pill">
+          <span class="review-override-chip-dot"></span>
+          Custom sequence active
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab bar: Details | Tasks -->
+  <!-- Only rendered when variant="drawer" -->
+  <div class="pd-tabs" role="tablist">
+    <button type="button" class="pd-tab active" id="tab-details" onclick="switchTab('details')">Details</button>
+    <button type="button" class="pd-tab" id="tab-tasks" onclick="switchTab('tasks')">
+      Tasks
+      <span class="pd-tab-count">2</span>
+    </button>
+  </div>
+
+  <!-- Body: scrollable -->
+  <div class="pd-body">
+
+    <!-- ── DETAILS TAB ─────────────────────────────────────
+         activeDrawerTab === 'details'
+    ──────────────────────────────────────────────────── -->
+    <div id="panel-details">
+
+      <!-- Sequence actions block — always shown in drawer Details tab -->
+      <!-- Position: top of pd-body, before any field sections -->
+      <div class="pd-sequence-actions">
+        <div class="pd-sequence-actions-copy">
+          <div class="pd-sec-label" style="margin-top:0;border-bottom:none;padding-bottom:0;margin-bottom:6px;">Sequence</div>
+          <div class="pd-sequence-sub">
+            This prospect uses a custom sequence. Edit it below, or reset to the campaign default.
+          </div>
+        </div>
+        <div class="pd-sequence-actions-row">
+          <!-- onEditSequence prop — opens the sequence editor modal -->
+          <button type="button" class="btn btn-ghost btn-sm" style="border-radius:8px;font-size:11px;padding:6px 12px;">
+            Edit this prospect's sequence
+          </button>
+          <!-- onResetSequence prop — only shown when hasCustomSequenceOverride=true -->
+          <button type="button" class="btn btn-ghost btn-sm" style="border-radius:8px;font-size:11px;padding:6px 12px;color:var(--td);">
+            Reset to campaign default
+          </button>
+        </div>
+      </div>
+
+      <!-- ── draftSection block ──────────────────────────────
+           Only rendered when draftSection prop is supplied
+           (i.e. when the drawer is opened from the Drafts tab)
+           Position: between sequence actions and field sections
+      ────────────────────────────────────────────────────── -->
+      <div class="pd-sec-label">Current draft</div>
+      <div class="pd-draft-card">
+        <div class="pd-draft-preview">
+          <div class="pd-draft-subject">Quick thought on YouStudio's pipeline</div>
+          <div class="pd-draft-body">Hi Howard,
+
+Noticed you're scaling the team at YouStudio — thought this might be timely.
+
+We've been helping consultancies like yours build a more consistent pipeline without adding headcount…</div>
+        </div>
+        <div style="display:flex;gap:8px;justify-content:flex-end;">
+          <button type="button" class="btn btn-ghost btn-sm" style="border-radius:8px;font-size:11px;">Edit draft</button>
+          <button type="button" class="btn btn-primary btn-sm" style="border-radius:8px;font-size:11px;">Send →</button>
+        </div>
+      </div>
+
+      <!-- Contact details field grid -->
+      <div class="pd-sec-label">Contact details</div>
+      <div class="pd-grid">
+        <div class="pd-field">
+          <div class="pd-fl">First name</div>
+          <input class="pd-input" type="text" value="Howard">
+        </div>
+        <div class="pd-field">
+          <div class="pd-fl">Last name</div>
+          <input class="pd-input" type="text" value="Sullivan">
+        </div>
+        <div class="pd-field span2">
+          <div class="pd-fl">
+            <span>Email</span>
+            <!-- gen-badge: .empty when no email, .done when generated/set -->
+            <span class="gen-badge done" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;padding:3px 8px;border-radius:4px;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.2);color:var(--cyan);">✓ Email set</span>
+          </div>
+          <input class="pd-input" type="text" value="howard@youstudio.com">
+        </div>
+      </div>
+
+      <div class="pd-sec-label">Organisation</div>
+      <div class="pd-grid">
+        <div class="pd-field span2">
+          <div class="pd-fl">Company</div>
+          <input class="pd-input" type="text" value="YouStudio">
+        </div>
+        <div class="pd-field">
+          <div class="pd-fl">Industry</div>
+          <div class="pd-fv">Design Services</div>
+        </div>
+        <div class="pd-field">
+          <div class="pd-fl">Org size</div>
+          <div class="pd-fv">51–200</div>
+        </div>
+        <div class="pd-field span2">
+          <div class="pd-fl">LinkedIn</div>
+          <div class="pd-fv"><a href="#">View profile →</a></div>
+        </div>
+      </div>
+
+      <div class="pd-sec-label">About</div>
+      <div class="pd-about">A creative leader spearheading next generation retail experiences.</div>
+
+      <div class="pd-sec-label">Notes</div>
+      <textarea class="pd-input" rows="3" placeholder="Add any context about this prospect…" style="resize:none;line-height:1.6;width:100%;"></textarea>
+
+    </div><!-- /panel-details -->
+
+    <!-- ── TASKS TAB ────────────────────────────────────────
+         activeDrawerTab === 'tasks'
+         Hidden by default — shown when tab is clicked
+    ──────────────────────────────────────────────────── -->
+    <div id="panel-tasks" style="display:none;">
+      <!-- Add task launch button -->
+      <button type="button" class="pd-task-launch" style="margin-bottom:16px;">
+        <span class="pd-task-launch-icon">＋</span>
+        <span>Add task</span>
+      </button>
+
+      <!-- Open tasks group -->
+      <div class="pd-task-group">
+        <div class="pd-task-group-label">Open</div>
+        <div class="pd-task-list">
+          <div class="pd-task-timeline-item">
+            <div class="pd-task-timeline-dot"></div>
+            <div class="pd-task-card">
+              <div class="pd-task-card-top">
+                <div class="pd-task-card-title-row">
+                  <div class="pd-task-kind-chip">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="1.5" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M0.5 3.5l4.5 3 4.5-3" stroke="currentColor" stroke-width="1.1"/></svg>
+                    <span>Email</span>
+                  </div>
+                  <div class="pd-task-title pd-task-title-inline">Follow up re: Q2 proposal</div>
+                </div>
+                <div class="pd-task-date-label">15 May 2026</div>
+              </div>
+              <div class="pd-task-actions-row">
+                <button type="button" class="pd-task-btn pd-task-btn-done">✓ Mark done</button>
+                <button type="button" class="pd-task-btn">Edit</button>
+                <button type="button" class="pd-task-link">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overdue task variant -->
+      <div class="pd-task-group" style="margin-top:12px;">
+        <div class="pd-task-group-label">Overdue</div>
+        <div class="pd-task-list">
+          <div class="pd-task-timeline-item is-overdue">
+            <div class="pd-task-timeline-dot is-overdue"></div>
+            <div class="pd-task-card is-overdue">
+              <div class="pd-task-card-top">
+                <div class="pd-task-card-title-row">
+                  <div class="pd-task-kind-chip overdue">
+                    <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><rect x="0.5" y="1.5" width="9" height="7" rx="1.5" stroke="currentColor" stroke-width="1.1"/><path d="M0.5 3.5l4.5 3 4.5-3" stroke="currentColor" stroke-width="1.1"/></svg>
+                    <span>Email</span>
+                  </div>
+                  <div class="pd-task-title pd-task-title-inline">Send intro message</div>
+                </div>
+                <div class="pd-task-date-label overdue">Overdue</div>
+              </div>
+              <div class="pd-task-actions-row">
+                <button type="button" class="pd-task-btn pd-task-btn-done">✓ Mark done</button>
+                <button type="button" class="pd-task-btn">Edit</button>
+                <button type="button" class="pd-task-link">Delete</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div><!-- /panel-tasks -->
+
+  </div><!-- /pd-body -->
+
+  <!-- Footer: skip (left) + save/approve (right) -->
+  <!-- In Drafts tab context: skip + save only (no approve) -->
+  <div class="pd-ftr">
+    <button type="button" class="pd-skip" onclick="closeDrawer()">✕ Skip prospect</button>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-ghost btn-sm" onclick="closeDrawer()">Save</button>
+      <button type="button" class="btn btn-primary btn-sm">✓ Approve →</button>
+    </div>
+  </div>
+
+</div><!-- /pd-panel -->
+
+<script>
+function openDrawer() {
+  document.getElementById('pd-backdrop').classList.add('open');
+  document.getElementById('pd-panel').classList.add('open');
+}
+function closeDrawer() {
+  document.getElementById('pd-backdrop').classList.remove('open');
+  document.getElementById('pd-panel').classList.remove('open');
+}
+function switchTab(tab) {
+  document.getElementById('panel-details').style.display = tab === 'details' ? '' : 'none';
+  document.getElementById('panel-tasks').style.display   = tab === 'tasks'   ? '' : 'none';
+  document.getElementById('tab-details').className = 'pd-tab' + (tab === 'details' ? ' active' : '');
+  document.getElementById('tab-tasks').className   = 'pd-tab' + (tab === 'tasks'   ? ' active' : '');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
