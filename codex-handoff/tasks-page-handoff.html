@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Pulse. Handoff — Tasks Page Queue Rows</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<style>
+
+/*
+  ================================================================
+  PULSE. HANDOFF — Tasks Page (/tasks)
+  ================================================================
+
+  THE PROBLEM (diagnosed via browser inspection)
+  Codex used class names from the wireframe (.qi, .qi-ico, .qi-body,
+  .qi-title, .qi-sub, .qi-badge, .qi-arrow) that do NOT exist in
+  globals.css. Zero CSS rules match them, so the browser renders
+  everything as plain inline text.
+
+  THE FIX
+  Add the CSS block in SECTION A to globals.css.
+  Do NOT rename any JSX class names — the classes Codex used are
+  fine as aliases. The CSS block below wires them to the correct
+  visual behaviour.
+
+  SECTION A — PASTE INTO globals.css
+  SECTION B — Component reference (rendered below)
+  ================================================================
+*/
+
+
+/*
+  ================================================================
+  SECTION A — ADD THIS BLOCK TO globals.css
+  Paste at the end of globals.css, before the closing @media blocks.
+
+  These rules make .qi and its sub-elements render identically to
+  .summary-queue-row (which already exists in globals.css).
+  We alias rather than rename so the JSX doesn't need touching.
+  ================================================================
+
+  .tasks-queue__rows {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .qi {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 1px solid var(--b);
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    color: var(--t);
+    transition: border-color var(--anim-quick), background-color var(--anim-quick);
+  }
+
+  .qi:hover {
+    border-color: var(--b2);
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .qi.overdue {
+    border-color: rgba(255, 157, 66, 0.25);
+    background: rgba(255, 157, 66, 0.04);
+  }
+
+  .qi-ico {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .qi-ico.a {
+    background: var(--ad);
+    border: 1px solid rgba(255, 157, 66, 0.2);
+    color: var(--amber);
+  }
+
+  .qi-ico.p {
+    background: var(--pd);
+    border: 1px solid rgba(255, 20, 147, 0.2);
+    color: var(--pink);
+  }
+
+  .qi-ico.c {
+    background: var(--cd);
+    border: 1px solid rgba(0, 212, 255, 0.2);
+    color: var(--cyan);
+  }
+
+  .qi-ico.g {
+    background: var(--gd);
+    border: 1px solid rgba(100, 220, 120, 0.2);
+    color: var(--green);
+  }
+
+  .qi-body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .qi-title {
+    font-family: var(--of);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--t);
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .qi-sub {
+    font-size: 12px;
+    color: var(--tm);
+    line-height: 1.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .qi-badge {
+    font-family: var(--of);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 999px;
+    flex-shrink: 0;
+    border: 1px solid var(--b2);
+    background: var(--s2);
+    color: var(--tm);
+  }
+
+  .qi-badge.a {
+    background: var(--ad);
+    border-color: rgba(255, 157, 66, 0.3);
+    color: var(--amber);
+  }
+
+  .qi-badge.c {
+    background: var(--cd);
+    border-color: rgba(0, 212, 255, 0.3);
+    color: var(--cyan);
+  }
+
+  .qi-badge.p {
+    background: var(--pd);
+    border-color: rgba(255, 20, 147, 0.3);
+    color: var(--pink);
+  }
+
+  .qi-badge.g {
+    background: var(--gd);
+    border-color: rgba(100, 220, 120, 0.3);
+    color: var(--green);
+  }
+
+  .qi-badge.overdue {
+    background: rgba(255, 76, 76, 0.1);
+    border-color: rgba(255, 76, 76, 0.3);
+    color: var(--red);
+  }
+
+  .qi-arrow {
+    font-size: 14px;
+    color: var(--td);
+    flex-shrink: 0;
+  }
+
+  .tasks-page__summary-badge {
+    font-family: var(--of);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--td);
+    flex-shrink: 0;
+  }
+
+  ================================================================
+  END OF SECTION A
+  ================================================================
+*/
+
+
+/* ── Token replication for standalone rendering ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --bg:#0d0914; --s:rgba(255,255,255,0.04); --s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07); --b2:rgba(255,255,255,0.13);
+  --pink:#ff1493; --cyan:#00d4ff; --green:#64dc78; --amber:#ff9d42; --red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10); --cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10); --ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2; --tm:#a8a8b8; --td:#6b6b80;
+  --of:'Outfit',sans-serif; --sf:'DM Sans',sans-serif;
+  --anim-quick:120ms;
+}
+html,body { background:var(--bg); color:var(--t); font-family:var(--sf); min-height:100vh; }
+
+/* Globals from globals.css used on this page */
+.summary-section-head { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:18px; }
+.summary-section-title { font-family:var(--of); font-size:20px; font-weight:800; letter-spacing:-0.02em; color:var(--t); }
+.summary-section-sub { margin-top:3px; font-size:13px; color:var(--tm); }
+
+/* ── THE MISSING CSS (Section A rendered for this file) ── */
+.tasks-queue__rows { display:flex; flex-direction:column; gap:8px; }
+
+.qi { display:flex; align-items:center; justify-content:space-between; gap:16px; padding:14px 16px; border-radius:12px; border:1px solid var(--b); background:rgba(255,255,255,0.02); text-decoration:none; color:var(--t); transition:border-color var(--anim-quick), background-color var(--anim-quick); }
+.qi:hover { border-color:var(--b2); background:rgba(255,255,255,0.04); }
+.qi.overdue { border-color:rgba(255,157,66,0.25); background:rgba(255,157,66,0.04); }
+
+.qi-ico { width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.qi-ico.a { background:var(--ad); border:1px solid rgba(255,157,66,0.2); color:var(--amber); }
+.qi-ico.p { background:var(--pd); border:1px solid rgba(255,20,147,0.2); color:var(--pink); }
+.qi-ico.c { background:var(--cd); border:1px solid rgba(0,212,255,0.2); color:var(--cyan); }
+.qi-ico.g { background:var(--gd); border:1px solid rgba(100,220,120,0.2); color:var(--green); }
+
+.qi-body { flex:1; min-width:0; }
+.qi-title { font-family:var(--of); font-size:13px; font-weight:700; color:var(--t); margin-bottom:3px; display:flex; align-items:center; gap:8px; }
+.qi-sub { font-size:12px; color:var(--tm); line-height:1.5; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+.qi-badge { font-family:var(--of); font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px; flex-shrink:0; border:1px solid var(--b2); background:var(--s2); color:var(--tm); }
+.qi-badge.a { background:var(--ad); border-color:rgba(255,157,66,0.3); color:var(--amber); }
+.qi-badge.c { background:var(--cd); border-color:rgba(0,212,255,0.3); color:var(--cyan); }
+.qi-badge.p { background:var(--pd); border-color:rgba(255,20,147,0.3); color:var(--pink); }
+.qi-badge.g { background:var(--gd); border-color:rgba(100,220,120,0.3); color:var(--green); }
+.qi-badge.overdue { background:rgba(255,76,76,0.1); border-color:rgba(255,76,76,0.3); color:var(--red); }
+
+.qi-arrow { font-size:14px; color:var(--td); flex-shrink:0; }
+.tasks-page__summary-badge { font-family:var(--of); font-size:13px; font-weight:600; color:var(--td); flex-shrink:0; }
+
+/* Overdue chip inside title row */
+.qi-overdue-chip { display:inline-flex; align-items:center; padding:2px 7px; border-radius:4px; font-family:var(--of); font-size:10px; font-weight:700; letter-spacing:0.06em; text-transform:uppercase; background:rgba(255,76,76,0.1); border:1px solid rgba(255,76,76,0.25); color:var(--red); }
+
+/* Page chrome */
+.orb { position:fixed; border-radius:50%; filter:blur(120px); pointer-events:none; z-index:0; }
+.o1 { width:600px; height:600px; background:rgba(255,20,147,0.04); top:-200px; right:-150px; }
+.o2 { width:400px; height:400px; background:rgba(0,212,255,0.03); bottom:-100px; left:0; }
+.page { max-width:800px; margin:0 auto; padding:48px 32px 120px; position:relative; z-index:1; }
+.hf-label { font-family:var(--of); font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:0.14em; color:var(--td); margin-bottom:10px; padding-bottom:8px; border-bottom:1px solid var(--b); }
+.hf-note { font-size:12px; color:var(--tm); line-height:1.7; margin-bottom:20px; max-width:640px; }
+.hf-note code { font-family:'DM Mono',monospace; font-size:11px; background:var(--s2); border:1px solid var(--b2); border-radius:4px; padding:1px 5px; color:var(--cyan); }
+.hf-note strong { color:var(--t); }
+.hf-section { margin-top:40px; }
+</style>
+</head>
+<body>
+<div class="orb o1"></div>
+<div class="orb o2"></div>
+
+<div class="page">
+
+  <div class="hf-label">Pulse. Handoff — Tasks page queue rows</div>
+
+  <p class="hf-note">
+    <strong>Root cause (confirmed via browser inspection):</strong>
+    Codex used class names from the wireframe — <code>.qi</code>, <code>.qi-ico</code>,
+    <code>.qi-body</code>, <code>.qi-title</code>, <code>.qi-sub</code>,
+    <code>.qi-badge</code>, <code>.qi-arrow</code> — that have zero CSS rules in
+    <code>globals.css</code>. The <code>&lt;a&gt;</code> tag renders as
+    <code>display: inline</code> (browser default) instead of a flex card.<br><br>
+    <strong>Fix:</strong> paste the CSS block from Section A of this file into
+    <code>globals.css</code>. Do not rename any JSX class names.
+    The existing JSX structure Codex produced is correct — only CSS is missing.
+  </p>
+
+  <!-- ════════════════════════════════════════════════════════
+       SECTION B — COMPONENT REFERENCE
+       
+       This is what the rendered output should look like.
+       The HTML below uses the EXACT class names Codex used
+       in tasks/page.tsx (confirmed from browser inspection).
+       
+       JSX structure produced by Codex:
+         <div className="tasks-queue__rows">
+           <a className="qi tasks-queue__row" href="...">
+             <div className="qi-ico a tasks-queue__icon">SVG</div>
+             <div className="qi-body">
+               <div className="qi-title">
+                 {task.title}
+                 {isOverdue && <span className="qi-overdue-chip">overdue</span>}
+               </div>
+               <div className="qi-sub">{prospect} · {campaign}</div>
+             </div>
+             <span className="qi-badge a">{dueLabel}</span>
+             <span className="qi-arrow">→</span>
+           </a>
+         </div>
+       
+       Colour variants for .qi-ico and .qi-badge:
+         .a  = amber  (tasks — default)
+         .c  = cyan   (replies)
+         .p  = pink   (drafts)
+         .g  = green  (follow-ups done / conversations)
+       ════════════════════════════════════════════════════════ -->
+
+  <div class="hf-section">
+    <div class="hf-label" style="margin-top:0;">B.1 — This week view (normal + overdue states)</div>
+    <p class="hf-note">
+      Overdue tasks get <code>.qi.overdue</code> on the row and <code>.qi-badge.overdue</code>
+      on the badge. An inline <code>.qi-overdue-chip</code> sits inside <code>.qi-title</code>
+      when <code>task.is_overdue</code> is true.
+    </p>
+
+    <div class="summary-section-head">
+      <div>
+        <h2 class="summary-section-title">Tasks due this week</h2>
+        <p class="summary-section-sub">See the next week of outreach reminders in one place.</p>
+      </div>
+      <span class="tasks-page__summary-badge">3 open</span>
+    </div>
+
+    <div class="tasks-queue__rows">
+
+      <!-- Overdue task — .qi.overdue + .qi-badge.overdue + chip in title -->
+      <a class="qi overdue" href="#">
+        <div class="qi-ico a">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">
+            Send intro email
+            <span class="qi-overdue-chip">1 overdue</span>
+          </div>
+          <div class="qi-sub">Howard Sullivan · YouStudio — Agency founders Q1</div>
+        </div>
+        <span class="qi-badge overdue">Overdue</span>
+        <span class="qi-arrow">→</span>
+      </a>
+
+      <!-- Due today — .qi-badge.a (amber) -->
+      <a class="qi" href="#">
+        <div class="qi-ico a">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Follow up on proposal</div>
+          <div class="qi-sub">Mark Jory · Latitude Agency — Fractional CFO Q1</div>
+        </div>
+        <span class="qi-badge a">Today</span>
+        <span class="qi-arrow">→</span>
+      </a>
+
+      <!-- Due later this week — neutral badge with date -->
+      <a class="qi" href="#">
+        <div class="qi-ico a">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/>
+            <path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Call to check in</div>
+          <div class="qi-sub">Sophie Clarke · Fold Studio — Agency founders Q1</div>
+        </div>
+        <span class="qi-badge">Wed 15 Apr</span>
+        <span class="qi-arrow">→</span>
+      </a>
+
+    </div>
+  </div>
+
+
+  <div class="hf-section">
+    <div class="hf-label">B.2 — Today view (empty state)</div>
+    <p class="hf-note">
+      When no tasks are due today, render the <code>.summary-section-sub</code>
+      text and an empty state — do not render the <code>.tasks-queue__rows</code> div.
+    </p>
+
+    <div class="summary-section-head">
+      <div>
+        <h2 class="summary-section-title">Tasks due today</h2>
+        <p class="summary-section-sub">Nothing due today. Check back tomorrow.</p>
+      </div>
+      <span class="tasks-page__summary-badge">0 open</span>
+    </div>
+  </div>
+
+
+  <div class="hf-section">
+    <div class="hf-label">B.3 — Badge colour guide</div>
+    <p class="hf-note">
+      All badge colour variants use the same pattern: the letter suffix on both
+      <code>.qi-ico</code> and <code>.qi-badge</code> must match.
+    </p>
+    <div class="tasks-queue__rows">
+      <a class="qi" href="#" onclick="return false">
+        <div class="qi-ico a"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="qi-body"><div class="qi-title">.qi-ico.a + .qi-badge.a</div><div class="qi-sub">Amber — tasks (default)</div></div>
+        <span class="qi-badge a">Amber</span><span class="qi-arrow">→</span>
+      </a>
+      <a class="qi" href="#" onclick="return false">
+        <div class="qi-ico c"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 2l5 5-5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="qi-body"><div class="qi-title">.qi-ico.c + .qi-badge.c</div><div class="qi-sub">Cyan — replies</div></div>
+        <span class="qi-badge c">New</span><span class="qi-arrow">→</span>
+      </a>
+      <a class="qi" href="#" onclick="return false">
+        <div class="qi-ico p"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/></svg></div>
+        <div class="qi-body"><div class="qi-title">.qi-ico.p + .qi-badge.p</div><div class="qi-sub">Pink — drafts</div></div>
+        <span class="qi-badge p">3</span><span class="qi-arrow">→</span>
+      </a>
+      <a class="qi overdue" href="#" onclick="return false">
+        <div class="qi-ico a"><svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <div class="qi-body"><div class="qi-title">.qi.overdue + .qi-badge.overdue<span class="qi-overdue-chip" style="margin-left:8px;">2 overdue</span></div><div class="qi-sub">Red — overdue tasks</div></div>
+        <span class="qi-badge overdue">Overdue</span><span class="qi-arrow">→</span>
+      </a>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
