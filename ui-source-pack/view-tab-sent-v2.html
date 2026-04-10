@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Sent Tab V2 (State + Next Action)</title>
+<style>
+
+/* ══════════════════════════════════════════════════════════════
+   SENT TAB V2 — STATE + NEXT ACTION SYSTEM
+   
+   Codex: add all rules in this <style> block to globals.css.
+   No rules below conflict with existing globals.css classes.
+   All tokens (--pink, --cyan, --green, --amber, --red, --s, 
+   --b, --b2, --t, --tm, --td, --of, --sf) are already in 
+   globals.css.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Shell layout (replicates globals.css for standalone) */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;margin-right:16px;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);border:1px solid transparent;transition:all 0.15s;position:relative;}
+.si:hover{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.stats-strip{display:flex;gap:0;margin-bottom:0;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.sn{font-family:var(--of);font-size:20px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sn.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sn.green{color:var(--green);}
+.sn.cyan{color:var(--cyan);}
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+.tab-content{flex:1;padding:24px 32px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 18px;border-radius:999px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bc{background:var(--cd);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.bc:hover{background:rgba(0,212,255,0.14);}
+.bsm{padding:6px 14px;font-size:11px;}
+.search-bar{display:flex;align-items:center;background:var(--s);border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:20px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;padding:11px 10px;font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:15px;}
+
+/* ══════════════════════════════════════════════════════════════
+   SENT TAB V2 — NEW CSS
+   
+   Codex: paste everything below this comment into globals.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Sent row container ── */
+.sent-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 12px;
+  border: 1px solid var(--b);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+.sent-row:hover {
+  border-color: var(--b2);
+  background: rgba(255,255,255,0.04);
+}
+
+/* State-tinted rows */
+.sent-row.state-replied {
+  border-color: rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.03);
+}
+.sent-row.state-replied:hover {
+  border-color: rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.06);
+}
+.sent-row.state-action-needed {
+  border-color: rgba(255,157,66,0.2);
+  background: rgba(255,157,66,0.025);
+}
+.sent-row.state-action-needed:hover {
+  border-color: rgba(255,157,66,0.35);
+}
+.sent-row.state-failed {
+  border-color: rgba(255,76,76,0.2);
+  background: rgba(255,76,76,0.03);
+}
+.sent-row.state-failed:hover {
+  border-color: rgba(255,76,76,0.35);
+}
+
+/* ── Left accent bar — appears on rows needing action ── */
+.sent-row::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 12px;
+  bottom: 12px;
+  width: 2.5px;
+  border-radius: 0 2px 2px 0;
+  background: transparent;
+  transition: background 0.15s;
+}
+.sent-row.state-replied::before { background: var(--cyan); }
+.sent-row.state-action-needed::before { background: var(--amber); }
+.sent-row.state-failed::before { background: var(--red); }
+
+/* ── Avatar ── */
+.sent-av {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  background: var(--pd);
+  border: 1px solid rgba(255,20,147,0.2);
+  color: var(--pink);
+}
+.sent-av.cyan { background: var(--cd); border-color: rgba(0,212,255,0.2); color: var(--cyan); }
+.sent-av.green { background: var(--gd); border-color: rgba(100,220,120,0.2); color: var(--green); }
+.sent-av.amber { background: var(--ad); border-color: rgba(255,157,66,0.2); color: var(--amber); }
+.sent-av.muted { background: var(--s2); border-color: var(--b2); color: var(--td); }
+
+/* ── Identity ── */
+.sent-identity {
+  flex: 0 0 200px;
+  min-width: 0;
+}
+.sent-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--t);
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.sent-sub {
+  font-size: 12px;
+  color: var(--td);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── State signal (primary, centre) ── */
+.sent-state {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.sent-state-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t);
+}
+.sent-state-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.sent-state-dot.cyan  { background: var(--cyan);  box-shadow: 0 0 6px rgba(0,212,255,0.5); }
+.sent-state-dot.green { background: var(--green); box-shadow: 0 0 6px rgba(100,220,120,0.5); }
+.sent-state-dot.amber { background: var(--amber); box-shadow: 0 0 6px rgba(255,157,66,0.5); }
+.sent-state-dot.red   { background: var(--red);   box-shadow: 0 0 6px rgba(255,76,76,0.5); }
+.sent-state-dot.muted { background: var(--td); box-shadow: none; }
+.sent-state-dot.pulse {
+  animation: sent-dot-pulse 2.4s ease-in-out infinite;
+}
+@keyframes sent-dot-pulse {
+  0%,100% { opacity: 1; }
+  50%      { opacity: 0.35; }
+}
+.sent-state-context {
+  font-size: 11px;
+  color: var(--td);
+  padding-left: 14px; /* aligns under label text, past the dot */
+}
+
+/* ── Passive badge (no action) ── */
+.sent-passive {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--td);
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 20px;
+  padding: 3px 9px;
+  flex-shrink: 0;
+}
+
+/* ── CTA button — right side, per-row action ── */
+.sent-cta {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--b2);
+  background: var(--s);
+  color: var(--tm);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sent-cta:hover {
+  color: var(--t);
+  border-color: var(--td);
+  background: var(--s2);
+}
+/* CTA variants */
+.sent-cta.cyan {
+  background: rgba(0,212,255,0.08);
+  border-color: rgba(0,212,255,0.3);
+  color: var(--cyan);
+}
+.sent-cta.cyan:hover {
+  background: rgba(0,212,255,0.14);
+  border-color: rgba(0,212,255,0.5);
+}
+.sent-cta.amber {
+  background: rgba(255,157,66,0.08);
+  border-color: rgba(255,157,66,0.3);
+  color: var(--amber);
+}
+.sent-cta.amber:hover {
+  background: rgba(255,157,66,0.14);
+  border-color: rgba(255,157,66,0.5);
+}
+.sent-cta.red {
+  background: rgba(255,76,76,0.08);
+  border-color: rgba(255,76,76,0.3);
+  color: var(--red);
+}
+.sent-cta.red:hover {
+  background: rgba(255,76,76,0.14);
+  border-color: rgba(255,76,76,0.5);
+}
+.sent-cta.green {
+  background: rgba(100,220,120,0.08);
+  border-color: rgba(100,220,120,0.3);
+  color: var(--green);
+}
+.sent-cta.green:hover {
+  background: rgba(100,220,120,0.14);
+}
+
+/* ── Section dividers within the list ── */
+.sent-section-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--td);
+  margin: 20px 0 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--b);
+}
+.sent-section-label:first-child { margin-top: 0; }
+
+/* ── Empty state ── */
+.sent-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 72px 24px;
+  text-align: center;
+}
+.sent-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--s2);
+  border: 1px solid var(--b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  color: var(--td);
+}
+.sent-empty-title {
+  font-family: var(--of);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 6px;
+}
+.sent-empty-sub {
+  font-size: 13px;
+  color: var(--tm);
+  line-height: 1.6;
+  max-width: 300px;
+}
+
+/* Annotation (wireframe notes only) */
+.ann{margin-top:32px;background:rgba(255,255,255,0.02);border:1px solid var(--b);border-radius:10px;padding:16px 18px;}
+.ann-title{font-family:var(--of);font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
+.ann-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--td);line-height:1.6;margin-bottom:6px;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span>Campaigns</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
+  </div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<div class="layout">
+<main class="main">
+
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta">
+          <span>47 prospects</span><span class="ch-sep">·</span>
+          <span>Started 12 Mar 2026</span><span class="ch-sep">·</span>
+          <span>3-step sequence</span>
+        </div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm" style="gap:5px;border-radius:8px;">
+          <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><line x1="2" y1="3" x2="12" y2="3"/><line x1="2" y1="7" x2="12" y2="7"/><line x1="2" y1="11" x2="8" y2="11"/></svg>
+          Edit sequence
+        </button>
+        <button class="btn bs bsm" style="border-radius:8px;">+ Add prospects</button>
+      </div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-item"><div class="sn pink">15</div><div class="sl">Drafts ready</div></div>
+      <div class="stat-item"><div class="sn">2</div><div class="sl">Responded</div></div>
+      <div class="stat-item"><div class="sn green">8</div><div class="sl">Meetings set</div></div>
+      <div class="stat-item"><div class="sn">139</div><div class="sl">LinkedIn sent</div></div>
+      <div class="stat-item"><div class="sn cyan">0</div><div class="sl">LinkedIn due</div></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">563</span></div>
+      <div class="tab">Drafts <span class="tab-ct">15</span></div>
+      <div class="tab">LinkedIn</div>
+      <div class="tab on">Sent <span class="tab-ct">23</span></div>
+      <div class="tab">Follow-up <span class="tab-ct">14</span></div>
+      <div class="tab">Nurture</div>
+      <div class="tab">Conversations</div>
+      <div class="tab">Bounced</div>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       SENT TAB V2 CONTENT
+       
+       Codex: this entire block maps to SentTab.tsx
+       
+       KEY RULES:
+       • Clicking the row → opens prospect detail drawer
+       • Clicking a .sent-cta button → stopPropagation, own action
+       • No dropdowns. No manual status controls. Read-only state.
+       • State is derived from data: prospect.status, sequence position,
+         reply data — never set by the user directly in this tab
+       
+       ROW STATES (use .sent-row.[state-class]):
+         (none)              — In sequence, system handling
+         .state-replied      — Prospect replied, action may be needed
+         .state-action-needed — Sequence complete or decision required  
+         .state-failed       — Email failed / missing address
+       
+       AVATAR COLOUR:
+         .sent-av            — pink (default, in sequence)
+         .sent-av.cyan       — replied
+         .sent-av.green      — meeting/positive outcome
+         .sent-av.amber      — needs decision
+         .sent-av.muted      — failed/inactive
+       
+       STATE DOT COLOURS (.sent-state-dot.[colour]):
+         .muted.pulse        — in sequence, system running (animated)
+         .cyan               — replied
+         .green              — positive outcome
+         .amber              — decision needed
+         .red                — failed
+       
+       CTA VARIANTS (.sent-cta.[colour]):
+         (none/default)      — neutral action (create task, nurture)
+         .cyan               — conversation / reply action
+         .amber              — decision / fix action
+         .red                — error action
+         .green              — positive/done action
+  ══════════════════════════════════════════════════════════ -->
+
+  <div class="tab-content">
+
+    <div class="search-bar">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Search name, role, or agency…">
+    </div>
+
+    <!-- ── Section: Needs attention ── -->
+    <div class="sent-section-label">Needs your attention</div>
+
+    <!-- STATE A: Replied — awaiting user response -->
+    <!-- prospect.status = 'replied', user hasn't replied yet -->
+    <div class="sent-row state-replied" onclick="openDrawer()">
+      <div class="sent-av cyan">NS</div>
+      <div class="sent-identity">
+        <div class="sent-name">Nat Sajal</div>
+        <div class="sent-sub">Wagamama · Head of Brand</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot cyan"></span>
+          Replied — waiting for you
+        </div>
+        <div class="sent-state-context">Replied 2 hours ago · Step 1 of 3</div>
+      </div>
+      <button class="sent-cta cyan" onclick="event.stopPropagation()">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 8.5L5.5 4 10 8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Reply
+      </button>
+    </div>
+
+    <!-- STATE B: Sequence complete, no reply — needs decision -->
+    <!-- prospect.status = 'sequence_complete', no reply received -->
+    <div class="sent-row state-action-needed" onclick="openDrawer()">
+      <div class="sent-av amber">HC</div>
+      <div class="sent-identity">
+        <div class="sent-name">Helen Clarke</div>
+        <div class="sent-sub">Latitude Agency · CEO</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot amber"></span>
+          Sequence complete — no reply
+        </div>
+        <div class="sent-state-context">All 3 steps sent · Last sent 8 days ago</div>
+      </div>
+      <button class="sent-cta amber" onclick="event.stopPropagation()">
+        Decide
+      </button>
+    </div>
+
+    <!-- STATE C: Email failed -->
+    <!-- prospect.email bounced or missing -->
+    <div class="sent-row state-failed" onclick="openDrawer()">
+      <div class="sent-av muted">RL</div>
+      <div class="sent-identity">
+        <div class="sent-name">Rachel Lowe</div>
+        <div class="sent-sub">Studio Blk · Creative Dir.</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot red"></span>
+          Email failed to deliver
+        </div>
+        <div class="sent-state-context">r.lowe@studioblk.com bounced · Step 1</div>
+      </div>
+      <button class="sent-cta red" onclick="event.stopPropagation()">
+        Fix email
+      </button>
+    </div>
+
+    <!-- ── Section: In progress ── -->
+    <div class="sent-section-label">In progress — no action needed</div>
+
+    <!-- STATE D: In sequence, follow-up scheduled -->
+    <!-- System is handling — no action from user -->
+    <div class="sent-row" onclick="openDrawer()">
+      <div class="sent-av">JM</div>
+      <div class="sent-identity">
+        <div class="sent-name">James Mitchell</div>
+        <div class="sent-sub">North Agency · MD</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot muted pulse"></span>
+          Follow-up scheduled in 2 days
+        </div>
+        <div class="sent-state-context">Step 1 of 3 sent yesterday</div>
+      </div>
+      <span class="sent-passive">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.8v1.7l1 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        Scheduled
+      </span>
+    </div>
+
+    <!-- STATE E: In sequence, step 2 scheduled -->
+    <div class="sent-row" onclick="openDrawer()">
+      <div class="sent-av">ST</div>
+      <div class="sent-identity">
+        <div class="sent-name">Sarah Thompson</div>
+        <div class="sent-sub">ConsultCo · Growth Lead</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot muted pulse"></span>
+          Follow-up scheduled in 5 days
+        </div>
+        <div class="sent-state-context">Step 2 of 3 · 2nd follow-up due 17 Apr</div>
+      </div>
+      <span class="sent-passive">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.8v1.7l1 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        Scheduled
+      </span>
+    </div>
+
+    <!-- STATE F: Replied, conversation ongoing — user may want to check -->
+    <div class="sent-row" onclick="openDrawer()">
+      <div class="sent-av green">MP</div>
+      <div class="sent-identity">
+        <div class="sent-name">Marcus Peters</div>
+        <div class="sent-sub">Ventures.io · Partner</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot green"></span>
+          Meeting booked
+        </div>
+        <div class="sent-state-context">Confirmed for 16 Apr at 2pm</div>
+      </div>
+      <button class="sent-cta green" onclick="event.stopPropagation()">
+        View thread
+      </button>
+    </div>
+
+    <!-- STATE G: Last step sent, waiting -->
+    <div class="sent-row" onclick="openDrawer()">
+      <div class="sent-av">DK</div>
+      <div class="sent-identity">
+        <div class="sent-name">Dan Kim</div>
+        <div class="sent-sub">Studio North · Creative Dir.</div>
+      </div>
+      <div class="sent-state">
+        <div class="sent-state-label">
+          <span class="sent-state-dot muted pulse"></span>
+          Final follow-up sent — waiting
+        </div>
+        <div class="sent-state-context">Step 3 of 3 sent 3 days ago</div>
+      </div>
+      <span class="sent-passive">
+        <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.8v1.7l1 1" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+        Waiting
+      </span>
+    </div>
+
+    <!-- ── EMPTY STATE (shown when nothing sent yet) ── -->
+    <!-- Uncomment to preview:
+    <div class="sent-empty">
+      <div class="sent-empty-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M2 11h18M11 2l9 9-9 9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="sent-empty-title">Nothing sent yet</div>
+      <div class="sent-empty-sub">Once you send emails from the Drafts tab, they'll appear here with their current state.</div>
+    </div>
+    -->
+
+    <div class="ann">
+      <div class="ann-title">Sent Tab V2 — design notes</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">No dropdowns.</strong> State is read-only and derived from data. The user never sets a status manually.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Left accent bar</strong> on state-replied, state-action-needed, state-failed. Invisible on passive rows — only draws the eye when something needs attention.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Pulsing dot</strong> on in-sequence rows signals the system is running. Static dot on terminal states (replied, failed, complete).</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Section dividers</strong> separate "Needs your attention" from "In progress". Attention rows are always shown first.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">CTA stopPropagation.</strong> Clicking a CTA button does not open the drawer. Clicking anywhere else on the row does.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">"Decide" CTA</strong> on sequence-complete opens a small contextual menu: Nurture / Mark as closed / Create task. Not a dropdown — a small popover.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Microcopy guide:</strong> State labels are always present tense ("Follow-up scheduled", "Replied", "Email failed") with a time reference in the context line below.</div>
+    </div>
+
+  </div><!-- /tab-content -->
+</main>
+</div><!-- /layout -->
+
+<!-- Backdrop + drawer (same as review tab) -->
+<div id="pd-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);z-index:800;display:none;" onclick="closeDrawer()"></div>
+<div id="pd-panel" style="position:fixed;top:var(--th);right:0;bottom:0;width:480px;max-width:calc(100vw - var(--sw));background:#130a20;border-left:1px solid var(--b2);z-index:801;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);">
+  <div style="padding:18px 20px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;gap:12px;flex-shrink:0;">
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--cd);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:13px;font-weight:700;color:var(--cyan);flex-shrink:0;">NS</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:var(--of);font-size:16px;font-weight:700;color:var(--t);margin-bottom:3px;">Nat Sajal</div>
+      <div style="font-size:12px;color:var(--cyan);">Replied 2 hours ago · View conversation</div>
+    </div>
+    <div onclick="closeDrawer()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tm);font-size:14px;">✕</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--td);font-size:13px;">
+    Prospect detail drawer opens here — same as Review tab.
+  </div>
+</div>
+
+<script>
+function openDrawer() {
+  document.getElementById('pd-backdrop').style.display = 'block';
+  document.getElementById('pd-panel').style.transform = 'translateX(0)';
+}
+function closeDrawer() {
+  document.getElementById('pd-backdrop').style.display = 'none';
+  document.getElementById('pd-panel').style.transform = 'translateX(100%)';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
