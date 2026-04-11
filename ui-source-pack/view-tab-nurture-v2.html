@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<title>Pulse. — Nurture Tab V2</title>
+<style>
+/* ── Foundation tokens (inlined) ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+  --anim-quick:120ms;--anim-standard:180ms;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0;}
+.orb-pink{width:560px;height:560px;background:var(--pink);top:-220px;right:-220px;}
+.orb-cyan{width:360px;height:360px;background:var(--cyan);bottom:-140px;left:-140px;}
+
+/* Shell */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);backdrop-filter:blur(14px);z-index:200;display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);gap:12px;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;flex-shrink:0;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 10px;border-radius:100px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.85);border-right:1px solid var(--b);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--anim-quick);border:1px solid transparent;text-decoration:none;color:rgba(255,255,255,0.45);position:relative;}
+.si:hover,.si.on{background:var(--pd);border-color:rgba(255,20,147,0.24);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(13,9,20,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--anim-quick);z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+
+/* Campaign header */
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.stats-strip{display:flex;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.sn{font-family:var(--of);font-size:20px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sn.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sn.green{color:var(--green);}
+.sn.cyan{color:var(--cyan);}
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+.tab-content{flex:1;padding:24px 32px;max-width:860px;}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--of);font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;white-space:nowrap;border-radius:100px;}
+.bs{padding:7px 16px;font-size:12px;background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bp{padding:10px 20px;font-size:13px;background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;}
+.bsm{padding:6px 14px;font-size:11px;}
+
+/* Search */
+.search-bar{display:flex;align-items:center;background:var(--s);border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:20px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;padding:11px 10px;font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:15px;}
+
+/* ══════════════════════════════════════════════════════════════
+   NURTURE TAB V2 — NEW CSS
+   
+   Codex: paste everything below this comment into globals.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Nurture row ── */
+.nrow {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: 12px;
+  border: 1px solid var(--b);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  position: relative;
+}
+.nrow:hover {
+  border-color: var(--b2);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Ready-to-re-engage: amber tint */
+.nrow.ready {
+  border-color: rgba(255,157,66,0.2);
+  background: rgba(255,157,66,0.025);
+}
+.nrow.ready:hover {
+  border-color: rgba(255,157,66,0.35);
+}
+
+/* ── Avatar ── */
+.nav {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+  margin-top: 1px;
+  background: var(--s2);
+  border: 1px solid var(--b2);
+  color: var(--td);
+}
+.nav.amber { background: var(--ad); border-color: rgba(255,157,66,0.25); color: var(--amber); }
+.nav.cyan  { background: var(--cd); border-color: rgba(0,212,255,0.25);  color: var(--cyan);  }
+.nav.green { background: var(--gd); border-color: rgba(100,220,120,0.25);color: var(--green); }
+.nav.pink  { background: var(--pd); border-color: rgba(255,20,147,0.25); color: var(--pink);  }
+
+/* ── Body (centre) ── */
+.nbody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.nname {
+  font-family: var(--of);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 1px;
+}
+.nco {
+  font-size: 12px;
+  color: var(--td);
+  margin-bottom: 4px;
+}
+
+/* Reason chip — why are they here? */
+.nreason {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--tm);
+  background: var(--s2);
+  border: 1px solid var(--b);
+  border-radius: 6px;
+  padding: 3px 8px;
+  width: fit-content;
+}
+
+/* Timing row */
+.ntiming {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.ntiming-item {
+  font-size: 11px;
+  color: var(--td);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.ntiming-item.ready {
+  color: var(--amber);
+  font-weight: 600;
+}
+.ntiming-sep {
+  color: var(--b2);
+  font-size: 10px;
+}
+
+/* Suggestion hint */
+.nhint {
+  font-size: 11px;
+  color: var(--td);
+  font-style: italic;
+  margin-top: 2px;
+}
+.nhint.ready { color: rgba(255,157,66,0.8); font-style: normal; font-weight: 600; }
+
+/* Task indicator */
+.ntask-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--cyan);
+  background: var(--cd);
+  border: 1px solid rgba(0,212,255,0.2);
+  border-radius: 5px;
+  padding: 2px 7px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ntask-chip:hover {
+  background: rgba(0,212,255,0.14);
+  border-color: rgba(0,212,255,0.35);
+}
+
+/* ── Right side CTAs ── */
+.nactions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+.ncta {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--b2);
+  background: var(--s);
+  color: var(--tm);
+  white-space: nowrap;
+  transition: all 0.15s;
+}
+.ncta:hover {
+  color: var(--t);
+  border-color: var(--td);
+  background: var(--s2);
+}
+.ncta.primary {
+  background: rgba(255,157,66,0.08);
+  border-color: rgba(255,157,66,0.3);
+  color: var(--amber);
+}
+.ncta.primary:hover {
+  background: rgba(255,157,66,0.14);
+  border-color: rgba(255,157,66,0.5);
+}
+.ncta.pink {
+  background: var(--pd);
+  border-color: rgba(255,20,147,0.3);
+  color: var(--pink);
+}
+.ncta.pink:hover {
+  background: rgba(255,20,147,0.16);
+}
+.ndate-badge {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--td);
+  text-align: right;
+}
+.ndate-badge.ready {
+  color: var(--amber);
+}
+.ndate-badge.soon {
+  color: var(--cyan);
+}
+
+/* ── Section divider ── */
+.nsection {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--td);
+  margin-bottom: 12px;
+  margin-top: 24px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--b);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nsection:first-child { margin-top: 0; }
+
+/* ── Empty state ── */
+.nurture-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 24px;
+  text-align: center;
+  border: 1px dashed var(--b);
+  border-radius: 16px;
+  background: rgba(255,255,255,0.01);
+}
+.nurture-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--s2);
+  border: 1px solid var(--b);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  color: var(--td);
+  font-size: 22px;
+}
+.nurture-empty-title {
+  font-family: var(--of);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 8px;
+}
+.nurture-empty-sub {
+  font-size: 13px;
+  color: var(--tm);
+  line-height: 1.7;
+  max-width: 340px;
+  margin-bottom: 6px;
+}
+.nurture-empty-hint {
+  font-size: 12px;
+  color: var(--td);
+  line-height: 1.6;
+  max-width: 320px;
+}
+
+/* Annotation block (wireframe notes only — not in app) */
+.ann{margin-top:32px;background:rgba(255,255,255,0.02);border:1px solid var(--b);border-radius:10px;padding:16px 18px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
+.ann-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--td);line-height:1.6;margin-bottom:6px;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <nav class="breadcrumb">
+    <span>Campaigns</span>
+    <span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
+  </nav>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <a class="si" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<div class="layout">
+<main class="main">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span>Active</span><span class="ch-sep">·</span><span>3-step sequence</span></div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm" style="border-radius:8px;">Settings</button>
+        <button class="btn bp bsm" style="border-radius:8px;">+ Add prospects</button>
+      </div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-item"><div class="sn pink">15</div><div class="sl">Drafts ready</div></div>
+      <div class="stat-item"><div class="sn">2</div><div class="sl">Responded</div></div>
+      <div class="stat-item"><div class="sn green">8</div><div class="sl">Meetings set</div></div>
+      <div class="stat-item"><div class="sn">139</div><div class="sl">LinkedIn sent</div></div>
+      <div class="stat-item"><div class="sn cyan">0</div><div class="sl">LinkedIn due</div></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">12</span></div>
+      <div class="tab">Drafts <span class="tab-ct">8</span></div>
+      <div class="tab">LinkedIn</div>
+      <div class="tab">Sent <span class="tab-ct">23</span></div>
+      <div class="tab on">Nurture <span class="tab-ct">5</span></div>
+      <div class="tab">Conversations</div>
+      <div class="tab">Bounced</div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+
+    <div class="search-bar">
+      <span class="search-icon">⌕</span>
+      <input type="text" placeholder="Search name, role, or agency…">
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════════
+         NURTURE TAB V2
+
+         Codex: this entire section maps to NurtureTab.tsx
+         
+         ROW ANATOMY:
+           .nrow                  — the card container
+           .nrow.ready            — amber tint for ready-to-re-engage
+           .nav.[colour]          — avatar
+           .nbody                 — centre column (name, reason, timing)
+           .nactions              — right column (CTAs + date)
+         
+         SECTION DIVIDERS (.nsection):
+           "Ready to re-engage"   — timing has passed, action recommended
+           "Parked"               — still waiting, no action needed yet
+         
+         AVATAR COLOUR:
+           .amber  — ready to re-engage
+           .cyan   — recently active / task exists
+           .green  — positive signal
+           .pink   — just moved from sent
+           (none)  — default muted
+         
+         CTA VARIANTS (.ncta):
+           .primary  — amber, "Re-engage" (ready state)
+           .pink     — pink gradient, used when sequence just ended
+           (none)    — neutral "Create task" secondary action
+         
+         REASON CHIP (.nreason):
+           Human-readable text only — never a system code
+           Examples: "Sequence complete", "Not ready yet",
+                     "Follow up later", "On maternity leave"
+         
+         TASK CHIP (.ntask-chip):
+           Only shown when a task already exists for this prospect
+           Click → stopPropagation → opens task in drawer
+         
+         Clicking the row → opens prospect detail drawer
+         Clicking any button → stopPropagation, own action
+    ══════════════════════════════════════════════════════════ -->
+
+    <!-- SECTION: Ready to re-engage -->
+    <div class="nsection">
+      Ready to re-engage
+      <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--td);">2 prospects</span>
+    </div>
+
+    <!-- STATE A: Ready — timing has passed, amber tint -->
+    <div class="nrow ready" onclick="openDrawer()">
+      <div class="nav amber">HC</div>
+      <div class="nbody">
+        <div class="nname">Helen Clarke</div>
+        <div class="nco">Latitude Agency · CEO</div>
+        <span class="nreason">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+          Sequence complete — no reply
+        </span>
+        <div class="ntiming">
+          <span class="ntiming-item ready">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.5v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 31 days ago
+          </span>
+          <span class="ntiming-sep">·</span>
+          <span class="ntiming-item ready">Re-contact was 5 days ago</span>
+        </div>
+        <div class="nhint ready">Good time to reach out again</div>
+      </div>
+      <div class="nactions">
+        <button class="ncta primary" onclick="event.stopPropagation()">Re-engage</button>
+        <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+        <div class="ndate-badge ready">Due 6 Apr</div>
+      </div>
+    </div>
+
+    <!-- STATE B: Ready — manually added, task exists -->
+    <div class="nrow ready" onclick="openDrawer()">
+      <div class="nav cyan">MJ</div>
+      <div class="nbody">
+        <div class="nname">Mark Jory</div>
+        <div class="nco">Latitude Agency · MD</div>
+        <span class="nreason">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+          Not the right time
+        </span>
+        <div class="ntiming">
+          <span class="ntiming-item ready">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.5v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 24 days ago
+          </span>
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;margin-top:4px;">
+          <!-- Task chip — shown when a task exists for this prospect -->
+          <button class="ntask-chip" onclick="event.stopPropagation()">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><rect x="0.5" y="0.5" width="8" height="8" rx="1.5" stroke="currentColor" stroke-width="1"/><path d="M2.5 4.5l1.5 1.5 2.5-2.5" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Task: Call to re-introduce · Due 15 Apr
+          </button>
+        </div>
+      </div>
+      <div class="nactions">
+        <button class="ncta primary" onclick="event.stopPropagation()">Re-engage</button>
+        <div class="ndate-badge ready">Due 10 Apr</div>
+      </div>
+    </div>
+
+    <!-- SECTION: Parked — not yet time -->
+    <div class="nsection">
+      Parked
+      <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--td);">3 prospects</span>
+    </div>
+
+    <!-- STATE C: Parked — just moved from Sent, sequence ended -->
+    <div class="nrow" onclick="openDrawer()">
+      <div class="nav pink">ST</div>
+      <div class="nbody">
+        <div class="nname">Sarah Thompson</div>
+        <div class="nco">ConsultCo · Growth Lead</div>
+        <span class="nreason">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+          Sequence complete — no reply
+        </span>
+        <div class="ntiming">
+          <span class="ntiming-item">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.5v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 8 days ago
+          </span>
+          <span class="ntiming-sep">·</span>
+          <span class="ntiming-item">Re-contact from 1 May</span>
+        </div>
+        <div class="nhint">Wait a bit longer before reaching out</div>
+      </div>
+      <div class="nactions">
+        <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+        <div class="ndate-badge soon">From 1 May</div>
+      </div>
+    </div>
+
+    <!-- STATE D: Parked — manually added with note -->
+    <div class="nrow" onclick="openDrawer()">
+      <div class="nav">RB</div>
+      <div class="nbody">
+        <div class="nname">Rachel Burns</div>
+        <div class="nco">Studio Blk · Creative Dir.</div>
+        <span class="nreason">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+          On maternity leave
+        </span>
+        <div class="ntiming">
+          <span class="ntiming-item">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.5v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 14 days ago
+          </span>
+          <span class="ntiming-sep">·</span>
+          <span class="ntiming-item">Re-contact from Jun 2026</span>
+        </div>
+        <div class="nhint">Back from leave around June</div>
+      </div>
+      <div class="nactions">
+        <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+        <div class="ndate-badge">Jun 2026</div>
+      </div>
+    </div>
+
+    <!-- STATE E: Parked — closed not a fit, long re-contact -->
+    <div class="nrow" onclick="openDrawer()">
+      <div class="nav">DK</div>
+      <div class="nbody">
+        <div class="nname">Dan Kim</div>
+        <div class="nco">Studio North · Creative Dir.</div>
+        <span class="nreason">
+          <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+          Not a fit right now
+        </span>
+        <div class="ntiming">
+          <span class="ntiming-item">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="3.8" stroke="currentColor" stroke-width="1"/><path d="M4.5 2.5v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 3 days ago
+          </span>
+          <span class="ntiming-sep">·</span>
+          <span class="ntiming-item">Re-contact from Jul 2026</span>
+        </div>
+        <div class="nhint">Revisit when context changes</div>
+      </div>
+      <div class="nactions">
+        <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+        <div class="ndate-badge">Jul 2026</div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════════
+         EMPTY STATE — no nurtured prospects yet
+    ══════════════════════════════════════════════════════ -->
+    <!-- Uncomment to preview:
+    <div class="nurture-empty">
+      <div class="nurture-empty-icon">
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><circle cx="11" cy="11" r="9"/><path d="M11 7v4l3 3"/></svg>
+      </div>
+      <div class="nurture-empty-title">Nothing parked yet</div>
+      <div class="nurture-empty-sub">
+        Nurture is for prospects worth coming back to — just not right now.
+      </div>
+      <div class="nurture-empty-hint">
+        When you mark a prospect as "Not ready" or a sequence ends without a reply, they'll appear here with a suggested re-contact date.
+      </div>
+    </div>
+    -->
+
+    <div class="ann">
+      <div class="ann-title">Nurture Tab V2 — design notes</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Two sections.</strong> "Ready to re-engage" (timing has passed, action recommended) sits above "Parked" (still waiting). The split makes it immediately clear where attention is needed without requiring the user to read every row.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Reason chip</strong> (.nreason) is human-readable text, not a system code. It explains why the prospect is here. Not editable in v1.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Ready rows</strong> get amber tint + amber CTA. Parked rows are neutral — no colour urgency, just timing context.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Task chip</strong> only appears when an open task exists for this prospect. Click → opens task in drawer. Prevents duplicate task creation.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Hint text</strong> (.nhint) is optional, subtle, italic. Gives a single-line human steer without being prescriptive.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Re-engage CTA</strong> moves the prospect back to Review (or directly to Drafts if a message template exists). Does not trigger row click — stopPropagation.</div>
+      <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Future exploration (v2+):</strong> contextual signals ("role change detected", "company news") could appear as a subtle extra line below the reason chip. Not in v1.</div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- Backdrop + drawer -->
+<div id="pd-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);z-index:800;display:none;" onclick="closeDrawer()"></div>
+<div id="pd-panel" style="position:fixed;top:var(--th);right:0;bottom:0;width:480px;max-width:calc(100vw - var(--sw));background:#130a20;border-left:1px solid var(--b2);z-index:801;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);">
+  <div style="padding:18px 20px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;gap:12px;flex-shrink:0;">
+    <div style="width:40px;height:40px;border-radius:50%;background:var(--ad);border:1px solid rgba(255,157,66,0.25);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:13px;font-weight:700;color:var(--amber);flex-shrink:0;">HC</div>
+    <div style="flex:1;min-width:0;">
+      <div style="font-family:var(--of);font-size:16px;font-weight:700;color:var(--t);margin-bottom:3px;">Helen Clarke</div>
+      <div style="font-size:12px;color:var(--td);">Sequence complete — no reply · Last contacted 31 days ago</div>
+    </div>
+    <div onclick="closeDrawer()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tm);font-size:14px;">✕</div>
+  </div>
+  <div style="flex:1;padding:20px;display:flex;align-items:center;justify-content:center;color:var(--td);font-size:13px;text-align:center;">Prospect detail drawer — same component as Review, Drafts, Sent tabs.</div>
+</div>
+
+<script>
+function openDrawer() {
+  document.getElementById('pd-backdrop').style.display = 'block';
+  document.getElementById('pd-panel').style.transform = 'translateX(0)';
+}
+function closeDrawer() {
+  document.getElementById('pd-backdrop').style.display = 'none';
+  document.getElementById('pd-panel').style.transform = 'translateX(100%)';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
