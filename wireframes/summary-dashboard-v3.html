@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Summary Dashboard V3</title>
+<style>
+
+/* ══════════════════════════════════════════════════════════════
+   SUMMARY DASHBOARD V3 — Global control centre
+   Today view + This Week view
+
+   Codex: all new CSS classes below should be added to globals.css.
+   Tokens (--pink, --cyan, --green, --amber, --s, --b, etc.)
+   already exist in globals.css.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Shell replication */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);border:1px solid transparent;transition:all 0.15s;position:relative;}
+.si:hover,.si.on{background:rgba(255,255,255,0.07);border-color:rgba(255,255,255,0.12);color:rgba(255,255,255,0.9);}
+.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si-tip{position:absolute;left:calc(100%+10px);top:50%;transform:translateY(-50%);background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;}
+.si-bottom{margin-top:auto;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+.content-area{padding:28px 32px;max-width:780px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:36px;padding:0 16px;border-radius:999px;font-family:var(--of);font-size:12px;font-weight:700;cursor:pointer;border:none;transition:all 0.15s;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bc{background:var(--cd);border:1px solid rgba(0,212,255,0.25);color:var(--cyan);}
+.bc:hover{background:rgba(0,212,255,0.14);}
+
+/* ══════════════════════════════════════════════════════════════
+   NEW CSS — paste into globals.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Page header ── */
+.dash-greeting {
+  font-family: var(--of);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t);
+  margin-bottom: 3px;
+}
+.dash-date {
+  font-size: 13px;
+  color: var(--td);
+  margin-bottom: 24px;
+}
+
+/* ── Tab bar (Today / This week) ── */
+.dash-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--b);
+  margin-bottom: 28px;
+  position: relative;
+}
+.dash-tab {
+  padding: 9px 20px;
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tm);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: color 0.15s, border-color 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.dash-tab:hover { color: var(--t); }
+.dash-tab.on { color: var(--pink); border-bottom-color: var(--pink); }
+.dash-tab-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  padding-bottom: 8px;
+}
+
+/* ── Section label ── */
+.dash-section-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--td);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--b);
+}
+.dash-section-label:not(:first-child) { margin-top: 28px; }
+
+/* ── Queue item (action rows) ── */
+/* Shared with tasks page .qi — these rules extend it for dashboard context */
+.dash-qi {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--b);
+  background: rgba(255,255,255,0.02);
+  margin-bottom: 8px;
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--t);
+  transition: border-color 0.15s, background 0.15s;
+}
+.dash-qi:hover {
+  border-color: var(--b2);
+  background: rgba(255,255,255,0.04);
+}
+.dash-qi.urgent {
+  border-color: rgba(0,212,255,0.2);
+  background: rgba(0,212,255,0.03);
+}
+.dash-qi.urgent:hover {
+  border-color: rgba(0,212,255,0.35);
+  background: rgba(0,212,255,0.06);
+}
+.dash-qi.warn {
+  border-color: rgba(255,157,66,0.2);
+  background: rgba(255,157,66,0.025);
+}
+.dash-qi.warn:hover { border-color: rgba(255,157,66,0.35); }
+.dash-qi.error {
+  border-color: rgba(255,76,76,0.2);
+  background: rgba(255,76,76,0.03);
+}
+/* Left accent bar on attention rows */
+.dash-qi.urgent::before,
+.dash-qi.warn::before,
+.dash-qi.error::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 12px; bottom: 12px;
+  width: 2.5px;
+  border-radius: 0 2px 2px 0;
+}
+.dash-qi { position: relative; }
+.dash-qi.urgent::before { background: var(--cyan); }
+.dash-qi.warn::before   { background: var(--amber); }
+.dash-qi.error::before  { background: var(--red); }
+
+/* Icon block */
+.dash-qi-ico {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.dash-qi-ico.c { background: var(--cd); border: 1px solid rgba(0,212,255,0.2); color: var(--cyan); }
+.dash-qi-ico.p { background: var(--pd); border: 1px solid rgba(255,20,147,0.2); color: var(--pink); }
+.dash-qi-ico.a { background: var(--ad); border: 1px solid rgba(255,157,66,0.2); color: var(--amber); }
+.dash-qi-ico.g { background: var(--gd); border: 1px solid rgba(100,220,120,0.2); color: var(--green); }
+.dash-qi-ico.r { background: rgba(255,76,76,0.08); border: 1px solid rgba(255,76,76,0.2); color: var(--red); }
+.dash-qi-ico.n { background: var(--s2); border: 1px solid var(--b2); color: var(--td); }
+
+/* Body */
+.dash-qi-body { flex: 1; min-width: 0; }
+.dash-qi-title {
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 2px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.dash-qi-sub {
+  font-size: 12px;
+  color: var(--tm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge */
+.dash-qi-badge {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  border: 1px solid var(--b2);
+  background: var(--s2);
+  color: var(--tm);
+}
+.dash-qi-badge.c { background: var(--cd); border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.dash-qi-badge.p { background: var(--pd); border-color: rgba(255,20,147,0.3); color: var(--pink); }
+.dash-qi-badge.a { background: var(--ad); border-color: rgba(255,157,66,0.3); color: var(--amber); }
+.dash-qi-badge.g { background: var(--gd); border-color: rgba(100,220,120,0.3); color: var(--green); }
+.dash-qi-badge.r { background: rgba(255,76,76,0.1); border-color: rgba(255,76,76,0.3); color: var(--red); }
+
+/* CTA button inside queue row */
+.dash-qi-cta {
+  flex-shrink: 0;
+  padding: 6px 13px;
+  border-radius: 7px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--b2);
+  background: var(--s);
+  color: var(--tm);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.dash-qi-cta:hover { color: var(--t); border-color: var(--td); background: var(--s2); }
+.dash-qi-cta.c { background: rgba(0,212,255,0.08); border-color: rgba(0,212,255,0.3); color: var(--cyan); }
+.dash-qi-cta.c:hover { background: rgba(0,212,255,0.14); }
+.dash-qi-cta.p { background: rgba(255,20,147,0.08); border-color: rgba(255,20,147,0.3); color: var(--pink); }
+.dash-qi-cta.p:hover { background: rgba(255,20,147,0.14); }
+.dash-qi-cta.a { background: rgba(255,157,66,0.08); border-color: rgba(255,157,66,0.3); color: var(--amber); }
+.dash-qi-cta.r { background: rgba(255,76,76,0.08); border-color: rgba(255,76,76,0.3); color: var(--red); }
+.dash-qi-arrow { font-size: 14px; color: var(--td); flex-shrink: 0; }
+
+/* ── All clear hero (Today — nothing to do) ── */
+.dash-clear {
+  text-align: center;
+  padding: 52px 24px 32px;
+}
+.dash-clear-check {
+  width: 52px;
+  height: 52px;
+  border-radius: 999px;
+  background: var(--gd);
+  border: 1px solid rgba(100,220,120,0.25);
+  color: var(--green);
+  font-size: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 18px;
+}
+.dash-clear-title {
+  font-family: var(--of);
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t);
+  margin-bottom: 7px;
+}
+.dash-clear-sub {
+  font-size: 13px;
+  color: var(--tm);
+  line-height: 1.7;
+  max-width: 320px;
+  margin: 0 auto;
+}
+
+/* ── Upcoming activity (follow-ups) ── */
+.dash-upcoming {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dash-upcoming-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--b);
+  background: rgba(255,255,255,0.02);
+}
+.dash-upcoming-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--s2);
+  border: 1px solid var(--b2);
+  color: var(--td);
+}
+.dash-upcoming-body { flex: 1; min-width: 0; }
+.dash-upcoming-title {
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 4px;
+}
+.dash-upcoming-breakdown {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+.dash-upcoming-campaign {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid var(--b);
+  background: var(--s);
+  font-size: 11px;
+  color: var(--tm);
+  font-family: var(--of);
+}
+.dash-upcoming-count {
+  font-weight: 700;
+  color: var(--t);
+}
+.dash-upcoming-badge {
+  margin-left: auto;
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  background: var(--s2);
+  border: 1px solid var(--b2);
+  color: var(--td);
+}
+
+/* Expand toggle */
+.dash-upcoming-expand {
+  border: 0;
+  background: transparent;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--td);
+  cursor: pointer;
+  padding: 0;
+  margin-top: 8px;
+  transition: color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.dash-upcoming-expand:hover { color: var(--tm); }
+.dash-upcoming-prospects {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  display: none;
+}
+.dash-upcoming-prospect-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--b);
+  font-size: 12px;
+  color: var(--tm);
+}
+.dash-upcoming-prospect-row:last-child { border-bottom: none; }
+.dash-upcoming-prospect-name { color: var(--t); font-weight: 500; }
+
+/* ── Performance snapshot ── */
+.dash-snap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+.dash-snap-card {
+  padding: 14px 16px;
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+}
+.dash-snap-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--td);
+  margin-bottom: 6px;
+}
+.dash-snap-value {
+  font-family: var(--of);
+  font-size: 28px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--t);
+  margin-bottom: 4px;
+}
+.dash-snap-value.pink { background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.dash-snap-value.green { color: var(--green); }
+.dash-snap-value.cyan  { color: var(--cyan);  }
+.dash-snap-value.amber { color: var(--amber); }
+.dash-snap-detail {
+  font-size: 11px;
+  color: var(--td);
+  line-height: 1.5;
+}
+
+/* ── This Week: stat grid ── */
+.dash-week-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 0;
+}
+.dash-week-card {
+  padding: 16px;
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+}
+.dash-week-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--td);
+  margin-bottom: 8px;
+}
+.dash-week-value {
+  font-family: var(--of);
+  font-size: 30px;
+  font-weight: 900;
+  line-height: 1;
+  color: var(--t);
+  margin-bottom: 4px;
+}
+.dash-week-value.pink { background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.dash-week-value.green { color: var(--green); }
+.dash-week-value.cyan  { color: var(--cyan);  }
+.dash-week-delta {
+  font-size: 11px;
+  color: var(--td);
+}
+.delta-up   { color: var(--green); }
+.delta-same { color: var(--td); }
+.delta-down { color: var(--amber); }
+
+/* ── Activity feed ── */
+.dash-feed {
+  display: flex;
+  flex-direction: column;
+}
+.dash-feed-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--b);
+}
+.dash-feed-row:last-child { border-bottom: none; }
+.dash-feed-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dash-feed-dot.pink  { background: var(--pink);  }
+.dash-feed-dot.cyan  { background: var(--cyan);  }
+.dash-feed-dot.green { background: var(--green); }
+.dash-feed-dot.amber { background: var(--amber); }
+.dash-feed-dot.muted { background: var(--td);    }
+.dash-feed-text { flex: 1; font-size: 13px; color: var(--tm); line-height: 1.5; }
+.dash-feed-time { font-size: 11px; color: var(--td); flex-shrink: 0; }
+
+/* ── Wireframe switcher (dev only, not in production) ── */
+.switcher{margin-top:40px;padding:14px 18px;background:rgba(255,255,255,0.02);border:1px solid var(--b);border-radius:10px;}
+.switcher-label{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
+.swb{padding:6px 14px;font-family:var(--of);font-size:11px;font-weight:600;border-radius:6px;border:1px solid var(--b2);background:transparent;color:var(--tm);cursor:pointer;margin-right:6px;margin-bottom:6px;transition:all 0.15s;}
+.swb:hover,.swb.on{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+.ann{margin-top:12px;padding:14px 16px;background:rgba(255,255,255,0.02);border-radius:8px;}
+.ann-item{font-size:11px;color:var(--td);line-height:1.7;margin-bottom:4px;padding-left:12px;position:relative;}
+.ann-item::before{content:'·';position:absolute;left:0;color:var(--td);}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si on" href="#" title="Summary">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.5"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.75"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="si-tip">Summary</span>
+  </a>
+  <a class="si" href="#" title="Campaigns">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <a class="si" href="#" title="Tasks" style="position:relative;">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7.5l2 2 4-4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span style="position:absolute;top:4px;right:4px;width:7px;height:7px;border-radius:50%;background:var(--amber);border:1.5px solid var(--bg);"></span>
+    <span class="si-tip">Tasks</span>
+  </a>
+  <a class="si si-bottom" href="#" title="Settings">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<div class="layout">
+<main class="main">
+<div class="content-area">
+
+  <!-- Page header -->
+  <div class="dash-greeting" id="greeting">Good morning, Coris.</div>
+  <div class="dash-date" id="dateline">Saturday, 11 April 2026</div>
+
+  <!-- Tab bar -->
+  <div class="dash-tabs">
+    <button class="dash-tab on" id="tab-today" onclick="showView('today',this)">Today</button>
+    <button class="dash-tab" id="tab-week" onclick="showView('week',this)">This week</button>
+    <div class="dash-tab-right">
+      <button class="btn bs" style="font-size:11px;padding:5px 12px;border-radius:7px;gap:5px;" onclick="event.stopPropagation()">
+        <svg width="11" height="11" viewBox="0 0 11 11" fill="none"><path d="M1 5.5h9M5.5 1v9" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+        Add task
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════
+       TODAY VIEW
+       Default view. Shows only what needs attention.
+
+       States controlled by switcher below for wireframe demo.
+       In production, derived from live data.
+  ══════════════════════════════════════════════════════ -->
+  <div id="view-today">
+
+    <!-- STATE: Urgent (replies + tasks + errors) -->
+    <div id="today-active">
+
+      <!-- Section 1: Needs your attention -->
+      <div class="dash-section-label">Needs your attention</div>
+
+      <!-- Replies waiting -->
+      <a class="dash-qi urgent" href="#" onclick="return false">
+        <div class="dash-qi-ico c">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M1 1h12v8H8l-2 3-1-3H1V1z" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dash-qi-body">
+          <div class="dash-qi-title">2 replies received</div>
+          <div class="dash-qi-sub">Sarah Mitchell · Dan Kim — replied overnight</div>
+        </div>
+        <span class="dash-qi-badge c">New</span>
+        <span class="dash-qi-arrow">→</span>
+      </a>
+
+      <!-- Tasks due today / overdue -->
+      <a class="dash-qi warn" href="#" onclick="return false">
+        <div class="dash-qi-ico a">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dash-qi-body">
+          <div class="dash-qi-title">
+            3 tasks due today
+            <span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;background:rgba(255,76,76,0.1);border:1px solid rgba(255,76,76,0.25);color:var(--red);">1 overdue</span>
+          </div>
+          <div class="dash-qi-sub">Connect with Dan Kim · Follow up on proposal · Send intro email</div>
+        </div>
+        <span class="dash-qi-badge a">3</span>
+        <span class="dash-qi-arrow">→</span>
+      </a>
+
+      <!-- Nurture re-contact -->
+      <a class="dash-qi" href="#" onclick="return false">
+        <div class="dash-qi-ico n">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M2 12c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dash-qi-body">
+          <div class="dash-qi-title">1 prospect to re-contact today</div>
+          <div class="dash-qi-sub">Marcus Peters — re-contact date set for today</div>
+        </div>
+        <span class="dash-qi-badge a">Due</span>
+        <span class="dash-qi-arrow">→</span>
+      </a>
+
+      <!-- Section 2: Upcoming activity (awareness only) -->
+      <div class="dash-section-label">Automated activity today</div>
+      <div class="dash-upcoming">
+
+        <!-- Follow-ups going out today -->
+        <div class="dash-upcoming-row">
+          <div class="dash-upcoming-icon">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5 5.5-5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="dash-upcoming-body">
+            <div class="dash-upcoming-title">12 follow-ups sending today</div>
+            <div style="font-size:12px;color:var(--td);margin-top:2px;">Scheduled by the system — nothing for you to do</div>
+            <div class="dash-upcoming-breakdown">
+              <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">8</span> Agency founders Q1</div>
+              <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">4</span> Fractional CFO Q1</div>
+            </div>
+            <button class="dash-upcoming-expand" onclick="toggleExpand(this)">
+              <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 3.5l2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+              Show prospects
+            </button>
+            <div class="dash-upcoming-prospects">
+              <div class="dash-upcoming-prospect-row">
+                <span class="dash-upcoming-prospect-name">James Mitchell</span>
+                <span style="color:var(--td);">·</span>
+                <span>Agency founders Q1</span>
+                <span style="margin-left:auto;font-size:11px;color:var(--td);">Follow-up #1</span>
+              </div>
+              <div class="dash-upcoming-prospect-row">
+                <span class="dash-upcoming-prospect-name">Helen Clarke</span>
+                <span style="color:var(--td);">·</span>
+                <span>Agency founders Q1</span>
+                <span style="margin-left:auto;font-size:11px;color:var(--td);">Follow-up #2</span>
+              </div>
+              <div class="dash-upcoming-prospect-row">
+                <span class="dash-upcoming-prospect-name">+ 10 more</span>
+                <span style="margin-left:auto;"><a href="#" style="font-size:11px;color:var(--cyan);text-decoration:none;">View all →</a></span>
+              </div>
+            </div>
+          </div>
+          <div class="dash-upcoming-badge">Today</div>
+        </div>
+
+        <!-- Coming up next few days -->
+        <div class="dash-upcoming-row">
+          <div class="dash-upcoming-icon">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 3.5v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          </div>
+          <div class="dash-upcoming-body">
+            <div class="dash-upcoming-title">24 follow-ups in the next 3 days</div>
+            <div style="font-size:12px;color:var(--td);margin-top:2px;">System will handle these automatically</div>
+          </div>
+          <div class="dash-upcoming-badge">Next 3 days</div>
+        </div>
+
+      </div>
+
+      <!-- Section 3: Performance snapshot (lightweight) -->
+      <div class="dash-section-label" style="margin-top:28px;">This week so far</div>
+      <div class="dash-snap">
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Emails sent</div>
+          <div class="dash-snap-value pink">14</div>
+          <div class="dash-snap-detail">↑ 3 from last week</div>
+        </div>
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Replies</div>
+          <div class="dash-snap-value green">3</div>
+          <div class="dash-snap-detail">2 still open</div>
+        </div>
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Meetings</div>
+          <div class="dash-snap-value cyan">1</div>
+          <div class="dash-snap-detail">Agency founders Q1</div>
+        </div>
+      </div>
+
+    </div><!-- /today-active -->
+
+    <!-- STATE: All clear — nothing needs attention -->
+    <div id="today-clear" style="display:none;">
+
+      <div class="dash-clear">
+        <div class="dash-clear-check">✓</div>
+        <div class="dash-clear-title">You're done for today.</div>
+        <div class="dash-clear-sub">Your outreach is moving. Follow-ups are scheduled. Come back tomorrow.</div>
+      </div>
+
+      <div class="dash-section-label">Automated activity today</div>
+      <div class="dash-upcoming">
+        <div class="dash-upcoming-row">
+          <div class="dash-upcoming-icon">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5 5.5-5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="dash-upcoming-body">
+            <div class="dash-upcoming-title">12 follow-ups sending today</div>
+            <div style="font-size:12px;color:var(--td);margin-top:2px;">Nothing for you to do</div>
+          </div>
+          <div class="dash-upcoming-badge">Today</div>
+        </div>
+      </div>
+
+      <div class="dash-section-label" style="margin-top:28px;">This week so far</div>
+      <div class="dash-snap">
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Emails sent</div>
+          <div class="dash-snap-value pink">14</div>
+          <div class="dash-snap-detail">↑ 3 from last week</div>
+        </div>
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Replies</div>
+          <div class="dash-snap-value green">3</div>
+          <div class="dash-snap-detail">All handled</div>
+        </div>
+        <div class="dash-snap-card">
+          <div class="dash-snap-label">Meetings</div>
+          <div class="dash-snap-value cyan">1</div>
+          <div class="dash-snap-detail">Agency founders Q1</div>
+        </div>
+      </div>
+
+    </div><!-- /today-clear -->
+
+  </div><!-- /view-today -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       THIS WEEK VIEW
+       Broader view. Less urgent, more informational.
+  ══════════════════════════════════════════════════════ -->
+  <div id="view-week" style="display:none;">
+
+    <!-- Week headline stats -->
+    <div class="dash-section-label" style="margin-top:0;">Week at a glance — Mon 6 Apr to Sun 12 Apr</div>
+    <div class="dash-week-grid" style="margin-bottom:28px;">
+      <div class="dash-week-card">
+        <div class="dash-week-label">Emails sent</div>
+        <div class="dash-week-value pink">14</div>
+        <div class="dash-week-delta delta-up">↑ 3 from last week</div>
+      </div>
+      <div class="dash-week-card">
+        <div class="dash-week-label">Follow-ups sent</div>
+        <div class="dash-week-value">22</div>
+        <div class="dash-week-delta delta-up">↑ 5 from last week</div>
+      </div>
+      <div class="dash-week-card">
+        <div class="dash-week-label">Replies received</div>
+        <div class="dash-week-value green">3</div>
+        <div class="dash-week-delta delta-up">↑ 1 from last week</div>
+      </div>
+      <div class="dash-week-card">
+        <div class="dash-week-label">Meetings booked</div>
+        <div class="dash-week-value cyan">1</div>
+        <div class="dash-week-delta delta-same">Same as last week</div>
+      </div>
+    </div>
+
+    <!-- Tasks coming up -->
+    <div class="dash-section-label">Tasks coming up this week</div>
+    <a class="dash-qi" href="#" onclick="return false">
+      <div class="dash-qi-ico a">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="1" width="12" height="12" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M4 7l2.5 2.5L10 4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="dash-qi-body">
+        <div class="dash-qi-title">5 tasks due this week</div>
+        <div class="dash-qi-sub">3 open · 1 overdue · 1 coming up Wednesday</div>
+      </div>
+      <span class="dash-qi-badge a">5</span>
+      <span class="dash-qi-arrow">→</span>
+    </a>
+
+    <!-- Follow-up schedule this week -->
+    <div class="dash-section-label">Follow-up schedule this week</div>
+    <div class="dash-upcoming">
+
+      <div class="dash-upcoming-row">
+        <div class="dash-upcoming-icon">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5 5.5-5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dash-upcoming-body">
+          <div class="dash-upcoming-title">12 follow-ups today</div>
+          <div class="dash-upcoming-breakdown">
+            <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">8</span> Agency founders Q1</div>
+            <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">4</span> Fractional CFO Q1</div>
+          </div>
+        </div>
+        <div class="dash-upcoming-badge">Today</div>
+      </div>
+
+      <div class="dash-upcoming-row">
+        <div class="dash-upcoming-icon">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5 5.5-5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dash-upcoming-body">
+          <div class="dash-upcoming-title">9 follow-ups Monday–Wednesday</div>
+          <div class="dash-upcoming-breakdown">
+            <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">6</span> Agency founders Q1</div>
+            <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">3</span> Fractional CFO Q1</div>
+          </div>
+        </div>
+        <div class="dash-upcoming-badge">Mon–Wed</div>
+      </div>
+
+      <div class="dash-upcoming-row">
+        <div class="dash-upcoming-icon">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 6.5h11M6.5 1l5 5.5-5 5.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="dash-upcoming-body">
+          <div class="dash-upcoming-title">3 follow-ups Thursday–Sunday</div>
+          <div class="dash-upcoming-breakdown">
+            <div class="dash-upcoming-campaign"><span class="dash-upcoming-count">3</span> Fractional CFO Q1</div>
+          </div>
+        </div>
+        <div class="dash-upcoming-badge">Thu–Sun</div>
+      </div>
+
+    </div>
+
+    <!-- Activity feed -->
+    <div class="dash-section-label" style="margin-top:28px;">Recent activity</div>
+    <div style="background:var(--s);border:1px solid var(--b);border-radius:12px;padding:4px 16px;">
+      <div class="dash-feed">
+        <div class="dash-feed-row">
+          <div class="dash-feed-dot green"></div>
+          <div class="dash-feed-text">Meeting booked with Helen Clarke — Agency founders Q1</div>
+          <div class="dash-feed-time">2h ago</div>
+        </div>
+        <div class="dash-feed-row">
+          <div class="dash-feed-dot pink"></div>
+          <div class="dash-feed-text">4 emails sent — Fractional CFO Q1</div>
+          <div class="dash-feed-time">3h ago</div>
+        </div>
+        <div class="dash-feed-row">
+          <div class="dash-feed-dot cyan"></div>
+          <div class="dash-feed-text">Sarah Thompson replied — Agency founders Q1</div>
+          <div class="dash-feed-time">4h ago</div>
+        </div>
+        <div class="dash-feed-row">
+          <div class="dash-feed-dot muted"></div>
+          <div class="dash-feed-text">8 follow-ups sent — Agency founders Q1</div>
+          <div class="dash-feed-time">Yesterday</div>
+        </div>
+        <div class="dash-feed-row">
+          <div class="dash-feed-dot cyan"></div>
+          <div class="dash-feed-text">Dan Kim replied — Fractional CFO Q1</div>
+          <div class="dash-feed-time">Yesterday</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /view-week -->
+
+
+  <!-- ══════════════════════════════════════════════════════
+       WIREFRAME SWITCHER (not in production)
+  ══════════════════════════════════════════════════════ -->
+  <div class="switcher" id="switcher-today" style="margin-top:32px;">
+    <div class="switcher-label">Wireframe states — Today view</div>
+    <button class="swb on" onclick="setTodayState('active',this)">Active — items need attention</button>
+    <button class="swb" onclick="setTodayState('clear',this)">All clear — nothing to do</button>
+    <div class="ann" style="margin-top:10px;">
+      <div class="ann-item">Today tab shows only what needs action. Replies and tasks always surface first. Upcoming follow-ups are awareness-only — no CTAs, no management.</div>
+      <div class="ann-item">Follow-up tab is removed from campaign view. Visibility lives here instead — lightweight, grouped by time window and campaign.</div>
+      <div class="ann-item">Performance snapshot is minimal — 3 numbers, no chart. Doesn't distract from action items.</div>
+      <div class="ann-item">All clear state is warm and calm — not empty. Reassures the user the system is running.</div>
+      <div class="ann-item">The + Add task button is always in the tab bar right side, persistent across both views.</div>
+    </div>
+  </div>
+
+</div><!-- /content-area -->
+</main>
+</div><!-- /layout -->
+
+<script>
+function showView(view, btn) {
+  document.getElementById('view-today').style.display = view === 'today' ? '' : 'none';
+  document.getElementById('view-week').style.display  = view === 'week'  ? '' : 'none';
+  document.getElementById('switcher-today').style.display = view === 'today' ? '' : 'none';
+  document.getElementById('tab-today').className = 'dash-tab' + (view === 'today' ? ' on' : '');
+  document.getElementById('tab-week').className  = 'dash-tab' + (view === 'week'  ? ' on' : '');
+}
+
+function setTodayState(state, btn) {
+  document.querySelectorAll('.swb').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('today-active').style.display = state === 'active' ? '' : 'none';
+  document.getElementById('today-clear').style.display  = state === 'clear'  ? '' : 'none';
+}
+
+function toggleExpand(btn) {
+  const prospects = btn.nextElementSibling;
+  const open = prospects.style.display === 'flex';
+  prospects.style.display = open ? 'none' : 'flex';
+  btn.innerHTML = open
+    ? '<svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 3.5l2.5 2.5 2.5-2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Show prospects'
+    : '<svg width="9" height="9" viewBox="0 0 9 9" fill="none"><path d="M2 5.5l2.5-2.5 2.5 2.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg> Hide prospects';
+}
+</script>
+</body>
+</html>
