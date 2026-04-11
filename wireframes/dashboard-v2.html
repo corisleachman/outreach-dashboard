@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="pulse-foundation.css">
+<title>Pulse. — Dashboard V2</title>
+<style>
+
+/* ══════════════════════════════════════════════════════════════
+   DASHBOARD V2 — GLOBAL CONTROL CENTRE
+   
+   Codex: add all CSS in this <style> block to globals.css.
+   No conflicts with existing globals.css classes.
+   ══════════════════════════════════════════════════════════════ */
+
+/* Shell replication */
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.5px;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.topbar-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 9px;border-radius:20px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;text-decoration:none;color:rgba(255,255,255,0.45);border:1px solid transparent;transition:all 0.15s;position:relative;}
+.si:hover,.si.on{background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);}
+.si.tasks-has-badge::after{content:'';position:absolute;top:6px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--amber);border:1.5px solid var(--bg);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(20,10,35,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;pointer-events:none;opacity:0;visibility:hidden;transition:opacity 0.15s;z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+.content-area{padding:28px 32px;max-width:900px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:40px;padding:0 18px;border-radius:999px;font-family:var(--of);font-size:13px;font-weight:700;cursor:pointer;border:none;transition:all 0.2s;white-space:nowrap;}
+.bp{background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;}
+.bs{background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bsm{padding:6px 14px;font-size:11px;}
+
+/* ══════════════════════════════════════════════════════════════
+   NEW CSS — ADD TO globals.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Page header ── */
+.dash-greeting {
+  font-family: var(--of);
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--t);
+  margin-bottom: 3px;
+}
+.dash-date {
+  font-size: 13px;
+  color: var(--tm);
+  margin-bottom: 24px;
+}
+
+/* ── Tab row ── */
+.dash-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--b);
+  margin-bottom: 28px;
+}
+.dash-tab {
+  padding: 8px 20px;
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tm);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+}
+.dash-tab:hover { color: var(--t); }
+.dash-tab.on {
+  color: var(--pink);
+  border-bottom-color: var(--pink);
+}
+
+/* ── Section label ── */
+.dash-section-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: var(--td);
+  margin-bottom: 12px;
+  margin-top: 28px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--b);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.dash-section-label:first-child { margin-top: 0; }
+.dash-section-count {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--td);
+}
+
+/* ── Action queue rows (Today tab — items needing attention) ── */
+/* Reuses .qi, .qi-ico, .qi-body, .qi-title, .qi-sub, .qi-badge, 
+   .qi-arrow from globals.css (added by tasks page fix).
+   No new classes needed for the rows themselves. */
+
+/* ── Performance snapshot strip ── */
+.dash-snap {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 0;
+}
+.dash-snap-card {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 10px;
+  padding: 14px 16px;
+}
+.dash-snap-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--td);
+  margin-bottom: 6px;
+}
+.dash-snap-num {
+  font-family: var(--of);
+  font-size: 28px;
+  font-weight: 900;
+  color: var(--t);
+  line-height: 1;
+  margin-bottom: 3px;
+}
+.dash-snap-num.pink { background: var(--gr); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.dash-snap-num.green { color: var(--green); }
+.dash-snap-num.cyan  { color: var(--cyan);  }
+.dash-snap-num.amber { color: var(--amber); }
+.dash-snap-detail {
+  font-size: 11px;
+  color: var(--td);
+  line-height: 1.5;
+}
+
+/* ── Upcoming follow-ups section ── */
+.dash-followup-band {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.dash-followup-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--b);
+  transition: background 0.12s;
+}
+.dash-followup-row:last-child { border-bottom: none; }
+.dash-followup-row.expandable { cursor: pointer; }
+.dash-followup-row.expandable:hover { background: rgba(255,255,255,0.025); }
+.dash-followup-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background: var(--cd);
+  border: 1px solid rgba(0,212,255,0.15);
+  color: var(--cyan);
+}
+.dash-followup-copy { flex: 1; min-width: 0; }
+.dash-followup-title {
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 2px;
+}
+.dash-followup-sub {
+  font-size: 12px;
+  color: var(--tm);
+  line-height: 1.5;
+}
+.dash-followup-count {
+  font-family: var(--of);
+  font-size: 18px;
+  font-weight: 900;
+  color: var(--t);
+  flex-shrink: 0;
+  text-align: right;
+  min-width: 28px;
+}
+.dash-followup-count.cyan { color: var(--cyan); }
+.dash-followup-expand-icon {
+  color: var(--td);
+  font-size: 11px;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.dash-followup-row.is-open .dash-followup-expand-icon {
+  transform: rotate(180deg);
+}
+
+/* Campaign breakdown sub-rows (inside expanded followup) */
+.dash-followup-breakdown {
+  display: none;
+  background: rgba(0,212,255,0.02);
+  border-bottom: 1px solid var(--b);
+}
+.dash-followup-breakdown.open { display: block; }
+.dash-followup-campaign-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 18px 10px 64px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px;
+}
+.dash-followup-campaign-row:last-child { border-bottom: none; }
+.dash-followup-campaign-name { color: var(--tm); }
+.dash-followup-campaign-count {
+  font-family: var(--of);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--td);
+}
+
+/* ── All-clear state (Today tab when nothing needs attention) ── */
+.dash-clear {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  background: rgba(100,220,120,0.04);
+  border: 1px solid rgba(100,220,120,0.15);
+  margin-bottom: 8px;
+}
+.dash-clear-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: rgba(100,220,120,0.1);
+  border: 1px solid rgba(100,220,120,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  flex-shrink: 0;
+}
+.dash-clear-title {
+  font-family: var(--of);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green);
+  margin-bottom: 3px;
+}
+.dash-clear-sub {
+  font-size: 13px;
+  color: var(--tm);
+  line-height: 1.6;
+}
+
+/* ── This week: campaign summary cards ── */
+.dash-week-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.dash-week-card {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+.dash-week-card:hover {
+  border-color: var(--b2);
+  background: rgba(255,255,255,0.04);
+}
+.dash-week-card-identity { flex: 1; min-width: 0; }
+.dash-week-card-name {
+  font-family: var(--of);
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--t);
+  margin-bottom: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dash-week-card-meta {
+  font-size: 12px;
+  color: var(--td);
+}
+.dash-week-card-stats {
+  display: flex;
+  gap: 20px;
+  flex-shrink: 0;
+}
+.dash-week-stat {
+  text-align: right;
+}
+.dash-week-stat-num {
+  font-family: var(--of);
+  font-size: 18px;
+  font-weight: 800;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.dash-week-stat-lbl {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--td);
+}
+
+/* ── Activity feed ── */
+.dash-activity {
+  background: var(--s);
+  border: 1px solid var(--b);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.dash-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  border-bottom: 1px solid var(--b);
+  font-size: 13px;
+  color: var(--tm);
+}
+.dash-activity-row:last-child { border-bottom: none; }
+.dash-activity-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dash-activity-dot.pink  { background: var(--pink);  }
+.dash-activity-dot.cyan  { background: var(--cyan);  }
+.dash-activity-dot.green { background: var(--green); }
+.dash-activity-dot.amber { background: var(--amber); }
+.dash-activity-text { flex: 1; min-width: 0; }
+.dash-activity-time {
+  font-size: 11px;
+  color: var(--td);
+  flex-shrink: 0;
+}
+
+/* ── Add task button ── */
+.dash-add-task {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid var(--b2);
+  background: transparent;
+  color: var(--td);
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.dash-add-task:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+  background: rgba(255,20,147,0.05);
+}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+
+<!-- Topbar -->
+<header class="topbar">
+  <a href="#" class="logo">Pulse.</a>
+  <div class="breadcrumb">
+    <span style="color:var(--t);font-weight:500;">Summary</span>
+    <span style="opacity:0.3;margin:0 4px;">·</span>
+    <span style="color:var(--tm);font-size:12px;">Fri, 11 Apr 2026</span>
+  </div>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<!-- Sidebar -->
+<aside class="sidebar" style="position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.7);border-right:1px solid var(--b);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;">
+  <a class="si on" href="#" title="Summary">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg>
+    <span class="si-tip">Summary</span>
+  </a>
+  <a class="si" href="#" title="Campaigns">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg>
+    <span class="si-tip">Campaigns</span>
+  </a>
+  <a class="si tasks-has-badge" href="#" title="Tasks">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="13" height="13" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M4.5 7.5l2.5 2.5L11 5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <span class="si-tip">Tasks</span>
+  </a>
+  <a class="si si-bottom" href="#" title="Settings">
+    <svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <span class="si-tip">Settings</span>
+  </a>
+</aside>
+
+<div class="layout">
+<main class="main">
+<div class="content-area">
+
+  <div class="dash-greeting">Good morning, Coris.</div>
+  <div class="dash-date">Friday, 11 April 2026</div>
+
+  <!-- Tab row -->
+  <div class="dash-tabs">
+    <button class="dash-tab on" id="tab-today" onclick="showTab('today')">Today</button>
+    <button class="dash-tab" id="tab-week" onclick="showTab('week')">This week</button>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════════════
+       TODAY TAB
+       
+       Three sections stacked:
+       1. Needs attention (action queue) — only items requiring user action
+       2. Upcoming follow-ups (awareness only — no actions)
+       3. Performance snapshot (lightweight numbers)
+       
+       STATES:
+       • Active state: items in each section (shown below)
+       • All-clear: replace action queue with .dash-clear block
+       • Empty: no sent emails yet — omit followup section
+  ══════════════════════════════════════════════════════════ -->
+  <div id="view-today">
+
+    <!-- ── 1. NEEDS ATTENTION ── -->
+    <!-- 
+      Codex notes:
+      • Each .qi row maps to a real item: reply, task, failed email, nurture
+      • .qi-ico colour: c=cyan(reply), a=amber(task/overdue), r=red-ish(failed)
+      • .qi-badge colour matches icon
+      • Clicking row → opens prospect drawer (same as review/sent tabs)
+      • Clicking CTA button → stopPropagation, own action
+      • Sort order: replies first, overdue tasks, tasks due today, failed emails
+      • If nothing here → show .dash-clear block instead
+    -->
+    <div class="dash-section-label">
+      Needs your attention
+      <span class="dash-section-count">4 items</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:8px;">
+
+      <!-- Reply received — highest priority -->
+      <a class="qi" style="border-color:rgba(0,212,255,0.2);background:rgba(0,212,255,0.03);border-left:2.5px solid var(--cyan);" href="#" onclick="openDrawer(event,'NS')">
+        <div class="qi-ico c">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 8.5L6.5 3 12 8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Nat Sajal replied</div>
+          <div class="qi-sub">Wagamama · Agency founders Q1 · 2 hours ago</div>
+        </div>
+        <button class="sent-cta cyan" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);white-space:nowrap;">Reply</button>
+      </a>
+
+      <!-- Second reply -->
+      <a class="qi" style="border-color:rgba(0,212,255,0.2);background:rgba(0,212,255,0.03);border-left:2.5px solid var(--cyan);" href="#" onclick="openDrawer(event,'DK')">
+        <div class="qi-ico c">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1 8.5L6.5 3 12 8.5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Dan Kim replied</div>
+          <div class="qi-sub">Studio North · Agency founders Q1 · Yesterday</div>
+        </div>
+        <button class="sent-cta cyan" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;background:rgba(0,212,255,0.08);border:1px solid rgba(0,212,255,0.3);color:var(--cyan);white-space:nowrap;">View thread</button>
+      </a>
+
+      <!-- Overdue task -->
+      <a class="qi" style="border-color:rgba(255,157,66,0.2);background:rgba(255,157,66,0.025);border-left:2.5px solid var(--amber);" href="#" onclick="openDrawer(event,'HS')">
+        <div class="qi-ico a">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><rect x="1" y="1" width="11" height="11" rx="2" stroke="currentColor" stroke-width="1.3"/><path d="M4 6.5l2 2L9 4.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Task overdue — Howard Sullivan
+            <span style="display:inline-flex;align-items:center;padding:2px 7px;border-radius:4px;font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;background:rgba(255,76,76,0.1);border:1px solid rgba(255,76,76,0.25);color:var(--red);">overdue</span>
+          </div>
+          <div class="qi-sub">YouStudio · Follow up re: Q2 proposal · Was due Wed 9 Apr</div>
+        </div>
+        <button class="sent-cta amber" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;background:rgba(255,157,66,0.08);border:1px solid rgba(255,157,66,0.3);color:var(--amber);white-space:nowrap;">View task</button>
+      </a>
+
+      <!-- Failed email -->
+      <a class="qi" style="border-color:rgba(255,76,76,0.2);background:rgba(255,76,76,0.025);border-left:2.5px solid var(--red);" href="#" onclick="openDrawer(event,'RL')">
+        <div class="qi-ico" style="width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,76,76,0.1);border:1px solid rgba(255,76,76,0.2);color:var(--red);">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M6.5 4v3.5M6.5 9.5v.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.3"/></svg>
+        </div>
+        <div class="qi-body">
+          <div class="qi-title">Email failed — Rachel Lowe</div>
+          <div class="qi-sub">Studio Blk · Fractional CFO Q1 · r.lowe@studioblk.com bounced</div>
+        </div>
+        <button class="sent-cta red" onclick="event.stopPropagation()" style="display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:8px;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;background:rgba(255,76,76,0.08);border:1px solid rgba(255,76,76,0.3);color:var(--red);white-space:nowrap;">Fix email</button>
+      </a>
+
+    </div>
+
+    <!-- ALL-CLEAR state — shown when nothing needs attention -->
+    <!-- Uncomment to preview:
+    <div class="dash-clear">
+      <div class="dash-clear-icon">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8l3.5 3.5L13 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div>
+        <div class="dash-clear-title">All clear</div>
+        <div class="dash-clear-sub">Nothing needs your attention right now. Your sequences are running. Come back later today or check again tomorrow.</div>
+      </div>
+    </div>
+    -->
+
+    <!-- ── 2. UPCOMING FOLLOW-UPS ── -->
+    <!--
+      Codex notes:
+      • This section is AWARENESS ONLY — no action required from user
+      • Rows are expandable to show per-campaign breakdown
+      • No individual prospect rows by default — aggregate counts only
+      • Data source: sequence_executions table, grouped by due_date window
+      • Only render this section if there are upcoming follow-ups (> 0)
+    -->
+    <div class="dash-section-label" style="margin-top:28px;">
+      Upcoming follow-ups
+      <span class="dash-section-count" style="font-size:11px;color:var(--td);font-weight:400;text-transform:none;letter-spacing:0;">System is handling these</span>
+    </div>
+
+    <div class="dash-followup-band">
+
+      <!-- Today's follow-ups -->
+      <div class="dash-followup-row expandable" onclick="toggleBreakdown('today-breakdown', this)">
+        <div class="dash-followup-icon">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M2 7h10M7 1v2M7 11v2M1 7l2-2M11 5l2 2M1 7l2 2M11 9l2-2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dash-followup-copy">
+          <div class="dash-followup-title">Going out today</div>
+          <div class="dash-followup-sub">Automatic — no action needed</div>
+        </div>
+        <div class="dash-followup-count cyan">12</div>
+        <div class="dash-followup-expand-icon">▾</div>
+      </div>
+      <div class="dash-followup-breakdown" id="today-breakdown">
+        <div class="dash-followup-campaign-row">
+          <span class="dash-followup-campaign-name">Agency founders Q1</span>
+          <span class="dash-followup-campaign-count">8</span>
+        </div>
+        <div class="dash-followup-campaign-row">
+          <span class="dash-followup-campaign-name">Fractional CFO Q1</span>
+          <span class="dash-followup-campaign-count">4</span>
+        </div>
+      </div>
+
+      <!-- Next 3 days -->
+      <div class="dash-followup-row expandable" onclick="toggleBreakdown('3day-breakdown', this)">
+        <div class="dash-followup-icon" style="background:rgba(0,212,255,0.04);border-color:rgba(0,212,255,0.08);">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 6h12M4.5 1v3M9.5 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dash-followup-copy">
+          <div class="dash-followup-title">Next 3 days</div>
+          <div class="dash-followup-sub">Mon 14 Apr — Wed 16 Apr</div>
+        </div>
+        <div class="dash-followup-count">24</div>
+        <div class="dash-followup-expand-icon">▾</div>
+      </div>
+      <div class="dash-followup-breakdown" id="3day-breakdown">
+        <div class="dash-followup-campaign-row">
+          <span class="dash-followup-campaign-name">Agency founders Q1</span>
+          <span class="dash-followup-campaign-count">16</span>
+        </div>
+        <div class="dash-followup-campaign-row">
+          <span class="dash-followup-campaign-name">Fractional CFO Q1</span>
+          <span class="dash-followup-campaign-count">8</span>
+        </div>
+      </div>
+
+      <!-- Later this week -->
+      <div class="dash-followup-row" style="opacity:0.7;">
+        <div class="dash-followup-icon" style="background:var(--s);border-color:var(--b);color:var(--td);">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="3" width="12" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M1 6h12M4.5 1v3M9.5 1v3" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </div>
+        <div class="dash-followup-copy">
+          <div class="dash-followup-title" style="color:var(--tm);">Later this week</div>
+          <div class="dash-followup-sub">Thu 17 Apr — Sun 20 Apr</div>
+        </div>
+        <div class="dash-followup-count" style="color:var(--td);">11</div>
+      </div>
+
+    </div>
+
+    <!-- ── 3. PERFORMANCE SNAPSHOT ── -->
+    <!--
+      Codex notes:
+      • Numbers are this-week figures
+      • No chart — just 4 stat cards
+      • Intentionally lightweight — not an analytics page
+    -->
+    <div class="dash-section-label" style="margin-top:28px;">This week so far</div>
+    <div class="dash-snap">
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Emails sent</div>
+        <div class="dash-snap-num pink">14</div>
+        <div class="dash-snap-detail">↑ 3 from last week</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Replies</div>
+        <div class="dash-snap-num green">3</div>
+        <div class="dash-snap-detail">2 awaiting your reply</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Follow-ups sent</div>
+        <div class="dash-snap-num">9</div>
+        <div class="dash-snap-detail">All automated</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Meetings booked</div>
+        <div class="dash-snap-num cyan">1</div>
+        <div class="dash-snap-detail">Marcus Peters · 16 Apr</div>
+      </div>
+    </div>
+
+  </div><!-- /view-today -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+       THIS WEEK TAB
+       
+       Three sections:
+       1. Week summary — stat cards + follow-up count
+       2. Campaign activity — per-campaign cards showing week numbers
+       3. Activity feed — chronological log of what happened
+  ══════════════════════════════════════════════════════════ -->
+  <div id="view-week" style="display:none;">
+
+    <div class="dash-section-label" style="margin-top:0;">Week summary</div>
+    <div class="dash-snap">
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Emails sent</div>
+        <div class="dash-snap-num pink">14</div>
+        <div class="dash-snap-detail">↑ 3 from last week</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Follow-ups</div>
+        <div class="dash-snap-num">21</div>
+        <div class="dash-snap-detail">Automated · 36 more due</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Replies</div>
+        <div class="dash-snap-num green">3</div>
+        <div class="dash-snap-detail">↑ 1 from last week</div>
+      </div>
+      <div class="dash-snap-card">
+        <div class="dash-snap-label">Tasks</div>
+        <div class="dash-snap-num amber">2</div>
+        <div class="dash-snap-detail">1 overdue · 1 today</div>
+      </div>
+    </div>
+
+    <!-- Campaign breakdown -->
+    <div class="dash-section-label" style="margin-top:28px;">Campaigns this week</div>
+    <div class="dash-week-grid">
+
+      <a class="dash-week-card" href="#">
+        <div class="dash-week-card-identity">
+          <div class="dash-week-card-name">Agency founders Q1</div>
+          <div class="dash-week-card-meta">47 prospects · 3-step sequence · Active</div>
+        </div>
+        <div class="dash-week-card-stats">
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--pink);">8</div>
+            <div class="dash-week-stat-lbl">Sent</div>
+          </div>
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--cyan);">2</div>
+            <div class="dash-week-stat-lbl">Replies</div>
+          </div>
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--td);">14</div>
+            <div class="dash-week-stat-lbl">Follow-ups</div>
+          </div>
+        </div>
+        <span style="color:var(--td);font-size:13px;">→</span>
+      </a>
+
+      <a class="dash-week-card" href="#">
+        <div class="dash-week-card-identity">
+          <div class="dash-week-card-name">Fractional CFO Q1</div>
+          <div class="dash-week-card-meta">32 prospects · 2-step sequence · Active</div>
+        </div>
+        <div class="dash-week-card-stats">
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--pink);">6</div>
+            <div class="dash-week-stat-lbl">Sent</div>
+          </div>
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--cyan);">1</div>
+            <div class="dash-week-stat-lbl">Replies</div>
+          </div>
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--td);">7</div>
+            <div class="dash-week-stat-lbl">Follow-ups</div>
+          </div>
+        </div>
+        <span style="color:var(--td);font-size:13px;">→</span>
+      </a>
+
+      <a class="dash-week-card" href="#" style="border-style:dashed;opacity:0.6;">
+        <div class="dash-week-card-identity">
+          <div class="dash-week-card-name" style="color:var(--tm);">Design leaders — May</div>
+          <div class="dash-week-card-meta">Paused · 18 prospects in Review</div>
+        </div>
+        <div class="dash-week-card-stats">
+          <div class="dash-week-stat">
+            <div class="dash-week-stat-num" style="color:var(--td);">—</div>
+            <div class="dash-week-stat-lbl">Sent</div>
+          </div>
+        </div>
+        <span style="color:var(--td);font-size:13px;">→</span>
+      </a>
+
+    </div>
+
+    <!-- Activity feed -->
+    <div class="dash-section-label" style="margin-top:28px;">Recent activity</div>
+    <div class="dash-activity">
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot green"></div>
+        <div class="dash-activity-text">Meeting booked with Marcus Peters · Ventures.io</div>
+        <div class="dash-activity-time">2h ago</div>
+      </div>
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot cyan"></div>
+        <div class="dash-activity-text">Nat Sajal replied — Agency founders Q1</div>
+        <div class="dash-activity-time">2h ago</div>
+      </div>
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot pink"></div>
+        <div class="dash-activity-text">4 follow-ups sent — Agency founders Q1</div>
+        <div class="dash-activity-time">9:00am</div>
+      </div>
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot cyan"></div>
+        <div class="dash-activity-text">Dan Kim replied — Agency founders Q1</div>
+        <div class="dash-activity-time">Yesterday</div>
+      </div>
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot pink"></div>
+        <div class="dash-activity-text">6 follow-ups sent — Fractional CFO Q1</div>
+        <div class="dash-activity-time">Yesterday</div>
+      </div>
+      <div class="dash-activity-row">
+        <div class="dash-activity-dot amber"></div>
+        <div class="dash-activity-text">Rachel Lowe — email bounced, needs fixing</div>
+        <div class="dash-activity-time">Wed</div>
+      </div>
+    </div>
+
+  </div><!-- /view-week -->
+
+</div><!-- /content-area -->
+</main>
+</div><!-- /layout -->
+
+<!-- Prospect detail drawer (same pattern as Review/Sent tabs) -->
+<div id="pd-backdrop" style="position:fixed;inset:0;background:rgba(0,0,0,0.45);backdrop-filter:blur(3px);z-index:800;display:none;" onclick="closeDrawer()"></div>
+<div id="pd-panel" style="position:fixed;top:var(--th);right:0;bottom:0;width:480px;max-width:calc(100vw - var(--sw));background:#130a20;border-left:1px solid var(--b2);z-index:801;display:flex;flex-direction:column;transform:translateX(100%);transition:transform 0.28s cubic-bezier(0.4,0,0.2,1);">
+  <div style="padding:18px 20px;border-bottom:1px solid var(--b);display:flex;align-items:flex-start;gap:12px;flex-shrink:0;">
+    <div id="drawer-av" style="width:40px;height:40px;border-radius:50%;background:var(--cd);border:1px solid rgba(0,212,255,0.2);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:13px;font-weight:700;color:var(--cyan);flex-shrink:0;">NS</div>
+    <div style="flex:1;min-width:0;">
+      <div id="drawer-name" style="font-family:var(--of);font-size:16px;font-weight:700;color:var(--t);margin-bottom:3px;">Nat Sajal</div>
+      <div style="font-size:12px;color:var(--cyan);">Replied 2 hours ago</div>
+    </div>
+    <div onclick="closeDrawer()" style="width:28px;height:28px;border-radius:6px;background:transparent;border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;cursor:pointer;color:var(--tm);font-size:14px;">✕</div>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:var(--td);font-size:13px;">
+    Prospect detail drawer — same component as Review, Drafts, Sent tabs.
+  </div>
+</div>
+
+<script>
+function showTab(tab) {
+  document.getElementById('view-today').style.display = tab === 'today' ? '' : 'none';
+  document.getElementById('view-week').style.display  = tab === 'week'  ? '' : 'none';
+  document.getElementById('tab-today').className = 'dash-tab' + (tab === 'today' ? ' on' : '');
+  document.getElementById('tab-week').className  = 'dash-tab' + (tab === 'week'  ? ' on' : '');
+}
+
+function toggleBreakdown(id, row) {
+  const bd = document.getElementById(id);
+  const open = bd.classList.toggle('open');
+  row.classList.toggle('is-open', open);
+}
+
+function openDrawer(e, initials) {
+  document.getElementById('drawer-av').textContent = initials;
+  document.getElementById('drawer-name').textContent = {
+    NS:'Nat Sajal', DK:'Dan Kim', HS:'Howard Sullivan', RL:'Rachel Lowe'
+  }[initials] || initials;
+  document.getElementById('pd-backdrop').style.display = 'block';
+  document.getElementById('pd-panel').style.transform = 'translateX(0)';
+}
+function closeDrawer() {
+  document.getElementById('pd-backdrop').style.display = 'none';
+  document.getElementById('pd-panel').style.transform = 'translateX(100%)';
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeDrawer(); });
+</script>
+</body>
+</html>
