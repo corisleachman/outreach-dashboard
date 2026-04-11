@@ -1005,10 +1005,58 @@ textarea.input { resize: none; line-height: 1.7; min-height: 120px; }
   color: var(--td);
 }
 
-/* ── Action queue rows (Today tab — items needing attention) ── */
-/* Reuses .qi, .qi-ico, .qi-body, .qi-title, .qi-sub, .qi-badge, 
-   .qi-arrow from globals.css (added by tasks page fix).
-   No new classes needed for the rows themselves. */
+/* ── Action queue rows (.qi system) ── */
+.tasks-queue__rows { display:flex; flex-direction:column; gap:8px; }
+.qi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid var(--b);
+  background: rgba(255,255,255,0.02);
+  text-decoration: none;
+  color: var(--t);
+  transition: border-color 0.15s, background 0.15s;
+}
+.qi:hover { border-color: var(--b2); background: rgba(255,255,255,0.04); }
+.qi-ico {
+  width: 34px; height: 34px;
+  border-radius: 9px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.qi-ico.a { background: var(--ad); border: 1px solid rgba(255,157,66,0.2);  color: var(--amber); }
+.qi-ico.c { background: var(--cd); border: 1px solid rgba(0,212,255,0.2);   color: var(--cyan);  }
+.qi-ico.p { background: var(--pd); border: 1px solid rgba(255,20,147,0.2);  color: var(--pink);  }
+.qi-ico.g { background: var(--gd); border: 1px solid rgba(100,220,120,0.2); color: var(--green); }
+.qi-ico.r { background: var(--rd); border: 1px solid rgba(255,76,76,0.2);   color: var(--red);   }
+.qi-body  { flex: 1; min-width: 0; }
+.qi-title {
+  font-family: var(--of); font-size: 13px; font-weight: 700; color: var(--t);
+  margin-bottom: 3px; display: flex; align-items: center; gap: 8px;
+}
+.qi-sub   { font-size: 12px; color: var(--tm); line-height: 1.5; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.qi-badge {
+  font-family: var(--of); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 999px; flex-shrink: 0;
+  border: 1px solid var(--b2); background: var(--s2); color: var(--tm);
+}
+.qi-badge.a { background: var(--ad); border-color: rgba(255,157,66,0.3);  color: var(--amber); }
+.qi-badge.c { background: var(--cd); border-color: rgba(0,212,255,0.3);   color: var(--cyan);  }
+.qi-badge.p { background: var(--pd); border-color: rgba(255,20,147,0.3);  color: var(--pink);  }
+.qi-badge.g { background: var(--gd); border-color: rgba(100,220,120,0.3); color: var(--green); }
+.qi-badge.overdue { background: rgba(255,76,76,0.1); border-color: rgba(255,76,76,0.3); color: var(--red); }
+.qi-arrow { font-size: 14px; color: var(--td); flex-shrink: 0; }
+.qi-overdue-chip {
+  display: inline-flex; align-items: center; padding: 2px 7px; border-radius: 4px;
+  font-family: var(--of); font-size: 10px; font-weight: 700;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  background: rgba(255,76,76,0.1); border: 1px solid rgba(255,76,76,0.25); color: var(--red);
+}
+.tasks-page__summary-badge { font-family: var(--of); font-size: 13px; font-weight: 600; color: var(--td); flex-shrink: 0; }
 
 /* ── Performance snapshot strip ── */
 .dash-snap {
