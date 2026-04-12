@@ -326,11 +326,16 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   font-size: 11px;
   font-weight: 600;
   color: var(--cyan);
+  /* hidden by default — takes no space, appears when .visible is added */
+  max-height: 0;
+  overflow: hidden;
   opacity: 0;
-  transition: opacity 0.3s ease;
-  height: 16px;
+  transition: max-height 0.2s ease, opacity 0.3s ease;
 }
-.re-regen-confirm.visible { opacity: 1; }
+.re-regen-confirm.visible {
+  max-height: 24px;
+  opacity: 1;
+}
 
 /* Secondary action strip */
 .re-actions-strip {
