@@ -524,6 +524,53 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 .ann-title{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
 .ann-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--td);line-height:1.6;margin-bottom:6px;}
 .ann-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:6px;}
+
+/* ── Modal border scan — fires once on success state ── */
+.re-modal.scanning {
+  position: relative;
+}
+.re-modal.scanning::before {
+  content: '';
+  position: absolute;
+  inset: -1.5px;
+  border-radius: 17px; /* 16px modal + 1px outset */
+  background: conic-gradient(
+    from var(--scan-angle, 0deg),
+    transparent 0deg,
+    transparent 340deg,
+    rgba(0, 212, 255, 0.9) 348deg,
+    rgba(255, 20, 147, 1) 354deg,
+    rgba(0, 212, 255, 0.9) 360deg
+  );
+  animation: modal-scan-circuit 1.1s linear 1 forwards;
+  z-index: -1;
+}
+.re-modal.scanning::after {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  border-radius: 15px;
+  background: #130a20;
+  z-index: -1;
+}
+@keyframes modal-scan-circuit {
+  from {
+    --scan-angle: 0deg;
+    opacity: 1;
+  }
+  85% {
+    opacity: 1;
+  }
+  to {
+    --scan-angle: 360deg;
+    opacity: 0;
+  }
+}
+@property --scan-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
 </style>
 </head>
 <body>
@@ -893,6 +940,12 @@ function setState(state) {
   if (state === 'success') {
     defaultState.style.display = 'none';
     successState.style.display = '';
+    // Trigger scan when previewing success state directly
+    const modal = document.getElementById('re-modal');
+    modal.classList.remove('scanning');
+    void modal.offsetWidth; // force reflow to restart animation
+    modal.classList.add('scanning');
+    setTimeout(() => modal.classList.remove('scanning'), 1200);
   }
 }
 
