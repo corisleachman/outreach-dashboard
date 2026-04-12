@@ -1013,7 +1013,14 @@ function sendMessage() {
   const sendBtn = document.getElementById('re-send-btn');
   sendBtn.disabled = true;
   sendBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sending…';
-  setTimeout(() => { setState('success'); }, 900);
+  setTimeout(() => {
+    setState('success');
+    const modal = document.getElementById('re-modal');
+    modal.classList.remove('scanning');
+    void modal.offsetWidth;
+    modal.classList.add('scanning');
+    setTimeout(() => modal.classList.remove('scanning'), 1200);
+  }, 900);
 }
 
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
