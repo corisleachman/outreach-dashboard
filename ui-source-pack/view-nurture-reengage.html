@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800;900&family=DM+Sans:wght@400;500&family=DM+Mono&display=swap" rel="stylesheet">
+<title>Pulse. — Nurture Re-engage Flow</title>
+<style>
+/* ── Foundation tokens ── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --bg:#0d0914;--s:rgba(255,255,255,0.04);--s2:rgba(255,255,255,0.07);
+  --b:rgba(255,255,255,0.07);--b2:rgba(255,255,255,0.13);
+  --pink:#ff1493;--cyan:#00d4ff;--green:#64dc78;--amber:#ff9d42;--red:#ff4c4c;
+  --pd:rgba(255,20,147,0.10);--cd:rgba(0,212,255,0.08);
+  --gd:rgba(100,220,120,0.10);--ad:rgba(255,157,66,0.10);
+  --t:#f4f4f2;--tm:#a8a8b8;--td:#6b6b80;
+  --of:'Outfit',sans-serif;--sf:'DM Sans',sans-serif;--mono:'DM Mono',monospace;
+  --gr:linear-gradient(135deg,#ff1493,#00d4ff);
+  --th:56px;--sw:56px;
+  --eq:cubic-bezier(0.22,0.68,0,1.2);
+  --anim-quick:120ms;--anim-standard:180ms;--anim-deliberate:320ms;
+}
+html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:100vh;-webkit-font-smoothing:antialiased;}
+.orb{position:fixed;border-radius:50%;filter:blur(140px);opacity:0.08;pointer-events:none;z-index:0;}
+.orb-pink{width:560px;height:560px;background:var(--pink);top:-220px;right:-220px;}
+.orb-cyan{width:360px;height:360px;background:var(--cyan);bottom:-140px;left:-140px;}
+
+/* Shell */
+.topbar{position:fixed;top:0;left:0;right:0;height:var(--th);background:rgba(13,9,20,0.94);border-bottom:1px solid var(--b);backdrop-filter:blur(14px);z-index:200;display:flex;align-items:center;padding:0 24px 0 calc(var(--sw) + 20px);gap:12px;}
+.logo{font-family:var(--of);font-size:18px;font-weight:800;letter-spacing:-0.03em;background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-decoration:none;flex-shrink:0;}
+.breadcrumb{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tm);}
+.breadcrumb-sep{opacity:0.4;}
+.breadcrumb-current{color:var(--t);font-weight:500;}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.plan-badge{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;padding:3px 10px;border-radius:100px;background:rgba(255,20,147,0.1);border:1px solid rgba(255,20,147,0.25);color:var(--pink);}
+.av{width:30px;height:30px;border-radius:50%;background:var(--gr);display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;color:white;flex-shrink:0;}
+.sidebar{position:fixed;top:var(--th);left:0;bottom:0;width:var(--sw);background:rgba(13,9,20,0.85);border-right:1px solid var(--b);backdrop-filter:blur(8px);display:flex;flex-direction:column;align-items:center;padding:14px 0;z-index:190;gap:4px;}
+.si{width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all var(--anim-quick);border:1px solid transparent;text-decoration:none;color:rgba(255,255,255,0.45);position:relative;}
+.si:hover,.si.on{background:var(--pd);border-color:rgba(255,20,147,0.24);color:var(--pink);}
+.si-bottom{margin-top:auto;}
+.si-tip{position:absolute;left:calc(100% + 10px);top:50%;transform:translateY(-50%);background:rgba(13,9,20,0.97);color:var(--t);border:1px solid var(--b2);border-radius:6px;padding:5px 10px;font-family:var(--of);font-size:11px;font-weight:600;white-space:nowrap;opacity:0;visibility:hidden;pointer-events:none;transition:opacity var(--anim-quick);z-index:9999;}
+.si:hover .si-tip{opacity:1;visibility:visible;}
+.layout{display:flex;padding-top:var(--th);min-height:100vh;}
+.main{margin-left:var(--sw);flex:1;display:flex;flex-direction:column;position:relative;z-index:1;min-width:0;}
+.ch{padding:20px 32px 0;border-bottom:1px solid var(--b);background:rgba(13,9,20,0.5);backdrop-filter:blur(8px);position:sticky;top:var(--th);z-index:100;}
+.ch-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:16px;}
+.ch-name{font-family:var(--of);font-size:22px;font-weight:800;letter-spacing:-0.02em;color:var(--t);margin-bottom:3px;}
+.ch-meta{font-size:12px;color:var(--td);display:flex;align-items:center;gap:8px;}
+.ch-sep{opacity:0.4;}
+.ch-actions{display:flex;gap:8px;flex-shrink:0;}
+.stats-strip{display:flex;}
+.stat-item{padding:10px 20px;text-align:center;border-right:1px solid var(--b);}
+.stat-item:first-child{padding-left:0;}
+.stat-item:last-child{border-right:none;}
+.sn{font-family:var(--of);font-size:20px;font-weight:800;line-height:1;margin-bottom:3px;}
+.sn.pink{background:var(--gr);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.sn.green{color:var(--green);}
+.sn.cyan{color:var(--cyan);}
+.sl{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);}
+.tab-bar{display:flex;overflow-x:auto;margin-top:4px;}
+.tab-bar::-webkit-scrollbar{display:none;}
+.tab{padding:10px 16px;font-family:var(--of);font-size:12px;font-weight:600;color:var(--tm);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;transition:all 0.15s;display:flex;align-items:center;gap:5px;}
+.tab:hover{color:var(--t);}
+.tab.on{color:var(--pink);border-bottom-color:var(--pink);}
+.tab-ct{background:var(--s2);border:1px solid var(--b2);border-radius:4px;padding:1px 5px;font-size:10px;color:var(--td);}
+.tab.on .tab-ct{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+.tab-content{flex:1;padding:24px 32px;max-width:860px;}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;font-family:var(--of);font-weight:700;cursor:pointer;border:none;transition:all 0.2s;text-decoration:none;white-space:nowrap;border-radius:100px;}
+.bs{padding:7px 16px;font-size:12px;background:var(--s);border:1px solid var(--b2);color:var(--tm);}
+.bs:hover{color:var(--t);border-color:var(--td);}
+.bp{padding:10px 20px;font-size:13px;background:var(--gr);color:white;}
+.bp:hover{opacity:0.88;}
+.bsm{padding:6px 14px;font-size:11px;}
+.search-bar{display:flex;align-items:center;background:var(--s);border:1px solid var(--b2);border-radius:8px;padding:0 14px;margin-bottom:20px;}
+.search-bar input{flex:1;background:none;border:none;outline:none;padding:11px 10px;font-family:var(--sf);font-size:13px;color:var(--t);}
+.search-bar input::placeholder{color:var(--td);}
+.search-icon{color:var(--td);font-size:15px;}
+
+/* ── Existing nurture row classes (from view-tab-nurture-v2) ── */
+.nrow{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border-radius:12px;border:1px solid var(--b);background:rgba(255,255,255,0.02);margin-bottom:8px;cursor:pointer;transition:border-color 0.15s,background 0.15s;position:relative;}
+.nrow:hover{border-color:var(--b2);background:rgba(255,255,255,0.04);}
+.nrow.ready{border-color:rgba(255,157,66,0.2);background:rgba(255,157,66,0.025);}
+.nrow.ready:hover{border-color:rgba(255,157,66,0.35);}
+.nav{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--of);font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px;background:var(--s2);border:1px solid var(--b2);color:var(--td);}
+.nav.amber{background:var(--ad);border-color:rgba(255,157,66,0.25);color:var(--amber);}
+.nav.cyan{background:var(--cd);border-color:rgba(0,212,255,0.25);color:var(--cyan);}
+.nbody{flex:1;min-width:0;display:flex;flex-direction:column;gap:5px;}
+.nname{font-family:var(--of);font-size:14px;font-weight:700;color:var(--t);margin-bottom:1px;}
+.nco{font-size:12px;color:var(--td);margin-bottom:4px;}
+.nreason{display:inline-flex;align-items:center;gap:5px;font-family:var(--of);font-size:11px;font-weight:600;color:var(--tm);background:var(--s2);border:1px solid var(--b);border-radius:6px;padding:3px 8px;width:fit-content;}
+.ntiming{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.ntiming-item{font-size:11px;color:var(--td);display:flex;align-items:center;gap:4px;}
+.ntiming-item.ready{color:var(--amber);font-weight:600;}
+.ntiming-sep{color:var(--b2);font-size:10px;}
+.nhint{font-size:11px;color:var(--td);font-style:italic;margin-top:2px;}
+.nhint.ready{color:rgba(255,157,66,0.8);font-style:normal;font-weight:600;}
+.nactions{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;padding-top:1px;}
+.ncta{display:inline-flex;align-items:center;gap:5px;padding:7px 14px;border-radius:8px;font-family:var(--of);font-size:11px;font-weight:700;cursor:pointer;border:1px solid var(--b2);background:var(--s);color:var(--tm);white-space:nowrap;transition:all 0.15s;}
+.ncta:hover{color:var(--t);border-color:var(--td);background:var(--s2);}
+.ncta.primary{background:rgba(255,157,66,0.08);border-color:rgba(255,157,66,0.3);color:var(--amber);}
+.ncta.primary:hover{background:rgba(255,157,66,0.14);border-color:rgba(255,157,66,0.5);}
+.ndate-badge{font-family:var(--of);font-size:10px;font-weight:700;color:var(--td);text-align:right;}
+.ndate-badge.ready{color:var(--amber);}
+.nsection{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.14em;color:var(--td);margin-bottom:12px;margin-top:24px;padding-bottom:8px;border-bottom:1px solid var(--b);display:flex;align-items:center;justify-content:space-between;}
+.nsection:first-child{margin-top:0;}
+
+/* ══════════════════════════════════════════════════════════════
+   RE-ENGAGE MODAL SYSTEM
+   Codex: add everything below this comment to globals.css
+   ══════════════════════════════════════════════════════════════ */
+
+/* Backdrop */
+.re-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,9,20,0.78);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--anim-standard) ease;
+}
+.re-backdrop.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Modal surface */
+.re-modal {
+  width: min(520px, 100%);
+  background: #130a20;
+  border: 1px solid var(--b2);
+  border-radius: 16px;
+  box-shadow: 0 32px 96px rgba(0,0,0,0.65), 0 0 0 1px rgba(255,255,255,0.03);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 80px);
+  overflow: hidden;
+  transform: translateY(10px);
+  transition: transform var(--anim-deliberate) var(--eq);
+}
+.re-backdrop.open .re-modal {
+  transform: translateY(0);
+}
+
+/* Header */
+.re-hdr {
+  padding: 20px 24px 18px;
+  border-bottom: 1px solid var(--b);
+  flex-shrink: 0;
+}
+.re-hdr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.re-title {
+  font-family: var(--of);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--t);
+  letter-spacing: -0.01em;
+}
+.re-close {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid var(--b2);
+  background: transparent;
+  color: var(--tm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--anim-quick);
+}
+.re-close:hover { color: var(--t); }
+.re-hdr-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+.re-meta-item {
+  font-size: 12px;
+  color: var(--td);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.re-meta-sep { color: var(--b2); }
+.re-reason-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--tm);
+  background: var(--s2);
+  border: 1px solid var(--b);
+  border-radius: 5px;
+  padding: 2px 7px;
+}
+
+/* Body — scrollable */
+.re-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.re-body::-webkit-scrollbar { width: 3px; }
+.re-body::-webkit-scrollbar-thumb { background: var(--b2); }
+
+/* Subject line */
+.re-subject-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.re-subject-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--td);
+  flex-shrink: 0;
+  width: 52px;
+}
+.re-subject-val {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t);
+}
+.re-subject-input {
+  flex: 1;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--b2);
+  border-radius: 7px;
+  padding: 7px 10px;
+  font-family: var(--sf);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--t);
+  outline: none;
+  transition: border-color var(--anim-quick);
+}
+.re-subject-input:focus { border-color: rgba(0,212,255,0.35); }
+
+/* Message area */
+.re-message-wrap {
+  position: relative;
+}
+.re-message {
+  width: 100%;
+  min-height: 180px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--b2);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-family: var(--sf);
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--t);
+  resize: none;
+  outline: none;
+  transition: border-color var(--anim-quick), background var(--anim-quick);
+  /* Read-only default state */
+  cursor: default;
+}
+.re-message.editing {
+  background: rgba(255,255,255,0.05);
+  border-color: rgba(0,212,255,0.3);
+  cursor: text;
+}
+.re-message:focus { border-color: rgba(0,212,255,0.35); }
+.re-message::placeholder { color: var(--td); }
+
+/* Regenerating shimmer overlay */
+.re-message-shimmer {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(0,212,255,0.04) 40%,
+    rgba(0,212,255,0.08) 50%,
+    rgba(0,212,255,0.04) 60%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: re-shimmer 1.4s ease infinite;
+  pointer-events: none;
+  display: none;
+}
+.re-message-shimmer.active { display: block; }
+@keyframes re-shimmer {
+  from { background-position: 200% 0; }
+  to   { background-position: -200% 0; }
+}
+
+/* Regenerated confirmation */
+.re-regen-confirm {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--cyan);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  height: 16px;
+}
+.re-regen-confirm.visible { opacity: 1; }
+
+/* Secondary action strip */
+.re-actions-strip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+.re-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 11px;
+  border-radius: 7px;
+  font-family: var(--of);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--b2);
+  background: transparent;
+  color: var(--tm);
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.re-action-btn:hover {
+  color: var(--t);
+  border-color: var(--td);
+  background: var(--s);
+}
+.re-action-btn.active {
+  color: var(--cyan);
+  border-color: rgba(0,212,255,0.3);
+  background: var(--cd);
+}
+
+/* Optional context input */
+.re-context-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--td);
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  transition: color 0.15s;
+  font-family: var(--sf);
+}
+.re-context-toggle:hover { color: var(--tm); }
+.re-context-area {
+  display: none;
+  flex-direction: column;
+  gap: 6px;
+}
+.re-context-area.open { display: flex; }
+.re-context-label {
+  font-family: var(--of);
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--td);
+}
+.re-context-input {
+  width: 100%;
+  min-height: 72px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--b);
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: var(--sf);
+  font-size: 12px;
+  color: var(--tm);
+  resize: none;
+  outline: none;
+  transition: border-color var(--anim-quick);
+}
+.re-context-input::placeholder { color: var(--td); font-style: italic; }
+.re-context-input:focus { border-color: rgba(0,212,255,0.25); }
+
+/* Footer */
+.re-ftr {
+  padding: 14px 24px;
+  border-top: 1px solid var(--b);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-shrink: 0;
+}
+.re-ftr-left {
+  font-size: 11px;
+  color: var(--td);
+}
+.re-ftr-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.re-cancel {
+  padding: 7px 14px;
+  border-radius: 8px;
+  font-family: var(--of);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  border: 1px solid var(--b2);
+  background: transparent;
+  color: var(--tm);
+  transition: all 0.15s;
+}
+.re-cancel:hover { color: var(--t); border-color: var(--td); }
+.re-send {
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-family: var(--of);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  background: var(--gr);
+  color: white;
+  box-shadow: 0 0 24px rgba(255,20,147,0.2);
+  transition: opacity 0.15s, transform 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.re-send:hover { opacity: 0.88; }
+.re-send:active { transform: scale(0.97); }
+.re-send:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* Success state */
+.re-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  text-align: center;
+  gap: 12px;
+  min-height: 200px;
+}
+.re-success-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: var(--gd);
+  border: 1px solid rgba(100,220,120,0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--green);
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.re-success-title {
+  font-family: var(--of);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--t);
+}
+.re-success-sub {
+  font-size: 13px;
+  color: var(--tm);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+/* State switcher (wireframe demo only) */
+.demo-switcher{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap;}
+.demo-btn{padding:5px 12px;border-radius:6px;border:1px solid var(--b2);background:var(--s);font-family:var(--of);font-size:11px;font-weight:600;color:var(--td);cursor:pointer;transition:all 0.15s;}
+.demo-btn:hover{color:var(--t);}
+.demo-btn.on{background:var(--pd);border-color:rgba(255,20,147,0.3);color:var(--pink);}
+.ann{margin-top:24px;background:rgba(255,255,255,0.02);border:1px solid var(--b);border-radius:10px;padding:16px 18px;}
+.ann-title{font-family:var(--of);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--td);margin-bottom:10px;}
+.ann-item{display:flex;align-items:flex-start;gap:8px;font-size:12px;color:var(--td);line-height:1.6;margin-bottom:6px;}
+.ann-dot{width:5px;height:5px;border-radius:50%;background:var(--td);flex-shrink:0;margin-top:6px;}
+</style>
+</head>
+<body>
+<div class="orb orb-pink"></div><div class="orb orb-cyan"></div>
+
+<header class="topbar">
+  <a href="../hub.html" class="logo">Pulse.</a>
+  <nav class="breadcrumb">
+    <span>Campaigns</span><span class="breadcrumb-sep">/</span>
+    <span class="breadcrumb-current">Agency founders — Q1</span>
+  </nav>
+  <div class="topbar-right">
+    <span class="plan-badge">Pro</span>
+    <div class="av">CL</div>
+  </div>
+</header>
+
+<aside class="sidebar">
+  <a class="si" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="3" width="13" height="2" rx="1" fill="currentColor" opacity="0.4"/><rect x="1" y="7" width="9" height="2" rx="1" fill="currentColor" opacity="0.7"/><rect x="1" y="11" width="6" height="2" rx="1" fill="currentColor"/></svg><span class="si-tip">Summary</span></a>
+  <a class="si on" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><rect x="1" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="1" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="1" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/><rect x="8.5" y="8.5" width="5.5" height="5.5" rx="1" stroke="currentColor" stroke-width="1.3"/></svg><span class="si-tip">Campaigns</span></a>
+  <a class="si si-bottom" href="#"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><circle cx="7.5" cy="7.5" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M7.5 1v1.5M7.5 12.5V14M1 7.5h1.5M12.5 7.5H14M2.9 2.9l1.06 1.06M11.04 11.04l1.06 1.06M2.9 12.1l1.06-1.06M11.04 3.96l1.06-1.06" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg><span class="si-tip">Settings</span></a>
+</aside>
+
+<div class="layout">
+<main class="main">
+  <div class="ch">
+    <div class="ch-top">
+      <div>
+        <div class="ch-name">Agency founders — Q1</div>
+        <div class="ch-meta"><span>47 prospects</span><span class="ch-sep">·</span><span>Active</span></div>
+      </div>
+      <div class="ch-actions">
+        <button class="btn bs bsm" style="border-radius:8px;">Settings</button>
+        <button class="btn bp bsm" style="border-radius:8px;">+ Add prospects</button>
+      </div>
+    </div>
+    <div class="stats-strip">
+      <div class="stat-item"><div class="sn pink">15</div><div class="sl">Drafts ready</div></div>
+      <div class="stat-item"><div class="sn">2</div><div class="sl">Responded</div></div>
+      <div class="stat-item"><div class="sn green">8</div><div class="sl">Meetings set</div></div>
+    </div>
+    <div class="tab-bar">
+      <div class="tab">Review <span class="tab-ct">12</span></div>
+      <div class="tab">Drafts <span class="tab-ct">8</span></div>
+      <div class="tab">LinkedIn</div>
+      <div class="tab">Sent <span class="tab-ct">23</span></div>
+      <div class="tab on">Nurture <span class="tab-ct">5</span></div>
+      <div class="tab">Conversations</div>
+    </div>
+  </div>
+
+  <div class="tab-content">
+
+    <!-- State switcher — wireframe demo only -->
+    <div class="demo-switcher">
+      <div class="demo-btn on" onclick="setState('nurture')">Nurture tab</div>
+      <div class="demo-btn" onclick="setState('default')">Modal — draft ready</div>
+      <div class="demo-btn" onclick="setState('edit')">Modal — edit mode</div>
+      <div class="demo-btn" onclick="setState('regen')">Modal — new angle</div>
+      <div class="demo-btn" onclick="setState('sending')">Modal — sending</div>
+      <div class="demo-btn" onclick="setState('success')">Modal — sent ✓</div>
+    </div>
+
+    <!-- ── NURTURE TAB VIEW ── -->
+    <div id="view-nurture">
+      <div class="nsection">
+        Ready to re-engage
+        <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--td);">2 prospects</span>
+      </div>
+
+      <!-- Entry point row — Re-engage CTA is the primary action -->
+      <div class="nrow ready" onclick="setStateAndOpen('default')">
+        <div class="nav amber">HC</div>
+        <div class="nbody">
+          <div class="nname">Helen Clarke</div>
+          <div class="nco">Latitude Agency · CEO</div>
+          <span class="nreason">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+            Sequence complete — no reply
+          </span>
+          <div class="ntiming">
+            <span class="ntiming-item ready">Last contacted 31 days ago</span>
+            <span class="ntiming-sep">·</span>
+            <span class="ntiming-item ready">Re-contact was 5 days ago</span>
+          </div>
+          <div class="nhint ready">Good time to reach out again</div>
+        </div>
+        <div class="nactions">
+          <!-- Re-engage is the PRIMARY CTA — visually prominent -->
+          <button class="ncta primary" onclick="event.stopPropagation();setStateAndOpen('default')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M6 2l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Re-engage
+          </button>
+          <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+          <div class="ndate-badge ready">Due 6 Apr</div>
+        </div>
+      </div>
+
+      <div class="nrow ready" onclick="setStateAndOpen('default')">
+        <div class="nav cyan">MJ</div>
+        <div class="nbody">
+          <div class="nname">Mark Jory</div>
+          <div class="nco">Latitude Agency · MD</div>
+          <span class="nreason">
+            <svg width="9" height="9" viewBox="0 0 9 9" fill="none"><circle cx="4.5" cy="4.5" r="4" stroke="currentColor" stroke-width="1"/></svg>
+            Not the right time
+          </span>
+          <div class="ntiming">
+            <span class="ntiming-item ready">Last contacted 24 days ago</span>
+          </div>
+        </div>
+        <div class="nactions">
+          <button class="ncta primary" onclick="event.stopPropagation();setStateAndOpen('default')">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1 5h8M6 2l3 3-3 3" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Re-engage
+          </button>
+          <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+        </div>
+      </div>
+
+      <div class="nsection">
+        Parked
+        <span style="font-size:10px;font-weight:400;text-transform:none;letter-spacing:0;color:var(--td);">3 prospects</span>
+      </div>
+
+      <div class="nrow">
+        <div class="nav" style="background:var(--pd);border-color:rgba(255,20,147,0.25);color:var(--pink);">ST</div>
+        <div class="nbody">
+          <div class="nname">Sarah Thompson</div>
+          <div class="nco">ConsultCo · Growth Lead</div>
+          <span class="nreason">Sequence complete — no reply</span>
+          <div class="ntiming"><span class="ntiming-item">Last contacted 8 days ago</span><span class="ntiming-sep">·</span><span class="ntiming-item">Re-contact from 1 May</span></div>
+          <div class="nhint">Wait a bit longer before reaching out</div>
+        </div>
+        <div class="nactions">
+          <button class="ncta" onclick="event.stopPropagation()">Create task</button>
+          <div class="ndate-badge" style="color:var(--cyan);">From 1 May</div>
+        </div>
+      </div>
+
+      <div class="ann">
+        <div class="ann-title">Entry point — design notes</div>
+        <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Re-engage is the primary CTA</strong> on ready rows. It's amber-tinted, has a directional arrow, and sits at the top of the actions column. "Create task" is secondary below it.</div>
+        <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">Clicking the row OR the Re-engage button</strong> opens the modal. Row click on parked rows still opens the prospect drawer — not the re-engage modal.</div>
+        <div class="ann-item"><div class="ann-dot"></div><strong style="color:var(--tm);">No Re-engage CTA on parked rows</strong> — timing hasn't passed yet.</div>
+      </div>
+    </div>
+
+  </div>
+</main>
+</div>
+
+<!-- ══════════════════════════════════════════════════════════════
+     RE-ENGAGE MODAL
+     
+     Codex: this modal is portalled to document.body via createPortal.
+     States controlled by prop: 'default' | 'edit' | 'regen' | 'sending' | 'success'
+     
+     DATA FLOW:
+     • On open: call Claude API to generate re-engagement message
+       using prospect context (name, company, reason, days since contact)
+     • Show shimmer while generating, then reveal message
+     • "Try another angle" triggers a new generation with variation hint
+     • "Edit" converts textarea to editable (readOnly=false)
+     • "Send message" calls existing send endpoint, then shows success state
+     • On success: row disappears from Nurture tab (prospect moved to Sent)
+══════════════════════════════════════════════════════════════ -->
+<div class="re-backdrop" id="re-backdrop" onclick="handleBackdropClick(event)">
+  <div class="re-modal" id="re-modal" onclick="event.stopPropagation()">
+
+    <!-- ── DEFAULT STATE: draft ready ── -->
+    <div id="re-state-default">
+      <div class="re-hdr">
+        <div class="re-hdr-top">
+          <div class="re-title">Re-engage with Helen</div>
+          <button class="re-close" onclick="closeModal()">✕</button>
+        </div>
+        <div class="re-hdr-meta">
+          <span class="re-meta-item">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><circle cx="5" cy="5" r="4" stroke="currentColor" stroke-width="1"/><path d="M5 3v2l1.2 1.2" stroke="currentColor" stroke-width="1" stroke-linecap="round"/></svg>
+            Last contacted 31 days ago
+          </span>
+          <span class="re-meta-sep">·</span>
+          <span class="re-meta-item">No reply</span>
+          <span class="re-meta-sep">·</span>
+          <span class="re-reason-chip">Sequence complete</span>
+        </div>
+      </div>
+
+      <div class="re-body">
+        <!-- Subject line -->
+        <div class="re-subject-row">
+          <span class="re-subject-label">Subject</span>
+          <span class="re-subject-val" id="re-subject-display">Quick thought on Latitude's pipeline</span>
+        </div>
+
+        <!-- Message body -->
+        <div class="re-message-wrap">
+          <textarea class="re-message" id="re-message-body" readonly>Hi Helen,
+
+Dropping a quick note — I reached out a few weeks ago about the fractional new business support I offer agencies. I know timing matters, so I didn't want to keep chasing.
+
+If it's still not the right moment, totally fine — just let me know and I'll leave you be.
+
+But if things have shifted and a conversation might be useful, I'd love to connect.
+
+Coris</textarea>
+          <div class="re-message-shimmer" id="re-shimmer"></div>
+        </div>
+
+        <!-- Regenerated confirmation (hidden until triggered) -->
+        <div class="re-regen-confirm" id="re-regen-confirm">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 6.5l3 3 5-5" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          New version generated
+        </div>
+
+        <!-- Secondary action strip -->
+        <div class="re-actions-strip">
+          <button class="re-action-btn" id="re-edit-btn" onclick="enterEditMode()">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M7 1.5l1.5 1.5L3 8.5H1.5V7L7 1.5z" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Edit
+          </button>
+          <button class="re-action-btn" onclick="regenMessage()">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5A3.5 3.5 0 118 7.5M8 7.5V5.5M8 7.5H6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Try another angle
+          </button>
+          <button class="re-action-btn" onclick="shortenMessage()">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3h6M2 5h4M2 7h3" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>
+            Make it shorter
+          </button>
+        </div>
+
+        <!-- Optional context — collapsed by default -->
+        <div>
+          <button class="re-context-toggle" onclick="toggleContext()">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+            Add context
+          </button>
+          <div class="re-context-area" id="re-context-area" style="margin-top:10px;">
+            <div class="re-context-label">Optional context</div>
+            <textarea class="re-context-input" placeholder="Paste a LinkedIn post, company news, or a note — the message will update to reflect it…" rows="3"></textarea>
+            <button class="re-action-btn" style="align-self:flex-start;" onclick="regenWithContext()">
+              <svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M1.5 5A3.5 3.5 0 118 7.5M8 7.5V5.5M8 7.5H6" stroke="currentColor" stroke-width="1.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Regenerate with context
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="re-ftr">
+        <div class="re-ftr-left" id="re-ftr-hint">Looks good? Hit send.</div>
+        <div class="re-ftr-right">
+          <button class="re-cancel" onclick="closeModal()">Cancel</button>
+          <button class="re-send" id="re-send-btn" onclick="sendMessage()">
+            <svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Send message
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── SUCCESS STATE ── -->
+    <div id="re-state-success" style="display:none;">
+      <div class="re-hdr" style="display:flex;align-items:center;justify-content:flex-end;padding:14px 20px;">
+        <button class="re-close" onclick="closeModal()">✕</button>
+      </div>
+      <div class="re-success">
+        <div class="re-success-icon">
+          <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><path d="M4 11l5 5 9-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </div>
+        <div class="re-success-title">Message sent to Helen</div>
+        <div class="re-success-sub">She's been moved to Sent. You'll see her reply here if she responds.</div>
+        <button class="re-cancel" onclick="closeModal()" style="margin-top:8px;">Done</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+let currentState = 'nurture';
+
+const MESSAGES = {
+  default: `Hi Helen,
+
+Dropping a quick note — I reached out a few weeks ago about the fractional new business support I offer agencies. I know timing matters, so I didn't want to keep chasing.
+
+If it's still not the right moment, totally fine — just let me know and I'll leave you be.
+
+But if things have shifted and a conversation might be useful, I'd love to connect.
+
+Coris`,
+  regen: `Helen,
+
+It's been a few weeks. I won't pretend I haven't noticed the silence — I know you're busy, and the timing probably wasn't right.
+
+I work with agency founders on building a more consistent pipeline without hiring. If that's something that's been on your mind, I'd love a quick call.
+
+Either way, hope things are going well at Latitude.
+
+Coris`,
+  short: `Hi Helen,
+
+Quick one — I reached out a while back about agency new business support.
+
+Is this something worth a quick conversation?
+
+Coris`
+};
+
+function setState(state) {
+  currentState = state;
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector(`.demo-btn[onclick="setState('${state}')"]`)?.classList.add('on');
+
+  const viewNurture = document.getElementById('view-nurture');
+  const backdrop = document.getElementById('re-backdrop');
+
+  if (state === 'nurture') {
+    viewNurture.style.display = '';
+    backdrop.classList.remove('open');
+    return;
+  }
+
+  viewNurture.style.display = 'none';
+  backdrop.classList.add('open');
+
+  const defaultState = document.getElementById('re-state-default');
+  const successState = document.getElementById('re-state-success');
+  const msgBody = document.getElementById('re-message-body');
+  const regenConfirm = document.getElementById('re-regen-confirm');
+  const editBtn = document.getElementById('re-edit-btn');
+  const shimmer = document.getElementById('re-shimmer');
+  const sendBtn = document.getElementById('re-send-btn');
+  const ftrHint = document.getElementById('re-ftr-hint');
+
+  defaultState.style.display = '';
+  successState.style.display = 'none';
+  shimmer.classList.remove('active');
+  msgBody.readOnly = true;
+  msgBody.classList.remove('editing');
+  editBtn.classList.remove('active');
+  regenConfirm.classList.remove('visible');
+  sendBtn.disabled = false;
+  sendBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Send message';
+  ftrHint.textContent = 'Looks good? Hit send.';
+
+  if (state === 'default') {
+    msgBody.value = MESSAGES.default;
+  }
+  if (state === 'edit') {
+    msgBody.value = MESSAGES.default;
+    msgBody.readOnly = false;
+    msgBody.classList.add('editing');
+    editBtn.classList.add('active');
+    ftrHint.textContent = 'Edit freely — your changes are saved.';
+  }
+  if (state === 'regen') {
+    msgBody.value = MESSAGES.regen;
+    regenConfirm.classList.add('visible');
+  }
+  if (state === 'sending') {
+    msgBody.value = MESSAGES.default;
+    sendBtn.disabled = true;
+    sendBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sending…';
+  }
+  if (state === 'success') {
+    defaultState.style.display = 'none';
+    successState.style.display = '';
+  }
+}
+
+function setStateAndOpen(state) {
+  setState(state);
+}
+
+function closeModal() {
+  document.getElementById('re-backdrop').classList.remove('open');
+  document.getElementById('view-nurture').style.display = '';
+  currentState = 'nurture';
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector('.demo-btn[onclick="setState(\'nurture\')"]')?.classList.add('on');
+}
+
+function handleBackdropClick(e) {
+  if (e.target === document.getElementById('re-backdrop')) closeModal();
+}
+
+function enterEditMode() {
+  setState('edit');
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector('.demo-btn[onclick="setState(\'edit\')"]')?.classList.add('on');
+}
+
+function regenMessage() {
+  const shimmer = document.getElementById('re-shimmer');
+  const msgBody = document.getElementById('re-message-body');
+  const regenConfirm = document.getElementById('re-regen-confirm');
+  regenConfirm.classList.remove('visible');
+  shimmer.classList.add('active');
+  msgBody.style.opacity = '0.4';
+  setTimeout(() => {
+    shimmer.classList.remove('active');
+    msgBody.style.opacity = '1';
+    msgBody.value = MESSAGES.regen;
+    regenConfirm.classList.add('visible');
+    document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('on'));
+    document.querySelector('.demo-btn[onclick="setState(\'regen\')"]')?.classList.add('on');
+  }, 900);
+}
+
+function shortenMessage() {
+  const shimmer = document.getElementById('re-shimmer');
+  const msgBody = document.getElementById('re-message-body');
+  shimmer.classList.add('active');
+  msgBody.style.opacity = '0.4';
+  setTimeout(() => {
+    shimmer.classList.remove('active');
+    msgBody.style.opacity = '1';
+    msgBody.value = MESSAGES.short;
+  }, 700);
+}
+
+function regenWithContext() { regenMessage(); }
+
+function toggleContext() {
+  const area = document.getElementById('re-context-area');
+  area.classList.toggle('open');
+}
+
+function sendMessage() {
+  document.querySelectorAll('.demo-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector('.demo-btn[onclick="setState(\'sending\')"]')?.classList.add('on');
+  const sendBtn = document.getElementById('re-send-btn');
+  sendBtn.disabled = true;
+  sendBtn.innerHTML = '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><path d="M1.5 6.5h10M8 3.5l3 3-3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg> Sending…';
+  setTimeout(() => { setState('success'); }, 900);
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+</script>
+</body>
+</html>
