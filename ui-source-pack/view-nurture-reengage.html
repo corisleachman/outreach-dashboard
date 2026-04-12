@@ -140,7 +140,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   display: flex;
   flex-direction: column;
   max-height: calc(100vh - 80px);
-  overflow: hidden;
+  overflow: visible;
   transform: translateY(10px);
   transition: transform var(--anim-deliberate) var(--eq);
 }
@@ -153,6 +153,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   padding: 20px 24px 18px;
   border-bottom: 1px solid var(--b);
   flex-shrink: 0;
+  border-radius: 16px 16px 0 0;
+  overflow: hidden;
 }
 .re-hdr-top {
   display: flex;
@@ -216,6 +218,7 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
 /* Body — scrollable */
 .re-body {
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   padding: 20px 24px;
   display: flex;
@@ -419,6 +422,8 @@ html,body{background:var(--bg);color:var(--t);font-family:var(--sf);min-height:1
   justify-content: space-between;
   gap: 10px;
   flex-shrink: 0;
+  border-radius: 0 0 16px 16px;
+  overflow: hidden;
 }
 .re-ftr-left {
   font-size: 11px;
